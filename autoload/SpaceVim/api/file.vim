@@ -38,6 +38,7 @@ let s:file_node_extensions = {
       \  'rb'       : '',
       \  'php'      : '',
       \  'py'       : '',
+      \  'python'   : '',
       \  'pyc'      : '',
       \  'pyo'      : '',
       \  'pyd'      : '',
@@ -47,6 +48,10 @@ let s:file_node_extensions = {
       \  'conf'     : '',
       \  'ini'      : '',
       \  'yml'      : '',
+      \  'toml'     : '',
+      \  'zshrc'    : '',
+      \  'gitignore': '',
+      \  'gitconfig': '',
       \  'bat'      : '',
       \  'jpg'      : '',
       \  'jpeg'     : '',
@@ -67,6 +72,7 @@ let s:file_node_extensions = {
       \  'java'     : '',
       \  'sh'       : '',
       \  'fish'     : '',
+      \  'zsh'      : '',
       \  'ml'       : 'λ',
       \  'mli'      : 'λ',
       \  'diff'     : '',
@@ -121,8 +127,9 @@ let s:file_node_exact_matches = {
       \  'gulpfile.ls'                      : '',
       \  'dropbox'                          : '',
       \  '.ds_store'                        : '',
-      \  '.gitconfig'                       : '',
-      \  '.gitignore'                       : '',
+      \  '.gitconfig'                       : '',
+      \  '.gitignore'                       : '',
+      \  '.gdbinit'                         : '',
       \  '.bashrc'                          : '',
       \  '.bashprofile'                     : '',
       \  'favicon.ico'                      : '',
@@ -156,6 +163,9 @@ function! s:filetypeIcon(path) abort
     endif
   endfor
   let ext = fnamemodify(file, ':e')
+  if ext == ''
+    let ext = fnamemodify(file, ':s?\.??')
+  endif
   if has_key(g:spacevim_filetype_icons, ext)
     return g:spacevim_filetype_icons[ext]
   elseif has_key(s:file_node_extensions, ext)

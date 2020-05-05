@@ -16,7 +16,11 @@ let s:self.__buffer = SpaceVim#api#import('vim#buffer')
 let s:self.__cmp = SpaceVim#api#import('vim#compatible')
 
 function! s:self.check_width(len, sec, winwidth) abort
-  return a:len + self.len(a:sec) < a:winwidth
+  if a:sec =~ '%l/%L'
+    return 1
+  else
+    return a:len + self.len(a:sec) < a:winwidth
+  endif
 endfunction
 
 let s:self.__winid = -1

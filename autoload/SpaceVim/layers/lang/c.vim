@@ -60,6 +60,7 @@ let s:CPT = SpaceVim#api#import('vim#compatible')
 
 function! SpaceVim#layers#lang#c#plugins() abort
   let plugins = []
+  call add(plugins, ['skywind3000/vim-cppman'])
   if !SpaceVim#layers#lsp#check_filetype('c') && !SpaceVim#layers#lsp#check_filetype('cpp')
     if g:spacevim_autocomplete_method ==# 'deoplete'
       call add(plugins, ['Shougo/deoplete-clangx', {'merged' : 0}])
@@ -92,6 +93,7 @@ function! SpaceVim#layers#lang#c#plugins() abort
     endif
   else
     call add(plugins, ['octol/vim-cpp-enhanced-highlight', { 'merged' : 0}])
+    " call add(plugins, ['bfrg/vim-cpp-modern', { 'merged' : 0}])
   endif
   return plugins
 endfunction
@@ -102,21 +104,21 @@ function! SpaceVim#layers#lang#c#config() abort
   call SpaceVim#mapping#gd#add('cpp',
         \ function('s:go_to_def'))
   " TODO: add stdin suport flex -t lexer.l | gcc -o lexer.o -xc -
-  let runner1 = {
-        \ 'exe' : 'gcc',
-        \ 'targetopt' : '-o',
-        \ 'opt' : ['-xc', '-'],
-        \ 'usestdin' : 1,
-        \ }
-  call SpaceVim#plugins#runner#reg_runner('c', [runner1, '#TEMP#'])
-  call SpaceVim#mapping#space#regesit_lang_mappings('c', function('s:language_specified_mappings'))
-  let runner2 = {
-        \ 'exe' : 'g++',
-        \ 'targetopt' : '-o',
-        \ 'opt' : ['-xc++', '-'],
-        \ 'usestdin' : 1,
-        \ }
-  call SpaceVim#plugins#runner#reg_runner('cpp', [runner2, '#TEMP#'])
+  " let runner1 = {
+  "       \ 'exe' : 'gcc',
+  "       \ 'targetopt' : '-o',
+  "       \ 'opt' : ['-xc', '-'],
+  "       \ 'usestdin' : 1,
+  "       \ }
+  " call SpaceVim#plugins#runner#reg_runner('c', [runner1, '#TEMP#'])
+  " call SpaceVim#mapping#space#regesit_lang_mappings('c', function('s:language_specified_mappings'))
+  " let runner2 = {
+  "       \ 'exe' : 'g++',
+  "       \ 'targetopt' : '-o',
+  "       \ 'opt' : ['-xc++', '-'],
+  "       \ 'usestdin' : 1,
+  "       \ }
+  " call SpaceVim#plugins#runner#reg_runner('cpp', [runner2, '#TEMP#'])
   if !empty(s:c_repl_command)
     call SpaceVim#plugins#repl#reg('c', s:c_repl_command)
   else
@@ -185,11 +187,176 @@ function! SpaceVim#layers#lang#c#set_variable(var) abort
   let s:enable_clang_syntax = get(a:var, 'enable_clang_syntax_highlight', s:enable_clang_syntax)
 endfunction
 
+"================================
+" => QuickRun配置
+"================================
+" let g:QuickRun_Args = ''
+" let g:QuickRun_Redirect = ''
+" let g:QuickRun_CompileFlag = g:ale_and_quickrun_cpp_default_compile_flag
+function! SpaceVim#layers#lang#c#quickrun_do(var, str) abort
+  if a:str == ''
+    if  !call("exists",[a:var])
+      if a:var == 'b:QuickRun_cpp_CompileFlag'
+<<<<<<< Updated upstream
+        let b:QuickRun_cpp_CompileFlag = get(g:, 'ale_and_quickrun_cpp_compile_std', '-std=c++17')
+=======
+        let b:QuickRun_cpp_CompileFlag = g:ale_and_quickrun_cpp_default_compile_flag
+>>>>>>> Stashed changes
+      else
+        exe 'let '.a:var.'=""'
+      endif
+    endif
+    exe 'let '. a:var
+  else
+    exe 'let '. a:var .' =  a:str'
+  endif
+endfunction
+command! -nargs=? QuickrunArgs call SpaceVim#layers#lang#c#quickrun_do('b:QuickRun_Args', <q-args>)
+command! -nargs=? -complete=file QuickrunRedirect call SpaceVim#layers#lang#c#quickrun_do('b:QuickRun_Redirect', <q-args>)
+command! -nargs=? QuickrunCompileFlag call SpaceVim#layers#lang#c#quickrun_do('b:QuickRun_cpp_CompileFlag', <q-args>)
+
+let s:bufnr = 0
+let g:quickrun_Path = {}
+au TermEnter * setlocal  list nu norelativenumber
+
+function! s:open_win() abort
+    belowright 12 split __quickrun__
+    setlocal buftype=nofile bufhidden=wipe nobuflisted list nomodifiable noim
+          \ noswapfile
+          \ nowrap
+          \ cursorline
+          \ nospell
+          \ nu
+          \ norelativenumber
+          \ winfixheight
+          \ nomodifiable
+endfunction
+
+function! s:get_timestamp(cfile)
+  let tmp = execute("!ls -tl --time-style='+\\%M\\%H\\%S' ". a:cfile ." | cut -d' ' -f 6")  
+  return substitute(tmp, '.*\(\d\d\d\d\d\d\).*', '\1', 'g')
+endfunction
+
+function! SpaceVim#layers#lang#c#QuickRun()
+    if !exists('b:QuickRun_Args')
+      let b:QuickRun_Args = ''
+    endif
+    if !exists('b:QuickRun_Redirect')
+      let b:QuickRun_Redirect = ''
+    endif
+    if !exists('b:QuickRun_cpp_CompileFlag')
+      let b:QuickRun_cpp_CompileFlag = get(g:, 'ale_and_quickrun_cpp_default_compile_flag', '-std=c++20')
+    endif
+    let qr_args = b:QuickRun_Args
+    let qr_rd = b:QuickRun_Redirect
+    let qr_cf = b:QuickRun_cpp_CompileFlag
+
+    if s:bufnr != 0 && bufexists(s:bufnr)
+        execute 'bd! ' . s:bufnr
+    endif
+    let QuickRun_CFILE = expand('%:p')    " 需要编译的文件全路径
+    if &modified == 0 && has_key(g:quickrun_Path, QuickRun_CFILE) && g:quickrun_Path[QuickRun_CFILE] =~ s:get_timestamp(QuickRun_CFILE)
+        call s:open_win()
+        execute 'call termopen("vim-quickrun.sh -r '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args.' \"'.qr_rd .'\"")'
+        " echo 'call termopen("vim-quickrun.sh -r '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args.' \"'.qr_rd .'\"")'
+    else
+        write
+        let g:quickrun_Path[QuickRun_CFILE] = '/tmp/QuickRun/'. expand('%:t') .'.'. s:get_timestamp(QuickRun_CFILE)
+        let fileT=&ft
+        call s:open_win()
+        if fileT == 'c'
+            execute 'call termopen("vim-quickrun.sh -c -std=c11'. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
+        elseif fileT == 'cpp'
+            execute 'call termopen("vim-quickrun.sh -C \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
+            " echo 'call termopen("vim-quickrun.sh -C \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
+        else
+            echoerr 'need c/cpp filetype'
+        endif
+    endif
+    let s:bufnr=bufnr('%')
+    wincmd p
+endfunction
+
+let g:QuickRun_InputWin = 0
+function! SpaceVim#layers#lang#c#OpenInputWin()
+    if g:QuickRun_InputWin != 0 && bufexists(g:QuickRun_InputWin)
+        execute 'bd! ' . g:QuickRun_InputWin
+    endif
+    let originWinnr = win_getid()
+    let inputFileName = '/tmp/' . expand('%:t:r') . '.input'
+    let defxWinNr = win_findbuf( buffer_number('[defx] -0'))
+    if defxWinNr != []
+        call win_gotoid(defxWinNr[0])
+    else
+        Defx
+    endif
+    exe 'abo 20 split ' . inputFileName
+    setlocal bufhidden=wipe nobuflisted list ft=Input
+          \ noswapfile
+          \ nowrap
+          \ cursorline
+          \ nospell
+          \ nu
+          \ norelativenumber
+          \ winfixheight
+    let g:QuickRun_InputWin=bufnr('%')
+    let g:QuickRun_Redirect = "< ".inputFileName
+    call win_gotoid(originWinnr)
+endfunction
+
+function! SpaceVim#layers#lang#c#TurnoffQuickrun()
+    if s:bufnr != 0 && bufexists(s:bufnr)
+        execute 'bd! ' . s:bufnr
+        let &l:statusline = SpaceVim#layers#core#statusline#get(1)
+    endif
+endfunction
+
+function! SpaceVim#layers#lang#c#ClangCompile()
+    if &modified == 1
+        write
+    endif
+    if &ft == 'cpp'
+        execute '!clang++ -std=c++17 -O3 -I. -o ' . expand('%:r') . ' ' . expand('%')
+    elseif &ft == 'c'
+        execute '!clang -std=c11 -O3 -I. -o ' . expand('%:r') . ' ' . expand('%')
+    else
+        echoerr 'need c/cpp filetype'
+    endif
+endfunction
+function! SpaceVim#layers#lang#c#compile4debug()
+    if &modified == 1
+        write
+    endif
+    if &ft == 'cpp'
+        execute '!g++ -std=c++17 -Og -g3 -fno-inline -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -I. -o ' . expand('%:r') . ' ' . expand('%')
+    elseif
+        execute '!gcc -std=c11 -Og -g3 -fno-inline -I. -o ' . expand('%:r') . ' ' . expand('%')
+    else
+        echoerr 'need c/cpp filetype'
+    endif
+endfunction
+
+autocmd BufLeave *.input w
+
 function! s:language_specified_mappings() abort
 
   call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
-        \ 'call SpaceVim#plugins#runner#open()',
+        \ 'call SpaceVim#layers#lang#c#QuickRun()',
         \ 'execute current file', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','i'],
+        \ 'call SpaceVim#layers#lang#c#OpenInputWin()',
+        \ 'open input window', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','c'],
+        \ 'call SpaceVim#layers#lang#c#TurnoffQuickrun()',
+        \ 'close quickrun terminal', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','d'],
+        \ 'call SpaceVim#layers#lang#c#compile4debug()',
+        \ 'compile for debug', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','o'],
+        \ 'call SpaceVim#layers#lang#c#ClangCompile()',
+        \ 'optimized compile by clang', 1)
+  let g:cppman_open_mode = '<auto>'
+  nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
   if SpaceVim#layers#lsp#check_filetype('c')
     nnoremap <silent><buffer> K :call SpaceVim#lsp#show_doc()<CR>
 

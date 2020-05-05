@@ -52,6 +52,8 @@ call defx#custom#column('icon', {
 	      \ 'max_width': -90,
 	      \ })
 
+let g:defx_git#indicators = {'Untracked': '⟴', 'Unmerged': '≠', 'Ignored': '•', 'Renamed': '🗘', 'Modified': '⬍', 'Deleted': '✖', 'Unknown': '⁇', 'Staged': '⥥'}
+
 augroup vfinit
   au!
   autocmd FileType defx call s:defx_init()
@@ -69,6 +71,24 @@ function! s:close_last_vimfiler_windows() abort
   q
 endfunction
 
+function! Leaderf_Defx_Search()
+    let path = defx#get_candidate().action__path
+    winc p
+    exe 'Leaderf file '. path
+endfunction
+function! Ranger_Preview()
+  if ! executable('ranger')
+    echoerr 'You need to install `ranger`'
+  endif
+  let path = defx#get_candidate().action__path
+  if $TMUX != ''
+    exe "!tmux new-window 'ranger --selectfile=". path."'"
+  elseif executable('guake')
+    exe '!guake -n 1 -s 1 -e "ranger --selectfile='. path . '" --show'
+  else
+    echoerr 'You need to install guake , or you need to run your neovim in tmux'
+  endif
+endfunction
 function! s:defx_init()
   setl nonumber
   setl norelativenumber
@@ -134,8 +154,10 @@ function! s:defx_init()
         \ defx#do_action('drop', 'split')
   nnoremap <silent><buffer><expr> st
         \ defx#do_action('drop', 'tabedit')
-  nnoremap <silent><buffer><expr> p
-        \ defx#do_action('open', 'pedit')
+  nnoremap <silent><buffer> p :call Ranger_Preview()<cr><cr>
+
+  nnoremap <silent><buffer> f :call Leaderf_Defx_Search()<cr>
+
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')
   nnoremap <silent><buffer><expr> N
@@ -226,3 +248,4 @@ endfunction
 function! s:trim_right(str, trim)
   return substitute(a:str, printf('%s$', a:trim), '', 'g')
 endfunction
+au! VimEnter * if buffer_name() == '' | Defx | winc p | else | Defx | Defx | endif

@@ -1,0 +1,330 @@
+snippet inc
+#include <${1:iostream}>
+endsnippet
+
+snippet incm
+#include "${1:myheader}.hpp"
+endsnippet
+
+snippet incb
+#include <boost/${1:shared_ptr}.hpp>
+endsnippet
+
+snippet ttem
+template <template<typename> class ${1:T}>
+endsnippet
+
+snippet tem
+template <typename ${1:T}>
+endsnippet
+
+snippet class
+class ${1:ClassName}
+{
+public:
+    $2
+private:
+
+};
+endsnippet
+
+snippet struct
+struct ${1:StructName}
+{
+    $2
+};
+endsnippet
+
+snippet if
+if ( ${1:true} ) {
+    ${0:${VISUAL}}
+}
+endsnippet
+
+snippet ifel
+if ( ${1:true} ) {
+    ${2:${VISUAL}}
+} else {
+    ${0}
+}
+endsnippet
+
+snippet elif
+else if ( ${1:true} ) {
+    ${0:${VISUAL}}
+}
+endsnippet
+
+snippet el
+else {
+    ${0:${VISUAL}}
+}
+endsnippet
+
+snippet do
+do {
+    ${0:${VISUAL}}
+} while ( ${1:true} );
+endsnippet
+
+snippet while
+while ( {${1:true} ) {
+    ${2:${VISUAL}}
+}
+endsnippet
+
+snippet getopt
+int choice;
+while ( true )
+{
+    /* struct option {
+     *	   const char* name ; // (long option name)
+     *     int      has_arg ; // (no_argument, required_argument, optional_argument)
+     *     int        *flag ; // (function return val when flag==NULL)
+     *     int          val ; // (function return a int to represent this long option)
+     * };
+     */
+    static option long_options[] =
+    {
+        { "version", no_argument, 0, 'v' },
+        { "help",    no_argument, 0, 'h' },
+        { ${1:struct_option} },
+        { 0, 0, 0, 0 }
+    };
+    int option_index{ 0 };
+    choice = getopt_long( argc, argv, "vh", long_options, &option_index );
+    if ( choice == -1 )
+        break;
+    switch( choice ) {
+        case 'v':
+            $2
+            break;
+        case 'h':
+            $3
+            break;
+        case '?':
+            break ; // getopt_long will have already printed an error
+        default:
+            return -1 ; // Not sure how to get here...
+    }
+}
+// Deal with non-option arguments here
+if ( optind < argc ) {
+    while ( optind < argc ) {
+        $0
+    }
+}
+endsnippet
+
+## STL Collections
+# std::array
+snippet arr
+array<${1:T}, ${2:N}> ${3};
+endsnippet
+
+# std::vector
+snippet vec
+vector<${1:T}> ${2};
+endsnippet
+
+# std::deque
+snippet deq
+deque<${1:T}> ${2};
+endsnippet
+
+# std::forward_list
+snippet fls
+forward_list<${1:T}> ${2};
+endsnippet
+
+# std::list
+snippet ls
+list<${1:T}> ${2};
+endsnippet
+
+# std::set
+snippet set
+set<${1:T}> ${2};
+endsnippet
+
+# std::map
+snippet map
+map<${1:Key}, ${2:T}> ${3};
+endsnippet
+
+# std::multiset
+snippet mset
+multiset<${1:T}> ${2};
+endsnippet
+
+# std::multimap
+snippet mmap
+multimap<${1:Key}, ${2:T}> ${3};
+endsnippet
+
+# std::unordered_set
+snippet uset
+unordered_set<${1:T}> ${2};
+endsnippet
+
+# std::unordered_map
+snippet umap
+unordered_map<${1:Key}, ${2:T}> ${3};
+endsnippet
+
+# std::unordered_multiset
+snippet umset
+unordered_multiset<${1:T}> ${2};
+endsnippet
+
+# std::unordered_multimap
+snippet ummap
+unordered_multimap<${1:Key}, ${2:T}> ${3};
+endsnippet
+
+# std::stack
+snippet stack
+stack<${1:T}> ${2};
+endsnippet
+
+# std::queue
+snippet queue
+queue<${1:T}> ${2};
+endsnippet
+
+# std::priority_queue
+snippet pqueue
+priority_queue<${1:T}> ${2};
+endsnippet
+
+##
+## STL smart pointers
+# std::shared_ptr
+snippet msp
+shared_ptr<${1:T}> ${2} = make_shared<$1>(${3});
+endsnippet
+
+snippet amsp
+auto ${1} = make_shared<${2:T}>(${3});
+endsnippet
+
+# std::unique_ptr
+snippet mup
+unique_ptr<${1:T}> ${2} = make_unique<$1>(${3});
+endsnippet
+
+snippet amup
+auto ${1} = make_unique<${2:T}>(${3});
+endsnippet
+
+# std::cout
+snippet cout
+cout << ${1} << endl;
+endsnippet
+
+# std::cin
+snippet cin
+cin >> ${1};
+endsnippet
+
+##
+## Casts
+# static
+snippet sca
+static_cast<${1:unsigned}>(${2:expr})${3}
+endsnippet
+
+# dynamic
+snippet dca
+dynamic_cast<${1:unsigned}>(${2:expr})${3}
+endsnippet
+
+# reinterpret
+snippet rca
+reinterpret_cast<${1:unsigned}>(${2:expr})${3}
+endsnippet
+
+# const
+snippet cca
+const_cast<${1:unsigned}>(${2:expr})${3}
+endsnippet
+
+snippet fori
+for (int ${1:i}{}; $1 < ${2:count}; ${3:++}$1) {
+    ${4}
+}
+endsnippet
+
+# range-based
+snippet forr
+for (auto& ${0:i} : ${1:container}) {
+    ${2}
+}
+endsnippet
+
+snippet ld
+[${1}](${2}){${3}};
+endsnippet
+
+# lambda (multi-line)
+snippet lld
+[${1}] (${2}) {
+    ${3}
+};
+endsnippet
+
+snippet try
+try {
+    $1
+} catch(${1}) {
+    $2
+}
+endsnippet
+
+snippet init
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    $1
+
+    return 0;
+}
+
+endsnippet
+
+snippet main
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    $1
+
+    return 0;
+}
+endsnippet
+
+snippet maina
+int main(int argc, char* argv[])
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    $1
+
+    return 0;
+}
+endsnippet
+
+snippet argc
+int argc, char* argv[]
+endsnippet
+snippet fuck
+cout << "fuck!" << endl;
+endsnippet

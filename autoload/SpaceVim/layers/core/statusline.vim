@@ -28,6 +28,7 @@ let s:VIMCOMP = SpaceVim#api#import('vim#compatible')
 let s:SYSTEM = SpaceVim#api#import('system')
 let s:ICON = SpaceVim#api#import('unicode#icon')
 let s:VIM =  SpaceVim#api#import('vim')
+let s:FILE = SpaceVim#api#import('file')
 
 " init
 let s:separators = {
@@ -140,11 +141,21 @@ function! s:fileformat() abort
   else
     let g:_spacevim_statusline_fileformat = &ff
   endif
-  return '%{" " . g:_spacevim_statusline_fileformat . " | " . (&fenc!=""?&fenc:&enc) . " "}'
+  return '%{" " . g:_spacevim_statusline_fileformat . " ∥" . (&fenc!=""?&fenc:&enc) . " "}'
 endfunction
 
 function! s:major_mode() abort
-  return '%{empty(&ft)? "" : " " . &ft . " "}'
+    let nr = tabpagenr('$')
+    let buflist = tabpagebuflist(nr)
+    let winnr = tabpagewinnr(nr)
+    let bufname = bufname(buflist[winnr - 1])
+    let name = fnamemodify(bufname, ':t')
+    " let name = &ft
+    let icon = s:FILE.fticon(name)
+    if icon == ''
+      let icon = s:FILE.fticon(&ft)
+    endif
+  return ' '.icon.'%{empty(&ft)? "" : " " . &ft . " "}'
 endfunction
 
 function! s:modes() abort
@@ -165,11 +176,11 @@ endfunction
 
 
 function! s:percentage() abort
-  return ' %P '
+  return ' %P'
 endfunction
 
 function! s:cursorpos() abort
-  return "%{' ' . join(map(getpos('.')[1:2], \"printf('%3d', v:val)\"), ':') . ' '}"
+  return ' ☰ %l/%L :%c '
 endfunction
 
 function! s:time() abort
@@ -320,7 +331,13 @@ endfunction
 " enable_statusline_bfpath true
 function! s:buffer_name() abort
   if get(b:, '_spacevim_statusline_showbfname', 0) == 1 || g:spacevim_enable_statusline_bfpath
-    return  ' ' . bufname('%')
+    " return  ' ' . bufname('%')
+    let fp_name = fnamemodify(expand('%:p'), ':s?'.SpaceVim#plugins#projectmanager#current_root().'/??')
+    if &readonly == 1
+      return  "🔒️ " . fp_name
+    else
+      return  ' ' . fp_name
+    endif
   else
     return ''
   endif
@@ -450,6 +467,15 @@ function! SpaceVim#layers#core#statusline#get(...) abort
   elseif &filetype ==# 'MundoDiff'
     return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
           \ . '%#SpaceVim_statusline_b# MundoDiff %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
+  elseif &filetype ==# 'Input'
+    return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
+          \ . '%#SpaceVim_statusline_b# Input %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
+  elseif &filetype ==# 'undotree'
+    return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
+          \ . '%#SpaceVim_statusline_b# UndoTree %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
+  elseif &filetype ==# 'diff'
+    return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
+          \ . '%#SpaceVim_statusline_b# Diff %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
   elseif &filetype ==# 'SpaceVimMessageBuffer'
     return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
           \ . '%#SpaceVim_statusline_b# Message %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
@@ -592,6 +618,7 @@ function! SpaceVim#layers#core#statusline#init() abort
   augroup END
 endfunction
 
+nnoremap <silent><c-l> <c-l>:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
 let s:colors_template = SpaceVim#mapping#guide#theme#gruvbox#palette()
 
 function! SpaceVim#layers#core#statusline#def_colors() abort

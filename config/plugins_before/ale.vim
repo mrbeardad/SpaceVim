@@ -16,3 +16,16 @@ if g:spacevim_lint_on_the_fly
 else
   let g:ale_lint_on_text_changed = 'never'
 endif
+
+let g:ale_cpp_clangtidy_executable = '/opt/bin/nop.sh'
+let s:ale_lint_count = 0
+let g:ale_clangtidy_period = get(g:, 'ale_clangtidy_period', 6)
+function! ALE_Cnt()
+  if s:ale_lint_count == 0
+    let g:ale_cpp_clangtidy_executable = '/bin/clang-tidy'
+  else
+    let g:ale_cpp_clangtidy_executable = 'nop.sh'
+  endif
+  let s:ale_lint_count = (s:ale_lint_count + 1) % g:ale_clangtidy_period
+endfunction
+au InsertLeave *.cpp call ALE_Cnt()

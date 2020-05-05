@@ -734,7 +734,7 @@ let g:spacevim_keep_server_alive = 1
 
 ""
 " The colorscheme of SpaceVim. Default is 'gruvbox'.
-let g:spacevim_colorscheme             = 'gruvbox'
+let g:spacevim_colorscheme             = 'default-plus'
 ""
 " @section colorscheme_bg, options-colorscheme_bg
 " @parentsection options
@@ -750,7 +750,7 @@ let g:spacevim_colorscheme_bg             = 'dark'
 " >
 "   let g:spacevim_colorscheme_default = 'other_color'
 " <
-let g:spacevim_colorscheme_default     = 'desert'
+let g:spacevim_colorscheme_default     = 'default-plus'
 ""
 " @section filemanager, options-filemanager
 " @parentsection options
@@ -1108,7 +1108,8 @@ let g:spacevim_smartcloseignoreft      = [
       \ 'HelpDescribe',
       \ 'VebuggerShell',
       \ 'VebuggerTerminal',
-      \ 'SpaceVimTabsManager'
+      \ 'SpaceVimTabsManager',
+      \ 'Input'
       \ ]
 let g:_spacevim_altmoveignoreft         = ['Tagbar' , 'vimfiler']
 let g:spacevim_enable_javacomplete2_py = 0

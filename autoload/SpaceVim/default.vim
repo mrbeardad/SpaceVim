@@ -153,9 +153,9 @@ function! SpaceVim#default#layers() abort
 endfunction
 
 function! SpaceVim#default#keyBindings() abort
-  if g:spacevim_enable_insert_leader
-    inoremap <silent> <Leader><Tab> <C-r>=MyLeaderTabfunc()<CR>
-  endif
+  " if g:spacevim_enable_insert_leader
+  "   inoremap <silent> <Leader><Tab> <C-r>=MyLeaderTabfunc()<CR>
+  " endif
 
   " yank and paste
   if has('unnamedplus')
@@ -185,7 +185,7 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Jump to next quickfix list position',
         \ 'cnext',
         \ 'Next quickfix list')
-  call SpaceVim#mapping#def('nnoremap', '<Leader>qp', ':cprev<CR>',
+  call SpaceVim#mapping#def('nnoremap', '<Leader>qb', ':cprev<CR>',
         \ 'Jump to previous quickfix list position',
         \ 'cprev',
         \ 'Previous quickfix list')
@@ -193,14 +193,16 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Open quickfix list window',
         \ 'copen',
         \ 'Open quickfix list window')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qr', 'q',
-        \ 'Toggle recording',
+  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qc', ':cclose<CR>',
+        \ 'Close quickfix list',
         \ '',
-        \ 'Toggle recording mode')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qc', ':call setqflist([])<CR>',
+        \ 'Close quickfix list')
+  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qC', ':call setqflist([])<CR>',
         \ 'Clear quickfix list',
         \ '',
         \ 'Clear quickfix')
+let g:_spacevim_mappings.m = ['', 'quickly modify your macros', [ '', '', '', ] ]
+nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
 
   " Use Ctrl+* to jump between windows
   nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
@@ -260,14 +262,15 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <C-s> :<C-u>w<CR>
   vnoremap <C-s> :<C-u>w<CR>
   cnoremap <C-s> <C-u>w<CR>
+  cnoremap <c-a> <c-b>
 
   " Tabs
-  nnoremap <silent>g0 :<C-u>tabfirst<CR>
-  nnoremap <silent>g$ :<C-u>tablast<CR>
-  nnoremap <silent><expr> gr tabpagenr('#') > 0 ? ':exe "tabnext " . tabpagenr("#")<cr>' : ''
+  " nnoremap <silent>g0 :<C-u>tabfirst<CR>
+  " nnoremap <silent>g$ :<C-u>tablast<CR>
+  " nnoremap <silent><expr> gr tabpagenr('#') > 0 ? ':exe "tabnext " . tabpagenr("#")<cr>' : ''
 
   " Remove spaces at the end of lines
-  nnoremap <silent> ,<Space> :<C-u>silent! keeppatterns %substitute/\s\+$//e<CR>
+  " nnoremap <silent> ,<Space> :<C-u>silent! keeppatterns %substitute/\s\+$//e<CR>
 
   " C-r: Easier search and replace
   xnoremap <C-r> :<C-u>call <SID>VSetSearch()<CR>:,$s/<C-R>=@/<CR>//gc<left><left><left>

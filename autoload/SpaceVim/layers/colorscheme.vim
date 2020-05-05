@@ -83,6 +83,8 @@ let s:random_candidates = s:cs
 let s:random_frequency = ''
 let s:bright_statusline = 0
 
+let g:neosolarized_italic = 1
+let g:neosolarized_contrast = "normal"
 function! SpaceVim#layers#colorscheme#config() abort
   if s:random_colorscheme
     let ctime = ''

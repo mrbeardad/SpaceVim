@@ -1,3 +1,39 @@
+let g:ycm_filetype_whitelist = {
+        \ "c":1,
+        \ "cpp":1,
+        \ "java":1,
+        \ "python":1,
+        \ "vim":1,
+        \ "sh":1,
+        \ }
+let g:ycm_semantic_triggers =  {
+        \ "c,cpp,python,java,vim,sh": ['re!\w{2}'],
+        \ }
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_use_clangd = 1
+" let g:ycm_clangd_binary_path = '/bin/clangd'
+let g:ycm_cache_omnifunc = 0
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_complete_in_strings = 1
+let g:ycm_complete_in_comments = 0
+let g:ycm_key_invoke_completion = '<c-z>'
+let g:ycm_key_list_stop_completion = ['<s-cr>']
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 0
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_max_num_candidates = 20
+
+let g:_spacevim_mappings_g['o'] = ['call feedkeys("go", "n")', 'go to definition/declaration']
+nnoremap <silent> go :YcmCompleter GoTo<CR>
+let g:_spacevim_mappings_g['r'] = ['call feedkeys("go", "n")', 'go to reference']
+nnoremap <silent> gr :YcmCompleter GoToReferences<CR>
+let g:_spacevim_mappings_g['c'] = ['call feedkeys("gc", "n")', 'restructure']
+nnoremap <silent> gc :YcmCompleter RefactorRename 
+let g:_spacevim_mappings_g['t'] = ['call feedkeys("gt", "n")', 'get type']
+nnoremap <silent> gt :YcmCompleter GetType<CR>
+
 "let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 "let g:ycm_confirm_extra_conf = 0
 let g:ycm_collect_identifiers_from_tags_files = 
@@ -5,9 +41,9 @@ let g:ycm_collect_identifiers_from_tags_files =
 let g:ycm_collect_identifiers_from_comments_and_strings = 
       \ get(g:, 'ycm_collect_identifiers_from_comments_and_strings', 1)
 let g:ycm_key_list_select_completion =
-      \ get(g:, 'ycm_key_list_select_completion', ['<C-TAB>', '<Down>'])
+      \ get(g:, 'ycm_key_list_select_completion', ['<TAB>', '<Down>'])
 let g:ycm_key_list_previous_completion =
-      \ get(g:, 'ycm_key_list_previous_completion', ['<C-S-TAB>','<Up>'])
+      \ get(g:, 'ycm_key_list_previous_completion', ['<S-TAB>','<Up>'])
 let g:ycm_seed_identifiers_with_syntax =
       \ get(g:, 'ycm_seed_identifiers_with_syntax', 1)
 let g:ycm_key_invoke_completion =

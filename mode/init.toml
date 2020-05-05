@@ -1,0 +1,95 @@
+########################### SpaceVim选项 ###########################
+[options]
+    # Statusline和Tabline配置
+    statusline_separator = "arrow"
+    statusline_iseparator = "arrow"
+    statusline_inactive_separator = "arrow"
+    enable_statusline_bfpath = true
+    enable_statusline_mode = true
+    enable_statusline_tag = false
+    enable_os_fileformat_icon = true
+    enable_tabline_ft_icon = true
+    buffer_index_type = 1
+    windows_index_type = 0
+    statusline_left_sections = ['winnr', 'version control info']
+    statusline_right_sections = ['major mode', 'fileformat', 'cursorpos', 'percentage']
+
+    # FileManager配置
+    filemanager = "defx"
+    enable_vimfiler_filetypeicon = true
+    enable_vimfiler_gitstatus = true
+    enable_vimfiler_welcome = false
+
+    # Checker配置
+    enable_ale = true
+    enable_neomake = false
+
+    # Autocomplete配置
+    enable_ycm = true
+    snippet_engine = "ultisnips"
+
+    # SpaceVim配置
+    checkinstall = false
+    vimcompatible = true
+    sidebar_width = 25
+    project_rooter_patterns = ['.root/', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', '.SpaceVim.d/']
+    disabled_plugins = [ 'neco-syntax', 'neoinclude.vim', 'neosnippet-snippets', 'neopairs.vim', 'deoplete-dictionary']
+
+########################### Layer模块 ###########################
+[[layers]]
+    name = 'core#banner'
+
+[[layers]]
+    name = 'core#statusline'
+
+[[layers]]
+    name = 'core#tabline'
+
+[[layers]]
+    name = 'core'
+
+[[layers]]
+    name = 'colorscheme'
+
+[[layers]]
+    name = 'ui'
+
+[[layers]]
+    name = 'edit'
+
+[[layers]]
+    name = 'tools'
+
+[[layers]]
+    name = 'leaderf'
+
+[[layers]]
+    name = 'foldsearch'
+
+[[layers]]
+    name = 'git'
+    git-plugin = "fugitive"
+
+[[layers]]
+  name = "VersionControl"
+
+[[layers]]
+    name = 'checker'
+
+[[layers]]
+    name = "autocomplete"
+    auto_completion_return_key_behavior = "nil"
+    auto_completion_tab_key_behavior = "nil"
+    auto_completion_complete_with_key_sequence = "nil"
+    auto_completion_enable_snippets_in_popup = true
+
+[[layers]]
+    name = 'format'
+    enable = false
+
+[[layers]]
+    name = 'lang#c'
+
+[[layers]]
+    name = 'lang#markdown'
+

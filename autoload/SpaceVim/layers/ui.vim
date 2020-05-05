@@ -15,6 +15,12 @@ function! SpaceVim#layers#ui#plugins() abort
         \ [g:_spacevim_root_dir . 'bundle/tagbar-proto.vim', {'merged': 0}],
         \ [g:_spacevim_root_dir . 'bundle/vim-choosewin', {'merged' : 0}],
         \ [g:_spacevim_root_dir . 'bundle/vim-startify', {'loadconf' : 1, 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/indentLine', {'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/tagbar', {'on_cmd' : 'TagbarToggle', 'loadconf' : 1, 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/tagbar-makefile.vim', {'on_cmd' : 'TagbarToggle', 'merged': 0}],
+        \ [g:_spacevim_root_dir . 'bundle/tagbar-proto.vim', {'on_cmd' : 'TagbarToggle', 'merged': 0}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-choosewin', {'on_cmd' : 'ChooseWin', 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-startify', {'loadconf' : 1, 'merged' : 0}],
         \ ]
   if !SpaceVim#layers#isLoaded('core#statusline')
     call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-airline',                { 'merged' : 0, 
@@ -33,10 +39,10 @@ function! SpaceVim#layers#ui#config() abort
   else
     let g:indentLine_color_gui = get(g:, 'indentLine_color_gui', '#d5c4a1')
   endif
-  let g:indentLine_char = get(g:, 'indentLine_char', '┊')
+  let g:indentLine_char = get(g:, 'indentLine_char', '¦')
   let g:indentLine_concealcursor = 'niv'
   let g:indentLine_conceallevel = 2
-  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'json']
+  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx', 'json']
   let g:better_whitespace_filetypes_blacklist = ['diff', 'gitcommit', 'unite',
         \ 'qf', 'help', 'markdown', 'leaderGuide',
         \ 'startify'
@@ -45,9 +51,9 @@ function! SpaceVim#layers#ui#config() abort
   let g:signify_line_highlight = 0
 
   if s:enable_sidebar
-    noremap <silent> <F2> :call SpaceVim#plugins#sidebar#toggle()<CR>
+    noremap <silent> <F1> :call SpaceVim#plugins#sidebar#toggle()<CR>
   else
-    noremap <silent> <F2> :TagbarToggle<CR>
+    noremap <silent> <F1> :TagbarToggle<CR>
   endif
 
   if !empty(g:spacevim_windows_smartclose)

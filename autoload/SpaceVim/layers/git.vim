@@ -107,10 +107,13 @@ function! SpaceVim#layers#git#config() abort
   let l:h_submenu_name = SpaceVim#layers#isLoaded('github') ? '+GitHub/Hunks' : '+Hunks'
   let g:_spacevim_mappings_space.g.h['name'] = l:h_submenu_name
 
+  let g:gitgutter_enabled = 0
   let l:stage_hunk_key = SpaceVim#layers#isLoaded('github') ? 's' : 'a'
   call SpaceVim#mapping#space#def('nmap', ['g', 'h', l:stage_hunk_key], '<Plug>(GitGutterStageHunk)', 'stage-current-hunk', 0)
   call SpaceVim#mapping#space#def('nmap', ['g', 'h', 'r'], '<Plug>(GitGutterUndoHunk)', 'undo-cursor-hunk', 0)
   call SpaceVim#mapping#space#def('nmap', ['g', 'h', 'v'], '<Plug>(GitGutterPreviewHunk)', 'preview-cursor-hunk', 0)
+  call SpaceVim#mapping#space#def('nnoremap', ['g', 'm'], 'Git branch', 'branch-manager', 1)
+  call SpaceVim#mapping#space#def('nmap', ['g', 'g'], 'GitGutterBufferToggle', 'GitGutter Buffer Toggle', 1)
 endfunction
 
 function! SpaceVim#layers#git#set_variable(var) abort

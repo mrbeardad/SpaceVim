@@ -15,23 +15,31 @@ let s:VIM = SpaceVim#api#import('vim')
 
 function! SpaceVim#layers#edit#plugins() abort
   let plugins = [
-        \ [g:_spacevim_root_dir . 'bundle/vim-surround'],
+        \ [g:_spacevim_root_dir . 'bundle/vim-surround', {'on_map': ['<Plug>Dsurround', '<Plug>Csurround', '<Plug>Ysurround', '<Plug>Yssurround']}],
         \ [g:_spacevim_root_dir . 'bundle/vim-repeat'],
         \ [g:_spacevim_root_dir . 'bundle/vim-emoji'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-expand-region', { 'loadconf' : 1}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-expand-region', {'on_map': ['<Plug>(expand_region_expand)', '<Plug>(expand_region_shrink)'], 'loadconf' : 1}],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-user'],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-indent'],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-line'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-table-mode'],
+        \ [g:_spacevim_root_dir . 'bundle/vim-textobj-parameter'],
+        \ [g:_spacevim_root_dir . 'bundle/vim-textobj-function'],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-entire'],
+        \ [g:_spacevim_root_dir . 'bundle/vim-table-mode', {'on_map':'<Plug>table-mode-tableize', 'on_func':'tablemode#Toggle'}],
         \ [g:_spacevim_root_dir . 'bundle/wildfire.vim',{'on_map' : '<Plug>(wildfire-'}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-easymotion'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-easyoperator-line'],
-        \ [g:_spacevim_root_dir . 'bundle/editorconfig-vim', { 'merged' : 0, 'if' : has('python') || has('python3')}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-easymotion', {'on_map' : '<Plug>(easymotion-'}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-easyoperator-line', {'on_map' : '<Plug>(easymotion-'}],
+        \ [g:_spacevim_root_dir . 'bundle/editorconfig-vim', { 'on_event': 'InsertEnter', 'merged' : 0, 'if' : has('python') || has('python3')}],
         \ [g:_spacevim_root_dir . 'bundle/vim-jplus', { 'on_map' : '<Plug>(jplus' }],
-        \ [g:_spacevim_root_dir . 'bundle/tabular',           { 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/tabular',           { 'on_cmd' : 'Tabularize', 'merged' : 0}],
         \ [g:_spacevim_root_dir . 'bundle/vim-better-whitespace',  { 'on_cmd' : ['StripWhitespace', 'ToggleWhitespace', 'DisableWhitespace', 'EnableWhitespace']}],
         \ ]
+  xmap v <Plug>(expand_region_expand)
+  xmap V <Plug>(expand_region_shrink)
+  nmap ds <Plug>Dsurround
+  nmap cs <Plug>Csurround
+  nmap ys <Plug>Ysurround
+  nmap yss <Plug>Yssurround
   if executable('fcitx')
     call add(plugins,[g:_spacevim_root_dir . 'bundle/fcitx.vim',        { 'on_event' : 'InsertEnter'}])
   endif
@@ -57,13 +65,17 @@ function! SpaceVim#layers#edit#config() abort
         \ },
         \ }
 
+  nmap <leader>tt <Plug>table-mode-tableize
+  xmap <leader>tt <Plug>table-mode-tableize
+  nnoremap <silent><leader>tm :call tablemode#Toggle()<cr>
   "noremap <SPACE> <Plug>(wildfire-fuel)
-  vnoremap <C-SPACE> <Plug>(wildfire-water)
+  vmap <C-v> <Plug>(wildfire-water)
   let g:wildfire_objects = ["i'", 'i"', 'i)', 'i]', 'i}', 'ip', 'it']
 
   " osyo-manga/vim-jplus {{{
   nmap <silent> J <Plug>(jplus)
   vmap <silent> J <Plug>(jplus)
+  nmap ; [SPC]jJ
   " }}}
 
   let g:_spacevim_mappings_space.x = {'name' : '+Text'}

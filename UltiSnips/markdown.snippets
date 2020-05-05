@@ -1,0 +1,104 @@
+# Italic
+snippet i
+*$1*
+endsnippet
+
+# Bold
+snippet b
+**$1**
+endsnippet
+
+# Bold and Italic
+snippet bi
+***$1***
+endsnippet
+
+# 下划线
+snippet u
+<u>$1</u>
+endsnippet
+
+# 删除线
+snippet d
+~~$1~~
+endsnippet
+
+# 按键元素
+snippet k
+<kbd>$1</kbd>
+endsnippet
+
+# 对齐文本
+snippet al
+<p align="${1:center}">$2</p>
+endsnippet
+
+# 图片元素
+snippet img
+![${1:LinkName}](${2:https://})
+endsnippet
+
+# 对齐的图片元素
+snippet ima
+<img align="${1:right}" src="${2:https://}"></img>
+
+endsnippet
+
+# 链接元素
+snippet lk
+[${1:LinkName}](${2:https://})
+endsnippet
+
+# 分割线
+snippet sep
+* * * * * * * * * *
+
+endsnippet
+
+# 代码块
+snippet cd
+\`\`\`$1
+$2
+\`\`\`
+endsnippet
+
+# LATEX公式块
+snippet tx
+$$
+$1
+$$
+endsnippet
+
+# 在GitHub上插入公式，斜杠用\\
+snippet tx1
+![](http://latex.codecogs.com/gif.latex?$1)
+endsnippet
+
+# github自己的api，速度要慢一点
+snippet tx2
+![]https://render.githubusercontent.com/render/math?math=$1)
+endsnippet
+
+# 折叠区块
+snippet fd
+<details>
+    <summary><b>${1:Title}</b></summary>
+
+${2:Context}
+</details>
+endsnippet
+
+# 设置跳转锚点
+snippet jp
+<span id="${1:jump}"></span>
+endsnippet
+
+# 鼠标悬停回显
+snippet eh
+<a href=## title="${1:echo content}">${2:content outside}</a>
+endsnippet
+
+# 鼠标悬停回显，但是没有高亮，一般不用
+snippet eh1
+<div title="${1:echo content}">**${2:content outside}**</div>
+endsnippet

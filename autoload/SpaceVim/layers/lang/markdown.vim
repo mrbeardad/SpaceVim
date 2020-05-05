@@ -74,6 +74,7 @@ function! SpaceVim#layers#lang#markdown#config() abort
         \ }
 
   " iamcco/markdown-preview.vim {{{
+  let g:mkdp_auto_close = 0
   let g:mkdp_browserfunc = 'openbrowser#open'
   " }}}
   call SpaceVim#mapping#space#regesit_lang_mappings('markdown', function('s:mappings'))
@@ -93,8 +94,8 @@ function! s:mappings() abort
   endif
   let g:_spacevim_mappings_space.l = {'name' : '+Language Specified'}
   call SpaceVim#mapping#space#langSPC('nmap', ['l','p'], 'MarkdownPreview', 'Real-time markdown preview', 1)
-  call SpaceVim#mapping#space#langSPC('nmap', ['l','k'], '<plug>(markdown-insert-link)', 'add link url', 0, 1)
-  call SpaceVim#mapping#space#langSPC('nmap', ['l','K'], '<plug>(markdown-insert-picture)', 'add link picture', 0, 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','g'], 'GenTocGFM', 'Generate GFM TOC', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','d'], 'RemoveToc', 'delete TOC', 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l', 'r'], 
         \ 'call call('
         \ . string(function('s:run_code_in_block'))
@@ -166,3 +167,8 @@ function! s:run_code_in_block() abort
   endif
 endfunction
 
+function Mkd_key()
+  inoremap <buffer><s-tab> &emsp;
+endfunction
+
+autocmd FileType markdown call Mkd_key()

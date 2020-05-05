@@ -25,6 +25,7 @@ function! SpaceVim#layers#leaderf#plugins() abort
   call add(plugins, 
         \ ['Yggdroot/LeaderF',
         \ {
+        \ 'on_cmd' : ['LeaderfHelpCword', 'LeaderfCommand', 'Leaderf','LeaderfFile'],
         \ 'loadconf' : 1,
         \ 'merged' : 0,
         \ }])
@@ -175,9 +176,6 @@ function! SpaceVim#layers#leaderf#config() abort
         \  'after_enter' : string(s:_function('s:init_leaderf_win', 1))[10:-3]
         \ }
 
-  let g:_spacevim_mappings_space.i = {'name' : '+Insertion'}
-  call SpaceVim#mapping#space#def('nnoremap', ['i', 'u'], 'Leaderf unicode', 'search-and-insert-unicode', 1)
-
   let lnum = expand('<slnum>') + s:lnum - 1
   call SpaceVim#mapping#space#def('nnoremap', ['?'], 'call call('
         \ . string(s:_function('s:warp_denite')) . ', ["Leaderf menu --name CustomKeyMaps --input [SPC]"])',
@@ -204,51 +202,6 @@ function! SpaceVim#layers#leaderf#config() abort
   nmap <Space>h<Space> [SPC]h[SPC]
 
   let lnum = expand('<slnum>') + s:lnum - 1
-  call SpaceVim#mapping#space#def('nnoremap', ['b', 'b'], 'Leaderf buffer',
-        \ ['buffer-list',
-        \ [
-        \ 'SPC b b is to open buffer list',
-        \ '',
-        \ 'Definition: ' . s:filename . ':' . lnum,
-        \ ]
-        \ ],
-        \ 1)
-
-  let lnum = expand('<slnum>') + s:lnum - 1
-  call SpaceVim#mapping#space#def('nnoremap', ['f', 'r'], 'Leaderf neomru',
-        \ ['open-recent-file',
-        \ [
-        \ 'SPC f r is to open recent file list',
-        \ '',
-        \ 'Definition: ' . s:filename . ':' . lnum,
-        \ ]
-        \ ],
-        \ 1)
-
-  let lnum = expand('<slnum>') + s:lnum - 1
-  call SpaceVim#mapping#space#def('nnoremap', ['j', 'i'], 'Leaderf function',
-        \ ['jump to a definition in buffer',
-        \ [
-        \ 'SPC j i is to jump to a definition in buffer',
-        \ '',
-        \ 'Definition: ' . s:filename . ':' . lnum,
-        \ ]
-        \ ],
-        \ 1)
-
-  let lnum = expand('<slnum>') + s:lnum - 1
-  call SpaceVim#mapping#space#def('nnoremap', ['r', 'l'], 'call call('
-        \ . string(s:_function('s:warp_denite')) . ', ["Leaderf --recall"])',
-        \ ['resume fuzzy finder windows',
-        \ [
-        \ 'SPC r l is to resume fuzzy finder windows',
-        \ '',
-        \ 'Definition: ' . s:filename . ':' . lnum,
-        \ ]
-        \ ],
-        \ 1)
-
-  let lnum = expand('<slnum>') + s:lnum - 1
   call SpaceVim#mapping#space#def('nnoremap', ['T', 's'], 'Leaderf colorscheme',
         \ ['fuzzy find colorschemes',
         \ [
@@ -258,33 +211,6 @@ function! SpaceVim#layers#leaderf#config() abort
         \ ]
         \ ],
         \ 1)
-
-  let lnum = expand('<slnum>') + s:lnum - 1
-  call SpaceVim#mapping#space#def('nnoremap', ['f', 'f'], 'exe "Leaderf file " . expand("%:p:h")',
-        \ ['Find files in the directory of the current buffer',
-        \ [
-        \ '[SPC f f] is to find files in the directory of the current buffer',
-        \ '',
-        \ 'Definition: ' . s:filename . ':' . lnum,
-        \ ]
-        \ ],
-        \ 1)
-
-  let lnum = expand('<slnum>') + s:lnum - 1
-  call SpaceVim#mapping#space#def('nnoremap', ['p', 'f'],
-        \ 'Leaderf file --fullPath '
-        \ . SpaceVim#plugins#projectmanager#current_root(),
-        \ ['find files in current project',
-        \ [
-        \ '[SPC p f] is to find files in the root of the current project',
-        \ '',
-        \ 'Definition: ' . s:filename . ':' . lnum,
-        \ ]
-        \ ],
-        \ 1)
-  nnoremap <silent> <C-p> :<C-u>exe 'Leaderf file --fullPath '
-        \ . SpaceVim#plugins#projectmanager#current_root()<cr>
-
 
   let lnum = expand('<slnum>') + s:lnum - 1
   call SpaceVim#mapping#space#def('nnoremap', ['h', 'i'], 'LeaderfHelpCword',
@@ -367,6 +293,7 @@ endfunction
 
 func! s:neoyank(...)
   let yank = []
+  call neoyank#update()
   for text in neoyank#_get_yank_histories()['"']
     call add(yank, '": ' . join(split(text[0], "\n"), '\n'))
   endfor
@@ -483,13 +410,13 @@ function! s:defind_fuzzy_finder() abort
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
-  nnoremap <silent> <Leader>fh
+  nnoremap <silent> <Leader>fy
         \ :<C-u>Leaderf neoyank<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.h = ['Leaderf neoyank',
+  let g:_spacevim_mappings.f.y = ['Leaderf neoyank',
         \ 'fuzzy find yank history',
         \ [
-        \ '[Leader f h] is to fuzzy find history and yank content',
+        \ '[Leader f y] is to fuzzy find history and yank content',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
@@ -538,12 +465,12 @@ function! s:defind_fuzzy_finder() abort
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
-  nnoremap <silent> <Leader>fo  :<C-u>Leaderf function<CR>
+  nnoremap <silent> <Leader>ff  :<C-u>Leaderf function<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.o = ['Leaderf function',
-        \ 'fuzzy find outline',
+  let g:_spacevim_mappings.f.f = ['Leaderf function',
+        \ 'fuzzy find function in current buffer',
         \ [
-        \ '[Leader f o] is to fuzzy find outline',
+        \ '[Leader f f] is to fuzzy find function',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
@@ -567,6 +494,154 @@ function! s:defind_fuzzy_finder() abort
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
+
+  nnoremap <silent> <Leader>fh :Leaderf help<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.h = ['Leaderf help',
+        \ 'fuzzy find vim help documents',
+        \ [
+        \ '[Leader f d] is to fuzzy find vim help documents installed in SpaceVim',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fc :LeaderfCommand<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.c = ['LeaderfCommand',
+        \ 'fuzzy find vim command',
+        \ [
+        \ '[Leader f c] is to fuzzy find vim command',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fF  :<C-u>Leaderf function --all<CR>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.F = ['Leaderf function',
+        \ 'fuzzy find function in all buffers',
+        \ [
+        \ '[Leader f f] is to fuzzy find function',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>ft :Leaderf bufTag<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.t = ['Leaderf bufTag',
+        \ 'fuzzy find tags in current buffer ',
+        \ [
+        \ '[Leader f t] is to fuzzy find tags in current buffer',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fT :Leaderf bufTag --all<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.T = ['Leaderf bufTag --all',
+        \ 'fuzzy find tags in all buffer ',
+        \ [
+        \ '[Leader f T] is to fuzzy find tags in all buffer',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fg :Leaderf gtags --all --result ctags-mod<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.g = ['Leaderf gtags --all --result ctags-mod',
+        \ 'fuzzy find gtags in project directory',
+        \ [
+        \ '[Leader f g] is to fuzzy find gtags in project directory',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>for :Leaderf neomru<CR>
+  let g:_spacevim_mappings.f.o = {'name' : '+Open file'}
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.o.r = ['Leaderf neomru',
+        \ 'open recent file',
+        \ [
+        \ '[Leader f o r] is to fuzzy find recent file',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fod :exe "Leaderf file ".expand("%:p:h")<CR>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.o.d = ['Leaderf file',
+        \ 'open file in current directory',
+        \ [
+        \ '[Leader f o d] is to fuzzy find recent directory',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fop :exe 'Leaderf file --fullPath ' . SpaceVim#plugins#projectmanager#current_root()<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.o.p = ['Leaderf file --fullPath',
+        \ 'open file in current Project directory',
+        \ [
+        \ '[Leader f o p] is to fuzzy find recent project directory',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fof :LeaderfFile 
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.o.f = ['LeaderfFile',
+        \ 'open file in specified Project directory',
+        \ [
+        \ '[Leader f o f] is to fuzzy find recent project directory',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fu :Leaderf unicode<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.u = ['Leaderf unicode',
+        \ 'open unicode tab to insert',
+        \ [
+        \ '[Leader f u] is to fuzzy find unicode',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+  nnoremap <silent> <Leader>fb :Leaderf buffer<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.b = ['Leaderf buffer',
+        \ 'find list buffers',
+        \ [
+        \ '[Leader f u] is to fuzzy find list buffers',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+let g:Lf_GtagsAutoGenerate = 1
+let g:Lf_WindowHeight = 0.3
+let g:Lf_CacheDirectory = $HOME . '/.cache/SpaceVim/'
+let g:Lf_RootMarkers = ['.root/', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', '.SpaceVim.d/']
+let g:Lf_WildIgnore = {
+        \ 'dir': ['.svn', '.git', '.root'],
+        \ 'file': ['*.bak', '*.save', '*.o', '*.so']
+        \}
+let g:_spacevim_mappings_g['D'] = ['call feedkeys("gD", "n")', 'go to definition by gtags']
+nnoremap <silent> gD :Leaderf! gtags -d  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
+let g:_spacevim_mappings_g['R'] = ['call feedkeys("gR", "n")', 'go to reference by gtags']
+nnoremap <silent> gR :Leaderf! gtags -r  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
+let g:_spacevim_mappings_g['S'] = ['call feedkeys("gS", "n")', 'go to symbols by gtags']
+nnoremap <silent> gS :Leaderf! gtags -s  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
+
 endfunction
 
 function! s:accept_mru(line) abort

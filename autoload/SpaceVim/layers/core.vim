@@ -31,20 +31,44 @@ function! SpaceVim#layers#core#plugins() abort
     call add(plugins, [g:_spacevim_root_dir . 'bundle/defx-icons',{'merged' : 0}])
   endif
 
-  if !g:spacevim_vimcompatible
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/clever-f.vim', {'merged' : 0}])
-  endif
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdcommenter', { 'loadconf' : 1, 'merged' : 0}])
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/clever-f.vim', {'on_map':['<Plug>(clever-f-f)', '<Plug>(clever-f-F)' ], 'merged' : 0}])
+  let g:clever_f_ignore_case = 1
+  let g:clever_f_smart_case = 1
+  let g:clever_f_fix_key_direction = 1
+  omap F <Plug>(clever-f-F)
+  nmap F <Plug>(clever-f-F)
+  xmap F <Plug>(clever-f-F)
+  omap f <Plug>(clever-f-f)
+  nmap f <Plug>(clever-f-f)
+  xmap f <Plug>(clever-f-f)
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdcommenter', { 'on_map': ['<Plug>Comment', '<Plug>NERDCommenter',], 'loadconf' : 1, 'merged' : 0}])
 
   if exists('*matchaddpos')
+    let g:matchup_matchparen_stopline = 56
+    let g:matchup_delim_stopline = 56
     call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-matchup', {'merged' : 0}])
   endif
   call add(plugins, [g:_spacevim_root_dir . 'bundle/gruvbox', {'loadconf' : 1, 'merged' : 0}])
   call add(plugins, [g:_spacevim_root_dir . 'bundle/open-browser.vim', {
-        \ 'merged' : 0,
+        \'on_cmd' : ['OpenBrowserSmartSearch', 'OpenBrowser',
+        \ 'OpenBrowserSearch'],
+        \'on_map' : '<Plug>(openbrowser-',
         \ 'loadconf' : 1,
         \}])
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-grepper' ,              { 'on_cmd' : 'Grepper',
+        " If it looks like URI, Open URI under cursor.
+        " Otherwise, Search word under cursor.
+        nmap gss <Plug>(openbrowser-smart-search)
+        " If it looks like URI, Open selected URI.
+        " Otherwise, Search selected word.
+        vmap gss <Plug>(openbrowser-smart-search)
+        " let g:_spacevim_mappings.s = {'name' : '+Search by OpenBrowser'}
+        vnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
+        nnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
+        vnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
+        nnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
+        vnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
+        nnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-grepper' , { 'on_cmd' : 'Grepper',
         \ 'loadconf' : 1} ])
   return plugins
 endfunction
@@ -92,7 +116,7 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> ]p p
 
   " Select last paste
-  nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
+  " nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
 
   call SpaceVim#mapping#space#def('nnoremap', ['f', 's'], 'write', 'save-current-file', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'S'], 'wall', 'save-all-files', 1)
@@ -107,6 +131,8 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['j', '$'], 'm`g_', 'jump-to-end-of-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'b'], '<C-o>', 'jump-backward', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'f'], '<C-i>', 'jump-forward', 0)
+  nmap <c-o> [SPC]jb
+  nmap <c-p> [SPC]jf
 
   " file tree key bindings
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'd'], 'call call('
@@ -117,18 +143,19 @@ function! SpaceVim#layers#core#config() abort
         \ 'split-explore-current-directory', 1)
 
   " call SpaceVim#mapping#space#def('nmap', ['j', 'j'], '<Plug>(easymotion-overwin-f)', 'jump to a character', 0)
+  let g:EasyMotion_smartcase = 1
   call SpaceVim#mapping#space#def('nmap', ['j', 'j'], '<Plug>(better-easymotion-overwin-f)', 'jump-or-select-to-a-character', 0, 1)
   nnoremap <silent> <Plug>(better-easymotion-overwin-f) :call <SID>better_easymotion_overwin_f(0)<Cr>
   xnoremap <silent> <Plug>(better-easymotion-overwin-f) :<C-U>call <SID>better_easymotion_overwin_f(1)<Cr>
   call SpaceVim#mapping#space#def('nmap', ['j', 'J'], '<Plug>(easymotion-overwin-f2)', 'jump-to-suite-of-two-characters', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'k'], 'j==', 'goto-next-line-and-indent', 0)
-  " call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(easymotion-overwin-line)', 'jump to a line', 0)
-  call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(better-easymotion-overwin-line)', 'jump-or-select-to-a-line', 0, 1)
+  call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(easymotion-overwin-line)', 'jump to a line', 0)
+  " call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(better-easymotion-overwin-line)', 'jump-or-select-to-a-line', 0, 1)
   nnoremap <silent> <Plug>(better-easymotion-overwin-line) :call <SID>better_easymotion_overwin_line(0)<Cr>
   xnoremap <silent> <Plug>(better-easymotion-overwin-line) :<C-U>call <SID>better_easymotion_overwin_line(1)<Cr>
-  call SpaceVim#mapping#space#def('nmap', ['j', 'v'], '<Plug>(easymotion-overwin-line)', 'jump-to-a-line', 0)
+  " call SpaceVim#mapping#space#def('nmap', ['j', 'v'], '<Plug>(easymotion-overwin-line)', 'jump-to-a-line', 0)
   call SpaceVim#mapping#space#def('nmap', ['j', 'w'], '<Plug>(easymotion-overwin-w)', 'jump-to-a-word', 0)
-  call SpaceVim#mapping#space#def('nmap', ['j', 'q'], '<Plug>(easymotion-overwin-line)', 'jump-to-a-line', 0)
+  " call SpaceVim#mapping#space#def('nmap', ['j', 'q'], '<Plug>(easymotion-overwin-line)', 'jump-to-a-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'n'], "i\<cr>\<esc>", 'sp-newline', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'o'], "i\<cr>\<esc>k$", 'open-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 's'], 'call call('
@@ -259,6 +286,8 @@ function! SpaceVim#layers#core#config() abort
         \ ]
         \ ]
         \ , 1)
+  nmap + [SPC]n+
+  nmap - [SPC]n-
   let g:vimproc#download_windows_dll = 1
   " call SpaceVim#mapping#space#def('nnoremap', ['p', 't'], 'call SpaceVim#plugins#projectmanager#current_root()', 'find-project-root', 1)
   let g:_spacevim_mappings_space.p.t = {'name' : '+Tasks'}
