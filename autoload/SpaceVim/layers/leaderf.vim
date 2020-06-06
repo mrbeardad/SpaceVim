@@ -202,17 +202,6 @@ function! SpaceVim#layers#leaderf#config() abort
   nmap <Space>h<Space> [SPC]h[SPC]
 
   let lnum = expand('<slnum>') + s:lnum - 1
-  call SpaceVim#mapping#space#def('nnoremap', ['T', 's'], 'Leaderf colorscheme',
-        \ ['fuzzy find colorschemes',
-        \ [
-        \ 'SPC T s is to fuzzy find colorschemes',
-        \ '',
-        \ 'Definition: ' . s:filename . ':' . lnum,
-        \ ]
-        \ ],
-        \ 1)
-
-  let lnum = expand('<slnum>') + s:lnum - 1
   call SpaceVim#mapping#space#def('nnoremap', ['h', 'i'], 'LeaderfHelpCword',
         \ ['get help with the symbol at point',
         \ [
@@ -495,6 +484,19 @@ function! s:defind_fuzzy_finder() abort
         \ ]
         \ ]
 
+  nnoremap <silent> <Leader>fC :Leaderf colorscheme<cr>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f.C = ['Leaderf colorscheme',
+        \ 'fuzzy find  colorscheme',
+        \ [
+        \ '[Leader f C] is to fuzzy find colorscheme installed in SpaceVim',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+
+
+  let lnum = expand('<slnum>') + s:lnum - 1
   nnoremap <silent> <Leader>fh :Leaderf help<cr>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
   let g:_spacevim_mappings.f.h = ['Leaderf help',

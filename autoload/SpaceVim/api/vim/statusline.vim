@@ -16,6 +16,7 @@ let s:self.__buffer = SpaceVim#api#import('vim#buffer')
 let s:self.__cmp = SpaceVim#api#import('vim#compatible')
 
 function! s:self.check_width(len, sec, winwidth) abort
+  " alway show cursor position
   if a:sec =~ '%l/%L'
     return 1
   else

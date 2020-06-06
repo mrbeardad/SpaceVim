@@ -11,10 +11,8 @@ function! SpaceVim#layers#tools#plugins() abort
   call add(plugins, ['tpope/vim-scriptease',             { 'merged' : 0}])
   call add(plugins, ['lymslive/vimloo',                  { 'merged' : 0}])
   call add(plugins, ['lymslive/vnote',                   { 'depends' : 'vimloo', 'on_cmd' : ['NoteBook','NoteNew','NoteEdit', 'NoteList', 'NoteConfig', 'NoteIndex', 'NoteImport']}])
-  " call add(plugins, ['junegunn/rainbow_parentheses.vim', { 'on_cmd' : 'RainbowParentheses'}])
   call add(plugins, ['luochen1990/rainbow',              { 'merged' : 0}])
   call add(plugins, ['mbbill/fencview',                  { 'on_cmd' : 'FencAutoDetect'}])
-  " call add(plugins, ['simnalamburt/vim-mundo',           { 'on_cmd' : 'MundoToggle'}])
   call add(plugins, ['mbbill/undotree',                  { 'on_cmd' : 'UndotreeToggle'}])
   call add(plugins, ['wsdjeg/vim-cheat',                 { 'on_cmd' : 'Cheat'}])
   call add(plugins, ['wsdjeg/Mysql.vim',                 { 'on_cmd' : 'SQLGetConnection'}])
@@ -50,6 +48,10 @@ function! SpaceVim#layers#tools#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['w', 'c'],
         \ 'Goyo', 'centered-buffer-mode', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['w', 'C'],
+        \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['a', 'r'],
+        \ 'Goyo', 'centered-buffer-mode', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['a', 'R'],
         \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
 
   " bootmark key binding
@@ -93,16 +95,6 @@ function! SpaceVim#layers#tools#config() abort
   \		'css': 0,
   \	}
   \}
-  " augroup rainbow_lisp
-  "   autocmd!
-  "   autocmd VimEnter * RainbowParentheses
-  "   autocmd FileType vimcalc setlocal nonu nornu nofoldenable | inoremap <silent> <buffer> <c-d> <c-[>:q<cr>
-  "         \ | nnoremap <silent> <buffer> q :bdelete<cr>
-  " augroup END
-  " let g:rainbow#max_level = 16
-  " let g:rainbow#pairs = [['(', ')'], ['[', ']'],['{','}']]
-  " " List of colors that you do not want. ANSI code or #RRGGBB
-  " let g:rainbow#blacklist = [233, 234]
   if maparg('<C-_>', 'v') ==# ''
     vnoremap <silent> <C-_> <Esc>:Ydv<CR>
   endif

@@ -59,7 +59,7 @@ lockvar g:spacevim_version
 " >
 "   let g:spacevim_default_indent = 2
 " <
-let g:spacevim_default_indent          = 2
+let g:spacevim_default_indent          = 4
 ""
 " In Insert mode: Use the appropriate number of spaces to insert a <Tab>
 let g:spacevim_expand_tab              = 1
@@ -750,7 +750,7 @@ let g:spacevim_colorscheme_bg             = 'dark'
 " >
 "   let g:spacevim_colorscheme_default = 'other_color'
 " <
-let g:spacevim_colorscheme_default     = 'default-plus'
+let g:spacevim_colorscheme_default     = 'desert'
 ""
 " @section filemanager, options-filemanager
 " @parentsection options
@@ -1108,8 +1108,7 @@ let g:spacevim_smartcloseignoreft      = [
       \ 'HelpDescribe',
       \ 'VebuggerShell',
       \ 'VebuggerTerminal',
-      \ 'SpaceVimTabsManager',
-      \ 'Input'
+      \ 'SpaceVimTabsManager'
       \ ]
 let g:_spacevim_altmoveignoreft         = ['Tagbar' , 'vimfiler']
 let g:spacevim_enable_javacomplete2_py = 0

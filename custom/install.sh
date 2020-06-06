@@ -45,10 +45,11 @@ makedir ~/.config
 backup ~/.config/nvim
 ln -s ~/.SpaceVim ~/.config/nvim
 
+# 安装合成的NerdCode字体
 makedir ~/.local/share/fonts/NerdCode
 (
     cd ~/.local/share/fonts/NerdCode || exit 1
-    curl -o ~/Downloads/NerdCode.tar.xz https://github.com/mrbeardad/DotFiles/raw/master/fonts/NerdCode.tar.xz
+    curl -o ~/Downloads/NerdCode.tar.xz https://github.com/mrbeardad/DotFiles/raw/master/fonts/NerdCode.tar.xz || exit 1
     tar -Jxvf ~/Downloads/NerdCode.tar.xz
     echo -e "\032[32mInstalling NerdCode fonts ...\032[m"
     mkfontdir
@@ -56,7 +57,16 @@ makedir ~/.local/share/fonts/NerdCode
     fc-cache -f
 )
 
-echo -e "\033[32m [Note]:\033[m Now, startup your neovim and execute command \036[36m:SPInstall\036[m to install all plugins.
+# 安装cppman数据缓存
+    makedir ~/.cache/cppman/cplusplus.com
+    (
+        cd /tmp || exit 1
+        curl -o ~/Downloads/cppman_db.tar.gz https://github.com/mrbeardad/DotFiles/raw/master/cppman/cppman_db.tar.gz || exit 1
+        tar -zxf ~/Downloads/cppman_db.tar.gz
+        cp -vn cppplusplus.com/* ~/.cache/cppman/cplusplus.com
+    )
+
+echo -e "\033[32m [Note]:\033[m Now, startup your neovim and execute command \033[36m:SPInstall\033[m to install all plugins.
 When all the plug-ins are installed, you need to do one things following :
 \033[33mcp -f ~/.SpaceVim/custom/*.vim ~/.cache/vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/
     \033[38;5;249m# This is to make ALE work better with cppcheck and clang-tidy"

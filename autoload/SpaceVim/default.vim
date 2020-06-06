@@ -137,6 +137,31 @@ function! SpaceVim#default#options() abort
 
   set foldtext=SpaceVim#default#Customfoldtext()
 
+  set termguicolors
+  set tabstop=4
+  set softtabstop=4
+  set shiftwidth=4
+  set expandtab
+  set list
+  set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶
+  set foldmethod=indent
+  set nofoldenable
+  set showcmd
+  set noruler
+  set noshowmode
+  set virtualedit=block,onemore
+  set ignorecase
+  set smartcase
+  set nowrapscan
+  set scrolloff=2
+  set noautoread
+  set autochdir
+  set belloff=
+  set noswapfile
+  set nobackup
+  set path+=/usr/include/c++/*/,/usr/include/boost/,.
+  set wildignore-=*/tmp/*
+
 endfunction
 "}}}
 
@@ -152,14 +177,32 @@ function! SpaceVim#default#layers() abort
   call SpaceVim#layers#load('core#tabline')
 endfunction
 
-function! SpaceVim#default#keyBindings() abort
-  " if g:spacevim_enable_insert_leader
-  "   inoremap <silent> <Leader><Tab> <C-r>=MyLeaderTabfunc()<CR>
-  " endif
+function! Paste_from_0reg(pos)
+  let tmp = @0
+  if substitute(tmp, '\n', '', '') != tmp
+    exe 'normal '.a:pos
+  elseif a:pos ==# 'P'
+    s/^\(\s*\)/\1\1/
+    nohl
+    exe "normal \<up>\"0p\<down>"
+  else
+    s/^\(\s*\)\(.*\)/\1\2\1/
+    nohl
+    exe "normal \"0p\<up>"
+  endif
+endfunction
 
+function! SpaceVim#default#keyBindings() abort
   " yank and paste
   if has('unnamedplus')
     xnoremap <Leader>y "+y
+    nnoremap <silent> , yl
+    nnoremap <silent> Y y$
+    nnoremap <leader>y "+y
+    nnoremap <leader>Y "+y$
+    nnoremap <leader>o od<c-c>v"+p
+    nnoremap <leader>O Od<c-c>v"+p
+    let g:_spacevim_mappings.o = ['normal! "+p', 'paste in next line']
     nnoremap <Leader>p "+p
     let g:_spacevim_mappings.p = ['normal! "+p', 'paste after here']
     nnoremap <Leader>P "+P
@@ -175,6 +218,11 @@ function! SpaceVim#default#keyBindings() abort
     xnoremap <Leader>p "*p
     xnoremap <Leader>P "*P
   endif
+
+  nnoremap [p "0p
+  nnoremap [P "0P
+  nnoremap <silent>[O :call Paste_from_0reg('P')<cr>
+  nnoremap <silent>[o :call Paste_from_0reg('p')<cr>
 
   xnoremap <silent><Leader>Y :call SpaceVim#plugins#pastebin#paste()<CR>
   " call SpaceVim#mapping#guide#register_displayname(':call SpaceVim#plugins#pastebin#paste()<CR>', 'copy to pastebin')
@@ -201,15 +249,37 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Clear quickfix list',
         \ '',
         \ 'Clear quickfix')
-let g:_spacevim_mappings.m = ['', 'quickly modify your macros', [ '', '', '', ] ]
-nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
 
+
+  nnoremap <silent> <leader>n :bn<cr>
+  let g:_spacevim_mappings.n = ['', 'next buffer']
+  nnoremap <silent> <leader>b :bp<cr>
+  let g:_spacevim_mappings.b = ['', 'previous buffer']
+
+  nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
+  let g:_spacevim_mappings.m = ['', 'quickly modify your macros']
+
+  nnoremap <silent> <Leader>h :nohl<CR>
+  let g:_spacevim_mappings.h = ['', 'highlight turnoff']
+
+  function! BufferDelete()
+    let bufNr = buffer_number()
+    bp
+    exe 'bd '. bufNr
+  endfunction
+  nnoremap <silent><c-w>x :call BufferDelete()<cr>
+  nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
+  nnoremap <silent><tab> :winc w<cr>
+  nnoremap <silent><s-tab> :winc p<cr>
+
+
+  vnoremap <c-a> 0
+  vnoremap <c-e> $
   " Use Ctrl+* to jump between windows
   nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
   nnoremap <silent><C-Left>  :<C-u>wincmd h<CR>
   nnoremap <silent><C-Up>    :<C-u>wincmd k<CR>
   nnoremap <silent><C-Down>  :<C-u>wincmd j<CR>
-
 
   "]<End> or ]<Home> move current line to the end or the begin of current buffer
   nnoremap <silent>]<End> ddGp``
@@ -218,26 +288,39 @@ nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string
   vnoremap <silent>]<Home> dggP``
 
 
+  inoremap <c-a> <home>
+  inoremap <c-e> <end>
+  inoremap <c-d> <c-c>10<c-e>i<right>
+  inoremap <c-b> <c-c>10<c-y>i<right>
+  inoremap <c-g> <c-c>%i
+  inoremap <c-u> <c-c><right>d^i
+  inoremap <c-k> <c-c><right>d$i
+  inoremap <c-o> <end><cr>
+  inoremap <c-y> <c-r>"
+  inoremap <c-l> <right><bs>
+  inoremap <silent><c-c> <c-c>:set cul<cr>
+
+  nnoremap <silent> <c-d> 18<c-e>
+  nnoremap <silent> <c-b> 18<c-y>
+  nnoremap <silent> <c-a> 0
+  nnoremap <silent> <c-e> $
+  nnoremap <expr> n  'Nn'[v:searchforward]
+  nnoremap <expr> N  'nN'[v:searchforward]
+
   "Ctrl+Shift+Up/Down to move up and down
   nnoremap <silent><C-S-Down> :m .+1<CR>==
   nnoremap <silent><C-S-Up> :m .-2<CR>==
-  inoremap <silent><C-S-Down> <Esc>:m .+1<CR>==gi
-  inoremap <silent><C-S-Up> <Esc>:m .-2<CR>==gi
+  inoremap <silent><C-S-Down> <C-C>:m .+1<CR>==gi
+  inoremap <silent><C-S-Up> <C-C>:m .-2<CR>==gi
   vnoremap <silent><C-S-Down> :m '>+1<CR>gv=gv
   vnoremap <silent><C-S-Up> :m '<-2<CR>gv=gv
 
   " Start new line
-  inoremap <S-Return> <C-o>o
+  inoremap <c-o> <c-c>o
 
   " Improve scroll, credits: https://github.com/Shougo
   nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
         \ 'zt' : (winline() == &scrolloff + 1) ? 'zb' : 'zz'
-  noremap <expr> <C-f> max([winheight(0) - 2, 1])
-        \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "H")
-  noremap <expr> <C-b> max([winheight(0) - 2, 1])
-        \ ."\<C-u>".(line('w0') <= 1 ? "H" : "L")
-  noremap <expr> <C-e> (line("w$") >= line('$') ? "j" : "3\<C-e>")
-  noremap <expr> <C-y> (line("w0") <= 1         ? "k" : "3\<C-y>")
 
   " Select blocks after indenting
   xnoremap < <gv
@@ -253,9 +336,6 @@ nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string
   nnoremap <silent><Down> gj
   nnoremap <silent><Up> gk
 
-  " Navigate window
-  nnoremap <silent><C-q> <C-w>
-
 
 
   " Fast saving
@@ -264,13 +344,6 @@ nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string
   cnoremap <C-s> <C-u>w<CR>
   cnoremap <c-a> <c-b>
 
-  " Tabs
-  " nnoremap <silent>g0 :<C-u>tabfirst<CR>
-  " nnoremap <silent>g$ :<C-u>tablast<CR>
-  " nnoremap <silent><expr> gr tabpagenr('#') > 0 ? ':exe "tabnext " . tabpagenr("#")<cr>' : ''
-
-  " Remove spaces at the end of lines
-  " nnoremap <silent> ,<Space> :<C-u>silent! keeppatterns %substitute/\s\+$//e<CR>
 
   " C-r: Easier search and replace
   xnoremap <C-r> :<C-u>call <SID>VSetSearch()<CR>:,$s/<C-R>=@/<CR>//gc<left><left><left>

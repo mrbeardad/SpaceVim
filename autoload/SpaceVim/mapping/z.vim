@@ -104,8 +104,8 @@ function! SpaceVim#mapping#z#init() abort "{{{
     let g:_spacevim_mappings_z['z'] = ['call feedkeys("zz", "n")', 'smart scroll']
     nnoremap zz zz
     let g:_spacevim_mappings_z['<Up>'] = ['normal <c-y>', 'scroll up one line']
-    nnoremap z<up> <c-y>
+    nnoremap z<up> <c-y><c-y>
     let g:_spacevim_mappings_z['<Down>'] = ['normal <c-e>', 'scroll down one line']
-    nnoremap z<down> <c-e>
+    nnoremap z<down> <c-e><c-e>
 
 endfunction "}}}

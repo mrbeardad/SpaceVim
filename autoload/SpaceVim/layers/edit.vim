@@ -68,14 +68,14 @@ function! SpaceVim#layers#edit#config() abort
   nmap <leader>tt <Plug>table-mode-tableize
   xmap <leader>tt <Plug>table-mode-tableize
   nnoremap <silent><leader>tm :call tablemode#Toggle()<cr>
+  inoremap <silent><m-m> <c-c>:call tablemode#Toggle()<cr>a
   "noremap <SPACE> <Plug>(wildfire-fuel)
-  vmap <C-v> <Plug>(wildfire-water)
+  vnoremap <C-SPACE> <Plug>(wildfire-water)
   let g:wildfire_objects = ["i'", 'i"', 'i)', 'i]', 'i}', 'ip', 'it']
 
   " osyo-manga/vim-jplus {{{
   nmap <silent> J <Plug>(jplus)
   vmap <silent> J <Plug>(jplus)
-  nmap ; [SPC]jJ
   " }}}
 
   let g:_spacevim_mappings_space.x = {'name' : '+Text'}

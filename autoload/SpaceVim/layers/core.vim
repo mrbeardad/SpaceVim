@@ -32,7 +32,6 @@ function! SpaceVim#layers#core#plugins() abort
   endif
 
   call add(plugins, [g:_spacevim_root_dir . 'bundle/clever-f.vim', {'on_map':['<Plug>(clever-f-f)', '<Plug>(clever-f-F)' ], 'merged' : 0}])
-  let g:clever_f_ignore_case = 1
   let g:clever_f_smart_case = 1
   let g:clever_f_fix_key_direction = 1
   omap F <Plug>(clever-f-F)
@@ -82,8 +81,8 @@ function! SpaceVim#layers#core#config() abort
   let g:matchup_matchparen_status_offscreen = 0
   " Unimpaired bindings
   " Quickly add empty lines
-  nnoremap <silent> [<Space>  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>
-  nnoremap <silent> ]<Space>  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
+  nnoremap <silent> [<Space>  :<c-u>put! =repeat(nr2char(10), v:count1)<cr><down>
+  nnoremap <silent> ]<Space>  :<c-u>put =repeat(nr2char(10), v:count1)<cr><up>
 
   "]e or [e move current line ,count can be used
   nnoremap <silent>[e  :<c-u>execute 'move -1-'. v:count1<cr>
@@ -111,10 +110,6 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> [t :tabprevious<cr>
   nnoremap <silent> ]t :tabnext<cr>
 
-  " [p or ]p for p and P
-  nnoremap <silent> [p P
-  nnoremap <silent> ]p p
-
   " Select last paste
   " nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
 
@@ -131,8 +126,8 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['j', '$'], 'm`g_', 'jump-to-end-of-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'b'], '<C-o>', 'jump-backward', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'f'], '<C-i>', 'jump-forward', 0)
-  nmap <c-o> [SPC]jb
-  nmap <c-p> [SPC]jf
+  nmap <c-o> <c-o>
+  nmap <c-p> <c-i>
 
   " file tree key bindings
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'd'], 'call call('
@@ -148,6 +143,7 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> <Plug>(better-easymotion-overwin-f) :call <SID>better_easymotion_overwin_f(0)<Cr>
   xnoremap <silent> <Plug>(better-easymotion-overwin-f) :<C-U>call <SID>better_easymotion_overwin_f(1)<Cr>
   call SpaceVim#mapping#space#def('nmap', ['j', 'J'], '<Plug>(easymotion-overwin-f2)', 'jump-to-suite-of-two-characters', 0)
+  nmap ; [SPC]jJ
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'k'], 'j==', 'goto-next-line-and-indent', 0)
   call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(easymotion-overwin-line)', 'jump to a line', 0)
   " call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(better-easymotion-overwin-line)', 'jump-or-select-to-a-line', 0, 1)
@@ -194,6 +190,7 @@ function! SpaceVim#layers#core#config() abort
         \ 'delete-the-selected-buffer', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', '<C-d>'], 'call SpaceVim#mapping#clear_buffers()', 'kill-other-buffers', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'c'], 'call SpaceVim#mapping#clear_saved_buffers()', 'clear-all-saved-buffers', 1)
+  nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'e'], 'call call('
         \ . string(s:_function('s:safe_erase_buffer')) . ', [])',
         \ 'safe-erase-buffer', 1)
@@ -247,6 +244,7 @@ function! SpaceVim#layers#core#config() abort
     call SpaceVim#mapping#space#def('nnoremap', ['f', 'T'], 'Defx -no-toggle', 'show-file-tree', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['f', 'o'], "Defx  -no-toggle -search=`expand('%:p')` `stridx(expand('%:p'), getcwd()) < 0? expand('%:p:h'): getcwd()`", 'open-file-tree', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['b', 't'], 'exe "Defx -no-toggle " . fnameescape(expand("%:p:h"))', 'show-file-tree-at-buffer-dir', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['a', 'f'], 'exe "Defx -no-toggle " . fnameescape(expand("%:p:h"))', 'show-file-tree-at-buffer-dir', 1)
   endif
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'y'], 'call SpaceVim#util#CopyToClipboard()', 'show-and-copy-buffer-filename', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'Y'], 'call SpaceVim#util#CopyToClipboard(1)', 'show-and-copy-buffer-filename', 1)

@@ -17,6 +17,40 @@ else
   let g:ale_lint_on_text_changed = 'never'
 endif
 
+let ale_and_quickrun_cpp_default_compile_flag = get(g:, 'ale_and_quickrun_cpp_default_compile_flag', '-std=c++20')
+let g:ale_linters = {
+      \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
+      \   'c': ['gcc', 'cppcheck'],
+      \   'sh': ['shellcheck'],
+      \   'python': ['flake8', 'pylint'],
+      \}
+let g:ale_linters_explicit = 1
+let g:ale_sign_column_always = 1
+let g:ale_disable_lsp = 1
+let g:ale_completion_enabled = 0
+let g:ale_set_highlights = 1
+let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 0
+let g:ale_cpp_gcc_options = '-Wall -Wextra -O2 '. g:ale_and_quickrun_cpp_default_compile_flag
+let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_and_quickrun_cpp_default_compile_flag
+let g:ale_cpp_clangtidy_options = g:ale_and_quickrun_cpp_default_compile_flag
+" let g:ale_cpp_clangtidy_options = '-extra-arg="-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-pedantic -Wno-missing-prototypes -Wno-padded -Wno-old-style-cast -O2 '.g:ale_and_quickrun_cpp_compile_std.'"'
+let g:ale_sign_error = '❌' " ✗
+let g:ale_sign_warning = '⚡'
+let g:ale_sign_info = '🛈 ' " ‼
+let g:ale_echo_msg_error_str = '❌'
+let g:ale_echo_msg_warning_str = '⚡'
+let g:ale_echo_msg_info_str = '🛈 '
+hi! clear SpellBad
+hi! clear SpellCap
+hi! clear SpellRare
+hi! SpellBad gui=undercurl guisp=red
+hi! SpellCap gui=undercurl guisp=yellow
+hi! SpellRare gui=undercurl guisp=magenta
+
 let g:ale_cpp_clangtidy_executable = '/opt/bin/nop.sh'
 let s:ale_lint_count = 0
 let g:ale_clangtidy_period = get(g:, 'ale_clangtidy_period', 6)

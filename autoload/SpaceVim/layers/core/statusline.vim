@@ -331,7 +331,6 @@ endfunction
 " enable_statusline_bfpath true
 function! s:buffer_name() abort
   if get(b:, '_spacevim_statusline_showbfname', 0) == 1 || g:spacevim_enable_statusline_bfpath
-    " return  ' ' . bufname('%')
     let fp_name = fnamemodify(expand('%:p'), ':s?'.SpaceVim#plugins#projectmanager#current_root().'/??')
     if &readonly == 1
       return  "🔒️ " . fp_name
@@ -619,6 +618,7 @@ function! SpaceVim#layers#core#statusline#init() abort
 endfunction
 
 nnoremap <silent><c-l> <c-l>:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
+nnoremap <silent><c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<CR>
 let s:colors_template = SpaceVim#mapping#guide#theme#gruvbox#palette()
 
 function! SpaceVim#layers#core#statusline#def_colors() abort

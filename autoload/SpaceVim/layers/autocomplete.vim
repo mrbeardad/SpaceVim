@@ -37,7 +37,6 @@ function! SpaceVim#layers#autocomplete#plugins() abort
         \ ]
   call add(plugins, [g:_spacevim_root_dir . 'bundle/deoplete-dictionary',        { 'merged' : 0}])
   if g:spacevim_autocomplete_parens
-    " call add(plugins, ['Raimondi/delimitMate',        { 'merged' : 0}])
     call add(plugins, ['jiangmiao/auto-pairs',        { 'merged' : 0}])
     let g:AutoPairsMapCR = 0
     let g:AutoPairsMultilineClose = 0
@@ -51,12 +50,11 @@ function! SpaceVim#layers#autocomplete#plugins() abort
           \ 'loadconf' : 1,
           \ 'on_cmd' : 'NeoSnippetEdit'}])
   elseif g:spacevim_snippet_engine ==# 'ultisnips'
-    call add(plugins, ['SirVer/ultisnips',{ 'on_ft': 'snippets', 'on_func': 'UltiSnips#ExpandSnippetOrJump', 'loadconf_before' : 1,
+    call add(plugins, ['SirVer/ultisnips',{ 'on_ft': ['snippets'], 'on_func': 'UltiSnips#ExpandSnippetOrJump', 'loadconf_before' : 1,
           \ 'merged' : 0}])
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'
     call add(plugins, ['ycm-core/YouCompleteMe',            { 'build' : './install.py --clangd-completer', 'loadconf_before' : 1, 'merged' : 0}])
-    " source ~/.SpaceVim/config/plugins_before/YouCompleteMe.vim " clangd会coredump，使用aur中的ycm可以直接使用libclang，只是缓兵之计
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
     call add(plugins, ['Shougo/neocomplete', {
           \ 'on_event' : 'InsertEnter',
@@ -117,16 +115,17 @@ function! SpaceVim#layers#autocomplete#plugins() abort
   return plugins
 endfunction
 
+function! Ycm_and_AutoPair_Return()
+  if expand('<cword>') == '{}' || expand('<cword>') == '()'
+    return "\<CR>"
+  else
+    exe 'return '. substitute(substitute(execute('imap <s-cr>'),'^.*<SNR>','<SNR>', ''),'S-CR','CR','')
+  endif
+endfunction
+inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr><c-r>=AutoPairsReturn()<cr>
+
 
 function! SpaceVim#layers#autocomplete#config() abort
-  " if g:spacevim_autocomplete_parens
-  "   imap <expr>(
-  "         \ pumvisible() ?
-  "         \ complete_parameter#pre_complete("()") :
-  "         \ (len(maparg('<Plug>delimitMate(', 'i')) == 0) ?
-  "         \ "\<Plug>delimitMate(" :
-  "         \ '('
-  " endif
 
   "mapping
   if s:tab_key_behavior ==# 'smart'
@@ -174,7 +173,7 @@ function! SpaceVim#layers#autocomplete#config() abort
           \ neosnippet#expandable() ?
           \ "\<Plug>(neosnippet_expand)" : ""
   elseif g:spacevim_snippet_engine ==# 'ultisnips'
-    inoremap <silent> <M-/> <C-R>=UltiSnips#ExpandSnippetOrJump()<cr>
+    inoremap <silent> <M-/> <C-C><right>:call UltiSnips#ExpandSnippetOrJump()<cr>
     vnoremap <silent> <M-/> <C-C>a
   endif
 

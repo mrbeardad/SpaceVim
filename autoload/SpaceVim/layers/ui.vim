@@ -32,6 +32,56 @@ function! SpaceVim#layers#ui#plugins() abort
 
 endfunction
 
+function! ToggleLinebreak()
+    if &linebreak == 1
+        setl nolinebreak
+        echo 'Linebreak Disable'
+    else
+        setl linebreak
+        echo 'Linebreak Enable'
+    endif
+endfunction
+" nnoremap <silent> <leader>l :call ToggleLinebreak()<cr>
+" call SpaceVim#mapping#space#def('nnoremap', ['t','l'], 'call ToggleLinebreak()', 'toggle linebreak',1)
+
+function! ToggleVirtuledit()
+    if &virtualedit =~ "all"
+        setl virtualedit=block,onemore
+        echo 'VirtualEdit Disable'
+    else
+        setl virtualedit=all
+        echo 'VirtualEdit Enable'
+    endif
+endfunction
+" nnoremap <silent> <leader>v :call ToggleVirtuledit()<CR>
+" call SpaceVim#mapping#space#def('nnoremap', ['t','v'], 'call ToggleVirtuledit()', 'toggle virtul edit',1)
+
+function! ToggleExpandtab()
+    if &expandtab == 1
+        setl noexpandtab
+        echo 'ExpandTab Disable'
+    else
+        setl expandtab
+        echo 'ExpandTab Enable'
+    endif
+endfunction
+" nnoremap <silent> <leader>e :call ToggleExpandtab()<CR>
+" call SpaceVim#mapping#space#def('nnoremap', ['t','e'], 'call ToggleExpandtab()', 'toggle expandtab',1)
+
+function! ToggleFoldMethod()
+    if &foldmethod != 'manual'
+        setl foldmethod=manual
+        echo 'set foldmethod=manual'
+    else
+        setl foldmethod=indent
+        echo 'set foldmethod=indent'
+    endif
+endfunction
+" nnoremap <silent> <leader>F :call ToggleFoldMethod()<cr>
+" call SpaceVim#mapping#space#def('nnoremap', ['t','f'], 'call ToggleFoldMethod()', 'toggle foldmethod',1)
+
+command! -nargs=* Rcmd :let tmp=<q-args> | put =execute(tmp)
+
 function! SpaceVim#layers#ui#config() abort
   if g:spacevim_colorscheme_bg ==# 'dark'
     let g:indentLine_color_term = get(g:, 'indentLine_color_term', 239)
@@ -55,13 +105,17 @@ function! SpaceVim#layers#ui#config() abort
   else
     noremap <silent> <F1> :TagbarToggle<CR>
   endif
-
+  nnoremap <silent><F7> :call SpaceVim#plugins#tabmanager#open()<cr>
   if !empty(g:spacevim_windows_smartclose)
     call SpaceVim#mapping#def('nnoremap <silent>', g:spacevim_windows_smartclose, ':<C-u>call SpaceVim#mapping#SmartClose()<cr>',
           \ 'smart-close-windows',
           \ 'call SpaceVim#mapping#SmartClose()')
   endif
   " Ui toggles
+  call SpaceVim#mapping#space#def('nnoremap', ['t','l'], 'call ToggleLinebreak()', 'toggle linebreak',1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t','v'], 'call ToggleVirtuledit()', 'toggle virtul edit',1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t','e'], 'call ToggleExpandtab()', 'toggle expandtab',1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t','f'], 'call ToggleFoldMethod()', 'toggle foldmethod',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', '8'], 'call call('
         \ . string(s:_function('s:toggle_fill_column')) . ', [])',
         \ 'highlight-long-lines', 1)
@@ -71,12 +125,7 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['w', '.'], 'call call('
         \ . string(s:_function('s:win_resize_transient_state')) . ', [])',
         \ 'windows-transient-state', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'c'], 'call call('
-        \ . string(s:_function('s:toggle_conceallevel')) . ', [])',
-        \ 'toggle conceallevel', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 't'], 'call SpaceVim#plugins#tabmanager#open()',
-        \ 'open-tabs-manager', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'f'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'F'], 'call call('
         \ . string(s:_function('s:toggle_colorcolumn')) . ', [])',
         \ 'fill-column-indicator', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'h'], 'call call('
@@ -113,17 +162,17 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['T', '~'], 'call call('
         \ . string(s:_function('s:toggle_end_of_buffer')) . ', [])',
         \ 'display ~ in the fringe on empty lines', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'S'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 's'], 'call call('
         \ . string(s:_function('s:toggle_spell_check')) . ', [])',
         \ 'toggle-spell-checker', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'p'], 'call call('
         \ . string(s:_function('s:toggle_paste')) . ', [])',
         \ 'toggle-paste-mode', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'l'], 'setlocal list!',
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'c'], 'setlocal list!',
         \ 'toggle-hidden-listchars', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'W'], 'setlocal wrap!',
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'w'], 'setlocal wrap!',
         \ 'toggle-wrap-line', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'w'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', '<space>'], 'call call('
         \ . string(s:_function('s:toggle_whitespace')) . ', [])',
         \ 'toggle-highlight-tail-spaces', 1)
 

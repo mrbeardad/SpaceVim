@@ -93,7 +93,13 @@ function! SpaceVim#layers#lang#c#plugins() abort
     endif
   else
     call add(plugins, ['octol/vim-cpp-enhanced-highlight', { 'merged' : 0}])
-    " call add(plugins, ['bfrg/vim-cpp-modern', { 'merged' : 0}])
+    let g:cpp_class_scope_highlight = 1
+    let g:cpp_member_variable_highlight = 1
+    let g:cpp_class_decl_highlight = 1
+    let g:cpp_concepts_highlight = 1
+    let g:cpp_posix_standard = 1
+    let g:cpp_experimental_simple_template_highlight = 1      " which works in most cases, but can be a little slow on large files
+    " let g:cpp_experimental_template_highlight = 1           " which is a faster implementation but has some corner cases where it doesn't work.
   endif
   return plugins
 endfunction
@@ -190,21 +196,36 @@ endfunction
 "================================
 " => QuickRun配置
 "================================
-" let g:QuickRun_Args = ''
-" let g:QuickRun_Redirect = ''
-" let g:QuickRun_CompileFlag = g:ale_and_quickrun_cpp_default_compile_flag
+tmap <esc> <c-\><c-n>
+tmap <c-up> <esc><c-up>
+tmap <c-down> <esc><c-down>
+tmap <c-right> <esc><c-right>
+tmap <c-left> <esc><c-left>
+tmap <c-w> <esc><c-w>
+tmap <silent><tab> <esc>:winc w<cr>
+tmap <silent><s-tab> <esc>:winc p<cr>
+tmap <c-a> <esc><home>
+tmap <c-e> <esc><end>
+tmap <c-f> <esc><c-f>
+tmap <c-b> <esc>10<c-y>
+tmap <up> <esc><up>
+tmap <down> <esc><down>
+tmap <left> <esc><left>
+tmap <right> <esc><right>
+let terminal_color_1 = '#ff5555'
+let terminal_color_2 = '#50fa7b'
+let terminal_color_3 = '#fabd2f'
+let terminal_color_4 = '#bd93f9'
+let terminal_color_5 = '#ff79c6'
+let terminal_color_6 = '#8be9fd'
+let terminal_color_7 = '#bfffff'
+
 function! SpaceVim#layers#lang#c#quickrun_do(var, str) abort
-  if a:str == ''
-    if  !call("exists",[a:var])
-      if a:var == 'b:QuickRun_cpp_CompileFlag'
-<<<<<<< Updated upstream
-        let b:QuickRun_cpp_CompileFlag = get(g:, 'ale_and_quickrun_cpp_compile_std', '-std=c++17')
-=======
-        let b:QuickRun_cpp_CompileFlag = g:ale_and_quickrun_cpp_default_compile_flag
->>>>>>> Stashed changes
-      else
-        exe 'let '.a:var.'=""'
-      endif
+  if a:str == '' && !call("exists",[a:var])
+    if a:var == 'b:QuickRun_cpp_CompileFlag'
+      let b:QuickRun_cpp_CompileFlag = get(g:, 'ale_and_quickrun_cpp_default_compile_flag', '-std=c++20')
+    else
+      exe 'let '.a:var.'=""'
     endif
     exe 'let '. a:var
   else
