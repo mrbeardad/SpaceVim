@@ -325,6 +325,15 @@ function! SpaceVim#layers#lang#c#OpenInputWin()
     call win_gotoid(originWinnr)
 endfunction
 
+function! Sort_Includes()
+  let nr = str2nr(substitute(execute("w !awk '/^\\\#include/{++cnt;} \\!/^\\\#include/{printf cnt; exit 0;}'"),'\n','','g'))
+  let line = line('.')
+  let col = col('.')
+  exe '1,'.nr.' !sort'
+  call cursor(line, col)
+endfunction
+au BufWritePre *.c,*.cpp call Sort_Includes()
+
 function! SpaceVim#layers#lang#c#TurnoffQuickrun()
     if s:bufnr != 0 && bufexists(s:bufnr)
         execute 'bd! ' . s:bufnr

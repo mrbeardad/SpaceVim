@@ -127,7 +127,7 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'b'], '<C-o>', 'jump-backward', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'f'], '<C-i>', 'jump-forward', 0)
   nmap <c-o> <c-o>
-  nmap <c-p> <c-i>
+  nmap <c-p> [SPC]jf
 
   " file tree key bindings
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'd'], 'call call('

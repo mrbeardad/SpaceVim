@@ -201,8 +201,9 @@ function! SpaceVim#default#keyBindings() abort
     nnoremap <leader>y "+y
     nnoremap <leader>Y "+y$
     nnoremap <leader>o od<c-c>v"+p
-    nnoremap <leader>O Od<c-c>v"+p
     let g:_spacevim_mappings.o = ['normal! "+p', 'paste in next line']
+    nnoremap <leader>O Od<c-c>v"+p
+    let g:_spacevim_mappings.O = ['normal! "+p', 'paste in previous line']
     nnoremap <Leader>p "+p
     let g:_spacevim_mappings.p = ['normal! "+p', 'paste after here']
     nnoremap <Leader>P "+P
@@ -219,10 +220,10 @@ function! SpaceVim#default#keyBindings() abort
     xnoremap <Leader>P "*P
   endif
 
-  nnoremap [p "0p
-  nnoremap [P "0P
-  nnoremap <silent>[O :call Paste_from_0reg('P')<cr>
-  nnoremap <silent>[o :call Paste_from_0reg('p')<cr>
+  nnoremap =p "0p
+  nnoremap =P "0P
+  nnoremap <silent>=O :call Paste_from_0reg('P')<cr>
+  nnoremap <silent>=o :call Paste_from_0reg('p')<cr>
 
   xnoremap <silent><Leader>Y :call SpaceVim#plugins#pastebin#paste()<CR>
   " call SpaceVim#mapping#guide#register_displayname(':call SpaceVim#plugins#pastebin#paste()<CR>', 'copy to pastebin')

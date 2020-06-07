@@ -37,6 +37,9 @@ cd ~/.SpaceVim
 * solarized
 ![sm](custom/solarized.png)
 
+**注**：只有设置了环境变量`DARKBG`才在启动时会随机使用gruvbox或solarized主题，否则为透明背景主题`default-plus`，
+想要启动时就开启这些主题的话，使用命令`DARKBG=1 nvim`即可，当然可以修改`init.vim`一劳永逸，将外分支注释即可
+
 ### statusline
 原版：
 ![之前statusline](custom/2020-05-10_12-36.png)
@@ -96,6 +99,7 @@ SpaceVim内建的<a href=## title="SpaceVim用于编译并运行当前编辑文�
 * <kbd>K</kbd>它可用于使用[cppman](https://github.com/aitjcize/cppman)查找cpp文档，
     安装cppman：`sudo pip3 install cppman`  
     安装脚本会帮你安装cppman的数据缓存，不然国内得下载半个多小时
+* 在写回文件时按字典序自动排序头文件
 
 ### lang#markdown
 * <kbd>space</kbd>+ <kbd>l</kbd>+ <kbd>p</kbd>：启动浏览器进行markdown及时预览

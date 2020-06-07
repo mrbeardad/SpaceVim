@@ -19,7 +19,7 @@ let g:ale_cpp_clangtidy_checks = ['*',
 
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
 
-if $XFCE4_TERM != ''
+if $COLORBG != ''
   if localtime() % 2 == 1  && &rtp =~ 'NeoSolarized'
     colorscheme NeoSolarized
     hi! Function gui=bold guifg=#268bd2
