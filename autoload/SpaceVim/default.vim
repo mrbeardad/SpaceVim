@@ -316,9 +316,6 @@ function! SpaceVim#default#keyBindings() abort
   vnoremap <silent><C-S-Down> :m '>+1<CR>gv=gv
   vnoremap <silent><C-S-Up> :m '<-2<CR>gv=gv
 
-  " Start new line
-  inoremap <c-o> <c-c>o
-
   " Improve scroll, credits: https://github.com/Shougo
   nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
         \ 'zt' : (winline() == &scrolloff + 1) ? 'zb' : 'zz'

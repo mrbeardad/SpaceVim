@@ -27,6 +27,8 @@ function! SpaceVim#layers#tools#plugins() abort
         \ 'BookmarkAnnotate',
         \ 'BookmarkNext',
         \ 'BookmarkPrev',
+        \ 'BookmarkClear',
+        \ 'BookmarkClearAll'
         \ ],
         \ 'loadconf_before' : 1}])
   let s:CMP = SpaceVim#api#import('vim#compatible')
@@ -63,6 +65,8 @@ function! SpaceVim#layers#tools#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['m', 'l'], 'BookmarkShowAll', 'BookmarkShowAll', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['m', 'n'], 'BookmarkNext', 'BookmarkNext', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['m', 'b'], 'BookmarkPrev', 'BookmarkPrev', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'c'], 'BookmarkClear', 'BookmarkClear', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'C'], 'BookmarkClearAll', 'BookmarkClearAll', 1)
   nnoremap <silent> <F5> :UndotreeToggle<CR>
   let g:rainbow_active = 1
   let g:rainbow_conf = {
