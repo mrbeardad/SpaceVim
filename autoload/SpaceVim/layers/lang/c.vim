@@ -212,13 +212,6 @@ tmap <up> <esc><up>
 tmap <down> <esc><down>
 tmap <left> <esc><left>
 tmap <right> <esc><right>
-let terminal_color_1 = '#ff5555'
-let terminal_color_2 = '#50fa7b'
-let terminal_color_3 = '#fabd2f'
-let terminal_color_4 = '#bd93f9'
-let terminal_color_5 = '#ff79c6'
-let terminal_color_6 = '#8be9fd'
-let terminal_color_7 = '#bfffff'
 
 function! SpaceVim#layers#lang#c#quickrun_do(var, str) abort
   if a:str == '' && !call("exists",[a:var])
@@ -327,10 +320,12 @@ endfunction
 
 function! Sort_Includes()
   let nr = str2nr(substitute(execute("w !awk '/^\\\#include/{++cnt;} \\!/^\\\#include/{printf cnt; exit 0;}'"),'\n','','g'))
-  let line = line('.')
-  let col = col('.')
-  exe '1,'.nr.' !sort'
-  call cursor(line, col)
+  if nr > 1
+    let line = line('.')
+    let col = col('.')
+    exe '1,'.nr.' !sort'
+    call cursor(line, col)
+  endif
 endfunction
 au BufWritePre *.c,*.cpp call Sort_Includes()
 

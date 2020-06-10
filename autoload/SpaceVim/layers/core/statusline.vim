@@ -145,13 +145,7 @@ function! s:fileformat() abort
 endfunction
 
 function! s:major_mode() abort
-    let nr = tabpagenr('$')
-    let buflist = tabpagebuflist(nr)
-    let winnr = tabpagewinnr(nr)
-    let bufname = bufname(buflist[winnr - 1])
-    let name = fnamemodify(bufname, ':t')
-    " let name = &ft
-    let icon = s:FILE.fticon(name)
+    let icon = s:FILE.fticon(bufname())
     if icon == ''
       let icon = s:FILE.fticon(&ft)
     endif

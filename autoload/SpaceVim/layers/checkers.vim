@@ -24,6 +24,7 @@ function! SpaceVim#layers#checkers#plugins() abort
     call SpaceVim#custom#SPC('nore', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#custom#SPC('nore', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
     call SpaceVim#custom#SPC('nore', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)
+    call SpaceVim#custom#SPC('nore', ['e', 't'], 'let ale_cpp_clangtidy_executable = "clang-tidy" | ALELint', 'Lint with clang-tidy', 1)
   else
     call add(plugins, ['wsdjeg/syntastic', {'on_event': 'WinEnter', 'loadconf' : 1, 'merged' : 0}])
   endif

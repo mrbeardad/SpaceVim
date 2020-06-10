@@ -60,6 +60,7 @@ let s:file_node_extensions = {
       \  'twig'     : '',
       \  'cpp'      : '',
       \  'c++'      : '',
+      \  'hpp'      : '',
       \  'cxx'      : '',
       \  'cc'       : '',
       \  'cp'       : '',
@@ -161,6 +162,9 @@ function! s:filetypeIcon(path) abort
     endif
   endfor
   let ext = fnamemodify(file, ':e')
+  if ext == ''
+    let ext = file
+  endif
   if has_key(g:spacevim_filetype_icons, ext)
     return g:spacevim_filetype_icons[ext]
   elseif has_key(s:file_node_extensions, ext)

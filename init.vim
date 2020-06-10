@@ -38,4 +38,11 @@ else
     colorscheme default-plus
 endif
 
+let terminal_color_1 = '#ff5555'
+let terminal_color_2 = '#50fa7b'
+let terminal_color_3 = '#fabd2f'
+let terminal_color_4 = '#bd93f9'
+let terminal_color_5 = '#ff79c6'
+let terminal_color_6 = '#8be9fd'
+let terminal_color_7 = '#bfffff'
 au VimEnter * iunmap <c-g>%
