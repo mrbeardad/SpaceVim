@@ -46,3 +46,7 @@ let terminal_color_5 = '#ff79c6'
 let terminal_color_6 = '#8be9fd'
 let terminal_color_7 = '#bfffff'
 au VimEnter * iunmap <c-g>%
+
+" 使用very_magic，即使用扩展正则
+nnoremap / /\v
+nnoremap ? ?\v

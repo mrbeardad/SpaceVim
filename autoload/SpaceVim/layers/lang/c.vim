@@ -100,6 +100,14 @@ function! SpaceVim#layers#lang#c#plugins() abort
     let g:cpp_posix_standard = 1
     let g:cpp_experimental_simple_template_highlight = 1      " which works in most cases, but can be a little slow on large files
     " let g:cpp_experimental_template_highlight = 1           " which is a faster implementation but has some corner cases where it doesn't work.
+
+    " call add(plugins, ['bfrg/vim-cpp-modern', { 'merged' : 0}])
+    " let g:cpp_no_function_highlight = 0
+    " let g:cpp_simple_highlight = 1
+    " let g:cpp_named_requirements_highlight = 1
+
+    " call add(plugins, ['jaxbot/semantic-highlight.vim', { 'merged' : 0}]) " 效果确实不错，就是颜色太花了，作者又没写清楚g:sementicGUIColors中各个颜色代表啥
+    " let g:semanticEnableFileTypes = ['c', 'cpp']
   endif
   return plugins
 endfunction
@@ -214,11 +222,13 @@ tmap <left> <esc><left>
 tmap <right> <esc><right>
 
 function! SpaceVim#layers#lang#c#quickrun_do(var, str) abort
-  if a:str == '' && !call("exists",[a:var])
-    if a:var == 'b:QuickRun_cpp_CompileFlag'
-      let b:QuickRun_cpp_CompileFlag = get(g:, 'ale_and_quickrun_cpp_default_compile_flag', '-std=c++20')
-    else
-      exe 'let '.a:var.'=""'
+  if a:str == ''
+    if !call("exists",[a:var])
+      if a:var == 'b:QuickRun_cpp_CompileFlag'
+        let b:QuickRun_cpp_CompileFlag = get(g:, 'ale_and_quickrun_cpp_default_compile_flag', '-std=c++20')
+      else
+        exe 'let '.a:var.'=""'
+      endif
     endif
     exe 'let '. a:var
   else

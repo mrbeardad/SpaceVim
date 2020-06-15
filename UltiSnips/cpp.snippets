@@ -37,82 +37,76 @@ endsnippet
 
 snippet if
 if ( ${1:true} ) {
-    ${0:${VISUAL}}
+    $2
 }
 endsnippet
 
 snippet ifel
 if ( ${1:true} ) {
-    ${2:${VISUAL}}
+    $2
 } else {
-    ${0}
+    $3
 }
 endsnippet
 
 snippet elif
 else if ( ${1:true} ) {
-    ${0:${VISUAL}}
+    $2
 }
 endsnippet
 
 snippet el
 else {
-    ${0:${VISUAL}}
+    $1
 }
 endsnippet
 
 snippet do
 do {
-    ${0:${VISUAL}}
+    $2
 } while ( ${1:true} );
 endsnippet
 
 snippet while
 while ( {${1:true} ) {
-    ${2:${VISUAL}}
+    $2
 }
 endsnippet
 
 snippet getopt
-int choice;
 while ( true )
 {
     /* struct option {
-     *	   const char* name ; // (long option name)
-     *     int      has_arg ; // (no_argument, required_argument, optional_argument)
-     *     int        *flag ; // (function return val when flag==NULL)
-     *     int          val ; // (function return a int to represent this long option)
+     *	   const char* name ; // long option name
+     *     int      has_arg ; // no_argument, required_argument, optional_argument
+     *     int        *flag ; // function return val when flag==NULL
+     *     int          val ; // function return a int to represent this long option
      * };
      */
-    static option long_options[] =
+    static option LongOpts[] =
     {
-        { "version", no_argument, 0, 'v' },
-        { "help",    no_argument, 0, 'h' },
-        { ${1:struct_option} },
-        { 0, 0, 0, 0 }
+        {"version", no_argument, 0, 'v'},
+        {"help",    no_argument, 0, 'h'},
+        {${1:struct_option}},
+        {0, 0, 0, 0}
     };
-    int option_index{ 0 };
-    choice = getopt_long( argc, argv, "vh", long_options, &option_index );
-    if ( choice == -1 )
+    int choice{getopt_long(argc, argv, "vh$2", LongOpts, nullptr)};
+    if ( choice == -1 ) {
         break;
-    switch( choice ) {
+    }
+    switch ( choice ) {
         case 'v':
-            $2
-            break;
-        case 'h':
             $3
             break;
+        case 'h':
+            $4
+            break;
         case '?':
-            break ; // getopt_long will have already printed an error
-        default:
-            return -1 ; // Not sure how to get here...
+            break ;
     }
 }
-// Deal with non-option arguments here
-if ( optind < argc ) {
-    while ( optind < argc ) {
-        $0
-    }
+while ( optind < argc ) {
+    $5
 }
 endsnippet
 
@@ -263,7 +257,7 @@ for (auto& ${0:i} : ${1:container}) {
 endsnippet
 
 snippet ld
-[${1}](${2}){${3}};
+[${1}](${2}){${3}}
 endsnippet
 
 # lambda (multi-line)
@@ -276,8 +270,8 @@ endsnippet
 snippet try
 try {
     $1
-} catch(${1}) {
-    $2
+} catch(${2}) {
+    $3
 }
 endsnippet
 

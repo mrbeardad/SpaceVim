@@ -14,8 +14,8 @@ function! SpaceVim#mapping#g#init() abort
     nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
     let g:_spacevim_mappings_g['<C-G>'] = ['call feedkeys("g\<c-g>", "n")', 'show cursor info']
     nnoremap g<c-g> g<c-g>
-    let g:_spacevim_mappings_g['&'] = ['call feedkeys("g&", "n")', 'repeat last ":s" on all lines']
-    nnoremap g& g&
+    let g:_spacevim_mappings_g['&'] = ['call feedkeys("g&", "n")', 'repeat last ":s" on this lines']
+    nnoremap <silent>g& :s/<up><cr>:nohl<cr>
 
     let g:_spacevim_mappings_g["'"] = ['call feedkeys("g' . "'" . '", "n")', 'jump to mark']
     nnoremap g' g'
