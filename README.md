@@ -1,7 +1,7 @@
 # SpaceVim定制版 :smile:
 ***本仓库作为[DotFiles](https://github.com/mrbeardad/DotFiles)项目的vim配置部分***
 
-***[使用笔记在此](https://github.com/mrbeardad/DotFiles/blob/master/cheat/vim.md)，列出了几乎所有的操作，你只需看看文档在多用用就OK了***
+***[使用笔记在此](https://github.com/mrbeardad/DotFiles/blob/master/cheat/vim.md)，列出了几乎所有的操作，你只需看看文档再多用用就OK了***
 
 ## 安装方法
 **Only for Linux**
@@ -116,6 +116,7 @@ SpaceVim内建的<a href=## title="SpaceVim用于编译并运行当前编辑文�
 > 注意：ranger的配置`~/.config/ranger/rc.conf`只有加了`set show_hidden true`才能在启动时预览隐藏文件，
 > Manjaro自带的ranger配置将其设置为了false
 * 按 <kbd>f</kbd>使用Leaderf搜索目录
+* 按<kbd>O</kbd>使用桌面系统工具来打开目标文件或目录
 
 ![preview](custom/pv.gif)
 

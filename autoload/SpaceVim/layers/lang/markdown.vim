@@ -96,6 +96,8 @@ function! s:mappings() abort
   call SpaceVim#mapping#space#langSPC('nmap', ['l','p'], 'MarkdownPreview', 'Real-time markdown preview', 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l','g'], 'GenTocGFM', 'Generate GFM TOC', 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l','d'], 'RemoveToc', 'delete TOC', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','k'], '<plug>(markdown-insert-link)', 'add link url', 0, 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','K'], '<plug>(markdown-insert-picture)', 'add link picture', 0, 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l', 'r'], 
         \ 'call call('
         \ . string(function('s:run_code_in_block'))

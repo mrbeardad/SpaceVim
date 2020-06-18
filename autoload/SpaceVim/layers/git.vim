@@ -113,7 +113,7 @@ function! SpaceVim#layers#git#config() abort
   call SpaceVim#mapping#space#def('nmap', ['g', 'h', 'r'], '<Plug>(GitGutterUndoHunk)', 'undo-cursor-hunk', 0)
   call SpaceVim#mapping#space#def('nmap', ['g', 'h', 'v'], '<Plug>(GitGutterPreviewHunk)', 'preview-cursor-hunk', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['g', 'm'], 'Git branch', 'branch-manager', 1)
-  call SpaceVim#mapping#space#def('nmap', ['g', 'g'], 'GitGutterBufferToggle', 'GitGutter Buffer Toggle', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['g', 'g'], 'GitGutterBufferToggle', 'GitGutter Buffer Toggle', 1)
 endfunction
 
 function! SpaceVim#layers#git#set_variable(var) abort

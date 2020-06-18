@@ -46,8 +46,8 @@ function! SpaceVim#mapping#g#init() abort
     " nnoremap g0 g0
     " let g:_spacevim_mappings_g['<Home>'] = ['call feedkeys("g0", "n")', 'go to leftmost character']
     " nnoremap g<Home> g<Home>
-    " let g:_spacevim_mappings_g['e'] = ['call feedkeys("ge", "n")', 'go to end of previous word']
-    " nnoremap ge ge
+    let g:_spacevim_mappings_g['e'] = ['call feedkeys("ge", "n")', 'go to end of previous word']
+    nnoremap ge ge
     let g:_spacevim_mappings_g['<'] = ['call feedkeys("g<", "n")', 'last page of previous command output']
     nnoremap g< g<
     let g:_spacevim_mappings_g['f'] = ['call feedkeys("gf", "n")', 'edit file under cursor']
@@ -60,8 +60,8 @@ function! SpaceVim#mapping#g#init() abort
     " nnoremap gk gk
     let g:_spacevim_mappings_g['u'] = ['call feedkeys("gu", "n")', 'make motion text lowercase']
     nnoremap gu gu
-    " let g:_spacevim_mappings_g['E'] = ['call feedkeys("gE", "n")', 'end of previous word']
-    " nnoremap gE gE
+    let g:_spacevim_mappings_g['E'] = ['call feedkeys("gE", "n")', 'end of previous word']
+    nnoremap gE gE
     let g:_spacevim_mappings_g['U'] = ['call feedkeys("gU", "n")', 'make motion text uppercase']
     nnoremap gU gU
     " let g:_spacevim_mappings_g['H'] = ['call feedkeys("gH", "n")', 'select line mode']
@@ -70,8 +70,8 @@ function! SpaceVim#mapping#g#init() abort
     " nnoremap gh gh
     " let g:_spacevim_mappings_g['I'] = ['call feedkeys("gI", "n")', 'insert text in column 1']
     " nnoremap gI gI
-    " let g:_spacevim_mappings_g['i'] = ['call feedkeys("gi", "n")', "insert text after '^ mark"]
-    " nnoremap gi gi
+    let g:_spacevim_mappings_g['i'] = ['call feedkeys("gi", "n")', "insert text after '^ mark"]
+    nnoremap gi gi
     " let g:_spacevim_mappings_g['J'] = ['call feedkeys("gJ", "n")', 'join lines without space']
     " nnoremap gJ gJ
     " let g:_spacevim_mappings_g['N'] = ['call feedkeys("gN", "n")', 'visually select previous match']
@@ -94,8 +94,8 @@ function! SpaceVim#mapping#g#init() abort
     " nnoremap g^ g^
     " let g:_spacevim_mappings_g['_'] = ['call feedkeys("g_", "n")', 'go to last char']
     " nnoremap g_ g_
-    " let g:_spacevim_mappings_g['~'] = ['call feedkeys("g~", "n")', 'swap case for Nmove text']
-    " nnoremap g~ g~
+    let g:_spacevim_mappings_g['~'] = ['call feedkeys("g~", "n")', 'swap case for Nmove text']
+    nnoremap g~ g~
     let g:_spacevim_mappings_g['a'] = ['call feedkeys("ga", "n")', 'print ascii value of cursor character']
     nnoremap ga ga
     let g:_spacevim_mappings_g['8'] = ['call feedkeys("g8", "n")', 'print ascii or unicode value of cursor character']

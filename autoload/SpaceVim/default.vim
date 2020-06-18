@@ -159,9 +159,7 @@ function! SpaceVim#default#options() abort
   set belloff=
   set noswapfile
   set nobackup
-  set path+=/usr/include/c++/*/,/usr/include/boost/,.
   set wildignore-=*/tmp/*
-
 endfunction
 "}}}
 
@@ -177,32 +175,23 @@ function! SpaceVim#default#layers() abort
   call SpaceVim#layers#load('core#tabline')
 endfunction
 
-function! Paste_from_0reg(pos)
-  let tmp = @0
-  if substitute(tmp, '\n', '', '') != tmp
-    exe 'normal '.a:pos
-  elseif a:pos ==# 'P'
-    s/^\(\s*\)/\1\1/
-    nohl
-    exe "normal \<up>\"0p\<down>"
-  else
-    s/^\(\s*\)\(.*\)/\1\2\1/
-    nohl
-    exe "normal \"0p\<up>"
-  endif
-endfunction
-
 function! SpaceVim#default#keyBindings() abort
   " yank and paste
+  xnoremap =p "0p
+  nnoremap =p "0p
+  nnoremap =P "0P
+  nnoremap <silent>=o :set paste<cr>o<c-r>0<c-c>:set nopaste<cr>
+  nnoremap <silent>=O :set paste<cr>O<c-r>0<c-c>:set nopaste<cr>
+
   if has('unnamedplus')
-    xnoremap <Leader>y "+y
     nnoremap <silent> , yl
     nnoremap <silent> Y y$
+    xnoremap <Leader>y "+y
     nnoremap <leader>y "+y
     nnoremap <leader>Y "+y$
-    nnoremap <leader>o od<c-c>v"+p
+    nnoremap <silent><leader>o :set paste<cr>o<c-r>+<c-c>:set nopaste<cr>
     let g:_spacevim_mappings.o = ['normal! "+p', 'paste in next line']
-    nnoremap <leader>O Od<c-c>v"+p
+    nnoremap <silent><leader>O :set paste<cr>O<c-r>+<c-c>:set nopaste<cr>
     let g:_spacevim_mappings.O = ['normal! "+p', 'paste in previous line']
     nnoremap <Leader>p "+p
     let g:_spacevim_mappings.p = ['normal! "+p', 'paste after here']
@@ -219,11 +208,6 @@ function! SpaceVim#default#keyBindings() abort
     xnoremap <Leader>p "*p
     xnoremap <Leader>P "*P
   endif
-
-  nnoremap =p "0p
-  nnoremap =P "0P
-  nnoremap <silent>=O :call Paste_from_0reg('P')<cr>
-  nnoremap <silent>=o :call Paste_from_0reg('p')<cr>
 
   xnoremap <silent><Leader>Y :call SpaceVim#plugins#pastebin#paste()<CR>
   " call SpaceVim#mapping#guide#register_displayname(':call SpaceVim#plugins#pastebin#paste()<CR>', 'copy to pastebin')
@@ -251,31 +235,6 @@ function! SpaceVim#default#keyBindings() abort
         \ '',
         \ 'Clear quickfix')
 
-
-  nnoremap <silent> <leader>n :bn<cr>
-  let g:_spacevim_mappings.n = ['', 'next buffer']
-  nnoremap <silent> <leader>b :bp<cr>
-  let g:_spacevim_mappings.b = ['', 'previous buffer']
-
-  nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
-  let g:_spacevim_mappings.m = ['', 'quickly modify your macros']
-
-  nnoremap <silent> <Leader>h :nohl<CR>
-  let g:_spacevim_mappings.h = ['', 'highlight turnoff']
-
-  function! BufferDelete()
-    let bufNr = buffer_number()
-    bp
-    exe 'bd '. bufNr
-  endfunction
-  nnoremap <silent><c-w>x :call BufferDelete()<cr>
-  nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
-  nnoremap <silent><tab> :winc w<cr>
-  nnoremap <silent><s-tab> :winc p<cr>
-
-
-  vnoremap <c-a> 0
-  vnoremap <c-e> $
   " Use Ctrl+* to jump between windows
   nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
   nnoremap <silent><C-Left>  :<C-u>wincmd h<CR>
@@ -288,25 +247,81 @@ function! SpaceVim#default#keyBindings() abort
   vnoremap <silent>]<End> dGp``
   vnoremap <silent>]<Home> dggP``
 
+  " buffer operator
+  nnoremap <silent> <leader>n :bn<cr>
+  let g:_spacevim_mappings.n = ['', 'next buffer']
+  nnoremap <silent> <leader>b :bp<cr>
+  let g:_spacevim_mappings.b = ['', 'previous buffer']
+  function! s:BufferDelete()
+    let bufNr = buffer_number()
+    bp
+    exe 'bd '. bufNr
+  endfunction
+  nnoremap <silent><c-w>x :call <SID>BufferDelete()<cr>
+  nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
+  nnoremap <silent><tab> :winc w<cr>
+  nnoremap <silent><s-tab> :winc W<cr>
 
+  nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
+  let g:_spacevim_mappings.m = ['', 'quickly modify your macros']
+
+  function! s:Scroll(num) abort
+    if a:num == 0
+      exe 'normal '. winheight('.') / 5 * 2 ."\<c-t>"
+    else
+      exe 'normal '. winheight('.') / 5 * 2 ."\<c-y>"
+    endif
+  endfunction
+
+  " insert mode
   inoremap <c-a> <home>
   inoremap <c-e> <end>
-  inoremap <c-d> <c-c>10<c-e>i<right>
-  inoremap <c-b> <c-c>10<c-y>i<right>
-  inoremap <c-g> <c-c>%i
+  inoremap <c-d> <c-c><c-d>i<right>
+  inoremap <c-b> <c-c><c-u>i<right>
+  inoremap <silent><s-down> <c-c>:call <SID>Scroll(1)<cr>i<right>
+  inoremap <silent><s-up> <c-c>:call <SID>Scroll(0)<cr>i<right>
+  inoremap <m-s> <c-c>%i
+  inoremap <c-l> <right><bs>
   inoremap <c-u> <c-c><right>d^i
   inoremap <c-k> <c-c><right>d$i
   inoremap <c-o> <end><cr>
   inoremap <c-y> <c-r>"
-  inoremap <c-l> <right><bs>
   inoremap <silent><c-c> <c-c>:set cul<cr>
 
-  nnoremap <silent> <c-d> 18<c-e>
-  nnoremap <silent> <c-b> 18<c-y>
-  nnoremap <silent> <c-a> 0
-  nnoremap <silent> <c-e> $
+  nnoremap <c-a> 0
+  nnoremap <c-e> $
+  nnoremap <c-b> <c-u>
+  nnoremap <c-t> <c-e>
+  nnoremap <silent><s-down> :call <SID>Scroll(1)<cr>
+  nnoremap <silent><s-up> :call <SID>Scroll(0)<cr>
+  nnoremap <silent> <bs> :nohl<CR>
   nnoremap <expr> n  'Nn'[v:searchforward]
   nnoremap <expr> N  'nN'[v:searchforward]
+
+  " visual mode
+  vnoremap <c-a> 0
+  vnoremap <c-e> $
+
+  " command mode
+  cnoremap <c-a> <c-b>
+
+  " terminal mode
+  tmap <esc> <c-\><c-n>
+  tmap <c-up> <esc><c-up>
+  tmap <c-down> <esc><c-down>
+  tmap <c-right> <esc><c-right>
+  tmap <c-left> <esc><c-left>
+  tmap <c-w> <esc><c-w>
+  tmap <silent><tab> <esc>:winc w<cr>
+  tmap <silent><s-tab> <esc>:winc p<cr>
+  tmap <c-a> <esc><home>
+  tmap <c-e> <esc><end>
+  tmap <up> <esc><up>
+  tmap <down> <esc><down>
+  tmap <left> <esc><left>
+  tmap <right> <esc><right>
+  tmap <silent><s-down> :call <SID>Scroll(1)<cr>
+  tmap <silent><s-up> :call <SID>Scroll(0)<cr>
 
   "Ctrl+Shift+Up/Down to move up and down
   nnoremap <silent><C-S-Down> :m .+1<CR>==
@@ -340,7 +355,6 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <C-s> :<C-u>w<CR>
   vnoremap <C-s> :<C-u>w<CR>
   cnoremap <C-s> <C-u>w<CR>
-  cnoremap <c-a> <c-b>
 
 
   " C-r: Easier search and replace

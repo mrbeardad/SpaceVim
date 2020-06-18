@@ -54,20 +54,16 @@ function! SpaceVim#layers#core#plugins() abort
         \'on_map' : '<Plug>(openbrowser-',
         \ 'loadconf' : 1,
         \}])
-        " If it looks like URI, Open URI under cursor.
-        " Otherwise, Search word under cursor.
         nmap gss <Plug>(openbrowser-smart-search)
-        " If it looks like URI, Open selected URI.
-        " Otherwise, Search selected word.
         vmap gss <Plug>(openbrowser-smart-search)
-        " let g:_spacevim_mappings.s = {'name' : '+Search by OpenBrowser'}
         vnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
         nnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
         vnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
         nnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
         vnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
         nnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-grepper' , { 'on_cmd' : 'Grepper',
+
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-grepper' ,              { 'on_cmd' : 'Grepper',
         \ 'loadconf' : 1} ])
   return plugins
 endfunction
@@ -244,7 +240,6 @@ function! SpaceVim#layers#core#config() abort
     call SpaceVim#mapping#space#def('nnoremap', ['f', 'T'], 'Defx -no-toggle', 'show-file-tree', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['f', 'o'], "Defx  -no-toggle -search=`expand('%:p')` `stridx(expand('%:p'), getcwd()) < 0? expand('%:p:h'): getcwd()`", 'open-file-tree', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['b', 't'], 'exe "Defx -no-toggle " . fnameescape(expand("%:p:h"))', 'show-file-tree-at-buffer-dir', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['a', 'f'], 'exe "Defx -no-toggle " . fnameescape(expand("%:p:h"))', 'show-file-tree-at-buffer-dir', 1)
   endif
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'y'], 'call SpaceVim#util#CopyToClipboard()', 'show-and-copy-buffer-filename', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'Y'], 'call SpaceVim#util#CopyToClipboard(1)', 'show-and-copy-buffer-filename', 1)

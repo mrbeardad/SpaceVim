@@ -52,9 +52,7 @@ function! SpaceVim#layers#tools#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['w', 'C'],
         \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['a', 'r'],
-        \ 'Goyo', 'centered-buffer-mode', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['a', 'R'],
-        \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
+        \ 'Goyo', 'read-mode', 1)
 
   " bootmark key binding
   let g:bookmark_auto_save_file = $HOME.'/.cache/SpaceVim/vim_bookmarks'

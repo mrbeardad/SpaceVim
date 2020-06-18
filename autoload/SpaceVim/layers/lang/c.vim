@@ -204,23 +204,6 @@ endfunction
 "================================
 " => QuickRun配置
 "================================
-tmap <esc> <c-\><c-n>
-tmap <c-up> <esc><c-up>
-tmap <c-down> <esc><c-down>
-tmap <c-right> <esc><c-right>
-tmap <c-left> <esc><c-left>
-tmap <c-w> <esc><c-w>
-tmap <silent><tab> <esc>:winc w<cr>
-tmap <silent><s-tab> <esc>:winc p<cr>
-tmap <c-a> <esc><home>
-tmap <c-e> <esc><end>
-tmap <c-f> <esc><c-f>
-tmap <c-b> <esc>10<c-y>
-tmap <up> <esc><up>
-tmap <down> <esc><down>
-tmap <left> <esc><left>
-tmap <right> <esc><right>
-
 function! SpaceVim#layers#lang#c#quickrun_do(var, str) abort
   if a:str == ''
     if !call("exists",[a:var])

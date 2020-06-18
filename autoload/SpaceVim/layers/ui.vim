@@ -10,12 +10,6 @@ scriptencoding utf-8
 function! SpaceVim#layers#ui#plugins() abort
   let plugins = [
         \ [g:_spacevim_root_dir . 'bundle/indentLine', {'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/tagbar', {'loadconf' : 1, 'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/tagbar-makefile.vim', {'merged': 0}],
-        \ [g:_spacevim_root_dir . 'bundle/tagbar-proto.vim', {'merged': 0}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-choosewin', {'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-startify', {'loadconf' : 1, 'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/indentLine', {'merged' : 0}],
         \ [g:_spacevim_root_dir . 'bundle/tagbar', {'on_cmd' : 'TagbarToggle', 'loadconf' : 1, 'merged' : 0}],
         \ [g:_spacevim_root_dir . 'bundle/tagbar-makefile.vim', {'on_cmd' : 'TagbarToggle', 'merged': 0}],
         \ [g:_spacevim_root_dir . 'bundle/tagbar-proto.vim', {'on_cmd' : 'TagbarToggle', 'merged': 0}],

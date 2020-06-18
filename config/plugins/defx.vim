@@ -76,6 +76,7 @@ function! Leaderf_Defx_Search()
     winc p
     exe 'Leaderf file '. path
 endfunction
+
 function! Ranger_Preview()
   if ! executable('ranger')
     echoerr 'You need to install `ranger`'
@@ -89,6 +90,7 @@ function! Ranger_Preview()
     echoerr 'You need to install guake , or you need to run your neovim in tmux'
   endif
 endfunction
+
 function! s:defx_init()
   setl nonumber
   setl norelativenumber
@@ -157,6 +159,10 @@ function! s:defx_init()
   nnoremap <silent><buffer> p :call Ranger_Preview()<cr><cr>
 
   nnoremap <silent><buffer> f :call Leaderf_Defx_Search()<cr>
+
+  nnoremap <silent><buffer> R :call defx#call_action('open_directory', SpaceVim#plugins#projectmanager#current_root())<cr>
+
+  nnoremap <silent><buffer> O :call defx#util#open(defx#get_candidate().action__path)<cr>
 
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')

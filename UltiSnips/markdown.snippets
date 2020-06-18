@@ -1,91 +1,91 @@
 # Italic
-snippet i
-*$1*
+snippet i "description" w
+*${1:italic}*
 endsnippet
 
 # Bold
-snippet b
-**$1**
+snippet b "description" w
+**${1:bold}**
 endsnippet
 
 # Bold and Italic
-snippet bi
-***$1***
+snippet bi "description" w
+***${1:bold&italic}***
 endsnippet
 
 # 下划线
-snippet u
-<u>$1</u>
+snippet u "description" w
+<u>${1:underline}</u>
 endsnippet
 
 # 删除线
-snippet d
-~~$1~~
+snippet d "description" w
+~~${1:delete}~~
 endsnippet
 
 # 按键元素
-snippet k
-<kbd>$1</kbd>
+snippet k "description" w
+<kbd>${1:keyboard}</kbd>
 endsnippet
 
 # 对齐文本
-snippet al
+snippet al "description" w
 <p align="${1:center}">$2</p>
 endsnippet
 
 # 图片元素
-snippet img
+snippet img "description" w
 ![${1:LinkName}](${2:https://})
 endsnippet
 
 # 对齐的图片元素
-snippet ima
+snippet ima "description" w
 <img align="${1:right}" src="${2:https://}"></img>
 
 endsnippet
 
 # 链接元素
-snippet lk
+snippet lk "description" w
 [${1:LinkName}](${2:https://})
 endsnippet
 
 # 分割线
-snippet sep
+snippet sep "description" w
 * * * * * * * * * *
 
 endsnippet
 
 # 代码块
-snippet cd
-\`\`\`$1
+snippet cd "description" w
+\`\`\`${1}
 $2
 \`\`\`
 endsnippet
 
 # LATEX公式块
-snippet tx
+snippet tx "description" w
 $$
-$1
+${1}
 $$
 endsnippet
 
 # 在GitHub上插入公式，斜杠用\\
-snippet tx1
-![](http://latex.codecogs.com/gif.latex?$1)
+snippet tx1 "description" w
+![](http://latex.codecogs.com/gif.latex?${1})
 endsnippet
 
 # github自己的api，速度要慢一点
-snippet tx2
-![]https://render.githubusercontent.com/render/math?math=$1)
+snippet tx2 "description" w
+![]https://render.githubusercontent.com/render/math?math=${1})
 endsnippet
 
 # 任务
-snippet ts
-- [ $1] $2
+snippet ts "description" w
+- [ ${1}] $2
 endsnippet
 
 # 折叠区块
-snippet fd
+snippet fd "description" w
 <details>
     <summary><b>${1:Title}</b></summary>
 
@@ -94,7 +94,7 @@ ${2:Context}
 endsnippet
 
 # 用于代码块的折叠区块
-snippet fdc
+snippet fdc "description" w
 <details>
     <summary><b>${1:Title}</b></summary>
 
@@ -105,16 +105,16 @@ $3
 endsnippet
 
 # 设置跳转锚点
-snippet jp
+snippet jp "description" w
 <span id="${1:jump}"></span>
 endsnippet
 
 # 鼠标悬停回显
-snippet eh
+snippet eh "description" w
 <a href=## title="${1:echo content}">[注]</a>
 endsnippet
 
 # 鼠标悬停回显，但是没有高亮，一般不用
-snippet eh1
+snippet eh1 "description" w
 <div title="${1:echo content}">${2:content outside}</div>
 endsnippet
