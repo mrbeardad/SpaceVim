@@ -59,8 +59,8 @@ function! SpaceVim#layers#git#config() abort
     call SpaceVim#mapping#space#def('nnoremap', ['g', 'd'], 'Gdiff', 'view-git-diff', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['g', 'A'], 'Git add .', 'stage-all-files', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['g', 'b'], 'Gblame', 'view-git-blame', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['g', 'V'], 'Glog -- %', 'git-log-of-current-file', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['g', 'v'], 'Glog --', 'git-log-of-current-repo', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['g', 'l'], 'Glog -- %', 'git-log-of-current-file', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['g', 'L'], 'Glog --', 'git-log-of-current-repo', 1)
   elseif s:git_plugin ==# 'gita'
     let g:gita#suppress_warning = 1
     call SpaceVim#mapping#space#def('nnoremap', ['g', 's'], 'Gita status', 'git-status', 1)
@@ -113,7 +113,7 @@ function! SpaceVim#layers#git#config() abort
   call SpaceVim#mapping#space#def('nmap', ['g', 'h', 'r'], '<Plug>(GitGutterUndoHunk)', 'undo-cursor-hunk', 0)
   call SpaceVim#mapping#space#def('nmap', ['g', 'h', 'v'], '<Plug>(GitGutterPreviewHunk)', 'preview-cursor-hunk', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['g', 'm'], 'Git branch', 'branch-manager', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['g', 'g'], 'GitGutterBufferToggle', 'GitGutter Buffer Toggle', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['g', 'g'], 'GitGutterToggle', 'GitGutter Buffer Toggle', 1)
 endfunction
 
 function! SpaceVim#layers#git#set_variable(var) abort

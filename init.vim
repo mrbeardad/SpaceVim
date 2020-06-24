@@ -1,4 +1,5 @@
-let g:ale_and_quickrun_cpp_default_compile_flag = '-std=c++20'
+let g:cpp_default_compile_flag = '-std=c++20'
+let g:c_default_compile_flag = '-std=c11'
 let g:ale_clangtidy_period = 6
 let g:ale_cpp_clangtidy_checks = ['*',
       \ '-abseil*',
@@ -55,3 +56,4 @@ nnoremap ? ?\v
 
 " 设置path
 set path+=/usr/include/c++/*/,/usr/include/boost/,.
+

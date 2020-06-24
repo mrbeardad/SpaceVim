@@ -63,6 +63,12 @@ function! SpaceVim#layers#core#plugins() abort
         vnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
         nnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
 
+  call add(plugins, ['ianva/vim-youdao-translater' ,              { 'on_cmd' : ['Ydv', 'Ydc', 'Yde'],
+        \ 'loadconf' : 1} ])
+  vnoremap <silent>gsy :<C-u>Ydv<CR>
+  nnoremap <silent>gsy :<C-u>Ydc<CR>
+  noremap <silent>gse :<C-u>Yde<CR>
+
   call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-grepper' ,              { 'on_cmd' : 'Grepper',
         \ 'loadconf' : 1} ])
   return plugins

@@ -23,7 +23,7 @@ endfunction
 
 function! SpaceVim#layers#lang#markdown#plugins() abort
   let plugins = []
-  call add(plugins, ['SpaceVim/vim-markdown',{ 'on_ft' : 'markdown'}])
+  call add(plugins, ['mrbeardad/vim-markdown',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['joker1007/vim-markdown-quote-syntax',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['iamcco/mathjax-support-for-mkdp',{ 'on_ft' : 'markdown'}])
@@ -88,14 +88,21 @@ function! SpaceVim#layers#lang#markdown#config() abort
   augroup END
 endfunction
 
+function! GenOrDelTocGFM()
+  if execute('w !grep -q "<\!-- vim-markdown-toc GFM -->" ; echo $?') =~ 0
+    RemoveToc
+  else
+    GenTocGFM
+  endif
+endfunction
+
 function! s:mappings() abort
   if !exists('g:_spacevim_mappings_space')
     let g:_spacevim_mappings_space = {}
   endif
   let g:_spacevim_mappings_space.l = {'name' : '+Language Specified'}
   call SpaceVim#mapping#space#langSPC('nmap', ['l','p'], 'MarkdownPreview', 'Real-time markdown preview', 1)
-  call SpaceVim#mapping#space#langSPC('nmap', ['l','g'], 'GenTocGFM', 'Generate GFM TOC', 1)
-  call SpaceVim#mapping#space#langSPC('nmap', ['l','d'], 'RemoveToc', 'delete TOC', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','g'], 'call GenOrDelTocGFM()', 'Generate GFM TOC', 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l','k'], '<plug>(markdown-insert-link)', 'add link url', 0, 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l','K'], '<plug>(markdown-insert-picture)', 'add link picture', 0, 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l', 'r'], 
@@ -169,8 +176,5 @@ function! s:run_code_in_block() abort
   endif
 endfunction
 
-function Mkd_key()
-  inoremap <buffer><s-tab> &emsp;
-endfunction
+autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
 
-autocmd FileType markdown call Mkd_key()

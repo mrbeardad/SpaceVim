@@ -189,6 +189,7 @@ function! SpaceVim#default#keyBindings() abort
     xnoremap <Leader>y "+y
     nnoremap <leader>y "+y
     nnoremap <leader>Y "+y$
+    nnoremap <leader>, "+yl
     nnoremap <silent><leader>o :set paste<cr>o<c-r>+<c-c>:set nopaste<cr>
     let g:_spacevim_mappings.o = ['normal! "+p', 'paste in next line']
     nnoremap <silent><leader>O :set paste<cr>O<c-r>+<c-c>:set nopaste<cr>
