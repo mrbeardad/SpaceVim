@@ -126,13 +126,14 @@ function! s:defx_init()
   " Define mappings
   nnoremap <silent><buffer><expr> gx
         \ defx#do_action('execute_system')
-  nnoremap <silent><buffer><expr> c
+  nnoremap <silent><buffer><expr> yy
         \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> q
         \ defx#do_action('quit')
-  nnoremap <silent><buffer><expr> m
+  nnoremap <silent><buffer><expr> dd
         \ defx#do_action('move')
-  nnoremap <silent><buffer><expr> P
+  map <silent><buffer> p <nop>
+  nnoremap <silent><buffer><expr> pp
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> h defx#do_action('call', 'DefxSmartH')
   nnoremap <silent><buffer><expr> <Left> defx#do_action('call', 'DefxSmartH')
@@ -156,9 +157,9 @@ function! s:defx_init()
         \ defx#do_action('drop', 'split')
   nnoremap <silent><buffer><expr> st
         \ defx#do_action('drop', 'tabedit')
-  nnoremap <silent><buffer> p :call Ranger_Preview()<cr><cr>
+  nnoremap <silent><buffer> P :call Ranger_Preview()<cr><cr>
 
-  nnoremap <silent><buffer> f :call Leaderf_Defx_Search()<cr>
+  nnoremap <silent><buffer> F :call Leaderf_Defx_Search()<cr>
 
   nnoremap <silent><buffer> R :call defx#call_action('open_directory', SpaceVim#plugins#projectmanager#current_root())<cr>
 
@@ -168,11 +169,11 @@ function! s:defx_init()
         \ defx#do_action('new_directory')
   nnoremap <silent><buffer><expr> N
         \ defx#do_action('new_file')
-  nnoremap <silent><buffer><expr> d
+  nnoremap <silent><buffer><expr> rm
         \ defx#do_action('remove')
-  nnoremap <silent><buffer><expr> r
+  nnoremap <silent><buffer><expr> rn
         \ defx#do_action('rename')
-  nnoremap <silent><buffer><expr> yy defx#do_action('call', 'DefxYarkPath')
+  nnoremap <silent><buffer><expr> yp defx#do_action('call', 'DefxYarkPath')
   nnoremap <silent><buffer><expr> .
         \ defx#do_action('toggle_ignored_files')
   nnoremap <silent><buffer><expr> ~

@@ -31,15 +31,9 @@ function! SpaceVim#layers#core#plugins() abort
     call add(plugins, [g:_spacevim_root_dir . 'bundle/defx-icons',{'merged' : 0}])
   endif
 
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/clever-f.vim', {'on_map':['<Plug>(clever-f-f)', '<Plug>(clever-f-F)' ], 'merged' : 0}])
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/clever-f.vim', {'merged' : 0}])
   let g:clever_f_smart_case = 1
   let g:clever_f_fix_key_direction = 1
-  omap F <Plug>(clever-f-F)
-  nmap F <Plug>(clever-f-F)
-  xmap F <Plug>(clever-f-F)
-  omap f <Plug>(clever-f-f)
-  nmap f <Plug>(clever-f-f)
-  xmap f <Plug>(clever-f-f)
   call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdcommenter', { 'on_map': ['<Plug>Comment', '<Plug>NERDCommenter',], 'loadconf' : 1, 'merged' : 0}])
 
   if exists('*matchaddpos')
