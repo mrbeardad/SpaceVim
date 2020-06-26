@@ -247,9 +247,9 @@ let s:fcflag = 0
 function! s:toggle_fill_column() abort
   if !s:fcflag
     if !&textwidth
-      let &colorcolumn=join(range(81,999),',')
+      set cc=100
     else
-      let &colorcolumn=join(range(&textwidth + 1,999),',')
+      set cc=100
     endif
     let s:fcflag = 1
   else

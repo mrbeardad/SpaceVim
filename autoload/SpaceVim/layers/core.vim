@@ -26,12 +26,12 @@ function! SpaceVim#layers#core#plugins() abort
           \ }])
     call add(plugins, [g:_spacevim_root_dir . 'bundle/vimproc.vim', {'build' : [(executable('gmake') ? 'gmake' : 'make')]}])
   elseif g:spacevim_filemanager ==# 'defx'
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/defx.nvim',{'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/defx-git',{'merged' : 0, 'loadconf' : 1}])
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/defx-icons',{'merged' : 0}])
+    call add(plugins, ['Shougo/defx.nvim',{'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
+    call add(plugins, ['kristijanhusak/defx-icons',{'merged' : 0, 'loadconf' : 1}])
+    call add(plugins, ['kristijanhusak/defx-icons',{'merged' : 0}])
   endif
 
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/clever-f.vim', {'merged' : 0}])
+  call add(plugins, ['rhysd/clever-f.vim', {'merged' : 0}])
   let g:clever_f_smart_case = 1
   let g:clever_f_fix_key_direction = 1
   call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdcommenter', { 'on_map': ['<Plug>Comment', '<Plug>NERDCommenter',], 'loadconf' : 1, 'merged' : 0}])
