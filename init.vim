@@ -1,4 +1,4 @@
-let g:cpp_default_compile_flag = '-std=c++20'
+let g:cpp_default_compile_flag = '-std=c++20 -lpthread'
 let g:c_default_compile_flag = '-std=c11'
 let g:ale_clangtidy_period = 6
 let g:ale_cpp_clangtidy_checks = ['*',
@@ -49,10 +49,6 @@ let terminal_color_4 = '#bd93f9'
 let terminal_color_5 = '#ff79c6'
 let terminal_color_6 = '#8be9fd'
 let terminal_color_7 = '#bfffff'
-
-" 使用very_magic，即使用扩展正则
-nnoremap / /\v
-nnoremap ? ?\v
 
 " 设置path
 set path+=/usr/include/c++/*/,/usr/include/boost/,.

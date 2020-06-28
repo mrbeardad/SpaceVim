@@ -117,12 +117,12 @@ endfunction
 
 function! Ycm_and_AutoPair_Return()
   if expand('<cword>') == '{}' || expand('<cword>') == '()'
-    return "\<CR>"
+    return "\<CR>\<c-c>zz=ko"
   else
     exe 'return '. substitute(substitute(execute('imap <s-cr>'),'^.*<SNR>','<SNR>', ''),'S-CR','CR','')
   endif
 endfunction
-inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr><c-r>=AutoPairsReturn()<cr>
+inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr>
 
 
 function! SpaceVim#layers#autocomplete#config() abort

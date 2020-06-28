@@ -35,7 +35,7 @@ let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_save = 0
 let g:ale_cpp_gcc_options = '-Wall -Wextra -O2 -I. '. g:ale_and_quickrun_cpp_default_compile_flag
-let g:ale_cpp_cppcheck_options = '--inconclusive --enable=warning,style,performance,portability -'.g:ale_and_quickrun_cpp_default_compile_flag
+let g:ale_cpp_cppcheck_options = '--inconclusive --enable=warning,style,performance,portability --std=c++20'
 let g:ale_cpp_clangtidy_options = g:ale_and_quickrun_cpp_default_compile_flag.' -I. '
 " let g:ale_cpp_clangtidy_options = '-extra-arg="-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-pedantic -Wno-missing-prototypes -Wno-padded -Wno-old-style-cast -O2 '.g:ale_and_quickrun_cpp_compile_std.'"'
 let g:ale_sign_error = '❌' " ✗

@@ -1,6 +1,6 @@
 " Author: vdeurzen <tim@kompiler.org>, w0rp <devw0rp@gmail.com>,
 " gagbo <gagbobada@gmail.com>
-" Description: clang-tidy linter for cpp files, changes to lint ont only on
+" Description: clang-tidy linter for cpp files, changes to lint not only on
 " save
 
 call ale#Set('cpp_clangtidy_executable', 'clang-tidy')
