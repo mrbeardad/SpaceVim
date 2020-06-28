@@ -65,10 +65,14 @@ function! SpaceVim#layers#edit#config() abort
         \ },
         \ }
 
+  let g:_spacevim_mappings.t = {'name' : '+Table-Mode/Translate'}
   nmap <leader>tt <Plug>table-mode-tableize
   xmap <leader>tt <Plug>table-mode-tableize
-  nnoremap <silent><leader>tm :call tablemode#Toggle()<cr>
-  inoremap <silent><m-m> <c-c>:call tablemode#Toggle()<cr>a
+  call SpaceVim#mapping#def('nnoremap', '<Leader>tm', ':call tablemode#Toggle()<cr>',
+        \ '',
+        \ '',
+        \ 'Toggle table mode')
+  inoremap <silent><m-m> <c-r>=tablemode#Toggle()<cr><bs>
   "noremap <SPACE> <Plug>(wildfire-fuel)
   vnoremap <C-SPACE> <Plug>(wildfire-water)
   let g:wildfire_objects = ["i'", 'i"', 'i)', 'i]', 'i}', 'ip', 'it']

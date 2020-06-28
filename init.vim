@@ -21,6 +21,8 @@ let g:ale_cpp_clangtidy_checks = ['*',
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
 "=============================== After Load =================================
 
+let g:translator_default_engines = ['bing']
+
 " 设置主题背景
 if $DARKBG != ''
   if localtime() % 2 == 1  && &rtp =~ 'NeoSolarized'

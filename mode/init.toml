@@ -93,3 +93,5 @@
 [[layers]]
     name = 'lang#markdown'
 
+[[layers]]
+    name = 'chinese'
