@@ -265,6 +265,10 @@ function! SpaceVim#layers#lang#c#QuickRun()
     let qr_args = b:QuickRun_Args
     let qr_rd = b:QuickRun_Redirect
     let qr_cf = b:QuickRun_CompileFlag
+    let qr_cf = qr_cf .' -I. -I'.SpaceVim#plugins#projectmanager#current_root() .'/include'
+    if execute('w !egrep -q "^\#include\s*<future>$"; echo -n $?') =~ 0
+      let qr_cf = qr_cf.' -lpthread'
+    endif
 
     if s:bufnr != 0 && bufexists(s:bufnr)
         execute 'bd! ' . s:bufnr

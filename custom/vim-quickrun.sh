@@ -20,11 +20,11 @@ if [[ "$1" == "-r" ]] ;then
     echo -e "\033[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program!\033[m"
     shift 1
 elif [[ "$1" == "-c" ]] ;then
-    echo -e "\033[1;32m[Compile]\033[34m gcc \033[35m$2\033[34m -O2 -I. -o \033[m$4 \033[3;32m'%'\033[m"
+    echo -e "\033[1;32m[Compile]\033[34m gcc \033[35m$2\033[34m -O2 -o \033[m$4 \033[3;32m'%'\033[m"
     gcc $2 -O2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -I. -o "$4" "$3"
     shift 3
 elif [[ "$1" == "-C" ]] ;then
-    echo -e "\033[1;32m[Compile]\033[34m g++ \033[35m$2\033[34m -O2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -I. -o \033[m$4 \033[3;32m'%'\033[m"
+    echo -e "\033[1;32m[Compile]\033[34m g++ \033[35m$2\033[34m -O2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -o \033[m$4 \033[3;32m'%'\033[m"
     g++ $2 -O2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -I. -o "$4" "$3"
     shift 3
 else

@@ -1,6 +1,11 @@
-let g:cpp_default_compile_flag = '-std=c++20 -lpthread'
-let g:c_default_compile_flag = '-std=c11'
 let g:ale_clangtidy_period = 6
+
+"=============================  Load SpaceVim ===============================
+execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
+"=============================== After Load =================================
+
+let g:cpp_default_compile_flag = '-std=c++20 '
+let g:c_default_compile_flag = '-std=c11'
 let g:ale_cpp_clangtidy_checks = ['*',
       \ '-abseil*',
       \ '-android*',
@@ -16,10 +21,6 @@ let g:ale_cpp_clangtidy_checks = ['*',
       \ '-cppcoreguidelines-pro-bounds-constant-array-index',
       \ '-readability-isolate-declaration',
       \ ]
-
-"=============================  Load SpaceVim ===============================
-execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
-"=============================== After Load =================================
 
 let g:translator_default_engines = ['bing']
 
