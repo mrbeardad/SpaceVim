@@ -110,12 +110,12 @@ SpaceVim内建的<a href=## title="SpaceVim用于编译并运行当前编辑文�
     提供了许多常用的标签，可以打开`UltiSnips`目录查看，写了有注释
 
 ### defx文件树
-* 在文件树中按 <kbd>p</kbd>键可以触发预览操作，需要安装`ranger`，并且还需要
+* 在文件树中按 <kbd>P</kbd>键可以触发预览操作，需要安装`ranger`，并且还需要
     * 在`tmux`中运行你的vim/neovim
     * 或者安装了`guake`
 > 注意：ranger的配置`~/.config/ranger/rc.conf`只有加了`set show_hidden true`才能在启动时预览隐藏文件，
 > Manjaro自带的ranger配置将其设置为了false
-* 按 <kbd>f</kbd>使用Leaderf搜索目录
+* 按 <kbd>F</kbd>使用Leaderf搜索目录
 * 按<kbd>O</kbd>使用桌面系统工具来打开目标文件或目录
 
 ![preview](custom/pv.gif)

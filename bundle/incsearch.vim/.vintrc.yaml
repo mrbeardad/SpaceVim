@@ -1,5 +1,0 @@
-# Config for vint
-# https://github.com/Kuniwak/vint
-policies:
-  ProhibitImplicitScopeVariable:
-    enabled: false

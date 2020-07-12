@@ -1,8 +1,0 @@
-lib/*
-doc/tags
-*.obj
-*.o
-*.so
-*.dll
-*.swp
-*~

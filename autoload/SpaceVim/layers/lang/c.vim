@@ -61,6 +61,11 @@ let s:CPT = SpaceVim#api#import('vim#compatible')
 function! SpaceVim#layers#lang#c#plugins() abort
   let plugins = []
   call add(plugins, ['skywind3000/vim-cppman'])
+  call add(plugins, ['agatan/vim-sort-include'])
+  augroup sort-include
+    autocmd!
+    autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
+  augroup END
   if !SpaceVim#layers#lsp#check_filetype('c') && !SpaceVim#layers#lsp#check_filetype('cpp')
     if g:spacevim_autocomplete_method ==# 'deoplete'
       call add(plugins, ['Shougo/deoplete-clangx', {'merged' : 0}])
@@ -324,17 +329,6 @@ function! SpaceVim#layers#lang#c#OpenInputWin()
     let g:QuickRun_Redirect = "< ".inputFileName
     call win_gotoid(originWinnr)
 endfunction
-
-function! Sort_Includes()
-  let nr = str2nr(substitute(execute("w !awk '/^\\\#include/{++cnt;} \\!/^\\\#include/{printf cnt; exit 0;}'"),'\n','','g'))
-  if nr > 1
-    let line = line('.')
-    let col = col('.')
-    exe '1,'.nr.' !sort'
-    call cursor(line, col)
-  endif
-endfunction
-au BufWritePre *.c,*.cpp call Sort_Includes()
 
 function! SpaceVim#layers#lang#c#TurnoffQuickrun()
     if s:bufnr != 0 && bufexists(s:bufnr)

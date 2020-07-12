@@ -15,41 +15,41 @@ let s:VIM = SpaceVim#api#import('vim')
 
 function! SpaceVim#layers#edit#plugins() abort
   let plugins = [
-        \ [g:_spacevim_root_dir . 'bundle/vim-surround', {'on_map': ['<Plug>Dsurround', '<Plug>Csurround', '<Plug>Ysurround', '<Plug>Yssurround']}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-repeat'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-emoji'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-expand-region', {'on_map': ['<Plug>(expand_region_expand)', '<Plug>(expand_region_shrink)'], 'loadconf' : 1}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-textobj-user'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-textobj-indent'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-textobj-line'],
-        \ ['sgur/vim-textobj-parameter'],
+        \ ['tpope/vim-surround', {'on_map': ['<Plug>Dsurround', '<Plug>Csurround', '<Plug>Ysurround', '<Plug>Yssurround']}],
+        \ ['tpope/vim-repeat'],
+        \ ['junegunn/vim-emoji'],
+        \ ['terryma/vim-expand-region', {'on_map': ['<Plug>(expand_region_expand)', '<Plug>(expand_region_shrink)'], 'loadconf' : 1}],
+        \ ['kana/vim-textobj-user'],
+        \ ['kana/vim-textobj-indent'],
+        \ ['kana/vim-textobj-line'],
         \ ['kana/vim-textobj-function'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-textobj-entire'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-table-mode', {'on_map':'<Plug>table-mode-tableize', 'on_func':'tablemode#Toggle'}],
-        \ [g:_spacevim_root_dir . 'bundle/wildfire.vim',{'on_map' : '<Plug>(wildfire-'}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-easymotion', {'on_map' : '<Plug>(easymotion-'}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-easyoperator-line', {'on_map' : '<Plug>(easymotion-'}],
-        \ [g:_spacevim_root_dir . 'bundle/editorconfig-vim', { 'on_event': 'InsertEnter', 'merged' : 0, 'if' : has('python') || has('python3')}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-jplus', { 'on_map' : '<Plug>(jplus' }],
-        \ [g:_spacevim_root_dir . 'bundle/tabular',           { 'on_cmd' : 'Tabularize', 'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-better-whitespace',  { 'on_cmd' : ['StripWhitespace', 'ToggleWhitespace', 'DisableWhitespace', 'EnableWhitespace']}],
+        \ ['sgur/vim-textobj-parameter'],
+        \ ['kana/vim-textobj-entire'],
+        \ ['dhruvasagar/vim-table-mode', {'on_map':'<Plug>table-mode-tableize', 'on_func':'tablemode#Toggle'}],
+        \ ['gcmt/wildfire.vim',{'on_map' : '<Plug>(wildfire-'}],
+        \ ['easymotion/vim-easymotion', {'on_map' : '<Plug>(easymotion-'}],
+        \ ['haya14busa/vim-easyoperator-line', {'on_map' : '<Plug>(easymotion-'}],
+        \ ['editorconfig/editorconfig-vim', { 'on_event': 'InsertEnter', 'merged' : 0, 'if' : has('python') || has('python3')}],
+        \ ['osyo-manga/vim-jplus', { 'on_map' : '<Plug>(jplus' }],
+        \ ['godlygeek/tabular',           { 'on_cmd' : 'Tabularize', 'merged' : 0}],
+        \ ['ntpeters/vim-better-whitespace',  { 'on_cmd' : ['StripWhitespace', 'ToggleWhitespace', 'DisableWhitespace', 'EnableWhitespace']}],
         \ ]
+  if executable('fcitx')
+    call add(plugins,['lilydjwg/fcitx.vim',        { 'on_event' : 'InsertEnter'}])
+  endif
+  if g:spacevim_enable_bepo_layout
+    call add(plugins,['michamos/vim-bepo',        { 'merged' : 0}])
+  endif
+  return plugins
+endfunction
+
+function! SpaceVim#layers#edit#config() abort
   xmap v <Plug>(expand_region_expand)
   xmap V <Plug>(expand_region_shrink)
   nmap ds <Plug>Dsurround
   nmap cs <Plug>Csurround
   nmap ys <Plug>Ysurround
   nmap yss <Plug>Yssurround
-  if executable('fcitx')
-    call add(plugins,[g:_spacevim_root_dir . 'bundle/fcitx.vim',        { 'on_event' : 'InsertEnter'}])
-  endif
-  if g:spacevim_enable_bepo_layout
-    call add(plugins,[g:_spacevim_root_dir . 'bundle/vim-bepo',        { 'merged' : 0}])
-  endif
-  return plugins
-endfunction
-
-function! SpaceVim#layers#edit#config() abort
   let g:multi_cursor_next_key=get(g:, 'multi_cursor_next_key', '<C-n>')
   let g:multi_cursor_prev_key=get(g:, 'multi_cursor_prev_key', '<C-m>')
   let g:multi_cursor_skip_key=get(g:, 'multi_cursor_skip_key', '<C-x>')

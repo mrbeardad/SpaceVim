@@ -113,89 +113,89 @@ endsnippet
 ## STL Collections
 # std::array
 snippet arr
-array<${1:T}, ${2:N}> ${3};
+std::array<${1:T}, ${2:N}> ${3};
 endsnippet
 
 # std::vector
 snippet vec
-vector<${1:T}> ${2};
+std::vector<${1:T}> ${2};
 endsnippet
 
 # std::deque
 snippet deq
-deque<${1:T}> ${2};
+std::deque<${1:T}> ${2};
 endsnippet
 
 # std::forward_list
 snippet fls
-forward_list<${1:T}> ${2};
+std::forward_list<${1:T}> ${2};
 endsnippet
 
 # std::list
 snippet ls
-list<${1:T}> ${2};
+std::list<${1:T}> ${2};
 endsnippet
 
 # std::set
 snippet set
-set<${1:T}> ${2};
+std::set<${1:T}> ${2};
 endsnippet
 
 # std::map
 snippet map
-map<${1:Key}, ${2:T}> ${3};
+std::map<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::multiset
 snippet mset
-multiset<${1:T}> ${2};
+std::multiset<${1:T}> ${2};
 endsnippet
 
 # std::multimap
 snippet mmap
-multimap<${1:Key}, ${2:T}> ${3};
+std::multimap<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::unordered_set
 snippet uset
-unordered_set<${1:T}> ${2};
+std::unordered_set<${1:T}> ${2};
 endsnippet
 
 # std::unordered_map
 snippet umap
-unordered_map<${1:Key}, ${2:T}> ${3};
+std::unordered_map<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::unordered_multiset
 snippet umset
-unordered_multiset<${1:T}> ${2};
+std::unordered_multiset<${1:T}> ${2};
 endsnippet
 
 # std::unordered_multimap
 snippet ummap
-unordered_multimap<${1:Key}, ${2:T}> ${3};
+std::unordered_multimap<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::stack
 snippet stack
-stack<${1:T}> ${2};
+std::stack<${1:T}> ${2};
 endsnippet
 
 # std::queue
 snippet queue
-queue<${1:T}> ${2};
+std::queue<${1:T}> ${2};
 endsnippet
 
 # std::priority_queue
 snippet pqueue
-priority_queue<${1:T}> ${2};
+std::priority_queue<${1:T}> ${2};
 endsnippet
 
 ##
 ## STL smart pointers
 # std::shared_ptr
 snippet msp
-shared_ptr<${1:T}> ${2} = make_shared<$1>(${3});
+std::shared_ptr<${1:T}> ${2} = make_shared<$1>(${3});
 endsnippet
 
 snippet amsp
@@ -204,7 +204,7 @@ endsnippet
 
 # std::unique_ptr
 snippet mup
-unique_ptr<${1:T}> ${2} = make_unique<$1>(${3});
+std::unique_ptr<${1:T}> ${2} = make_unique<$1>(${3});
 endsnippet
 
 snippet amup
@@ -213,12 +213,12 @@ endsnippet
 
 # std::cout
 snippet cout
-cout << ${1} << endl;
+std::cout << ${1} << std::endl;
 endsnippet
 
 # std::cin
 snippet cin
-cin >> ${1};
+std::cin >> ${1};
 endsnippet
 
 ##
@@ -282,7 +282,7 @@ using namespace std;
 
 int main()
 {
-    ios::sync_with_stdio(false);
+    std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
     $1
@@ -295,8 +295,8 @@ endsnippet
 snippet main
 int main()
 {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(nullptr);
 
     $1
 
@@ -307,7 +307,7 @@ endsnippet
 snippet maina
 int main(int argc, char* argv[])
 {
-    ios::sync_with_stdio(false);
+    std::ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
     $1

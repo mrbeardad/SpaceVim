@@ -11,20 +11,20 @@ let s:SYS = SpaceVim#api#import('system')
 function! SpaceVim#layers#core#plugins() abort
   let plugins = []
   if g:spacevim_filemanager ==# 'nerdtree'
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdtree', { 'merged' : 0,
+    call add(plugins, ['scrooloose/nerdtree', { 'merged' : 0,
           \ 'loadconf' : 1}])
   elseif g:spacevim_filemanager ==# 'vimfiler'
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/vimfiler.vim',{
+    call add(plugins, ['Shougo/vimfiler.vim',{
           \ 'merged' : 0,
           \ 'loadconf' : 1 ,
           \ 'loadconf_before' : 1,
           \ 'on_cmd' : ['VimFiler', 'VimFilerBufferDir']
           \ }])
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/unite.vim',{
+    call add(plugins, ['Shougo/unite.vim',{
           \ 'merged' : 0,
           \ 'loadconf' : 1
           \ }])
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/vimproc.vim', {'build' : [(executable('gmake') ? 'gmake' : 'make')]}])
+    call add(plugins, ['Shougo/vimproc.vim', {'build' : [(executable('gmake') ? 'gmake' : 'make')]}])
   elseif g:spacevim_filemanager ==# 'defx'
     call add(plugins, ['Shougo/defx.nvim',{'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
     call add(plugins, ['kristijanhusak/defx-git',{'merged' : 0, 'loadconf' : 1}])
@@ -32,32 +32,21 @@ function! SpaceVim#layers#core#plugins() abort
   endif
 
   call add(plugins, ['rhysd/clever-f.vim', {'merged' : 0}])
-  let g:clever_f_smart_case = 1
-  let g:clever_f_fix_key_direction = 1
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdcommenter', { 'on_map': ['<Plug>Comment', '<Plug>NERDCommenter',], 'loadconf' : 1, 'merged' : 0}])
+  call add(plugins, ['scrooloose/nerdcommenter', { 'loadconf' : 1, 'merged' : 0}])
 
   if exists('*matchaddpos')
     let g:matchup_matchparen_stopline = 56
     let g:matchup_delim_stopline = 56
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-matchup', {'merged' : 0}])
+    call add(plugins, ['andymass/vim-matchup', {'merged' : 0}])
   endif
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/gruvbox', {'loadconf' : 1, 'merged' : 0}])
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/open-browser.vim', {
+  call add(plugins, ['gruvbox-community/gruvbox', {'loadconf' : 1, 'merged' : 0}])
+  call add(plugins, ['tyru/open-browser.vim', {
         \'on_cmd' : ['OpenBrowserSmartSearch', 'OpenBrowser',
         \ 'OpenBrowserSearch'],
         \'on_map' : '<Plug>(openbrowser-',
         \ 'loadconf' : 1,
         \}])
-        nmap gss <Plug>(openbrowser-smart-search)
-        vmap gss <Plug>(openbrowser-smart-search)
-        vnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
-        nnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
-        vnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
-        nnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
-        vnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
-        nnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
-
-  call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-grepper' ,              { 'on_cmd' : 'Grepper',
+  call add(plugins, ['mhinz/vim-grepper' ,              { 'on_cmd' : 'Grepper',
         \ 'loadconf' : 1} ])
   return plugins
 endfunction
@@ -65,6 +54,17 @@ endfunction
 let s:filename = expand('<sfile>:~')
 let s:lnum = expand('<slnum>') + 2
 function! SpaceVim#layers#core#config() abort
+  let g:clever_f_smart_case = 1
+  let g:clever_f_fix_key_direction = 1
+  nmap gss <Plug>(openbrowser-smart-search)
+  vmap gss <Plug>(openbrowser-smart-search)
+  vnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
+  nnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
+  vnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
+  nnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
+  vnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
+  nnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
+
   if g:spacevim_filemanager ==# 'nerdtree'
     noremap <silent> <F3> :NERDTreeToggle<CR>
   endif

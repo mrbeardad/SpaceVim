@@ -1,3 +1,0 @@
-set runtimepath+=vader.vim
-set runtimepath+=..
-set hidden

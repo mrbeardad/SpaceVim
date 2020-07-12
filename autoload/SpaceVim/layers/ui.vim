@@ -9,17 +9,17 @@
 scriptencoding utf-8
 function! SpaceVim#layers#ui#plugins() abort
   let plugins = [
-        \ [g:_spacevim_root_dir . 'bundle/indentLine', {'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/tagbar', {'on_cmd' : 'TagbarToggle', 'loadconf' : 1, 'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/tagbar-makefile.vim', {'on_cmd' : 'TagbarToggle', 'merged': 0}],
-        \ [g:_spacevim_root_dir . 'bundle/tagbar-proto.vim', {'on_cmd' : 'TagbarToggle', 'merged': 0}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-choosewin', {'on_cmd' : 'ChooseWin', 'merged' : 0}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-startify', {'loadconf' : 1, 'merged' : 0}],
+        \ ['Yggdroot/indentLine', {'merged' : 0}],
+        \ ['wsdjeg/tagbar', {'on_cmd' : 'TagbarToggle','loadconf' : 1, 'merged' : 0}],
+        \ ['tenfyzhong/tagbar-makefile.vim', {'on_cmd' : 'TagbarToggle','merged': 0}],
+        \ ['tenfyzhong/tagbar-proto.vim', {'on_cmd' : 'TagbarToggle','merged': 0}],
+        \ ['t9md/vim-choosewin', {'on_cmd' : 'ChooseWin', 'merged' : 0}],
+        \ ['mhinz/vim-startify', {'loadconf' : 1, 'merged' : 0}],
         \ ]
   if !SpaceVim#layers#isLoaded('core#statusline')
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-airline',                { 'merged' : 0, 
+    call add(plugins, ['vim-airline/vim-airline',                { 'merged' : 0, 
           \ 'loadconf' : 1}])
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-airline-themes',         { 'merged' : 0}])
+    call add(plugins, ['vim-airline/vim-airline-themes',         { 'merged' : 0}])
   endif
 
   return plugins
