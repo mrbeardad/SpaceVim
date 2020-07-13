@@ -83,9 +83,10 @@ let s:random_candidates = s:cs
 let s:random_frequency = ''
 let s:bright_statusline = 0
 
-let g:neosolarized_italic = 1
-let g:neosolarized_contrast = "normal"
 function! SpaceVim#layers#colorscheme#config() abort
+  let g:palenight_terminal_italics = 1
+  let g:neosolarized_italic = 1
+  let g:neosolarized_contrast = "normal"
   if s:random_colorscheme
     let ctime = ''
     " Use local file's save time, the local file is

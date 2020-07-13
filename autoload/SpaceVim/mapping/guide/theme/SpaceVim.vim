@@ -19,7 +19,7 @@
 
 function! SpaceVim#mapping#guide#theme#SpaceVim#palette() abort
     return [
-                \ ['#282828' , '#FFA500' , 250, 97],
+                \ ['#282828' , '#ffafff' , 250, 97],
                 \ ['#d75fd7' , '#4e4e4e' , 170 , 239],
                 \ ['#c6c6c6' , '#3a3a3a' , 251 , 237],
                 \ ['#1c1c1c', 16],

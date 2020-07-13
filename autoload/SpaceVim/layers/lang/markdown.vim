@@ -47,6 +47,7 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
   return plugins
 endfunction
 
+  au FileType markdown setl matchpairs=(:),{:},[:]
 function! SpaceVim#layers#lang#markdown#config() abort
   " do not highlight markdown error
   let g:markdown_hi_error = 0

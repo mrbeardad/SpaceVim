@@ -97,7 +97,7 @@ function! SpaceVim#layers#lang#c#plugins() abort
       call add(plugins, ['bbchung/clighter', { 'if' : has('python')}])
     endif
   else
-    call add(plugins, ['octol/vim-cpp-enhanced-highlight', { 'merged' : 0}])
+    call add(plugins, ['mrbeardad/vim-cpp-enhanced-highlight', { 'merged' : 0}])
     let g:cpp_class_scope_highlight = 1
     let g:cpp_member_variable_highlight = 1
     let g:cpp_class_decl_highlight = 1
