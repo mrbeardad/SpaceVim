@@ -233,7 +233,9 @@ command! -nargs=? QuickrunCompileFlag call SpaceVim#layers#lang#c#quickrun_do('b
 
 let s:bufnr = 0
 let g:quickrun_Path = {}
-au TermEnter * setlocal  list nu norelativenumber
+if has('nvim')
+  au TermEnter * setlocal  list nu norelativenumber
+endif
 
 function! s:open_win() abort
     belowright 12 split __quickrun__
@@ -310,6 +312,7 @@ function! SpaceVim#layers#lang#c#OpenInputWin()
     endif
     let originWinnr = win_getid()
     let inputFileName = '/tmp/' . expand('%:t:r') . '.input'
+    exe "QuickrunRedirect < ".inputFileName
     let defxWinNr = win_findbuf( buffer_number('[defx] -0'))
     if defxWinNr != []
         call win_gotoid(defxWinNr[0])
@@ -326,7 +329,6 @@ function! SpaceVim#layers#lang#c#OpenInputWin()
           \ norelativenumber
           \ winfixheight
     let g:QuickRun_InputWin=bufnr('%')
-    let g:QuickRun_Redirect = "< ".inputFileName
     call win_gotoid(originWinnr)
 endfunction
 
@@ -337,7 +339,11 @@ function! SpaceVim#layers#lang#c#TurnoffQuickrun()
     endif
 endfunction
 
+let g:disable_auto_launch_gdb = get(g:, 'disable_auto_launch_gdb', '0')
 function! SpaceVim#layers#lang#c#openGDB(a,...)
+  if g:disable_auto_launch_gdb != 0
+    return
+  endif
   if executable('cgdb')
     exe "!tmux new-window 'cgdb ". expand('%:p:r') ."'"
   elseif executable('gdb')
@@ -358,6 +364,10 @@ function! SpaceVim#layers#lang#c#compile4debug()
       endif
     endif
     let qr_cf = b:QuickRun_CompileFlag
+    let qr_cf = qr_cf .' -I. -I'.SpaceVim#plugins#projectmanager#current_root() .'/include'
+    if execute('w !egrep -q "^\#include\s*<future>$"; echo -n $?') =~ 0
+      let qr_cf = qr_cf.' -lpthread'
+    endif
     if &modified == 1
         write
     endif

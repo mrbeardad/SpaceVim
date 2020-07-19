@@ -41,12 +41,13 @@ if $DARKBG != ''
     hi! Boolean guifg=#ffafdf
     hi! Structure guifg=#bd93f9
     hi! StorageClass guifg=#47d0ff
-    hi! Comment gui=italic guifg=#006f6f
+    hi! Comment gui=italic guifg=#007f7f
     hi! String gui=italic guifg=#00dfd7
     hi! Statement guifg=#ff5f87
     hi! Repeat guifg=#ff5f87
     hi! Conditional guifg=#ff5f87
     hi! Label guifg=#ff5f87
+    hi! MatchParen gui=bold
     hi! Operator gui=bold
     hi! Function gui=bold guifg=#df5faf
     hi! Type gui=italic guifg=#af00ff
@@ -73,7 +74,9 @@ if $DARKBG != ''
     hi! CursorLineNr gui=bold
     hi! Structure guifg=#00dfd7
     hi! StorageClass guifg=#87ff00
+    hi! StorageClass guifg=#c3e88d
     hi! Operator gui=bold
+    hi! MatchParen gui=bold
     hi! Constant guifg=#ff5370
     hi! Function gui=bold guifg=#82b1ff
     hi! Typedef gui=italic guifg=#ffcb6b
@@ -81,8 +84,10 @@ if $DARKBG != ''
     hi! String gui=italic guifg=#c3e88d
   elseif colorNr == 4  && &rtp =~ 'vim-material'
     colorscheme material
+    hi! Pmenu guifg=#cfffff
     hi! Structure guifg=#00dfd7
     hi! StorageClass guifg=#bd93f9
+    hi! MatchParen gui=bold
     hi! Operator gui=bold
     hi! Function gui=bold guifg=#82aaff
     hi! Type gui=italic guifg=#ffcb6b
@@ -91,6 +96,9 @@ if $DARKBG != ''
 else
     colorscheme default-plus
 endif
+hi! SpellBad gui=undercurl guisp=red
+hi! SpellCap gui=undercurl guisp=yellow
+hi! SpellRare gui=undercurl guisp=magenta
 
 " Terminal Color
 let terminal_color_1 = '#ff5555'
