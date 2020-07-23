@@ -377,7 +377,7 @@ function! SpaceVim#layers#lang#c#compile4debug()
       call SpaceVim#layers#lang#c#openGDB(1)
     else
       if &ft == 'cpp'
-          call jobstart('g\++ '. qr_cf .' -Og -g3 -fno-inline -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -I. -o ' . expand('%:p:r') . ' ' . expand('%'), {'on_exit':'SpaceVim#layers#lang#c#openGDB'})
+          call jobstart('g\++ '. qr_cf .' -Og -g3 -fno-inline -I. -o ' . expand('%:p:r') . ' ' . expand('%'), {'on_exit':'SpaceVim#layers#lang#c#openGDB'})
       elseif &ft == 'c'
           call jobstart('gcc '. qr_cf .' -Og -g3 -fno-inline -I. -o ' . expand('%:p:r') . ' ' . expand('%'), {'on_exit':'SpaceVim#layers#lang#c#openGDB'})
       else

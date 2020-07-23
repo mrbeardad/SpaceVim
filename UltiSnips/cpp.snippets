@@ -213,12 +213,12 @@ endsnippet
 
 # std::cout
 snippet cout
-std::cout << ${1} << std::endl;
+cout << ${1} << std::endl;
 endsnippet
 
 # std::cin
 snippet cin
-std::cin >> ${1};
+cin >> ${1};
 endsnippet
 
 ##
@@ -278,7 +278,8 @@ endsnippet
 snippet init
 #include <iostream>
 
-using namespace std;
+using std::cin;
+using std::cout;
 
 int main()
 {
@@ -321,5 +322,5 @@ int argc, char* argv[]
 endsnippet
 
 snippet fuck
-std::cout << "fuck!" << std::endl;
+cout << "fuck!" << std::endl;
 endsnippet

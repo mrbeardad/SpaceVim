@@ -85,8 +85,8 @@ custom文件显然不能满足，于是就自己动手魔改呗。这时模块�
 &emsp;文件树插件使用的是[defx](https://github.com/Shougo/defx.nvim)，按`<F3>`开启  
 &emsp;撤销树插件使用的是[undotree](https://github.com/mbbill/undotree)，按`<F3>`开启  
 <img align="left" height=700 src="custom/tagbar.png"></img>
-<img align="center" height=700 src="custom/defx.png"></img>
-<img align="left" height=700 src="custom/undo.png"></img>
+<img align="left" height=700 src="custom/defx.png"></img>
+<img align="center" height=700 src="custom/undo.png"></img>
 
 
 # 模糊搜索
@@ -142,12 +142,13 @@ custom文件显然不能满足，于是就自己动手魔改呗。这时模块�
 输出漂漂亮亮的。  
 
 &emsp;**命令：**  
-`QuickrunCompileFlag`：显示或设置当前文件的编译参数，例`QuickrunCompileFlag -std=c++20 -mavx2`  
-`QuickrunArgs`：显示或设置当前文件的运行时的命令行参数，例`QuickrunArgs -o file`  
-`QuickrunRedirect`：显示或设置当前文件的运行时重定向，例`QuickrunRedirect < file`
+* `QuickrunCompileFlag`：显示或设置当前文件的编译参数，例`QuickrunCompileFlag -std=c++20 -mavx2`  
+
+* `QuickrunArgs`：显示或设置当前文件的运行时的命令行参数，例`QuickrunArgs -o file`  
+* `QuickrunRedirect`：显示或设置当前文件的运行时重定向，例`QuickrunRedirect < file`
 
 &emsp;**变量：**  
-`g:disable_auto_launch_gdb`：若设置为1，则`<space>ld`仅编译用于调试的程序，而不会自动启动cgdb或gdb
+* `g:disable_auto_launch_gdb`：若设置为1，则`<space>ld`仅编译用于调试的程序，而不会自动启动cgdb或gdb
 
 | 按键        | 作用               |
 |-------------|--------------------|
@@ -157,8 +158,11 @@ custom文件显然不能满足，于是就自己动手魔改呗。这时模块�
 | `<space>ld` | 启动cgdb或gdb调试  |
 | `K`         | 利用cppman查询手册 |
 
+&emsp;注意：`<space>li`快速打开窗口，会自动使用 QuickrunRedirect命令将当前buffer对应的程序重定向到该输入窗口的文件，
+离开输入窗口自动写回硬盘。
+
 # Markdown模块
-&emsp;[*UltiSnips*](UltiSnips)目录提供了一些markdown的代码补全片段。  
+&emsp;[*UltiSnips目录*](UltiSnips)提供了一些markdown的代码补全片段。  
 此外，还对markdown的语法高亮进行了调整；  
 同时，提供了一些快捷键：
 

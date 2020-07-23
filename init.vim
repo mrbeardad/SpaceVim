@@ -29,6 +29,9 @@ let g:ale_cpp_clangtidy_checks = ['*',
 " Translator
 let g:translator_default_engines = ['bing']
 
+" YCM
+let g:ycm_clangd_args = [ '--header-insertion=never' ] " disable automatic insertion `#include`
+
 " Colorscheme
 " colorscheme palenight "srcery material
 if $DARKBG != ''
@@ -38,7 +41,8 @@ if $DARKBG != ''
     hi! CursorLineNr gui=bold guifg=#df5fdf
     hi! CursorLine guibg=#363636
     hi! LineNr guifg=#6c6c6c
-    hi! Boolean guifg=#ffafdf
+    hi! Constant guifg=#af00ee
+    hi! Boolean guifg=#af00ee
     hi! Structure guifg=#bd93f9
     hi! StorageClass guifg=#47d0ff
     hi! Comment gui=italic guifg=#007f7f
@@ -50,8 +54,8 @@ if $DARKBG != ''
     hi! MatchParen gui=bold
     hi! Operator gui=bold
     hi! Function gui=bold guifg=#df5faf
-    hi! Type gui=italic guifg=#af00ff
-    hi! Typedef gui=italic guifg=#af00ff
+    hi! Type guifg=#ffafdf
+    hi! Typedef guifg=#ffafdf
   elseif colorNr == 1  && &rtp =~ 'gruvbox'
     colorscheme gruvbox
     hi! CursorLineNr gui=bold
@@ -84,6 +88,11 @@ if $DARKBG != ''
     hi! String gui=italic guifg=#c3e88d
   elseif colorNr == 4  && &rtp =~ 'vim-material'
     colorscheme material
+    hi! Normal guifg=#ccdddd
+    hi! Search gui=underline guifg=#cfffff
+    hi! SignColumn guibg=#374349
+    hi! Error guibg=#374349
+    hi! ALEWarningSign guibg=#374349
     hi! Pmenu guifg=#cfffff
     hi! Structure guifg=#00dfd7
     hi! StorageClass guifg=#bd93f9
