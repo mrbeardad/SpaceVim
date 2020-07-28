@@ -22,7 +22,6 @@ let g:ale_cpp_clangtidy_checks = ['*',
       \ '-zircon*',
       \ '-*avoid-c-arrays',
       \ '-modernize-use-trailing-return-type',
-      \ '-cppcoreguidelines-pro-bounds-constant-array-index',
       \ '-readability-isolate-declaration',
       \ ]
 

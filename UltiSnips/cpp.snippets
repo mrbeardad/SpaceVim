@@ -7,11 +7,11 @@ snippet incm
 endsnippet
 
 snippet incb
-#include <boost/${1:shared_ptr}.hpp>
+#include <boost/${1:shared_ptr.hpp}>
 endsnippet
 
 snippet ttem
-template <template<typename> class ${1:T}>
+template <template <typename> class ${1:T}>
 endsnippet
 
 snippet tem
@@ -195,30 +195,34 @@ endsnippet
 ## STL smart pointers
 # std::shared_ptr
 snippet msp
-std::shared_ptr<${1:T}> ${2} = make_shared<$1>(${3});
-endsnippet
-
-snippet amsp
-auto ${1} = make_shared<${2:T}>(${3});
+auto ${1} = std::make_shared<${2:T}>(${3});
 endsnippet
 
 # std::unique_ptr
 snippet mup
-std::unique_ptr<${1:T}> ${2} = make_unique<$1>(${3});
-endsnippet
-
-snippet amup
 auto ${1} = make_unique<${2:T}>(${3});
 endsnippet
 
 # std::cout
 snippet cout
-cout << ${1} << std::endl;
+std::cout << ${1};
+endsnippet
+
+snippet coute
+std::cout << ${1} << std::endl;
+endsnippet
+
+snippet fuck
+std::cout << "fuck!" << std::endl;
+endsnippet
+
+snippet coutf
+std::cout << ${1} << std::flush;
 endsnippet
 
 # std::cin
 snippet cin
-cin >> ${1};
+std::cin >> ${1};
 endsnippet
 
 ##
@@ -228,9 +232,9 @@ snippet sc
 static_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
-# dynamic
-snippet dc
-dynamic_cast<${1:unsigned}>(${2:expr})${3}
+# const
+snippet cc
+const_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
 # reinterpret
@@ -238,20 +242,20 @@ snippet rc
 reinterpret_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
-# const
-snippet cc
-const_cast<${1:unsigned}>(${2:expr})${3}
+# dynamic
+snippet dc
+dynamic_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
-snippet fori
-for (int ${1:i}{}; $1 < ${2:count}; ${3:++}$1) {
+snippet for
+for ( ${1:int i\{\}}; ${2:i < num}; ${3:++i}) {
     ${4}
 }
 endsnippet
 
 # range-based
 snippet forr
-for (auto& ${0:i} : ${1:container}) {
+for (auto& ${1:t} : ${1:container}) {
     ${2}
 }
 endsnippet
@@ -277,9 +281,6 @@ endsnippet
 
 snippet init
 #include <iostream>
-
-using std::cin;
-using std::cout;
 
 int main()
 {
@@ -317,10 +318,7 @@ int main(int argc, char* argv[])
 }
 endsnippet
 
-snippet argc
+snippet arg
 int argc, char* argv[]
 endsnippet
 
-snippet fuck
-cout << "fuck!" << std::endl;
-endsnippet
