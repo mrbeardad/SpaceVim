@@ -38,12 +38,10 @@ let g:ale_cpp_gcc_options = '-Wall -Wextra -O2 -I. '. g:ale_cpp_std
 let g:ale_cpp_cppcheck_options = '--inconclusive --enable=warning,style,performance,portability -'.g:ale_cpp_std
 let g:ale_cpp_clangtidy_options = g:ale_cpp_std.' -I. '
 " let g:ale_cpp_clangtidy_options = '-extra-arg="-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-pedantic -Wno-missing-prototypes -Wno-padded -Wno-old-style-cast -O2 '.g:ale_and_quickrun_cpp_compile_std.'"'
-let g:ale_sign_error = '❌' " ✗
-let g:ale_sign_warning = '⚡'
-let g:ale_sign_info = '🛈 ' " ‼
-let g:ale_echo_msg_error_str = '❌'
-let g:ale_echo_msg_warning_str = '⚡'
-let g:ale_echo_msg_info_str = '🛈 '
+let g:ale_sign_error = '✗' " ❌
+let g:ale_sign_warning = '‼' " ⚡
+let g:ale_echo_msg_error_str = '✗'
+let g:ale_echo_msg_warning_str = '‼'
 hi! clear SpellBad
 hi! clear SpellCap
 hi! clear SpellRare

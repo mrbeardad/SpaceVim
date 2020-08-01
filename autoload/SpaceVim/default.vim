@@ -236,6 +236,8 @@ function! SpaceVim#default#keyBindings() abort
         \ '',
         \ 'Clear quickfix')
 
+  noremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
+  noremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
   " Use Ctrl+* to jump between windows
   nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
   nnoremap <silent><C-Left>  :<C-u>wincmd h<CR>

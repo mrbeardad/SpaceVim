@@ -119,3 +119,14 @@ let terminal_color_7 = '#bfffff'
 
 " path
 set path+=/usr/include/c++/*/,/usr/include/boost/,.
+
+" WSL clipboard
+if $WSL_DISTRO_NAME != ''
+  nnoremap <silent><leader>yy :.w !clip.exe<cr><cr>
+  xnoremap <silent><leader>y :w !clip.exe<cr><cr>
+  nnoremap <silent><space>bY :%w !clip.exe<cr><cr>
+  " Download paste.exe from https://www.c3scripts.com/tutorials/msdos/paste.zip
+  nnoremap <silent><leader>p :r !paste.exe<cr>
+  xnoremap <silent><leader>p :r !paste.exe<cr>
+  nnoremap <silent><space>bP :%r !paste.exe<cr>
+endif
