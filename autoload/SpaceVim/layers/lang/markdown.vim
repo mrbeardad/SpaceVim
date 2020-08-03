@@ -78,6 +78,8 @@ function! SpaceVim#layers#lang#markdown#config() abort
   " iamcco/markdown-preview.vim {{{
   let g:mkdp_auto_close = 0
   let g:mkdp_browserfunc = 'openbrowser#open'
+  let g:mkdp_open_ip = substitute(execute('!ip a show eth0 | sed -n "3p"'), '.*inet \(.*\)\/.*', '\1', 'g')
+  let g:mkdp_open_to_the_world = 1
   " }}}
   call SpaceVim#mapping#space#regesit_lang_mappings('markdown', function('s:mappings'))
   nnoremap <silent> <plug>(markdown-insert-link) :call <SID>markdown_insert_link(0, 0)<Cr>
