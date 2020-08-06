@@ -1,14 +1,3 @@
-let g:ycm_filetype_whitelist = {
-        \ "c":1,
-        \ "cpp":1,
-        \ "java":1,
-        \ "python":1,
-        \ "vim":1,
-        \ "sh":1,
-        \ }
-let g:ycm_semantic_triggers =  {
-        \ "c,cpp,python,java,vim,sh": ['re!\w{2}'],
-        \ }
 let g:ycm_add_preview_to_completeopt = 0
 let g:ycm_use_clangd = 1
 " let g:ycm_clangd_binary_path = '/bin/clangd'

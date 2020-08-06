@@ -162,6 +162,7 @@ function! s:filetypeIcon(path) abort
     endif
   endfor
   let ext = fnamemodify(file, ':e')
+  " 定制版中，file也可能是文件类型
   if ext == ''
     let ext = file
   endif

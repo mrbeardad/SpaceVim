@@ -47,7 +47,6 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
   return plugins
 endfunction
 
-  au FileType markdown setl matchpairs=(:),{:},[:]
 function! SpaceVim#layers#lang#markdown#config() abort
   let g:vmt_auto_update_on_save = 0
   " do not highlight markdown error
@@ -76,9 +75,11 @@ function! SpaceVim#layers#lang#markdown#config() abort
         \ }
 
   " iamcco/markdown-preview.vim {{{
-  let g:mkdp_auto_close = 0
   let g:mkdp_browserfunc = 'openbrowser#open'
-  let g:mkdp_open_ip = substitute(execute('!ip a show eth0 | sed -n "3p"'), '.*inet \(.*\)\/.*', '\1', 'g')
+  let g:mkdp_auto_close = 0
+  if $WSL_DISTRO_NAME != ''
+    let g:mkdp_open_ip = substitute(execute('!ip a show eth0 | sed -n "3p"'), '.*inet \(.*\)\/.*', '\1', 'g')
+  endif
   let g:mkdp_open_to_the_world = 1
   " }}}
   call SpaceVim#mapping#space#regesit_lang_mappings('markdown', function('s:mappings'))

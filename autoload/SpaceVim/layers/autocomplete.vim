@@ -38,10 +38,6 @@ function! SpaceVim#layers#autocomplete#plugins() abort
   call add(plugins, ['deoplete-plugins/deoplete-dictionary',        { 'merged' : 0}])
   if g:spacevim_autocomplete_parens
     call add(plugins, ['jiangmiao/auto-pairs',        { 'merged' : 0}])
-    let g:AutoPairsMapCR = 0
-    let g:AutoPairsMultilineClose = 0
-    let g:AutoPairsShortcutJump = 0
-    inoremap <silent><m-n> <c-c>:call AutoPairsJump()<cr>a
   endif
   " snippet
   if g:spacevim_snippet_engine ==# 'neosnippet'
@@ -55,7 +51,6 @@ function! SpaceVim#layers#autocomplete#plugins() abort
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'
     call add(plugins, ['ycm-core/YouCompleteMe',            { 'build' : './install.py --clangd-completer', 'loadconf_before' : 1, 'merged' : 0}])
-    inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr>
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
     call add(plugins, ['Shougo/neocomplete', {
           \ 'on_event' : 'InsertEnter',
@@ -109,10 +104,11 @@ function! SpaceVim#layers#autocomplete#plugins() abort
   if has('patch-7.4.774')
     call add(plugins, ['Shougo/echodoc.vim', {
           \ 'on_cmd' : ['EchoDocEnable', 'EchoDocDisable'],
-          \ 'on_event': ['InsertEnter', 'CompleteDone'],
+          \ 'on_event' : 'CompleteDone',
           \ 'loadconf_before' : 1,
           \ }])
   endif
+  call add(plugins, ['tenfyzhong/CompleteParameter.vim',  {'merged': 0}])
   return plugins
 endfunction
 
@@ -120,12 +116,20 @@ function! Ycm_and_AutoPair_Return()
   if expand('<cword>') == '{}' || expand('<cword>') == '()'
     return "\<CR>\<c-c>zz=ko"
   else
-    exe 'return '. substitute(substitute(execute('imap <s-cr>'),'^.*<SNR>','<SNR>', ''),'S-CR','CR','')
+    let ret = substitute(substitute(execute('imap <s-cr>'),'^.*<SNR>','<SNR>', ''),'S-CR','CR','')
+    if ret =~ 'StopCompletion'
+      exe 'return '. ret
+    else
+      return "\<cr>"
   endif
 endfunction
 
-
 function! SpaceVim#layers#autocomplete#config() abort
+  let g:AutoPairsMapCR = 0
+  let g:AutoPairsMultilineClose = 0
+  let g:AutoPairsShortcutJump = 0
+  inoremap <silent><m-n> <c-c>:call AutoPairsJump()<cr>a
+  inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr>
 
   "mapping
   if s:tab_key_behavior ==# 'smart'

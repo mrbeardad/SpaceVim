@@ -109,7 +109,7 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['t','l'], 'call ToggleLinebreak()', 'toggle linebreak',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','v'], 'call ToggleVirtuledit()', 'toggle virtul edit',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','e'], 'call ToggleExpandtab()', 'toggle expandtab',1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t','f'], 'call ToggleFoldMethod()', 'toggle foldmethod',1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t','F'], 'call ToggleFoldMethod()', 'toggle foldmethod',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', '8'], 'call call('
         \ . string(s:_function('s:toggle_fill_column')) . ', [])',
         \ 'highlight-long-lines', 1)
@@ -119,17 +119,22 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['w', '.'], 'call call('
         \ . string(s:_function('s:win_resize_transient_state')) . ', [])',
         \ 'windows-transient-state', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'C'], 'call call('
+        \ . string(s:_function('s:toggle_conceallevel')) . ', [])',
+        \ 'toggle conceallevel', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 't'], 'call SpaceVim#plugins#tabmanager#open()',
+        \ 'open-tabs-manager', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'F'], 'call call('
         \ . string(s:_function('s:toggle_colorcolumn')) . ', [])',
         \ 'fill-column-indicator', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'h'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'l'], 'call call('
         \ . string(s:_function('s:toggle_cursorline')) . ', [])',
         \ ['toggle-highlight-current-line',
         \ [
         \ 'SPC t h h is to toggle the highlighting of cursorline'
         \ ]
         \ ], 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'i'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'i'], 'call call('
         \ . string(s:_function('s:toggle_indentline')) . ', [])',
         \ ['toggle-highlight-indentation-levels',
         \ [

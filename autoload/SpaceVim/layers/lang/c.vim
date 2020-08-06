@@ -206,17 +206,18 @@ function! SpaceVim#layers#lang#c#set_variable(var) abort
   let s:enable_clang_syntax = get(a:var, 'enable_clang_syntax_highlight', s:enable_clang_syntax)
 endfunction
 
-"================================
+"================================================================
 " => QuickRun配置
-"================================
+"================================================================
+" Quickrun命令
 function! SpaceVim#layers#lang#c#quickrun_do(var, str) abort
   if a:str == ''
     if !call("exists",[a:var])
       if a:var == 'b:QuickRun_CompileFlag'
         if &ft == 'c'
-          let b:QuickRun_CompileFlag = get(g:, 'c_default_compile_flag', '-std=c11')
+          let b:QuickRun_CompileFlag = get(g:, 'quickrun_c_default_compile_flag', '-std=c11')
         elseif &ft == 'cpp'
-          let b:QuickRun_CompileFlag = get(g:, 'cpp_default_compile_flag', '-std=c++20')
+          let b:QuickRun_CompileFlag = get(g:, 'quickrun_cpp_default_compile_flag', '-std=c++17')
         endif
       else
         exe 'let '.a:var.'=""'
@@ -233,9 +234,6 @@ command! -nargs=? QuickrunCompileFlag call SpaceVim#layers#lang#c#quickrun_do('b
 
 let s:bufnr = 0
 let g:quickrun_Path = {}
-if has('nvim')
-  au TermEnter * setlocal  list nu norelativenumber
-endif
 
 function! s:open_win() abort
     belowright 12 split __quickrun__
@@ -251,85 +249,92 @@ function! s:open_win() abort
 endfunction
 
 function! s:get_timestamp(cfile)
-  let tmp = execute("!ls -tl --time-style='+\\%M\\%H\\%S' ". a:cfile ." | cut -d' ' -f 6")  
+  let tmp = execute("!ls -tl --time-style='+\\%M\\%H\\%S' ". a:cfile ." | cut -d' ' -f 6")
   return substitute(tmp, '.*\(\d\d\d\d\d\d\).*', '\1', 'g')
 endfunction
 
 function! SpaceVim#layers#lang#c#QuickRun()
-    if !exists('b:QuickRun_Args')
-      let b:QuickRun_Args = ''
+  " 初始化三个变量
+  if !exists('b:QuickRun_Args')
+    let b:QuickRun_Args = ''
+  endif
+  if !exists('b:QuickRun_Redirect')
+    let b:QuickRun_Redirect = ''
+  endif
+  if !exists('b:QuickRun_CompileFlag')
+    if &ft == 'c'
+      let b:QuickRun_CompileFlag = get(g:, 'quickrun_c_default_compile_flag', '-std=c11')
+    elseif &ft == 'cpp'
+      let b:QuickRun_CompileFlag = get(g:, 'quickrun_cpp_default_compile_flag', '-std=c++17')
     endif
-    if !exists('b:QuickRun_Redirect')
-      let b:QuickRun_Redirect = ''
-    endif
-    if !exists('b:QuickRun_CompileFlag')
-      if &ft == 'c'
-        let b:QuickRun_CompileFlag = get(g:, 'c_default_compile_flag', '-std=c11')
-      elseif &ft == 'cpp'
-        let b:QuickRun_CompileFlag = get(g:, 'cpp_default_compile_flag', '-std=c++20')
-      endif
-    endif
-    let qr_args = b:QuickRun_Args
-    let qr_rd = b:QuickRun_Redirect
-    let qr_cf = b:QuickRun_CompileFlag
-    let qr_cf = qr_cf .' -I. -I'.SpaceVim#plugins#projectmanager#current_root() .'/include'
-    if execute('w !egrep -q "^\#include\s*<future>$"; echo -n $?') =~ 0
-      let qr_cf = qr_cf.' -lpthread'
-    endif
+  endif
+  let qr_args = b:QuickRun_Args
+  let qr_rd = b:QuickRun_Redirect
+  let qr_cf = b:QuickRun_CompileFlag
+  let qr_cf = qr_cf .' -I. -I'.SpaceVim#plugins#projectmanager#current_root() .'/include'
 
-    if s:bufnr != 0 && bufexists(s:bufnr)
-        execute 'bd! ' . s:bufnr
+  " 编译参数自动扩展
+  let cnter=0
+  let g:quickrun_compileflag_extension_regex = get(g:, 'quickrun_compileflag_extension_regex', [])
+  let g:quickrun_compileflag_extension_flass = get(g:, 'quickrun_compileflag_extension_flags', [])
+  for ext_qr_cf_grep in g:quickrun_compileflag_extension_regex
+    if execute('g/'.ext_qr_cf_grep.'/echo 1') =~ 1
+      let qr_cf = qr_cf.' '.g:quickrun_compileflag_extension_flags[cnter]
     endif
-    let QuickRun_CFILE = expand('%:p')    " 需要编译的文件全路径
-    if &modified == 0 && has_key(g:quickrun_Path, QuickRun_CFILE) && g:quickrun_Path[QuickRun_CFILE] =~ s:get_timestamp(QuickRun_CFILE)
-        call s:open_win()
-        execute 'call termopen("vim-quickrun.sh -r '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args.' \"'.qr_rd .'\"")'
-        " echo 'call termopen("vim-quickrun.sh -r '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args.' \"'.qr_rd .'\"")'
-    else
-        if &modified == 1
-          write
-        endif
-        let g:quickrun_Path[QuickRun_CFILE] = '/tmp/QuickRun/'. expand('%:t') .'.'. s:get_timestamp(QuickRun_CFILE)
-        let fileT=&ft
-        call s:open_win()
-        if fileT == 'c'
-            execute 'call termopen("vim-quickrun.sh -c -std=c11'. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
-        elseif fileT == 'cpp'
-            execute 'call termopen("vim-quickrun.sh -C \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
-            " echo 'call termopen("vim-quickrun.sh -C \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
-        else
-            echoerr 'need c/cpp filetype'
-        endif
+    let cnter+=1
+  endfor
+
+  if s:bufnr != 0 && bufexists(s:bufnr) " 关闭已打开的QuickRun终端窗口
+    execute 'bd! ' . s:bufnr
+  endif
+  let QuickRun_CFILE = expand('%:p')    " 需要编译的文件绝对路径
+  " 若当前文件为改动，且之前通过QuickRun运行过，且自上次编译之后未改动过文件内容，则直接运行上次编译的可执行文件；
+  " 否则重新编译
+  if &modified == 0 && has_key(g:quickrun_Path, QuickRun_CFILE) && g:quickrun_Path[QuickRun_CFILE] =~ s:get_timestamp(QuickRun_CFILE)
+    call s:open_win()
+    execute 'call termopen("vim-quickrun.sh -r '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args.' \"'.qr_rd .'\"")'
+  else
+    if &modified == 1
+    write
     endif
-    let s:bufnr=bufnr('%')
-    wincmd p
+    let g:quickrun_Path[QuickRun_CFILE] = '/tmp/QuickRun/'. expand('%:t') .'.'. s:get_timestamp(QuickRun_CFILE)
+    let fileT=&ft
+    call s:open_win()
+    if fileT == 'c'
+      execute 'call termopen("vim-quickrun.sh -c \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
+    elseif fileT == 'cpp'
+      execute 'call termopen("vim-quickrun.sh -C \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
+    endif
+  endif
+  let s:bufnr=bufnr('%')
+  wincmd p
 endfunction
 
 let g:QuickRun_InputWin = 0
 function! SpaceVim#layers#lang#c#OpenInputWin()
-    if g:QuickRun_InputWin != 0 && bufexists(g:QuickRun_InputWin)
-        execute 'bd! ' . g:QuickRun_InputWin
-    endif
-    let originWinnr = win_getid()
-    let inputFileName = '/tmp/' . expand('%:t:r') . '.input'
-    exe "QuickrunRedirect < ".inputFileName
-    let defxWinNr = win_findbuf( buffer_number('[defx] -0'))
-    if defxWinNr != []
-        call win_gotoid(defxWinNr[0])
-    else
-        Defx
-    endif
-    exe 'abo 20 split ' . inputFileName
-    setlocal bufhidden=wipe nobuflisted list ft=Input
-          \ noswapfile
-          \ nowrap
-          \ cursorline
-          \ nospell
-          \ nu
-          \ norelativenumber
-          \ winfixheight
-    let g:QuickRun_InputWin=bufnr('%')
-    call win_gotoid(originWinnr)
+  if g:QuickRun_InputWin != 0 && bufexists(g:QuickRun_InputWin)
+    execute 'bd! ' . g:QuickRun_InputWin
+  endif
+  let originWinnr = win_getid()
+  let inputFileName = '/tmp/' . expand('%:t:r') . '.input'
+  exe "QuickrunRedirect < ".inputFileName
+  let defxWinNr = win_findbuf( buffer_number('[defx] -0'))
+  if defxWinNr != []
+    call win_gotoid(defxWinNr[0])
+  else
+    Defx
+  endif
+  exe 'abo 20 split ' . inputFileName
+  setlocal bufhidden=wipe nobuflisted list ft=Input
+        \ noswapfile
+        \ nowrap
+        \ cursorline
+        \ nospell
+        \ nu
+        \ norelativenumber
+        \ winfixheight
+  let g:QuickRun_InputWin=bufnr('%')
+  call win_gotoid(originWinnr)
 endfunction
 
 function! SpaceVim#layers#lang#c#TurnoffQuickrun()
@@ -339,9 +344,9 @@ function! SpaceVim#layers#lang#c#TurnoffQuickrun()
     endif
 endfunction
 
-let g:disable_auto_launch_gdb = get(g:, 'disable_auto_launch_gdb', '0')
+let g:quickrun_disable_auto_launch_gdb = get(g:, 'quickrun_disable_auto_launch_gdb', '0')
 function! SpaceVim#layers#lang#c#openGDB(a,...)
-  if g:disable_auto_launch_gdb != 0
+  if g:quickrun_disable_auto_launch_gdb != 0
     return
   endif
   if executable('cgdb')
@@ -356,37 +361,47 @@ function! SpaceVim#layers#lang#c#compile4debug()
     echoerr 'You need run your neovim in tmux!'
     return 1
   endif
-    if !exists('b:QuickRun_CompileFlag')
-      if &ft == 'c'
-        let b:QuickRun_CompileFlag = get(g:, 'c_default_compile_flag', '-std=c11')
-      elseif &ft == 'cpp'
-        let b:QuickRun_CompileFlag = get(g:, 'cpp_default_compile_flag', '-std=c++20')
-      endif
+  if !exists('b:QuickRun_CompileFlag')
+    if &ft == 'c'
+      let b:QuickRun_CompileFlag = get(g:, 'quickrun_c_default_compile_flag', '-std=c11')
+    elseif &ft == 'cpp'
+      let b:QuickRun_CompileFlag = get(g:, 'quickrun_cpp_default_compile_flag', '-std=c++17')
     endif
-    let qr_cf = b:QuickRun_CompileFlag
-    let qr_cf = qr_cf .' -I. -I'.SpaceVim#plugins#projectmanager#current_root() .'/include'
-    if execute('w !egrep -q "^\#include\s*<future>$"; echo -n $?') =~ 0
-      let qr_cf = qr_cf.' -lpthread'
+  endif
+  let qr_cf = b:QuickRun_CompileFlag
+  let qr_cf = qr_cf .' -I. -I'.SpaceVim#plugins#projectmanager#current_root() .'/include'
+
+  " 编译参数自动扩展
+  let cnter=0
+  let g:quickrun_compileflag_extension_regex = get(g:, 'quickrun_compileflag_extension_regex', [])
+  let g:quickrun_compileflag_extension_flass = get(g:, 'quickrun_compileflag_extension_flags', [])
+  for ext_qr_cf_grep in g:quickrun_compileflag_extension_regex
+    if execute('g/'.ext_qr_cf_grep.'/echo 1') =~ 1
+      let qr_cf = qr_cf.' '.g:quickrun_compileflag_extension_flags[cnter]
     endif
-    if &modified == 1
-        write
-    endif
-    let ELF_FILE = expand('%:p:r')
-    let CFILE = expand('%:p')
-    if &modified == 0 && execute('!test '. ELF_FILE .' -nt '. CFILE .' ; echo $?') =~ 0
-      call SpaceVim#layers#lang#c#openGDB(1)
+    let cnter+=1
+  endfor
+
+  if &modified == 1
+      write
+  endif
+  let ELF_FILE = expand('%:p:r')
+  let CFILE = expand('%:p')
+  if &modified == 0 && execute('!test '. ELF_FILE .' -nt '. CFILE .' ; echo $?') =~ 0
+    call SpaceVim#layers#lang#c#openGDB(1)
+  else
+    if &ft == 'cpp'
+        call jobstart('g\++ '. qr_cf .' -Og -g3 -fno-inline -I. -o ' . expand('%:p:r') . ' ' . expand('%'), {'on_exit':'SpaceVim#layers#lang#c#openGDB'})
+    elseif &ft == 'c'
+        call jobstart('gcc '. qr_cf .' -Og -g3 -fno-inline -I. -o ' . expand('%:p:r') . ' ' . expand('%'), {'on_exit':'SpaceVim#layers#lang#c#openGDB'})
     else
-      if &ft == 'cpp'
-          call jobstart('g\++ '. qr_cf .' -Og -g3 -fno-inline -I. -o ' . expand('%:p:r') . ' ' . expand('%'), {'on_exit':'SpaceVim#layers#lang#c#openGDB'})
-      elseif &ft == 'c'
-          call jobstart('gcc '. qr_cf .' -Og -g3 -fno-inline -I. -o ' . expand('%:p:r') . ' ' . expand('%'), {'on_exit':'SpaceVim#layers#lang#c#openGDB'})
-      else
-          echoerr 'need c/cpp filetype'
-      endif
+        echoerr 'need c/cpp filetype'
     endif
+  endif
 endfunction
 
-autocmd BufLeave *.input w
+au TermEnter * setlocal  list nu norelativenumber
+au BufLeave *.input w
 
 function! s:language_specified_mappings() abort
 

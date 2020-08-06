@@ -51,7 +51,7 @@ function! SpaceVim#layers#tools#config() abort
         \ 'Goyo', 'centered-buffer-mode', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['w', 'C'],
         \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['a', 'r'],
+  call SpaceVim#mapping#space#def('nnoremap', ['a', 'R'],
         \ 'Goyo', 'read-mode', 1)
 
   " bootmark key binding

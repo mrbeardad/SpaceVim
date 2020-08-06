@@ -59,7 +59,7 @@ lockvar g:spacevim_version
 " >
 "   let g:spacevim_default_indent = 2
 " <
-let g:spacevim_default_indent          = 4
+let g:spacevim_default_indent          = 2
 ""
 " In Insert mode: Use the appropriate number of spaces to insert a <Tab>
 let g:spacevim_expand_tab              = 1
@@ -1202,7 +1202,7 @@ command -range -nargs=1 LeaderGuideVisual call SpaceVim#mapping#guide#start_by_p
 function! SpaceVim#end() abort
   if !g:spacevim_vimcompatible
     call SpaceVim#mapping#def('nnoremap <silent>', '<Tab>', ':wincmd w<CR>', 'Switch to next window or tab','wincmd w')
-    call SpaceVim#mapping#def('nnoremap <silent>', '<S-Tab>', ':wincmd W<CR>', 'Switch to previous window or tab','wincmd p')
+    call SpaceVim#mapping#def('nnoremap <silent>', '<S-Tab>', ':wincmd p<CR>', 'Switch to previous window or tab','wincmd p')
   endif
   if g:spacevim_vimcompatible
     let g:spacevim_windows_leader = ''

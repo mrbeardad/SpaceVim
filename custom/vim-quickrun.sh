@@ -20,12 +20,12 @@ if [[ "$1" == "-r" ]] ;then
     echo -e "\033[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program!\033[m"
     shift 1
 elif [[ "$1" == "-c" ]] ;then
-    echo -e "\033[1;32m[Compile]\033[34m gcc \033[35m$2\033[34m -O2 -o \033[m$4 \033[3;32m'%'\033[m"
-    gcc $2 -O2 -I. -o "$4" "$3"
+    echo -e "\033[1;32m[Compile]\033[34m gcc \033[3;32m'%'\033[m \033[35m$2\033[34m -O2 -o \033[m$4"
+    gcc "$3" $2 -O2 -I. -o "$4"
     shift 3
 elif [[ "$1" == "-C" ]] ;then
-    echo -e "\033[1;32m[Compile]\033[34m g++ \033[35m$2\033[34m -O2 -o \033[m$4 \033[3;32m'%'\033[m"
-    g++ $2 -O2 -I. -o "$4" "$3"
+    echo -e "\033[1;32m[Compile]\033[34m g++ \033[3;32m'%'\033[m \033[35m$2\033[34m -O2 -o \033[m$4"
+    g++  "$3" $2 -O2 -I. -o "$4"
     shift 3
 else
     echo -e "\033[1;31moption error\033[m"

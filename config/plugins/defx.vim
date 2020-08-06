@@ -52,7 +52,7 @@ call defx#custom#column('icon', {
 	      \ 'max_width': -90,
 	      \ })
 
-let g:defx_git#indicators = {'Untracked': '⟴', 'Unmerged': '≠', 'Ignored': '•', 'Renamed': '🗘', 'Modified': '⬍', 'Deleted': '✖', 'Unknown': '⁇', 'Staged': '⥥'}
+let g:defx_git#indicators = {'Untracked': '', 'Unmerged': '≠', 'Ignored': '○', 'Renamed': '', 'Modified': '', 'Deleted': '✗', 'Unknown': '⁇', 'Staged': ''}
 
 augroup vfinit
   au!
@@ -126,13 +126,19 @@ function! s:defx_init()
   " Define mappings
   nnoremap <silent><buffer><expr> gx
         \ defx#do_action('execute_system')
+  nnoremap <silent><buffer><expr> <c-c>
+        \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> yy
         \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> q
         \ defx#do_action('quit')
+  nnoremap <silent><buffer><expr> <c-x>
+        \ defx#do_action('move')
   nnoremap <silent><buffer><expr> dd
         \ defx#do_action('move')
   map <silent><buffer> p <nop>
+  nnoremap <silent><buffer><expr> <c-v>
+        \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> pp
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> h defx#do_action('call', 'DefxSmartH')
@@ -158,17 +164,22 @@ function! s:defx_init()
   nnoremap <silent><buffer><expr> st
         \ defx#do_action('drop', 'tabedit')
   nnoremap <silent><buffer> P :call Ranger_Preview()<cr><cr>
+  nnoremap <silent><buffer> <c-p> :call Ranger_Preview()<cr><cr>
 
   nnoremap <silent><buffer> F :call Leaderf_Defx_Search()<cr>
+  nnoremap <silent><buffer> <c-f> :call Leaderf_Defx_Search()<cr>
 
   nnoremap <silent><buffer> R :call defx#call_action('open_directory', SpaceVim#plugins#projectmanager#current_root())<cr>
 
   nnoremap <silent><buffer> O :call defx#util#open(defx#get_candidate().action__path)<cr>
+  nnoremap <silent><buffer> <c-o> :call defx#util#open(defx#get_candidate().action__path)<cr>
 
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')
   nnoremap <silent><buffer><expr> N
         \ defx#do_action('new_file')
+  nnoremap <silent><buffer><expr> <del>
+        \ defx#do_action('remove')
   nnoremap <silent><buffer><expr> rm
         \ defx#do_action('remove')
   nnoremap <silent><buffer><expr> rn

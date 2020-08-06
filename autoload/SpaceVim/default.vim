@@ -159,7 +159,6 @@ function! SpaceVim#default#options() abort
   set belloff=
   set noswapfile
   set nobackup
-  set wildignore-=*/tmp/*
 endfunction
 "}}}
 
@@ -177,6 +176,8 @@ endfunction
 
 function! SpaceVim#default#keyBindings() abort
   " yank and paste
+  nnoremap <silent> , yl
+  nnoremap <silent> Y y$
   xnoremap =p "0p
   nnoremap =p "0p
   nnoremap =P "0P
@@ -184,8 +185,6 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent>=O :set paste<cr>O<c-r>0<c-c>:set nopaste<cr>
 
   if has('unnamedplus')
-    nnoremap <silent> , yl
-    nnoremap <silent> Y y$
     xnoremap <Leader>y "+y
     nnoremap <leader>y "+y
     nnoremap <leader>Y "+y$
@@ -236,37 +235,18 @@ function! SpaceVim#default#keyBindings() abort
         \ '',
         \ 'Clear quickfix')
 
-  noremap <silent>\|<space> :s/ *$//<cr>:nohl<cr>
-  noremap <silent>\|a<space> :%s/ *$//<cr>:nohl<cr>
   " Use Ctrl+* to jump between windows
   nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
   nnoremap <silent><C-Left>  :<C-u>wincmd h<CR>
   nnoremap <silent><C-Up>    :<C-u>wincmd k<CR>
   nnoremap <silent><C-Down>  :<C-u>wincmd j<CR>
 
+
   "]<End> or ]<Home> move current line to the end or the begin of current buffer
   nnoremap <silent>]<End> ddGp``
   nnoremap <silent>]<Home> ddggP``
   vnoremap <silent>]<End> dGp``
   vnoremap <silent>]<Home> dggP``
-
-  " buffer operator
-  nnoremap <silent> <leader>n :bn<cr>
-  let g:_spacevim_mappings.n = ['', 'next buffer']
-  nnoremap <silent> <leader>b :bp<cr>
-  let g:_spacevim_mappings.b = ['', 'previous buffer']
-  function! s:BufferDelete()
-    let bufNr = buffer_number()
-    bp
-    exe 'bd '. bufNr
-  endfunction
-  nnoremap <silent><c-w>x :call <SID>BufferDelete()<cr>
-  nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
-  nnoremap <silent><tab> :winc w<cr>
-  nnoremap <silent><s-tab> :winc W<cr>
-
-  nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
-  let g:_spacevim_mappings.m = ['', 'quickly modify your macros']
 
   function! s:Scroll(num) abort
     if a:num == 0
@@ -276,7 +256,17 @@ function! SpaceVim#default#keyBindings() abort
     endif
   endfunction
 
-  " insert mode
+  " buffer与window操作
+  nnoremap <silent> <leader>n :bn<cr>
+  let g:_spacevim_mappings.n = ['', 'next buffer']
+  nnoremap <silent> <leader>b :bp<cr>
+  let g:_spacevim_mappings.b = ['', 'previous buffer']
+  nnoremap <silent><c-w>x :let bufnr_for_delete_with_ctrl_w_x = buffer_number()<cr>bp<cr>exe 'bd '.bufnr_for_delete_with_ctrl_w_x<cr>
+  nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
+  nnoremap <silent><tab> :winc w<cr>
+  nnoremap <silent><s-tab> :winc W<cr>
+
+  " 插入模式
   inoremap <c-a> <home>
   inoremap <c-e> <end>
   inoremap <c-d> <c-c><c-d>i<right>
@@ -287,10 +277,11 @@ function! SpaceVim#default#keyBindings() abort
   inoremap <c-l> <right><bs>
   inoremap <c-u> <c-c><right>d^i
   inoremap <c-k> <c-c><right>d$i
-  inoremap <c-o> <end><cr>
   inoremap <c-y> <c-r>"
+  inoremap <c-o> <end><cr>
   inoremap <silent><c-c> <c-c>:set cul<cr>
 
+  " 普通模式
   nnoremap <c-a> 0
   nnoremap <c-e> $
   nnoremap <c-b> <c-u>
@@ -300,15 +291,19 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent> <bs> :nohl<CR>
   nnoremap <expr> n  'Nn'[v:searchforward]
   nnoremap <expr> N  'nN'[v:searchforward]
+  nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
+  nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
+  nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
+  let g:_spacevim_mappings.m = ['', 'quickly modify your macros']
 
-  " visual mode
+  " 可视模式
   vnoremap <c-a> 0
   vnoremap <c-e> $
 
-  " command mode
+  " 命令模式
   cnoremap <c-a> <c-b>
 
-  " terminal mode
+  " 终端模式
   tmap <esc> <c-\><c-n>
   tmap <c-up> <esc><c-up>
   tmap <c-down> <esc><c-down>
@@ -333,6 +328,9 @@ function! SpaceVim#default#keyBindings() abort
   inoremap <silent><C-S-Up> <C-C>:m .-2<CR>==gi
   vnoremap <silent><C-S-Down> :m '>+1<CR>gv=gv
   vnoremap <silent><C-S-Up> :m '<-2<CR>gv=gv
+
+  " Start new line
+  inoremap <S-Return> <C-o>o
 
   " Improve scroll, credits: https://github.com/Shougo
   nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
@@ -359,6 +357,9 @@ function! SpaceVim#default#keyBindings() abort
   vnoremap <C-s> :<C-u>w<CR>
   cnoremap <C-s> <C-u>w<CR>
 
+  nnoremap <C-q> :<c-u>q<cr>
+  vnoremap <C-q> :<c-u>q<cr>
+  cnoremap <C-q> <c-u>q<cr>
 
   " C-r: Easier search and replace
   xnoremap <C-r> :<C-u>call <SID>VSetSearch()<CR>:,$s/<C-R>=@/<CR>//gc<left><left><left>

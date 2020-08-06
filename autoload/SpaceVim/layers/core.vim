@@ -35,8 +35,6 @@ function! SpaceVim#layers#core#plugins() abort
   call add(plugins, ['scrooloose/nerdcommenter', { 'loadconf' : 1, 'merged' : 0}])
 
   if exists('*matchaddpos')
-    let g:matchup_matchparen_stopline = 56
-    let g:matchup_delim_stopline = 56
     call add(plugins, ['andymass/vim-matchup', {'merged' : 0}])
   endif
   call add(plugins, ['gruvbox-community/gruvbox', {'loadconf' : 1, 'merged' : 0}])
@@ -54,6 +52,8 @@ endfunction
 let s:filename = expand('<sfile>:~')
 let s:lnum = expand('<slnum>') + 2
 function! SpaceVim#layers#core#config() abort
+  let g:matchup_matchparen_stopline = 40
+  let g:matchup_delim_stopline = 40
   let g:clever_f_smart_case = 1
   let g:clever_f_fix_key_direction = 1
   nmap gss <Plug>(openbrowser-smart-search)
@@ -100,6 +100,10 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> [t :tabprevious<cr>
   nnoremap <silent> ]t :tabnext<cr>
 
+  " [p or ]p for p and P
+  nnoremap <silent> [p P
+  nnoremap <silent> ]p p
+
   " Select last paste
   " nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
 
@@ -116,7 +120,7 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['j', '$'], 'm`g_', 'jump-to-end-of-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'b'], '<C-o>', 'jump-backward', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'f'], '<C-i>', 'jump-forward', 0)
-  nmap <c-o> <c-o>
+  nnoremap <c-o> <c-o>
   nmap <c-p> [SPC]jf
 
   " file tree key bindings

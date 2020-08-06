@@ -109,12 +109,22 @@ snippet jp "description" w
 <span id="${1:jump}"></span>
 endsnippet
 
-# 鼠标悬停回显
+# 鼠标悬停回显，且有高亮
 snippet eh "description" w
 <a href=## title="${1:echo content}">[注]</a>
 endsnippet
 
-# 鼠标悬停回显，但是没有高亮，一般不用
+# 鼠标悬停回显，且单独一行
 snippet eh1 "description" w
 <div title="${1:echo content}">${2:content outside}</div>
+endsnippet
+
+# see begin
+snippet <
+<!-- entry begin: $1 -->
+endsnippet
+
+# see end
+snippet >
+<!-- entry end -->
 endsnippet
