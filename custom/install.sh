@@ -35,7 +35,7 @@ cp -v ~/.SpaceVim/mode/init.toml ~/.SpaceVim.d
 
 # 安装配置需要的命令
 makedir ~/.local/bin
-cp ~/.SpaceVim/custom/{vim-quickrun,nop}.sh ~/.local/bin
+cp ~/.SpaceVim/custom/vim-quickrun.sh ~/.local/bin
 g++ -O3 -std=c++17 -o ~/.local/bin/quickrun_time ~/.SpaceVim/custom/quickrun_time.cpp
 
 # 链接nvim配置

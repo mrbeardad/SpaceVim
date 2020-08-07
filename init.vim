@@ -44,6 +44,11 @@ let g:translator_default_engines = ['bing']
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
 "=============================== After Load =================================
 
+let g:ale_echo_msg_error_str = '❌'
+let g:ale_echo_msg_warning_str = '⚡'
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = '⚡'
+
 set path+=/usr/include/c++/*/,/usr/include/boost/,/usr/include/mysql++/,.
 
 if $WSL_DISTRO_NAME != ''
@@ -127,9 +132,17 @@ if $DARKBG != ''
 else
     colorscheme default-plus
 endif
-hi! SpellBad gui=undercurl guisp=red
-hi! SpellCap gui=undercurl guisp=yellow
-hi! SpellRare gui=undercurl guisp=magenta
+
+if $WSL_DISTRO_NAME != ''
+  " Windows Terminal暂时还不支持undercurl，且无法回滚为underline
+  hi! SpellBad gui=underline guisp=red
+  hi! SpellCap gui=underline guisp=yellow
+  hi! SpellRare gui=underline guisp=magenta
+else
+  hi! SpellBad gui=undercurl guisp=red
+  hi! SpellCap gui=undercurl guisp=yellow
+  hi! SpellRare gui=undercurl guisp=magenta
+endif
 
 " Terminal Color
 let terminal_color_1 = '#ff5555'

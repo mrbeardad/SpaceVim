@@ -8,5 +8,5 @@ else
     option="-i"
 fi
 
-cp $option -vu ~/.local/bin/{nop,vim-quickrun}.sh custom/
+cp $option -vu ~/.local/bin/vim-quickrun.sh custom/
 cp $option -vu ~/.SpaceVim.d/init.toml mode/

@@ -248,14 +248,14 @@ dynamic_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
 snippet for
-for ( ${1:int i\{\}}; ${2:i < num}; ${3:++i}) {
+for ( ${1:int i\{\}}; ${2:i < num}; ${3:++i} ) {
     ${4}
 }
 endsnippet
 
 # range-based
 snippet forr
-for (auto& ${1:t} : ${1:container}) {
+for ( auto& ${1:t} : ${1:container} ) {
     ${2}
 }
 endsnippet

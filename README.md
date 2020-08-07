@@ -210,7 +210,7 @@ let g:quickrun_compileflag_extension_flags = [
 &emsp;哈哈，编辑器这东西就是要称手才好用，所以你也不可避免的需要修改一些内容。
 接下来就简单说说怎么定制吧。
 
-&emsp;首先，一部分我觉得用户大可能需要修改的配置都被放到了[init.vim](init.vim)里。  
+&emsp;首先，一部分我觉得用户可能会需要修改的配置都被放到了[init.vim](init.vim)里。  
 
 &emsp;然后，如果init.vim里面没有内想要的该去哪找呢？这你的先看看[SpaceVim的官方文档](https://spacevim.org/documentation/)，
 官方给的选项都需要在~/.SpaceVim.d/init.toml里添加配置，本仓库的init.toml在[mode目录下](mode/init.toml)
@@ -226,6 +226,12 @@ let g:quickrun_compileflag_extension_flags = [
 &emsp;最后，最简单的办法就是，给我提issue  
 -“凎，为啥不早说？”  
 -“(●'◡'●)ﾉ⭐️️”
+
+SpaceVim目录：
+autoload/   ：各种SpaceVim配置
+autoload/SpaceVim/layers/ ：可用模块配置
+config/plugins/     ：插件的配置
+config/plugins_before/     ：插件的配置（在插件加载前加载）
 
 # 安装
 

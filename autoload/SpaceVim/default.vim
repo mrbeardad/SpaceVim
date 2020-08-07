@@ -261,7 +261,7 @@ function! SpaceVim#default#keyBindings() abort
   let g:_spacevim_mappings.n = ['', 'next buffer']
   nnoremap <silent> <leader>b :bp<cr>
   let g:_spacevim_mappings.b = ['', 'previous buffer']
-  nnoremap <silent><c-w>x :let bufnr_for_delete_with_ctrl_w_x = buffer_number()<cr>bp<cr>exe 'bd '.bufnr_for_delete_with_ctrl_w_x<cr>
+  nnoremap <silent><c-w>x :let bufnr_for_delete_with_ctrl_w_x = buffer_number()<cr>:bp<cr>:exe 'bd '.bufnr_for_delete_with_ctrl_w_x<cr>
   nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
   nnoremap <silent><tab> :winc w<cr>
   nnoremap <silent><s-tab> :winc W<cr>
