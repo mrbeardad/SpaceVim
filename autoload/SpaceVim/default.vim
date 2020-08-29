@@ -158,7 +158,7 @@ function! SpaceVim#default#options() abort
   set noautoread
   set autochdir
   set belloff=
-  set noswapfile
+  set swapfile
   set nobackup
 endfunction
 "}}}

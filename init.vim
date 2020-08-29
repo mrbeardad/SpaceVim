@@ -14,6 +14,7 @@ let g:ale_cpp_clangtidy_checks = ['*',
       \ '-modernize-use-trailing-return-type',
       \ '-readability-isolate-declaration',
       \ ]
+let g:disable_quickrun = 0
 let g:quickrun_disable_auto_launch_gdb = 0
 let g:quickrun_cpp_default_compile_flag = '-std=c++17 '
 let g:quickrun_c_default_compile_flag = '-std=c11 '
@@ -26,16 +27,16 @@ let g:quickrun_compileflag_extension_flags = [
       \ '-I/usr/include/mysql -lmysqlpp'
       \ ]
 let g:ycm_filetype_whitelist = {
-        \ "c":1,
-        \ "cpp":1,
-        \ "java":1,
-        \ "python":1,
-        \ "vim":1,
-        \ "sh":1,
-        \ }
+      \ "c":1,
+      \ "cpp":1,
+      \ "java":1,
+      \ "python":1,
+      \ "vim":1,
+      \ "sh":1,
+      \ }
 let g:ycm_semantic_triggers =  {
-        \ "c,cpp,python,java,vim,sh": ['re!\w{2}'],
-        \ }
+      \ "c,cpp,python,java,vim,sh": ['re!\w{2}'],
+      \ }
 let g:ycm_clangd_args = [ '--header-insertion=never' ] " disable automatic insertion `#include`
 
 let g:translator_default_engines = ['bing']
@@ -50,16 +51,6 @@ let g:ale_sign_error = '❌'
 let g:ale_sign_warning = '⚡'
 
 set path+=/usr/include/c++/*/,/usr/include/boost/,/usr/include/mysql++/,.
-
-if $WSL_DISTRO_NAME != ''
-  nnoremap <silent><leader>yy :.w !clip.exe<cr><cr>
-  xnoremap <silent><leader>y :w !clip.exe<cr><cr>
-  nnoremap <silent><space>bY :%w !clip.exe<cr><cr>
-  " Download paste.exe from https://www.c3scripts.com/tutorials/msdos/paste.zip
-  nnoremap <silent><leader>p :r !paste.exe<cr>
-  xnoremap <silent><leader>p :r !paste.exe<cr>
-  nnoremap <silent><space>bP :%r !paste.exe<cr>
-endif
 
 if $DARKBG != ''
   let colorNr = localtime() % 5
@@ -130,10 +121,17 @@ if $DARKBG != ''
     hi! String gui=italic guifg=#c3e88d
   endif
 else
-    colorscheme default-plus
+  colorscheme default-plus
 endif
 
 if $WSL_DISTRO_NAME != ''
+  " WSL访问Windows剪切板，需要下载一个小工具
+  " curl -sLo /tmp/win32yank.zip https://github.com/equalsraf/win32yank/releases/download/v0.0.4/win32yank-x64.zip
+  " unzip -p /tmp/win32yank.zip win32yank.exe > /tmp/win32yank.exe
+  " chmod +x /tmp/win32yank.exe
+  " sudo mv /tmp/win32yank.exe ~/bin
+  set clipboard=unnamedplus
+
   " Windows Terminal暂时还不支持undercurl，且无法回滚为underline
   hi! SpellBad gui=underline
   hi! SpellCap gui=underline

@@ -48,6 +48,7 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
 endfunction
 
 function! SpaceVim#layers#lang#markdown#config() abort
+  let g:tex_conceal = ""
   let g:vmt_auto_update_on_save = 0
   " do not highlight markdown error
   let g:markdown_hi_error = 0

@@ -1,6 +1,6 @@
 # 写在前面
 
-&emsp;SpaceVim确实是个很棒的配置集合。相比于其他热门vim配置，它的文档更详细，开发更活跃。
+&emsp;SpaceVim确实是个很棒的配置集合。相比于其他热门vim配置，它的文档更详细，开发更活跃，
 而且模块化的设计使得用户可以更方便、更精准地进行自定义，魔改原配置。
 虽然作者建议将custom配置写到单独的文件，但编辑器要用得顺手就是要配置的十分个性化嘛，
 custom文件显然不能满足，于是就自己动手魔改呗。这时模块化配置就体现出优势了，哪里不顺改那里✺◟(∗❛ัᴗ❛ั∗)◞✺
@@ -8,11 +8,10 @@ custom文件显然不能满足，于是就自己动手魔改呗。这时模块�
 * * *
 
 几乎所有的快捷键都在[这个快捷键列表](https://github.com/mrbeardad/learning-notes-and-cheat-sheets/blob/master/notes/vim.md)中列出了，
-里面包含了vim自带快捷键、SpaceVim原版快捷键、以及本魔改版快捷键
+里面包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键
 
 接下来就按一个个模块来讲解各种特性吧。先look~look我改了哪些地方  
 ![gdi upstream](custom/diff.png)  
-**<p align="center">用Neovim结合该配置更棒哦</p>**
 
 # 目录
 <!-- vim-markdown-toc GFM -->
@@ -33,15 +32,14 @@ custom文件显然不能满足，于是就自己动手魔改呗。这时模块�
 
 # 颜色主题
 &emsp;SpaceVim的***colorscheme模块***提供了不少颜色主题。我选取了其中几个比较好看的，
-针对C\+\+语法高亮进行微调，当然也包括了对C\+\+语法高亮插件进行了微调。
+针对C\+\+语法高亮进行微调，而且也对C\+\+语法高亮插件进行了微调。
 
 &emsp;不同的是，C\+\+语法高亮插件的微调直接对插件本身进行了调整，
 而对颜色主题的调整全都放在了[init.vim](init.vim)。所以想要使用微调过的颜色主题，
-只有启动nvim时加载init.vim才行，而在开启后使用`:colorscheme`更换的主题是没有微调过的。
+只有启动nvim时加载init.vim才行，而在开启后使用`:colorscheme`更换的主题是原版哦。
 
-&emsp;需要在启动nvim时设置环境变量`DARKBG`，即执行`DARKBG=1 nvim`即可随机启用那些花里胡哨的主题，
-不然默认使用透明背景主题default-plus。
-要是觉得不方便，则可以简单修改一下[init.vim](init.vim)分支语句即可
+&emsp;只需要在启动nvim时设置环境变量`DARKBG`，即执行`DARKBG=1 nvim`即可随机启用那些花里胡哨的主题中的一个，
+不然默认使用透明背景主题default-plus。要是觉得不方便，则可以简单修改一下[init.vim](init.vim)分支语句即可
 
 PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master/fonts)，是我将三种字体合成一个font family得到的。
 
@@ -123,18 +121,21 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 ![ALE](custom/checker.png)
 
 选项：
-* `g:ale_cpp_std` ：设置C++标准版本，默认值为`-std=c++17`
 * `g:ale_c_std` ：设置C标准版本，默认值为`-std=c11`
+
+* `g:ale_cpp_std` ：设置C++标准版本，默认值为`-std=c++17`
+
 * `g:ale_cpp_clangtidy_checks ` ：指定静态语法检测器clang-tidy
     所启用的[checks](https://clang.llvm.org/extra/clang-tidy/checks/list.html)，
     从而可以针对某一问题进行语法检测进而提示用户。
 
 * `g:ale_clangtidy_period`  ：`clang-tidy`的启动周期，在init.vim中启用了绝大多数的checks，
-    故它的检测速度相当感人。所以让它在一个周期内只启动一次。默认值为`6`，
+    导致它的检测速度相当感人，所以让它在一个周期内只启动一次。默认值为`6`，
     即每6次从插入模式退出到普通模式，只会触发一次clang-tidy，而gcc与cppcheck无此限制
 
 * `g:ale_lint_on_*` ：这几个变量设置何时触发语法检测，用`:h`查看详细信息，
-    默认只有`InsertLeave`退出插入模式才触发ALE检测（按`<c-c>`退出插入模式可不触发）
+    默认只有`InsertLeave`（即退出插入模式进入普通模式）才触发ALE检测
+    （按`<c-c>`代替`<esc>`退出插入模式避免触发）
 
 * `g:ale_sign_*`  ：这几个变量设置侧边栏显示的错误或警告图标，用`:h`查看详细信息
 
@@ -147,13 +148,14 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 
 ![autocomplete](custom/autocomplete.png)
 
-&emsp;除了语义补全，还有代码片段补全，插件为[UltiSnips](https://github.com/SirVer/ultisnips)。即按一定的语法编辑snippet配置文件后，再在代码中输入关键字，
+&emsp;除了语义补全，还有代码片段补全，插件为[UltiSnips](https://github.com/SirVer/ultisnips)。
+即按一定的语法编辑snippet配置文件后，再在代码中输入关键字，
 然后按`<m-/>`（<kbd>Alt</kbd>+<kbd>/</kbd>）触发，就会将关键字替换为配置文件中的完整片段。  
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
 
 # C模块
-&emsp;原生SpaceVim运行程序不会使用内建终端，而且脚本计时器的偏差有点大，所以我重新写了一个Linux平台的计时器，
-输出漂漂亮亮的。  
+&emsp;原生SpaceVim运行程序不会使用内建终端，而且脚本计时器的偏差有点大，
+所以我重写了该部分的配置，输出漂漂亮亮的。（目前只支持Linux）
 
 &emsp;**命令：**  
 * `QuickrunCompileFlag`：显示或设置当前文件的编译参数，例`QuickrunCompileFlag -std=c++20 -mavx2`  
@@ -162,6 +164,7 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 * `QuickrunRedirect`：显示或设置当前文件的运行时重定向，例`QuickrunRedirect < file`
 
 &emsp;**选项：**  
+* `g:disable_quickrun`  ：因为更改后的该模块只支持Linux，所以其他OS使用SpaceVim原版的Runner吧
 * `g:disable_auto_launch_gdb` ：若设置为1，则快捷键`<space>ld`仅编译用于调试的程序，而不会自动启动cgdb或gdb
 * `g:quickrun_cpp_default_compile_flag ` ：设置编译C++文件时的参数，默认值为`-std=c++17`
 * `g:quickrun_c_default_compile_flag `  ：设置编译C文件时的参数，默认值为`-std=c11`
@@ -202,7 +205,7 @@ let g:quickrun_compileflag_extension_flags = [
 | `<space>lg` | 添加或删除GFM目录               |
 | `<space>lk` | 利用系统剪切板的URL插入链接元素 |
 
-注意：`WSL`与`WSL2`中也可打开浏览器进行预览哦，已经配置好了。
+注意：`WSL`与`WSL2`中也会自动打开浏览器进行预览哦
 
 # 总结
 &emsp;以上就是大概的定制化内容，还有不少比较杂的就不一一列出了。  
@@ -222,6 +225,9 @@ let g:quickrun_compileflag_extension_flags = [
 &emsp;若还是没找到，那就祭出终极杀器——用上面的模糊搜索模块直接搜整个项目，
 快捷键`<leader>fp`搜索项目中的文件名，
 快捷键`<space>sp`搜索项目中文件的内容
+
+&emsp;除了模块目录，还有个目录比较重要，`config/plugins/与config/plugins_before/`，
+里面是各个插件的配置文件。
 
 &emsp;最后，最简单的办法就是，给我提issue  
 -“凎，为啥不早说？”  
@@ -245,6 +251,7 @@ config/plugins_before/     ：插件的配置（在插件加载前加载）
 
 | 依赖包                    | 作用                              |
 |---------------------------|-----------------------------------|
+| neovim                    | 本配置仅适用于neovim而非vim       |
 | xsel                      | neovim的系统剪切板交互            |
 | python-pynvim             | neovim的python支持                |
 | cmake                     | build YCM时需要                   |
@@ -257,7 +264,7 @@ config/plugins_before/     ：插件的配置（在插件加载前加载）
 
 此外，想要更好的体验，需要将neovim运行在tmux中，你可以设置你喜欢的终端，使它启动时自动连接tmux。
 [tmux的配置可以用这个](https://github.com/mrbeardad/DotFiles/blob/master/tmux/tmux.conf)，
-此配置解决了tmux中的true-color与undercrul问题，不然你在tmux例运行neovim是很不美观的。
+此配置解决了tmux中的true-color、undercrul和vim映射冲突等问题，不然你在tmux例运行neovim体验可是不太好。
 
 ## 安装指导
 **Only for Linux**
