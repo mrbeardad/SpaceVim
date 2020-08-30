@@ -171,8 +171,8 @@ function! s:defx_init()
 
   nnoremap <silent><buffer> R :call defx#call_action('open_directory', SpaceVim#plugins#projectmanager#current_root())<cr>
 
-  nnoremap <silent><buffer> O :call defx#util#open(defx#get_candidate().action__path)<cr>
-  nnoremap <silent><buffer> <c-o> :call defx#util#open(defx#get_candidate().action__path)<cr>
+  nnoremap <silent><buffer> O :exe '!xdg-open ' substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g')<cr><cr>
+  nnoremap <silent><buffer> <c-o> :exe '!xdg-open ' substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g')<cr><cr>
 
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')

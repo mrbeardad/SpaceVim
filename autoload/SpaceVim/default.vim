@@ -281,6 +281,8 @@ function! SpaceVim#default#keyBindings() abort
   inoremap <c-y> <c-r>"
   inoremap <c-o> <end><cr>
   inoremap <silent><c-c> <c-c>:set cul<cr>
+  inoremap <c-right> <c-t>
+  inoremap <c-left> <c-d>
 
   " 普通模式
   nnoremap <c-a> 0
