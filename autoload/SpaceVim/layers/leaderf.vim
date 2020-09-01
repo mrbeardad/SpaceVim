@@ -31,6 +31,7 @@ function! SpaceVim#layers#leaderf#plugins() abort
         \ }])
   call add(plugins, ['Shougo/neomru.vim', {'merged' : 0}])
   call add(plugins, ['Shougo/neoyank.vim', {'merged' : 0}])
+  let neoyank#save_registers = ['"']
 
   " use this repo unicode data
   call add(plugins, ['SpaceVim/Unite-sources', {'merged' : 0}])
@@ -283,15 +284,19 @@ endfunction
 func! s:neoyank(...)
   let yank = []
   call neoyank#update()
-  for text in neoyank#_get_yank_histories()['"']
-    call add(yank, '": ' . join(split(text[0], "\n"), '\n'))
+  if $WSL_DISTRO_NAME != ''
+    let reg = '+'
+  else
+    let reg = '"'
+  endif
+  for text in neoyank#_get_yank_histories()[reg]
+    call add(yank, reg . ': ' . join(split(text[0], "\n"), '\n'))
   endfor
   return yank
 endfunction
 
 function! s:neoyank_acp(line, args) abort
-  let line = a:line[3:]
-  call append(0, split(line, '\\n'))
+  let @+ = a:line[3:]
 endfunction
 
 function! s:menu(name)
