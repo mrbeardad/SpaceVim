@@ -23,6 +23,7 @@ hi CursorLineNr guifg=#d7ffff
 hi MoreMsg  guifg=springgreen
 hi Question guifg=springgreen
 hi NonText guifg=blue
+hi CursorLine guibg=Grey25
 
 " #d7cfff   基佬紫
 " #bfffff   基佬青

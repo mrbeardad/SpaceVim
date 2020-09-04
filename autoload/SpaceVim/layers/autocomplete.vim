@@ -117,7 +117,7 @@ function! SpaceVim#layers#autocomplete#plugins() abort
 endfunction
 
 function! Ycm_and_AutoPair_Return()
-  if expand('<cword>') == '{}' || expand('<cword>') == '()'
+  if expand('<cword>') ==# '{}' || expand('<cword>') ==# '()'
     return "\<CR>\<c-c>zz=ko"
   else
     let ret = substitute(substitute(execute('imap <s-cr>'),'^.*<SNR>','<SNR>', ''),'S-CR','CR','')

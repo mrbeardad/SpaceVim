@@ -163,7 +163,7 @@ function! s:filetypeIcon(path) abort
   endfor
   let ext = fnamemodify(file, ':e')
   " 定制版中，file也可能是文件类型
-  if ext == ''
+  if ext ==# ''
     let ext = file
   endif
   if has_key(g:spacevim_filetype_icons, ext)

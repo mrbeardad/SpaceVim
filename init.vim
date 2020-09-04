@@ -1,4 +1,24 @@
 let g:ale_cpp_std = '-std=c++17'
+let g:ale_linters = {
+      \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
+      \   'c': ['gcc', 'cppcheck'],
+      \   'sh': ['shellcheck'],
+      \   'python': ['flake8', 'pylint'],
+      \}
+let g:ale_linters_explicit = 1
+let g:ale_sign_column_always = 1
+let g:ale_disable_lsp = 1
+let g:ale_completion_enabled = 0
+let g:ale_set_highlights = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 0
+let g:ale_cpp_cc_executable = 'gcc'
+let g:ale_cpp_cc_options = '-Wall -Wextra -O2 -I. ' . g:ale_cpp_std
+let g:ale_cpp_cppcheck_options = '--inconclusive --enable=warning,style,performance,portability -'.g:ale_cpp_std
+let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
+" let g:ale_cpp_clangtidy_options = '-extra-arg="-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-pedantic -Wno-missing-prototypes -Wno-padded -Wno-old-style-cast -O2 '.g:ale_and_quickrun_cpp_compile_std.'"'
 let g:ale_clangtidy_period = 6
 let g:ale_cpp_clangtidy_checks = ['*',
       \ '-abseil*',
@@ -14,6 +34,7 @@ let g:ale_cpp_clangtidy_checks = ['*',
       \ '-modernize-use-trailing-return-type',
       \ '-readability-isolate-declaration',
       \ ]
+
 let g:disable_quickrun = 0
 let g:quickrun_disable_auto_launch_gdb = 0
 let g:quickrun_cpp_default_compile_flag = '-std=c++17 '
@@ -26,6 +47,7 @@ let g:quickrun_compileflag_extension_flags = [
       \ '-lpthread',
       \ '-I/usr/include/mysql -lmysqlpp'
       \ ]
+
 let g:ycm_filetype_whitelist = {
       \ "c":1,
       \ "cpp":1,
@@ -45,10 +67,12 @@ let g:translator_default_engines = ['bing']
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
 "=============================== After Load =================================
 
-let g:ale_echo_msg_error_str = '❌'
-let g:ale_echo_msg_warning_str = '⚡'
-let g:ale_sign_error = '❌'
-let g:ale_sign_warning = '⚡'
+let g:ale_sign_error = ' '
+let g:ale_sign_warning = ' '
+let g:ale_sign_info = ' '
+let g:ale_echo_msg_error_str = 'Error'
+let g:ale_echo_msg_warning_str = 'Warning'
+let g:ale_echo_msg_info_str = 'Info'
 
 set path+=/usr/include/c++/*/,/usr/include/boost/,/usr/include/mysql++/,.
 
@@ -130,7 +154,8 @@ if $WSL_DISTRO_NAME != ''
   " unzip -p /tmp/win32yank.zip win32yank.exe > /tmp/win32yank.exe
   " chmod +x /tmp/win32yank.exe
   " sudo mv /tmp/win32yank.exe ~/bin
-  set clipboard=unnamedplus
+  " set clipboard=unnamedplus
+  let g:clipboard = 'win32yank'
 
   " Windows Terminal暂时还不支持undercurl，且无法回滚为underline
   hi! SpellBad gui=underline

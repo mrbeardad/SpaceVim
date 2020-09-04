@@ -360,6 +360,9 @@ function! SpaceVim#default#keyBindings() abort
   vnoremap <C-s> :<C-u>w<CR>
   cnoremap <C-s> <C-u>w<CR>
 
+  " Tabs
+  nnoremap <silent> <leader>0 :<C-u>tabfirst<CR>
+  nnoremap <silent> <leader>$ :<C-u>tablast<CR>
   nnoremap <C-q> :<c-u>q<cr>
   vnoremap <C-q> :<c-u>q<cr>
   cnoremap <C-q> <c-u>q<cr>

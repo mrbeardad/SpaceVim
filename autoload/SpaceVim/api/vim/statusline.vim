@@ -17,7 +17,7 @@ let s:self.__cmp = SpaceVim#api#import('vim#compatible')
 
 function! s:self.check_width(len, sec, winwidth) abort
   " 总是显示行数与列数
-  if a:sec =~ '%l/%L'
+  if a:sec =~# '%l/%L'
     return 1
   else
     return a:len + self.len(a:sec) < a:winwidth

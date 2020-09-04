@@ -23,8 +23,9 @@ endfunction
 
 function! SpaceVim#layers#lang#markdown#plugins() abort
   let plugins = []
-  call add(plugins, ['mrbeardad/vim-markdown',{ 'on_ft' : 'markdown'}])
-  call add(plugins, ['joker1007/vim-markdown-quote-syntax',{ 'on_ft' : 'markdown'}])
+  " call add(plugins, ['mrbeardad/vim-markdown',{ 'on_ft' : 'markdown'}])
+  " call add(plugins, ['joker1007/vim-markdown-quote-syntax',{ 'on_ft' : 'markdown'}])
+  call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['iamcco/mathjax-support-for-mkdp',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['lvht/tagbar-markdown',{'merged' : 0}])
@@ -49,6 +50,12 @@ endfunction
 
 function! SpaceVim#layers#lang#markdown#config() abort
   let g:tex_conceal = ""
+  let g:vim_markdown_math = 1
+  let g:vim_markdown_emphasis_multiline = 0
+  let g:vim_markdown_conceal = 0
+  let g:vim_markdown_strikethrough = 1
+  let g:vim_markdown_conceal_code_blocks = 0
+
   let g:vmt_auto_update_on_save = 0
   " do not highlight markdown error
   let g:markdown_hi_error = 0

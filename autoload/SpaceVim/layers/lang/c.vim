@@ -210,9 +210,9 @@ function! SpaceVim#layers#lang#c#quickrun_init()
   let b:QuickRun_Args = ''
   let b:QuickRun_Redirect = ''
   let g:apple = &ft
-  if &ft == 'c'
+  if &ft ==# 'c'
     let b:QuickRun_CompileFlag = get(g:, 'quickrun_c_default_compile_flag', '-std=c11')
-  elseif &ft == 'cpp'
+  elseif &ft ==# 'cpp'
     let b:QuickRun_CompileFlag = get(g:, 'quickrun_cpp_default_compile_flag', '-std=c++17')
   endif
 endfunction
@@ -220,7 +220,7 @@ au! FileType c,cpp call SpaceVim#layers#lang#c#quickrun_init()
 
 " Quickrun命令
 function! SpaceVim#layers#lang#c#quickrun_do(var, str) abort
-  if a:str == '' "为空则打印变量值
+  if a:str ==# '' "为空则打印变量值
     exe 'let '. a:var
   else
     exe 'let '. a:var .' =  a:str'
@@ -255,14 +255,14 @@ function! SpaceVim#layers#lang#c#QuickRun()
   let qr_cf = qr_cf .' -I. -I'.SpaceVim#plugins#projectmanager#current_root() .'/include'
 
   " 编译参数自动扩展
-  let cnter=0
+  let cnter = 0
   let g:quickrun_compileflag_extension_regex = get(g:, 'quickrun_compileflag_extension_regex', [])
   let g:quickrun_compileflag_extension_flass = get(g:, 'quickrun_compileflag_extension_flags', [])
   for ext_qr_cf_grep in g:quickrun_compileflag_extension_regex
-    if execute('g/'.ext_qr_cf_grep.'/echo 1') =~ 1
+    if execute('g/'.ext_qr_cf_grep.'/echo 1') =~# '1'
       let qr_cf = qr_cf.' '.g:quickrun_compileflag_extension_flags[cnter]
     endif
-    let cnter+=1
+    let cnter += 1
   endfor
 
   if s:bufnr != 0 && bufexists(s:bufnr) " 关闭已打开的QuickRun终端窗口
@@ -270,19 +270,19 @@ function! SpaceVim#layers#lang#c#QuickRun()
   endif
   let QuickRun_CFILE = expand('%:p')    " 需要编译的文件绝对路径
   " 若当前文件为改动，且之前通过QuickRun运行过，且自上次编译之后未改动过文件内容，则直接运行上次编译的可执行文件；否则重新编译
-  if &modified == 0 && has_key(g:quickrun_Path, QuickRun_CFILE) && g:quickrun_Path[QuickRun_CFILE] =~ s:get_timestamp(QuickRun_CFILE)
+  if &modified ==# '0' && has_key(g:quickrun_Path, QuickRun_CFILE) && g:quickrun_Path[QuickRun_CFILE] =~# s:get_timestamp(QuickRun_CFILE)
     call s:open_win()
     execute 'call termopen("vim-quickrun.sh -r '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args.' \"'.qr_rd .'\"")'
   else
-    if &modified == 1
+    if &modified ==# '1'
     write
     endif
     let g:quickrun_Path[QuickRun_CFILE] = '/tmp/QuickRun/'. expand('%:t') .'.'. s:get_timestamp(QuickRun_CFILE)
     let fileT=&ft
     call s:open_win()
-    if fileT == 'c'
+    if fileT ==# 'c'
       execute 'call termopen("vim-quickrun.sh -c \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
-    elseif fileT == 'cpp'
+    elseif fileT ==# 'cpp'
       execute 'call termopen("vim-quickrun.sh -C \"'. qr_cf .'\" '. QuickRun_CFILE .' '. g:quickrun_Path[QuickRun_CFILE] .' '.  qr_args .' \"'. qr_rd .'\"")'
     endif
   endif
@@ -292,7 +292,7 @@ endfunction
 
 let g:QuickRun_InputWin = 0
 function! SpaceVim#layers#lang#c#OpenInputWin()
-  if g:QuickRun_InputWin != 0 && bufexists(g:QuickRun_InputWin)
+  if g:QuickRun_InputWin !=# '0' && bufexists(g:QuickRun_InputWin)
     execute 'bd! ' . g:QuickRun_InputWin
   endif
   let originWinnr = win_getid()

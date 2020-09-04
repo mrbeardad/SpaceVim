@@ -284,19 +284,15 @@ endfunction
 func! s:neoyank(...)
   let yank = []
   call neoyank#update()
-  if $WSL_DISTRO_NAME != ''
-    let reg = '+'
-  else
-    let reg = '"'
-  endif
-  for text in neoyank#_get_yank_histories()[reg]
-    call add(yank, reg . ': ' . join(split(text[0], "\n"), '\n'))
+  for text in neoyank#_get_yank_histories()['"']
+    call add(yank, '": ' . join(split(text[0], "\n"), '\n'))
   endfor
   return yank
 endfunction
 
 function! s:neoyank_acp(line, args) abort
   let @+ = a:line[3:]
+  let @" = a:line[3:]
 endfunction
 
 function! s:menu(name)
