@@ -306,24 +306,6 @@ function! SpaceVim#default#keyBindings() abort
   " 命令模式
   cnoremap <c-a> <c-b>
 
-  " 终端模式
-  tmap <esc> <c-\><c-n>
-  tmap <c-up> <esc><c-up>
-  tmap <c-down> <esc><c-down>
-  tmap <c-right> <esc><c-right>
-  tmap <c-left> <esc><c-left>
-  tmap <c-w> <esc><c-w>
-  tmap <silent><tab> <esc>:winc w<cr>
-  tmap <silent><s-tab> <esc>:winc p<cr>
-  tmap <c-a> <esc><home>
-  tmap <c-e> <esc><end>
-  tmap <up> <esc><up>
-  tmap <down> <esc><down>
-  tmap <left> <esc><left>
-  tmap <right> <esc><right>
-  tmap <silent><s-down> :call <SID>Scroll(1)<cr>
-  tmap <silent><s-up> :call <SID>Scroll(0)<cr>
-
   "Ctrl+Shift+Up/Down to move up and down
   nnoremap <silent><C-S-Down> :m .+1<CR>==
   nnoremap <silent><C-S-Up> :m .-2<CR>==

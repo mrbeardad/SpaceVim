@@ -20,7 +20,7 @@ function! SpaceVim#layers#checkers#plugins() abort
   if g:spacevim_enable_neomake && g:spacevim_enable_ale == 0
     call add(plugins, ['neomake/neomake', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
   elseif g:spacevim_enable_ale
-    call add(plugins, ['dense-analysis/ale', {'on_event' : 'InsertEnter', 'merged' : 0, 'loadconf_before' : 1}])
+    call add(plugins, ['dense-analysis/ale', {'on_ft' : keys(g:ale_linters), 'merged' : 0, 'loadconf_before' : 1}])
     call SpaceVim#custom#SPC('nore', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#custom#SPC('nore', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
     call SpaceVim#custom#SPC('nore', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)

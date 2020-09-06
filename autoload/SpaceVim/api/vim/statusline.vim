@@ -16,7 +16,7 @@ let s:self.__buffer = SpaceVim#api#import('vim#buffer')
 let s:self.__cmp = SpaceVim#api#import('vim#compatible')
 
 function! s:self.check_width(len, sec, winwidth) abort
-  " 总是显示行数与列数
+  " CUSTOM: Always show the cursor position
   if a:sec =~# '%l/%L'
     return 1
   else

@@ -68,34 +68,34 @@ function! SpaceVim#layers#tools#config() abort
   nnoremap <silent> <F5> :UndotreeToggle<CR>
   let g:rainbow_active = 1
   let g:rainbow_conf = {
-  \	'guifgs':  ['#e15078', '#95bcad', '#ff7300', '#3a5fcd', '#d7cfff', '#00dfd7', '#ffd700', '#ff00ff', '#40ffff'],
-  \	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-  \	'guis': [''],
-  \	'cterms': [''],
-  \	'operators': '_,_',
-  \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-  \	'separately': {
-  \		'*': {},
-  \		'markdown': {
-  \			'parentheses_options': 'containedin=markdownCode contained',
-  \		},
-  \		'lisp': {
-  \			'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
-  \		},
-  \		'haskell': {
-  \			'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/\v\{\ze[^-]/ end=/}/ fold'],
-  \		},
-  \		'vim': {
-  \			'parentheses_options': 'containedin=vimFuncBody',
-  \		},
-  \		'perl': {
-  \			'syn_name_prefix': 'perlBlockFoldRainbow',
-  \		},
-  \		'stylus': {
-  \			'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
-  \		},
-  \		'css': 0,
-  \	}
+  \ 'guifgs':  ['#e15078', '#95bcad', '#ff7300', '#3a5fcd', '#d7cfff', '#00dfd7', '#ffd700', '#ff00ff', '#40ffff'],
+  \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+  \ 'guis': [''],
+  \ 'cterms': [''],
+  \ 'operators': '_,_',
+  \ 'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+  \ 'separately': {
+  \     '*': {},
+  \     'markdown': {
+  \       'parentheses_options': 'containedin=markdownCode contained',
+  \     },
+  \     'lisp': {
+  \       'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+  \     },
+  \     'haskell': {
+  \       'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/\v\{\ze[^-]/ end=/}/ fold'],
+  \     },
+  \     'vim': {
+  \       'parentheses_options': 'containedin=vimFuncBody',
+  \     },
+  \     'perl': {
+  \       'syn_name_prefix': 'perlBlockFoldRainbow',
+  \     },
+  \     'stylus': {
+  \       'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
+  \     },
+  \     'css': 0,
+  \ }
   \}
   if maparg('<C-_>', 'v') ==# ''
     vnoremap <silent> <C-_> <Esc>:Ydv<CR>

@@ -36,9 +36,9 @@ let g:quickrun_compileflag_extension_flass = get(g:, 'quickrun_compileflag_exten
 function! ALE_CHOPT()
   let cnter=0
   for ext_qr_cf_grep in g:quickrun_compileflag_extension_regex
-    if execute('g/'.ext_qr_cf_grep.'/echo 1') =~ 1
-      let g:ale_cpp_gcc_options = g:ale_cpp_gcc_options.' '.g:quickrun_compileflag_extension_flags[cnter]
-      let g:ale_cpp_clangtidy_options = g:ale_cpp_gcc_options.' '.g:quickrun_compileflag_extension_flags[cnter]
+    if execute('g/'.ext_qr_cf_grep.'/echo 1') =~# '1'
+      let g:ale_cpp_cc_options = g:ale_cpp_cc_options.' '.g:quickrun_compileflag_extension_flags[cnter]
+      let g:ale_cpp_clangtidy_options = g:ale_cpp_clangtidy_options.' '.g:quickrun_compileflag_extension_flags[cnter]
     endif
     let cnter+=1
   endfor

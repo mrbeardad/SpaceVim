@@ -82,12 +82,20 @@ function! Ranger_Preview()
     echoerr 'You need to install `ranger`'
   endif
   let path = defx#get_candidate().action__path
-  if $TMUX != ''
+  if $TMUX !=# ''
     exe "!tmux new-window 'ranger --selectfile=". path."'"
   elseif executable('guake')
     exe '!guake -n 1 -s 1 -e "ranger --selectfile='. path . '" --show'
   else
     echoerr 'You need to install guake , or you need to run your neovim in tmux'
+  endif
+endfunction
+
+function! Open_wtih_gui()
+  if has('unix') || has('wsl')
+    call jobstart('xdg-open '. substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g'))
+  elseif has('win32')
+    call jobstart('explorer.exe '. substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g'))
   endif
 endfunction
 
@@ -171,8 +179,8 @@ function! s:defx_init()
 
   nnoremap <silent><buffer> R :call defx#call_action('open_directory', SpaceVim#plugins#projectmanager#current_root())<cr>
 
-  nnoremap <silent><buffer> O :exe '!xdg-open ' substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g')<cr><cr>
-  nnoremap <silent><buffer> <c-o> :exe '!xdg-open ' substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g')<cr><cr>
+  nnoremap <silent><buffer> O :call Open_wtih_gui()<cr>
+  nnoremap <silent><buffer> <c-o> :call Open_wtih_gui()<cr>
 
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')

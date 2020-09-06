@@ -146,10 +146,10 @@ endfunction
 
 function! s:major_mode() abort
     let icon = s:FILE.fticon(bufname())
-    if icon == ''
+    if icon ==# ''
       let icon = s:FILE.fticon(&ft)
     endif
-    if icon == ''
+    if icon ==# ''
       let icon = ''
     endif
   return ' '.icon.'%{empty(&ft)? "Unkown" : " " . &ft . " "}'

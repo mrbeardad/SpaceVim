@@ -50,7 +50,7 @@ function! SpaceVim#layers#autocomplete#plugins() abort
           \ 'merged' : 0}])
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'
-    call add(plugins, ['ycm-core/YouCompleteMe',            { 'build' : './install.py --clangd-completer', 'loadconf_before' : 1, 'merged' : 0}])
+    call add(plugins, ['ycm-core/YouCompleteMe', { 'build' : './install.py --clangd-completer', 'loadconf_before' : 1, 'merged' : 0}])
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
     call add(plugins, ['Shougo/neocomplete', {
           \ 'on_event' : 'InsertEnter',
@@ -133,7 +133,9 @@ function! SpaceVim#layers#autocomplete#config() abort
   let g:AutoPairsMultilineClose = 0
   let g:AutoPairsShortcutJump = 0
   inoremap <silent><m-n> <c-c>:call AutoPairsJump()<cr>a
-  inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr>
+  if g:spacevim_autocomplete_parens && g:spacevim_autocomplete_method ==# 'ycm'
+    inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr>
+  endif
 
   "mapping
   if s:tab_key_behavior ==# 'smart'

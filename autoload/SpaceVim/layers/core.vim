@@ -52,15 +52,12 @@ endfunction
 let s:filename = expand('<sfile>:~')
 let s:lnum = expand('<slnum>') + 2
 function! SpaceVim#layers#core#config() abort
-  let g:matchup_matchparen_stopline = 40
-  let g:matchup_delim_stopline = 40
+  let g:matchup_matchparen_stopline = 45
+  let g:matchup_delim_stopline = 45
   let g:clever_f_smart_case = 1
   let g:clever_f_fix_key_direction = 1
   nmap gss <Plug>(openbrowser-smart-search)
   vmap gss <Plug>(openbrowser-smart-search)
-  nnoremap gsg :OpenBrowser https://github.com/search?q=expand("<cword>")&ref=opensearch<cr><cr>
-  xnoremap gsg :OpenBrowser https://github.com/search?q=expand("<cword>")&ref=opensearch<cr><cr>
-
   "vnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
   "nnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
   "vnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
@@ -108,7 +105,7 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> ]p p
 
   " Select last paste
-  " nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
+  nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
 
   call SpaceVim#mapping#space#def('nnoremap', ['f', 's'], 'write', 'save-current-file', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'S'], 'wall', 'save-all-files', 1)
@@ -124,7 +121,7 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'b'], '<C-o>', 'jump-backward', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'f'], '<C-i>', 'jump-forward', 0)
   nnoremap <c-o> <c-o>
-  nmap <c-p> [SPC]jf
+  nnoremap <c-p> <c-i>
 
   " file tree key bindings
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'd'], 'call call('
@@ -140,15 +137,12 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> <Plug>(better-easymotion-overwin-f) :call <SID>better_easymotion_overwin_f(0)<Cr>
   xnoremap <silent> <Plug>(better-easymotion-overwin-f) :<C-U>call <SID>better_easymotion_overwin_f(1)<Cr>
   call SpaceVim#mapping#space#def('nmap', ['j', 'J'], '<Plug>(easymotion-overwin-f2)', 'jump-to-suite-of-two-characters', 0)
-  nmap ; [SPC]jJ
+  nmap ; <Plug>(easymotion-overwin-f2)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'k'], 'j==', 'goto-next-line-and-indent', 0)
   call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(easymotion-overwin-line)', 'jump to a line', 0)
-  " call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(better-easymotion-overwin-line)', 'jump-or-select-to-a-line', 0, 1)
   nnoremap <silent> <Plug>(better-easymotion-overwin-line) :call <SID>better_easymotion_overwin_line(0)<Cr>
   xnoremap <silent> <Plug>(better-easymotion-overwin-line) :<C-U>call <SID>better_easymotion_overwin_line(1)<Cr>
-  " call SpaceVim#mapping#space#def('nmap', ['j', 'v'], '<Plug>(easymotion-overwin-line)', 'jump-to-a-line', 0)
   call SpaceVim#mapping#space#def('nmap', ['j', 'w'], '<Plug>(easymotion-overwin-w)', 'jump-to-a-word', 0)
-  " call SpaceVim#mapping#space#def('nmap', ['j', 'q'], '<Plug>(easymotion-overwin-line)', 'jump-to-a-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'n'], "i\<cr>\<esc>", 'sp-newline', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'o'], "i\<cr>\<esc>k$", 'open-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 's'], 'call call('

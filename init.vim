@@ -26,17 +26,17 @@ let g:ycm_clangd_args = [ '--header-insertion=never' ]
 
 let g:translator_default_engines = ['bing']
 
-"=============================  Load SpaceVim ===============================
-execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
-"=============================== After Load =================================
-
-let g:ale_cpp_std = '-std=c++17'
 let g:ale_linters = {
       \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
       \   'c': ['gcc', 'cppcheck'],
       \   'sh': ['shellcheck'],
       \   'python': ['flake8', 'pylint'],
       \}
+"=============================  Load SpaceVim ===============================
+execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
+"=============================== After Load =================================
+
+let g:ale_cpp_std = '-std=c++17'
 let g:ale_linters_explicit = 1
 let g:ale_sign_column_always = 1
 let g:ale_disable_lsp = 1
@@ -170,4 +170,3 @@ endif
 " let terminal_color_5 = '#ff79c6'
 " let terminal_color_6 = '#8be9fd'
 " let terminal_color_7 = '#bfffff'
-

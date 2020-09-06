@@ -127,6 +127,7 @@ let s:file_node_exact_matches = {
       \  '.ds_store'                        : '',
       \  '.gitconfig'                       : '',
       \  '.gitignore'                       : '',
+      \  '.gitsubmodules'                   : '',
       \  '.gdbinit'                         : '',
       \  '.zshrc'                           : '',
       \  '.bashrc'                          : '',
@@ -162,7 +163,7 @@ function! s:filetypeIcon(path) abort
     endif
   endfor
   let ext = fnamemodify(file, ':e')
-  " 定制版中，file也可能是文件类型
+  " CUSTOM: 'file' might be filetype
   if ext ==# ''
     let ext = file
   endif

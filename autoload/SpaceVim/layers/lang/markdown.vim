@@ -85,7 +85,13 @@ function! SpaceVim#layers#lang#markdown#config() abort
   let g:mkdp_browserfunc = 'openbrowser#open'
   let g:mkdp_auto_close = 0
   if $WSL_DISTRO_NAME != ''
-    let g:mkdp_open_ip = substitute(execute('!ip a show eth0 | sed -n "3p"'), '.*inet \(.*\)\/.*', '\1', 'g')
+python3 << EOF
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(('8.8.8.8', 80))
+ip = s.getsockname()[0]
+vim.command("let g:mkdp_open_ip = '" + ip + "'")
+EOF
   endif
   let g:mkdp_open_to_the_world = 1
   " }}}
