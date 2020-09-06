@@ -3,25 +3,30 @@
 set -ex
 export TRAVIS_PULL_REQUEST=${TRAVIS_PULL_REQUEST}
 if [ "$LINT" = "vimlint" ]; then
-    for file in $(git diff --name-only HEAD dev | grep .vim$);
+    if [[ -f build_log ]]; then
+        rm build_log
+    fi
+    for file in $(git ls-files | grep SpaceVim.*.vim);
     do
-        sh /tmp/vimlint/bin/vimlint.sh -l /tmp/vimlint -p /tmp/vimlparser $file;
+        /tmp/vimlint/bin/vimlint.sh -l /tmp/vimlint -p /tmp/vimlparser $file >> build_log 2>&1;
     done
+    if [[ -s build_log ]]; then
+        exit 2
+    fi
 elif [ "$LINT" = "vimlint-errors" ]; then
     if [[ -f build_log ]]; then
         rm build_log
     fi
-    for file in $(git diff --name-only HEAD master | grep .vim$);
+    for file in $(git ls-files | grep SpaceVim.*.vim);
     do
         /tmp/vimlint/bin/vimlint.sh -E -l /tmp/vimlint -p /tmp/vimlparser $file >> build_log 2>&1;
     done
     if [[ -s build_log ]]; then
-        cat build_log
         exit 2
     fi
 elif [ "$LINT" = "file-encoding" ]; then
-    if [[ -f encoding_log ]]; then
-        rm encoding_log
+    if [[ -f build_log ]]; then
+        rm build_log
     fi
     for file in $(git diff --name-only HEAD master);
     do
@@ -31,17 +36,34 @@ elif [ "$LINT" = "file-encoding" ]; then
         encoding=`file -b --mime-encoding $file`
         if [ $encoding != "utf-8" ] && [ $encoding != "us-ascii" ];
         then
-            echo $file " " $encoding >> encoding_log
+            echo $file " " $encoding >> build_log
         fi
     done
-    if [[ -s encoding_log ]]; then
-        cat encoding_log
+    if [[ -s build_log ]]; then
         exit 2
     fi
 elif [ "$LINT" = "vint" ]; then
-    vint --enable-neovim .
+    if [[ -f build_log ]]; then
+        rm build_log
+    fi
+    for file in $(git ls-files | grep SpaceVim.*.vim);
+    do
+        vint --enable-neovim $file >> build_log 2>&1;
+    done
+    if [[ -s build_log ]]; then
+        exit 2
+    fi
 elif [ "$LINT" = "vint-errors" ]; then
-    vint --enable-neovim --error .
+    if [[ -f build_log ]]; then
+        rm build_log
+    fi
+    for file in $(git ls-files | grep SpaceVim.*.vim);
+    do
+        vint --enable-neovim --error $file >> build_log 2>&1;
+    done
+    if [[ -s build_log ]]; then
+        exit 2
+    fi
 elif [ "$LINT" = "vader" ]; then
     if [ "$VIM_BIN" = "nvim" ]; then
         export PATH="${DEPS}/_neovim/${VIM_TAG}/bin:${PATH}"
