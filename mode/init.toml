@@ -10,7 +10,7 @@
     enable_os_fileformat_icon = true
     enable_tabline_ft_icon = true
     buffer_index_type = 4
-    windows_index_type = 0
+    windows_index_type = 4
     statusline_left_sections = ['winnr', 'version control info']
     statusline_right_sections = ['major mode', 'fileformat', 'cursorpos', 'percentage']
 

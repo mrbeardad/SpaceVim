@@ -154,6 +154,51 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
 
 # C模块
+
+### QuickRun插件已从C模块中抽里出来，并修改了接口，文档待更新。可以暂时照init.vim中的实例进行配置
+```vim
+let g:quickrun_default_flags = {
+    \ 'python': {
+        \ 'compiler': '',
+        \ 'compileFlags': '',
+        \ 'debugCompileFlags': '',
+        \ 'extRegex': [],
+        \ 'extFlags': [],
+        \ 'cmd': 'python ${thisFile}',
+        \ 'cmdArgs': '',
+        \ 'cmdRedir': '',
+        \ 'debugCmd': ''
+    \ },
+    \ 'c': {
+        \ 'compiler': 'gcc',
+        \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'debugCompileFlags': '-Og -g3 -std=c17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'extRegex': [],
+        \ 'extFlags': [],
+        \ 'cmd': '${exeFile}',
+        \ 'cmdArgs': '',
+        \ 'cmdRedir': '',
+        \ 'debugCmd': 'cgdb ${exeFile}'
+    \ },
+    \ 'cpp': {
+        \ 'compiler': 'g\++',
+        \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'extRegex': [
+            \ '^\#include\s*<future>',
+            \ '^\#include\s*<mysql++\/mysql++.h>'
+        \ ],
+        \ 'extFlags': [
+            \ '-lpthread',
+            \ '-I/usr/include/mysql -lmysqlpp'
+        \ ],
+        \ 'cmd': '${exeFile}',
+        \ 'cmdArgs': '',
+        \ 'cmdRedir': '',
+        \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+    \ }
+\ }
+```
 &emsp;原生SpaceVim运行程序不会使用内建终端，而且脚本计时器的偏差有点大，
 所以我重写了该部分的配置，输出漂漂亮亮的。（目前只支持Linux）
 

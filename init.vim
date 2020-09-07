@@ -1,15 +1,44 @@
-let g:disable_quickrun = 0
-let g:quickrun_disable_auto_launch_gdb = 0
-let g:quickrun_cpp_default_compile_flag = '-std=c++17 '
-let g:quickrun_c_default_compile_flag = '-std=c11 '
-let g:quickrun_compileflag_extension_regex =[
-      \ '^\#include\s*<future>',
-      \ '^\#include\s*<mysql++\/mysql++.h>'
-      \ ]
-let g:quickrun_compileflag_extension_flags = [
-      \ '-lpthread',
-      \ '-I/usr/include/mysql -lmysqlpp'
-      \ ]
+let g:quickrun_default_flags = {
+    \ 'python': {
+        \ 'compiler': '',
+        \ 'compileFlags': '',
+        \ 'debugCompileFlags': '',
+        \ 'extRegex': [],
+        \ 'extFlags': [],
+        \ 'cmd': 'python ${thisFile}',
+        \ 'cmdArgs': '',
+        \ 'cmdRedir': '',
+        \ 'debugCmd': ''
+    \ },
+    \ 'c': {
+        \ 'compiler': 'gcc',
+        \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'debugCompileFlags': '-Og -g3 -std=c17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'extRegex': [],
+        \ 'extFlags': [],
+        \ 'cmd': '${exeFile}',
+        \ 'cmdArgs': '',
+        \ 'cmdRedir': '',
+        \ 'debugCmd': 'cgdb ${exeFile}'
+    \ },
+    \ 'cpp': {
+        \ 'compiler': 'g\++',
+        \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+        \ 'extRegex': [
+            \ '^\#include\s*<future>',
+            \ '^\#include\s*<mysql++\/mysql++.h>'
+        \ ],
+        \ 'extFlags': [
+            \ '-lpthread',
+            \ '-I/usr/include/mysql -lmysqlpp'
+        \ ],
+        \ 'cmd': '${exeFile}',
+        \ 'cmdArgs': '',
+        \ 'cmdRedir': '',
+        \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+    \ }
+\ }
 
 let g:ycm_filetype_whitelist = {
       \ "c":1,
