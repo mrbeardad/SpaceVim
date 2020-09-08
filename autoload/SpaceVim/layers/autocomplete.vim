@@ -50,7 +50,7 @@ function! SpaceVim#layers#autocomplete#plugins() abort
           \ 'merged' : 0}])
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'
-    call add(plugins, ['ycm-core/YouCompleteMe', { 'build' : './install.py --clangd-completer', 'loadconf_before' : 1, 'merged' : 0}])
+    call add(plugins, ['ycm-core/YouCompleteMe', { 'on_ft': keys(g:ycm_filetype_whitelist), 'build' : './install.py --clangd-completer', 'loadconf_before' : 1, 'merged' : 0}])
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
     call add(plugins, ['Shougo/neocomplete', {
           \ 'on_event' : 'InsertEnter',

@@ -29,7 +29,7 @@ function! SpaceVim#layers#edit#plugins() abort
         \ ['gcmt/wildfire.vim',{'on_map' : '<Plug>(wildfire-'}],
         \ ['easymotion/vim-easymotion', {'on_map' : '<Plug>(easymotion-'}],
         \ ['haya14busa/vim-easyoperator-line', {'on_map' : '<Plug>(easymotion-'}],
-        \ ['editorconfig/editorconfig-vim', { 'on_event': 'InsertEnter', 'merged' : 0, 'if' : has('python') || has('python3')}],
+        \ ['editorconfig/editorconfig-vim', { 'merged' : 0, 'if' : has('python') || has('python3')}],
         \ ['osyo-manga/vim-jplus', { 'on_map' : '<Plug>(jplus' }],
         \ ['godlygeek/tabular',           { 'on_cmd' : 'Tabularize', 'merged' : 0}],
         \ ['ntpeters/vim-better-whitespace',  { 'on_cmd' : ['StripWhitespace', 'ToggleWhitespace', 'DisableWhitespace', 'EnableWhitespace']}],

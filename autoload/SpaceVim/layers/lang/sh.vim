@@ -22,9 +22,9 @@
 function! SpaceVim#layers#lang#sh#plugins() abort
   let l:plugins = []
   call add(l:plugins, ['chrisbra/vim-zsh', { 'on_ft' : 'zsh' }])
-  call add(l:plugins, ['dag/vim-fish', { 'merged' : 0 }])
+  call add(l:plugins, ['dag/vim-fish', {  'on_ft' : 'fish' ,'merged' : 0 }])
   if get(g:, 'spacevim_enable_ycm') == 1
-    call add(l:plugins, ['Valodim/vim-zsh-completion', { 'on_ft' : 'zsh' }])
+    call add(l:plugins, ['vim-add-ons/shell-omni-completion', { 'on_ft' : ['sh', 'zsh', 'bash'] }])
   else
     call add(l:plugins, ['zchee/deoplete-zsh', { 'on_ft' : 'zsh' }])
   endif

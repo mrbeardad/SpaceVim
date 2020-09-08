@@ -28,6 +28,9 @@
     enable_ycm = true
     snippet_engine = "ultisnips"
 
+    # Quickrun配置
+    enable_quickrun = true
+
     # SpaceVim配置
     default_indent = 4
     checkinstall = false
@@ -93,6 +96,15 @@
 
 [[layers]]
     name = 'lang#markdown'
+
+[[layers]]
+    name ='lang#sh'
+
+[[layers]]
+    name ='lang#vim'
+
+[[layers]]
+    name ='lang#python'
 
 [[layers]]
     name = 'chinese'

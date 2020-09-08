@@ -3,11 +3,11 @@
 &emsp;SpaceVim确实是个很棒的配置集合。相比于其他热门vim配置，它的文档更详细，开发更活跃，
 而且模块化的设计使得用户可以更方便、更精准地进行自定义，魔改原配置。
 虽然作者建议将custom配置写到单独的文件，但编辑器要用得顺手就是要配置的十分个性化嘛，
-custom文件显然不能满足，于是就自己动手魔改呗。这时模块化配置就体现出优势了，哪里不顺改那里✺◟(∗❛ัᴗ❛ั∗)◞✺
+custom文件显然不能满足，于是就自己动手魔改呗。这时模块化配置就体现出优势了，哪里不顺改那里，精准打击✺◟(∗❛ัᴗ❛ั∗)◞✺
 
 * * *
 
-几乎所有的快捷键都在[这个快捷键列表](https://github.com/mrbeardad/learning-notes-and-cheat-sheets/blob/master/notes/vim.md)中列出了，
+几乎所有的快捷键都在[<u>这个快捷键列表</u>](https://github.com/mrbeardad/learning-notes-and-cheat-sheets/blob/master/notes/vim.md)中列出了，
 里面包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键
 
 接下来就按一个个模块来讲解各种特性吧。先look~look我改了哪些地方  
@@ -34,7 +34,7 @@ custom文件显然不能满足，于是就自己动手魔改呗。这时模块�
 &emsp;SpaceVim的***colorscheme模块***提供了不少颜色主题。我选取了其中几个比较好看的，
 针对C\+\+语法高亮进行微调，而且也对C\+\+语法高亮插件进行了微调。
 
-&emsp;不同的是，C\+\+语法高亮插件的微调直接对插件本身进行了调整，
+&emsp;不同的是，C\+\+语法高亮插件的微调直接对插件本身进行了调整（我fork了该项目），
 而对颜色主题的调整全都放在了[init.vim](init.vim)。所以想要使用微调过的颜色主题，
 只有启动nvim时加载init.vim才行，而在开启后使用`:colorscheme`更换的主题是原版哦。
 
@@ -153,9 +153,12 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 然后按`<m-/>`（<kbd>Alt</kbd>+<kbd>/</kbd>）触发，就会将关键字替换为配置文件中的完整片段。  
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
 
-# C模块
-
-### QuickRun插件已从C模块中抽里出来，并修改了接口，文档待更新。可以暂时照init.vim中的实例进行配置
+# QuickRun
+在`~/.SpaceVim.d/init.toml`中的`[option]`下设置`enable_quickrun = true`
+即可启用QuickRun替代原版中的Runner来运行程序，QuickRun与后者区别在于：
+* 使用neovim的内建终端
+* 程序运行计时器更加准确
+* 如下，设置参数比较方便
 ```vim
 let g:quickrun_default_flags = {
     \ 'python': {
@@ -199,8 +202,7 @@ let g:quickrun_default_flags = {
     \ }
 \ }
 ```
-&emsp;原生SpaceVim运行程序不会使用内建终端，而且脚本计时器的偏差有点大，
-所以我重写了该部分的配置，输出漂漂亮亮的。（目前只支持Linux）
+**但现在还不完善，只支持Linux + Neovim**
 
 &emsp;**命令：**  
 * `QuickrunCompileFlag`：显示或设置当前文件的编译参数，例`QuickrunCompileFlag -std=c++20 -mavx2`  

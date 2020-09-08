@@ -60,8 +60,8 @@ let s:CPT = SpaceVim#api#import('vim#compatible')
 
 function! SpaceVim#layers#lang#c#plugins() abort
   let plugins = []
-  call add(plugins, ['skywind3000/vim-cppman'])
-  call add(plugins, ['agatan/vim-sort-include'])
+  call add(plugins, ['skywind3000/vim-cppman', {'on_ft':'c'}])
+  call add(plugins, ['agatan/vim-sort-include', {'on_ft':['c','cpp']}])
   if !SpaceVim#layers#lsp#check_filetype('c') && !SpaceVim#layers#lsp#check_filetype('cpp')
     if g:spacevim_autocomplete_method ==# 'deoplete'
       call add(plugins, ['Shougo/deoplete-clangx', {'merged' : 0}])
@@ -116,26 +116,21 @@ function! SpaceVim#layers#lang#c#config() abort
   call SpaceVim#mapping#gd#add('cpp',
         \ function('s:go_to_def'))
   " TODO: add stdin suport flex -t lexer.l | gcc -o lexer.o -xc -
+  let runner1 = {
+        \ 'exe' : 'gcc',
+        \ 'targetopt' : '-o',
+        \ 'opt' : ['-xc', '-'],
+        \ 'usestdin' : 1,
+        \ }
+  call SpaceVim#plugins#runner#reg_runner('c', [runner1, '#TEMP#'])
   call SpaceVim#mapping#space#regesit_lang_mappings('c', function('s:language_specified_mappings'))
-  if exists("g:spacevim_enable_quickrun") && g:spacevim_enable_quickrun == 1
-    call SpaceVim#plugins#quickrun#prepare()
-  else
-    let runner1 = {
-          \ 'exe' : 'gcc',
-          \ 'targetopt' : '-o',
-          \ 'opt' : ['-xc', '-'],
-          \ 'usestdin' : 1,
-          \ }
-    call SpaceVim#plugins#runner#reg_runner('c', [runner1, '#TEMP#'])
-    let runner2 = {
-          \ 'exe' : 'g++',
-          \ 'targetopt' : '-o',
-          \ 'opt' : ['-xc++', '-'],
-          \ 'usestdin' : 1,
-          \ }
-    call SpaceVim#plugins#runner#reg_runner('cpp', [runner2, '#TEMP#'])
-  endif
-
+  let runner2 = {
+        \ 'exe' : 'g++',
+        \ 'targetopt' : '-o',
+        \ 'opt' : ['-xc++', '-'],
+        \ 'usestdin' : 1,
+        \ }
+  call SpaceVim#plugins#runner#reg_runner('cpp', [runner2, '#TEMP#'])
   if !empty(s:c_repl_command)
     call SpaceVim#plugins#repl#reg('c', s:c_repl_command)
   else
@@ -164,8 +159,35 @@ function! SpaceVim#layers#lang#c#config() abort
         auto FileType c,cpp  ClighterEnable
       endif
     endif
+    if g:spacevim_enable_ale == 1
+      auto FileType c,cpp call s:is_ale_ok()
+    endif
   augroup END
   call add(g:spacevim_project_rooter_patterns, '.clang')
+endfunction
+
+function! s:is_ale_ok()
+  let needcp_cppcheck = 1
+  let needcp_clangtidy = 1
+  let dir = g:spacevim_data_dir.'vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/'
+  for thisLinter in ['cppcheck', 'clangtidy']
+    if  match(execute('echo g:ale_linters'),thisLinter) != -1 && filereadable(dir.thisLinter.'.vim')
+      for thisLine in readfile(dir.thisLinter.'.vim')
+        if thisLine =~# 'ALE_CUSTOM_CHANGED'
+          let needcp_{thisLinter} =0
+        endif
+      endfor
+    endif
+  endfor
+  if  match(execute('echo g:ale_linters'),thisLinter) != -1 && filereadable(dir.thisLinter.'.vim')
+    py3 from shutil import copyfile
+    for thisLinter in ['cppcheck', 'clangtidy']
+      if needcp_{thisLinter} == 1
+        echo 'copy file from ~/.SpaceVim/custom/'.thisLinter.'.vim to '.dir.thisLinter.'.vim'
+        exe "py3 copyfile('".$HOME."/.SpaceVim/custom/".thisLinter.".vim', '".dir.thisLinter.".vim')"
+      endif
+    endfor
+  endif
 endfunction
 
 let s:enable_clang_syntax = 0
@@ -205,21 +227,10 @@ function! SpaceVim#layers#lang#c#set_variable(var) abort
 endfunction
 
 function! s:language_specified_mappings() abort
-  if exists("g:spacevim_enable_quickrun") && g:spacevim_enable_quickrun == 1
-    call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
-          \ 'call SpaceVim#plugins#quickrun#QuickRun()',
-          \ 'execute current file', 1)
-    call SpaceVim#mapping#space#langSPC('nmap', ['l','i'],
-          \ 'call SpaceVim#plugins#quickrun#OpenInputWin()',
-          \ 'open input window', 1)
-    call SpaceVim#mapping#space#langSPC('nmap', ['l','d'],
-          \ ':call SpaceVim#plugins#quickrun#compile4debug()<cr><cr>',
-          \ 'compile for debug', 0)
-  else
-    call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
-          \ 'call SpaceVim#plugins#runner#open()',
-          \ 'execute current file', 1)
-  endif
+
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
+        \ 'call SpaceVim#plugins#runner#open()',
+        \ 'execute current file', 1)
 
   nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
 

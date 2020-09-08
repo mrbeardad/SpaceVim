@@ -26,3 +26,4 @@ call ale#linter#Define('cpp', {
 \   'command': function('ale_linters#cpp#cppcheck#GetCommand'),
 \   'callback': 'ale#handlers#gcc#HandleGCCFormatWithIncludes',
 \})
+" ALE_CUSTOM_CHANGED

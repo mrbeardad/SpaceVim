@@ -274,4 +274,4 @@ endfunction
 function! s:trim_right(str, trim)
   return substitute(a:str, printf('%s$', a:trim), '', 'g')
 endfunction
-au! VimEnter * if buffer_name() == '' | Defx | winc p | else | Defx | Defx | endif
+" au! VimEnter * if buffer_name() == '' | Defx | winc p | else | Defx | Defx | endif

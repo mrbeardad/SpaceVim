@@ -24,7 +24,7 @@ endfunction
 function! SpaceVim#layers#lang#markdown#plugins() abort
   let plugins = []
   call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}])
-  call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_ft' : 'markdown'}])
+  call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_cmd' : ['RemoveToc', 'GenTocGFM']}])
   call add(plugins, ['iamcco/mathjax-support-for-mkdp',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['lvht/tagbar-markdown',{'merged' : 0}])
   " check node package managers to ensure building of 2 plugins below
@@ -37,7 +37,7 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
     call SpaceVim#logger#error('npm or yarn is required to build iamcco/markdown-preview and neoclide/vim-node-rpc')
   endif
   call add(plugins, ['iamcco/markdown-preview.nvim',
-        \ { 'on_ft' : 'markdown',
+        \ { 'on_cmd' : 'MarkdownPreview',
         \ 'depends': 'open-browser.vim',
         \ 'build' : 'cd app & ' . s:node_pkgm . ' install' }])
   if !has('nvim')

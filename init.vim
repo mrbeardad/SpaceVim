@@ -5,7 +5,7 @@ let g:quickrun_default_flags = {
         \ 'debugCompileFlags': '',
         \ 'extRegex': [],
         \ 'extFlags': [],
-        \ 'cmd': 'python ${thisFile}',
+        \ 'cmd': '/bin/python ${thisFile}',
         \ 'cmdArgs': '',
         \ 'cmdRedir': '',
         \ 'debugCmd': ''
@@ -43,13 +43,12 @@ let g:quickrun_default_flags = {
 let g:ycm_filetype_whitelist = {
       \ "c":1,
       \ "cpp":1,
-      \ "java":1,
       \ "python":1,
       \ "vim":1,
       \ "sh":1,
       \ }
 let g:ycm_semantic_triggers =  {
-      \ "c,cpp,python,java,vim,sh": ['re!\w{2}'],
+      \ "c,cpp,python": ['re!\w{2}'],
       \ }
 let g:ycm_clangd_args = [ '--header-insertion=never' ]
 

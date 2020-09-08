@@ -44,3 +44,4 @@ call ale#linter#Define('cpp', {
 \   'command': {b -> ale#c#RunMakeCommand(b, function('ale_linters#cpp#clangtidy#GetCommand'))},
 \   'callback': 'ale#handlers#gcc#HandleGCCFormat',
 \})
+" ALE_CUSTOM_CHANGED

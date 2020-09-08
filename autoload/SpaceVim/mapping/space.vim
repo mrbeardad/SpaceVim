@@ -668,6 +668,17 @@ function! SpaceVim#mapping#space#langSPC(m, keys, cmd, desc, is_cmd, ...) abort
   endif
   call SpaceVim#mapping#menu(a:desc, '[SPC]' . join(a:keys, ''), lcmd)
   call extend(g:_spacevim_mappings_prefixs['[SPC]'], get(g:, '_spacevim_mappings_space', {}))
+  if has('nvim') && exists("g:spacevim_enable_quickrun") && g:spacevim_enable_quickrun == 1 && a:cmd ==# 'call SpaceVim#plugins#runner#open()' && execute('echo keys(g:quickrun_default_flags)') =~# "'".&ft."'"
+    call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
+          \ 'call SpaceVim#plugins#quickrun#QuickRun()',
+          \ 'execute current file', 1)
+    call SpaceVim#mapping#space#langSPC('nmap', ['l','i'],
+          \ 'call SpaceVim#plugins#quickrun#OpenInputWin()',
+          \ 'open input window', 1)
+    call SpaceVim#mapping#space#langSPC('nmap', ['l','d'],
+          \ 'call SpaceVim#plugins#quickrun#compile4debug()',
+          \ 'compile for debug', 1)
+  endif
 endfunction
 
 
