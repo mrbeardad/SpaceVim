@@ -158,36 +158,40 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 即可启用QuickRun替代原版中的Runner来运行程序，QuickRun与后者区别在于：
 * 使用neovim的内建终端
 * 程序运行计时器更加准确
-* 如下，设置参数比较方便
+* 设置参数比较方便
+
+**但现在还不完善，只支持Linux + Neovim**
+
+&emsp;**命令：**  
+* `QuickrunCompiler`
+* `QuickrunCompileFlag`
+* `QuickrunCompileFlagAdd`
+* `QuickrunDebugCompileFlag`
+* `QuickrunDebugCompileFlagAdd`
+* `QuickrunDebugCmd`
+* `QuickrunCmd`
+* `QuickrunCmdArgs`
+* `QuickrunCmdRedir`
+
+```vim
+" 例：
+:QuickrunCompileFlag -std=c++17 -lpthread " 设置编译参数（覆盖）为`-std=c++ -lpthread`
+:QuickrunCompileFlagAdd -DNDEBUG          " 设置编译参数（追加）为`-std=c++ -lpthread -DNDEBUG`
+
+" 以下三个命令设置命令行参数为`cmd -opt arg < file`
+:QuickrunCmd cmd
+:QuickrunCmdArgs -opt arg
+:QuickrunCmdRedir < file
+```
+
+&emsp;**选项：**  
 ```vim
 let g:quickrun_default_flags = {
-    \ 'python': {
-        \ 'compiler': '',
-        \ 'compileFlags': '',
-        \ 'debugCompileFlags': '',
-        \ 'extRegex': [],
-        \ 'extFlags': [],
-        \ 'cmd': 'python ${thisFile}',
-        \ 'cmdArgs': '',
-        \ 'cmdRedir': '',
-        \ 'debugCmd': ''
-    \ },
-    \ 'c': {
-        \ 'compiler': 'gcc',
-        \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
-        \ 'debugCompileFlags': '-Og -g3 -std=c17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
-        \ 'extRegex': [],
-        \ 'extFlags': [],
-        \ 'cmd': '${exeFile}',
-        \ 'cmdArgs': '',
-        \ 'cmdRedir': '',
-        \ 'debugCmd': 'cgdb ${exeFile}'
-    \ },
     \ 'cpp': {
-        \ 'compiler': 'g\++',
-        \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
-        \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
-        \ 'extRegex': [
+        \ 'compiler': 'g\++',   " 设置编译器为g++（注意可能出现的vim特殊字符），可以为空
+        \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}', " 设置编译器参数
+        \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}', " 设置调试时的编译器参数
+        \ 'extRegex': [         " 若文件内容匹配到其中的pattern，则添加extFlags中对应参数
             \ '^\#include\s*<future>',
             \ '^\#include\s*<mysql++\/mysql++.h>'
         \ ],
@@ -195,48 +199,23 @@ let g:quickrun_default_flags = {
             \ '-lpthread',
             \ '-I/usr/include/mysql -lmysqlpp'
         \ ],
-        \ 'cmd': '${exeFile}',
-        \ 'cmdArgs': '',
-        \ 'cmdRedir': '',
-        \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+        \ 'cmd': '${exeFile}',  " 运行程序的命令
+        \ 'cmdArgs': '',        " 运行程序的参数
+        \ 'cmdRedir': '',       " 运行程序的IO重定向
+        \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"' "设置调试器命令，头部'!'表示不打开终端
     \ }
 \ }
-```
-**但现在还不完善，只支持Linux + Neovim**
-
-&emsp;**命令：**  
-* `QuickrunCompileFlag`：显示或设置当前文件的编译参数，例`QuickrunCompileFlag -std=c++20 -mavx2`  
-
-* `QuickrunArgs`：显示或设置当前文件的运行时的命令行参数，例`QuickrunArgs -o file`  
-* `QuickrunRedirect`：显示或设置当前文件的运行时重定向，例`QuickrunRedirect < file`
-
-&emsp;**选项：**  
-* `g:disable_quickrun`  ：因为更改后的该模块只支持Linux，所以其他OS使用SpaceVim原版的Runner吧
-* `g:disable_auto_launch_gdb` ：若设置为1，则快捷键`<space>ld`仅编译用于调试的程序，而不会自动启动cgdb或gdb
-* `g:quickrun_cpp_default_compile_flag ` ：设置编译C++文件时的参数，默认值为`-std=c++17`
-* `g:quickrun_c_default_compile_flag `  ：设置编译C文件时的参数，默认值为`-std=c11`
-* `g:quickrun_compileflag_extension_regex` ：设置条件扩展编译参数的正则表达式。见下
-* `quickrun_compileflag_extension_flags`  ：设置条件扩展编译参数的参数内容。见下
-```vim
-let g:quickrun_compileflag_extension_regex =[
-      \ '^\#include\s*<future>'
-      \ ]
-let g:quickrun_compileflag_extension_flags = [
-      \ '-lpthread'
-      \ ]
-" 若文件中匹配到了正则表达式 '^\#include\s*<future>'
-" 则语法检测以及运行该文件时会自动添加编译参数 '-lpthread'
-" 两个列表中的regex与flags要相互对应，
-" 同时注意vim字符串中的特殊字符如'#' '%' '/'等需要用反斜杠转义
+" 特殊变量：
+" ${thisFile}   当前文件名
+" ${exeFile}    QuickRun自动选择的可执行文件位置，脚本无需编译则应该用${thisFile}
+" ${workspaceFolder}    项目根目录
 ```
 
 | 按键        | 作用               |
 |-------------|--------------------|
 | `<space>lr` | 快速运行程序       |
-| `<space>lc` | 关闭运行程序的终端 |
 | `<space>li` | 快速打开输入窗口   |
-| `<space>ld` | 启动cgdb或gdb调试  |
-| `K`         | 利用cppman查询手册 |
+| `<space>ld` | 启动调试程序       |
 
 &emsp;注意：`<space>li`快速打开窗口，会自动使用 QuickrunRedirect命令将当前buffer将要运行的程序重定向到该输入窗口。
 离开输入窗口时会自动写回硬盘。
@@ -306,7 +285,6 @@ config/plugins_before/     ：插件的配置（在插件加载前加载）
 | global与ctags             | 模糊搜索模块的符号索引            |
 | npm或php                  | build markdown即时预览插件        |
 | gcc、cppcheck、clang-tidy | 语法检测模块（gcc需要支持C++17）  |
-| gdb与cgdb                 | 调试                              |
 | cppman                    | 联网查询C++手册                   |
 
 此外，想要更好的体验，需要将neovim运行在tmux中，你可以设置你喜欢的终端，使它启动时自动连接tmux。

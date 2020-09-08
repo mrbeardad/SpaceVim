@@ -14,7 +14,7 @@ function! s:init(ft)
   let b:QuickRun_debugCmd = g:quickrun_default_flags[a:ft].debugCmd
   let b:QuickRun_Cmd = g:quickrun_default_flags[a:ft].cmd
   let b:QuickRun_CmdArgs = g:quickrun_default_flags[a:ft].cmdArgs
-  let b:QuickRun_CmdRedir = g:quickrun_default_flags[a:ft].cmdRedir
+  let b:QuickRun_CmdRedir = get(b:,'QuickRun_CmdRedir',g:quickrun_default_flags[a:ft].cmdRedir)
 endfunction
 
 " provide commands to change quickrun variables
@@ -138,7 +138,7 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
   endif
 
   exe 'abo 20 split ' . inputfile
-  setlocal nobuflisted
+  setlocal nobuflisted ft=Input
       \ noswapfile
       \ nowrap
       \ cursorline
@@ -154,6 +154,9 @@ function! SpaceVim#plugins#quickrun#compile4debug()
   let exe_file_path = expand('%:r').'.exe'
   let qr_cl = s:parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
   let qr_cf = s:parse_flags(b:QuickRun_debugCompileFlag, src_file_path, exe_file_path) .' '. s:parse_flags(s:extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
+  if qr_cf !=# ''
+    let qr_cf = qr_cf.';'
+  endif
   let qr_cmd = s:parse_flags(b:QuickRun_debugCmd, src_file_path, exe_file_path)
 
   if &modified == 0 && filereadable(exe_file_path) && py3eval('os.path.getmtime("'.exe_file_path.'")') > py3eval('os.path.getmtime("'.src_file_path.'")')
@@ -168,10 +171,10 @@ function! SpaceVim#plugins#quickrun#compile4debug()
       write
     endif
     if qr_cmd =~# '^!'
-      call jobstart(qr_cl.' '.qr_cf.';'. substitute(qr_cmd, '^!', '', ''))
+      call jobstart(qr_cl.' '.qr_cf. substitute(qr_cmd, '^!', '', ''))
     else
       call s:open_termwin()
-      call termopen(qr_cl.' '.qr_cf.';'. substitute(qr_cmd, '^!', '', ''))
+      call termopen(qr_cl.' '.qr_cf. substitute(qr_cmd, '^!', '', ''))
     endif
   endif
 endfunction

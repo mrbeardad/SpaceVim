@@ -202,7 +202,7 @@ function! s:update_statusline() abort
 endfunction
 
 function! SpaceVim#plugins#runner#reg_runner(ft, runner) abort
-  if exists("g:spacevim_enable_quickrun") && g:spacevim_enable_quickrun == 1 && has('nvim')
+  if has('nvim') && exists("g:spacevim_enable_quickrun") && g:spacevim_enable_quickrun == 1
     call SpaceVim#plugins#quickrun#prepare()
     return
   endif
