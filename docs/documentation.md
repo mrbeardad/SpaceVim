@@ -32,13 +32,15 @@ description: "General documentation about how to using SpaceVim, including the q
     - [Open file with file tree.](#open-file-with-file-tree)
 - [General usage](#general-usage)
   - [Native functions](#native-functions)
-  - [Visual mode key bindings](#visual-mode-key-bindings)
   - [Command line mode key bindings](#command-line-mode-key-bindings)
   - [Mappings guide](#mappings-guide)
   - [Editing](#editing)
+    - [Moving text](#moving-text)
+    - [Code indentation](#code-indentation)
     - [Text manipulation commands](#text-manipulation-commands)
     - [Text insertion commands](#text-insertion-commands)
     - [Increase/Decrease numbers](#increasedecrease-numbers)
+    - [Copy and paste](#copy-and-paste)
     - [Commenting](#commenting)
     - [Multi-Encodings](#multi-encodings)
   - [Window manager](#window-manager)
@@ -267,7 +269,7 @@ to the `custom_plugins` section:
 `on_cmd` option means this plugin will be loaded only when the following commands are called.
 
 `merged` option is used for merging plugins directory. When `merged` is `trye`, all files in
-this custom plugin will be merged into `~/.cache/vimfiles/.cache/init.vim/` for neovim or 
+this custom plugin will be merged into `~/.cache/vimfiles/.cache/init.vim/` for neovim or
 `~/.cache/vimfiles/.cache/vimrc/` for vim.
 
 For more options see `:h dein-options`.
@@ -812,26 +814,29 @@ If only one file buffer is opened, a file is opened in the active window, otherw
 
 The following key bindings are the general key bindings for moving cursor.
 
-| Key Bindings     | Descriptions                                      |
-| ---------------- | ------------------------------------------------- |
-| `h`              | move cursor left                                  |
-| `j`              | move cursor down                                  |
-| `k`              | move cursor up                                    |
-| `l`              | move cursor right                                 |
-| `<Up>`, `<Down>` | Smart up and down                                 |
-| `H`              | move cursor to the top of the screen              |
-| `L`              | move cursor to the bottom of the screen           |
-| `<`              | Indent to left and re-select                      |
-| `>`              | Indent to right and re-select                     |
-| `}`              | paragraphs forward                                |
-| `{`              | paragraphs backward                               |
-| `Ctrl-f`         | Smart page forward (`Ctrl-f` / `Ctrl-d`)          |
-| `Ctrl-b`         | Smart page backward (`C-b` / `C-u`)               |
-| `Ctrl-e`         | Smart scroll down (`3 Ctrl-e/j`)                  |
-| `Ctrl-y`         | Smart scroll up (`3Ctrl-y/k`)                     |
-| `Ctrl-c`         | Copy full path of current buffer to X11 clipboard |
+| Key Bindings     | Descriptions                             |
+| ---------------- | ---------------------------------------- |
+| `h`              | move cursor left                         |
+| `j`              | move cursor down                         |
+| `k`              | move cursor up                           |
+| `l`              | move cursor right                        |
+| `<Up>`, `<Down>` | Smart up and down                        |
+| `H`              | move cursor to the top of the screen     |
+| `L`              | move cursor to the bottom of the screen  |
+| `<`              | Indent to left and re-select             |
+| `>`              | Indent to right and re-select            |
+| `}`              | paragraphs forward                       |
+| `{`              | paragraphs backward                      |
+| `Ctrl-f`         | Smart page forward (`Ctrl-f` / `Ctrl-d`) |
+| `Ctrl-b`         | Smart page backward (`C-b` / `C-u`)      |
+| `Ctrl-e`         | Smart scroll down (`3 Ctrl-e/j`)         |
+| `Ctrl-y`         | Smart scroll up (`3Ctrl-y/k`)            |
 
 ### Native functions
+
+When vimcompatible is not enabled, some native key bindings of vim
+has been overrided. To use these key bindings, SpaceVim provides
+alternate key bindings:
 
 | Key bindings     | Mode   | Action                            |
 | ---------------- | ------ | --------------------------------- |
@@ -839,21 +844,6 @@ The following key bindings are the general key bindings for moving cursor.
 | `<Leader> q r /` | Normal | Same as native `q /`, open cmdwin |
 | `<Leader> q r ?` | Normal | Same as native `q ?`, open cmdwin |
 | `<Leader> q r :` | Normal | Same as native `q :`, open cmdwin |
-
-### Visual mode key bindings
-
-| Key               | Action                                   |
-| ----------------- | ---------------------------------------- |
-| `<Leader> y`      | Copy selection to X11 clipboard ("+y)    |
-| `<Leader> p`      | Paste selection from X11 clipboard ("+p) |
-| `<`               | Indent to left and re-select             |
-| `>`               | Indent to right and re-select            |
-| `<Tab>`           | Indent to right and re-select            |
-| `Shift-<Tab>`     | Indent to left and re-select             |
-| `Ctrl-q`          | `Ctrl-w`                                 |
-| `Ctrl-x`          | Switch buffer and placement              |
-| `Ctrl-Shift-Up`   | move lines up                            |
-| `Ctrl-Shift-Down` | move lines down                          |
 
 ### Command line mode key bindings
 
@@ -884,6 +874,20 @@ The default keys of these prefixs are:
 | `[SPC]`     | NONE / `<Space>`                  | default mapping prefix of SpaceVim  |
 | `[WIN]`     | `windows_leader` / `s`            | window mapping prefix of SpaceVim   |
 | `<Leader>`  | default vim leader                | default leader prefix of vim/Neovim |
+
+The default value of `<Leader>` is `\`, if you want to change this key,
+you need to use bootstrap function. For example, use `,` as the `<Leader>` key:
+
+```vim
+function! myspacevim#before() abort
+    let g:mapleader = ','
+endfunction
+```
+
+**NOTE:** When changing valuable `g:mapleader` in a function.
+you can not omit the valuable scope. Because the default scope
+of a valuable in function is `l:`. It seems different from what you
+seee in vim help `:h mapleader`.
 
 By default the guide buffer will be displayed 1000ms after the keys being pressed.
 You can change the delay by adding vim option `'timeoutlen'` to your bootstrap function.
@@ -919,6 +923,36 @@ To narrow the list, just insert the mapping keys or descriptions of what mapping
 Then use `<Tab>` or `<Up>` and `<Down>` to select the mapping, press `<Enter>` to execute that command.
 
 ### Editing
+
+#### Moving text
+
+| Key               | Action                        |
+| ----------------- | ----------------------------- |
+| `>` / `Tab`       | Indent to right and re-select |
+| `<` / `Shift-Tab` | Indent to left and re-select  |
+| `Ctrl-Shift-Up`   | move lines up                 |
+| `Ctrl-Shift-Down` | move lines down               |
+
+#### Code indentation
+
+The default indentation of code is 2, which is controlled by option `default_indent`.
+If you prefer to use 4 as code indentation. Just add following snippet into SpaceVim
+configuration file:
+
+```toml
+[options]
+    default_indent = 4
+```
+
+The `default_indent` option will be applied to vim's `&tabstop`, `&softtabstop` and
+`&shiftwidth` options. By default, when user insert a `<Tab>`, it will be expanded
+to spaces. This feature can be disabled by `expand_tab` option.
+
+```toml
+[options]
+    default_indent = 4
+    expand_tab = true
+```
 
 #### Text manipulation commands
 
@@ -1024,6 +1058,30 @@ In transient state:
 | Any other key | leave the transient state              |
 
 **Tips:** You can increase or decrease a number by more than once by using a prefix argument (i.e. `10 SPC n +` will add 10 to the number under cursor).
+
+#### Copy and paste
+
+If `has('unnamedplus')`, the register used by `<Leader> y` is `+`, otherwise it is `*`.
+Read `:h registers` for more info about other registers.
+
+| Key          | Action                           |
+| ------------ | -------------------------------- |
+| `<Leader> y` | Copy text to system clipboard    |
+| `<Leader> p` | Paste text from system clipboard |
+| `<Leader> Y` | Copy text to pastebin            |
+
+The `<Leader< Y` key binding will copy selected text to a pastebin server. It requires `curl` in your `$PATH`.
+And the default command is:
+
+```
+curl -s -F "content=<-" http://dpaste.com/api/v2/
+```
+
+This command will read stdin and copy the stdin to dpaste server. It is same as:
+
+```
+echo "selected text" | curl -s -F "content=<-" http://dpaste.com/api/v2/
+```
 
 #### Commenting
 
@@ -1160,6 +1218,7 @@ Windows manipulation commands (start with `w`):
 | `SPC w V`             | vertical split and focus new window                                                                           |
 | `SPC w w`             | cycle and focus between windows                                                                               |
 | `SPC w W`             | select window using vim-choosewin                                                                             |
+| `SPC w x`             | exchange current window with next one                                                                         |
 
 ### Buffers and Files
 
@@ -1733,7 +1792,7 @@ which will tell you the functional of all mappings starting with `z`.
 
 When open a file, SpaceVim will change current directory to the project
 root directory which contains this file. The project root directory detection
-is based on on `project_rooter_patterns` option,  and the default value is:
+is based on on `project_rooter_patterns` option, and the default value is:
 
 ```toml
 [options]

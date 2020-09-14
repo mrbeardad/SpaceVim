@@ -210,7 +210,7 @@ function! SpaceVim#default#keyBindings() abort
     xnoremap <Leader>P "*P
   endif
 
-  xnoremap <silent><Leader>Y :call SpaceVim#plugins#pastebin#paste()<CR>
+  xnoremap <silent><Leader>Y :<C-u>call SpaceVim#plugins#pastebin#paste()<CR>
   " call SpaceVim#mapping#guide#register_displayname(':call SpaceVim#plugins#pastebin#paste()<CR>', 'copy to pastebin')
 
   " quickfix list movement
@@ -376,8 +376,6 @@ function! SpaceVim#default#keyBindings() abort
 
   call SpaceVim#mapping#def('nnoremap <silent>','g=',':call SpaceVim#mapping#format()<cr>','format current buffer','call SpaceVim#mapping#format()')
 
-  call SpaceVim#mapping#def('nnoremap <silent>', '<C-c>', ':<c-u>call SpaceVim#util#CopyToClipboard()<cr>',
-        \ 'Copy buffer absolute path to X11 clipboard','call SpaceVim#util#CopyToClipboard()')
 endfunction
 
 fu! s:tobur(num) abort
@@ -441,7 +439,7 @@ endfunction
 function! s:switch_tabs() abort
   let previous_tab = s:TAB.previous_tabpagenr()
   if previous_tab > 0
-    exe "tabnext " . previous_tab
+    exe 'tabnext ' . previous_tab
   endif
 endfunction
 
