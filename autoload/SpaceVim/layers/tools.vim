@@ -55,6 +55,8 @@ function! SpaceVim#layers#tools#config() abort
         \ 'Goyo', 'read-mode', 1)
 
   " bootmark key binding
+  let g:bookmark_sign = ' '
+  let g:bookmark_annotation_sign = ' '
   let g:bookmark_auto_save_file = $HOME.'/.cache/SpaceVim/vim_bookmarks'
   let g:bookmark_no_default_key_mappings = 1
   let g:_spacevim_mappings_space.m = {'name' : '+Major-mode/Marks'}

@@ -1,6 +1,7 @@
 let g:ycm_add_preview_to_completeopt = 0
 let g:ycm_use_clangd = 1
 " let g:ycm_clangd_binary_path = '/bin/clangd'
+let g:ycm_clangd_uses_ycmd_caching = 0
 let g:ycm_cache_omnifunc = 0
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_show_diagnostics_ui = 0
@@ -10,7 +11,7 @@ let g:ycm_key_invoke_completion = '<c-z>'
 let g:ycm_key_list_stop_completion = ['<s-cr>']
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 0
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_max_num_candidates = 20
 

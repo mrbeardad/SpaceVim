@@ -34,7 +34,7 @@ snippet al "description" w
 endsnippet
 
 # 图片元素
-snippet img "description" w
+snippet im "description" w
 ![${1:LinkName}](${2:https://})
 endsnippet
 
@@ -50,7 +50,7 @@ snippet lk "description" w
 endsnippet
 
 # 分割线
-snippet sep "description" w
+snippet sp "description" w
 * * * * * * * * * *
 
 endsnippet
@@ -109,14 +109,14 @@ snippet jp "description" w
 <span id="${1:jump}"></span>
 endsnippet
 
-# 鼠标悬停回显，且有高亮
+# 鼠标悬停回显，且单独一行
 snippet eh "description" w
-<a href=## title="${1:echo content}">[注]</a>
+<div title="${1:echo content}">${2:content outside}</div>
 endsnippet
 
-# 鼠标悬停回显，且单独一行
+# 鼠标悬停回显，且有高亮
 snippet eh1 "description" w
-<div title="${1:echo content}">${2:content outside}</div>
+<a href=## title="${1:echo content}">[注]</a>
 endsnippet
 
 # see begin

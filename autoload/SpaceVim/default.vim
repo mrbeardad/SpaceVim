@@ -237,10 +237,10 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Clear quickfix')
 
   " Use Ctrl+* to jump between windows
-  nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
-  nnoremap <silent><C-Left>  :<C-u>wincmd h<CR>
-  nnoremap <silent><C-Up>    :<C-u>wincmd k<CR>
-  nnoremap <silent><C-Down>  :<C-u>wincmd j<CR>
+  nnoremap <silent><s-Right> :<C-u>wincmd l<CR>
+  nnoremap <silent><s-Left>  :<C-u>wincmd h<CR>
+  nnoremap <silent><s-Up>    :<C-u>wincmd k<CR>
+  nnoremap <silent><s-Down>  :<C-u>wincmd j<CR>
 
 
   "]<End> or ]<Home> move current line to the end or the begin of current buffer
@@ -272,8 +272,8 @@ function! SpaceVim#default#keyBindings() abort
   inoremap <c-e> <end>
   inoremap <c-d> <c-c><c-d>i<right>
   inoremap <c-b> <c-c><c-u>i<right>
-  inoremap <silent><s-down> <c-c>:call <SID>Scroll(1)<cr>i<right>
-  inoremap <silent><s-up> <c-c>:call <SID>Scroll(0)<cr>i<right>
+  inoremap <silent><c-down> <c-c>:call <SID>Scroll(1)<cr>i<right>
+  inoremap <silent><c-up> <c-c>:call <SID>Scroll(0)<cr>i<right>
   inoremap <m-s> <c-c>%i
   inoremap <c-l> <right><bs>
   inoremap <c-u> <c-c><right>d^i
@@ -281,16 +281,18 @@ function! SpaceVim#default#keyBindings() abort
   inoremap <c-y> <c-r>"
   inoremap <c-o> <end><cr>
   inoremap <silent><c-c> <c-c>:set cul<cr>
-  inoremap <c-right> <c-t>
-  inoremap <c-left> <c-d>
+  inoremap <s-right> <c-t>
+  inoremap <s-left> <c-d>
 
   " 普通模式
   nnoremap <c-a> 0
   nnoremap <c-e> $
   nnoremap <c-b> <c-u>
   nnoremap <c-t> <c-e>
-  nnoremap <silent><s-down> :call <SID>Scroll(1)<cr>
-  nnoremap <silent><s-up> :call <SID>Scroll(0)<cr>
+  nnoremap <c-right> w
+  nnoremap <c-left> b
+  nnoremap <silent><c-down> :call <SID>Scroll(1)<cr>
+  nnoremap <silent><c-up> :call <SID>Scroll(0)<cr>
   nnoremap <silent> <bs> :nohl<CR>
   nnoremap <expr> n  'Nn'[v:searchforward]
   nnoremap <expr> N  'nN'[v:searchforward]
@@ -298,6 +300,11 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
   nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
   let g:_spacevim_mappings.m = ['', 'quickly modify your macros']
+  if has('unix') || has('wsl')
+    nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
+  elseif has ('win32')
+    nnoremap <silent> gF :call jobstart('explorer '. expand('<cfile>'))<cr>
+  endif
 
   " 可视模式
   vnoremap <c-a> 0

@@ -80,7 +80,7 @@ if !isdirectory(g:QuickRun_Tempdir)
 endif
 
 
-function! SpaceVim#plugins#quickrun#QuickRun()
+function! SpaceVim#plugins#quickrun#QuickRun(...)
   let src_file_path = expand('%:p')
   let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. s:get_timestamp(src_file_path).'.exe'
   let qr_cl = s:parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
@@ -91,22 +91,24 @@ function! SpaceVim#plugins#quickrun#QuickRun()
 
   let qr_compile = ''
   if qr_cl !=# ''
-    let qr_compile = 'echo "[1;32m[Compile] [34m' . qr_cl . '[0m ' . qr_cf . '";' . qr_cl .' '. qr_cf .';'
+    let qr_compile = 'echo "[1;32m[Compile] [34m' . qr_cl . '[0m ' . qr_cf . '";' . qr_cl .' '. qr_cf .'&& '
   endif
 
-  let qr_prepare = ''
+  let qr_prepare = '{'
   if (has('unix') || has('wsl')) && !isdirectory('/sys/fs/cgroup/memory/quickrun')
     call jobstart('sudo mkdir /sys/fs/cgroup/memory/quickrun')
-    let qr_prepare = 'echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;'
+    let qr_prepare = '{echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;'
   endif
 
   let qr_running = 'echo "[1;32m[Running] [34m' . qr_cmd . '[0m ' . qr_args .' '. qr_rd .'"; echo;echo "[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[m";quickrun_time ' . qr_cmd .' '. qr_args .' '. qr_rd .';'
   if has('nvim')
-    let qr_running = qr_running . 'echo;echo "[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ..."'
+    let qr_running = qr_running . 'echo;echo "[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ..."}'
+  else
+    let qr_running = qr_running.'}'
   endif
 
-  " 若当前文件为改动，且之前通过QuickRun运行过，且自上次编译之后未改动过文件内容，则直接运行上次编译的可执行文件；否则重新编译
-  if &modified == 0 && has_key(s:Quickrun_Path, src_file_path) && s:Quickrun_Path[src_file_path] =~# s:get_timestamp(src_file_path)
+  " 若函数没有参数（有则表示强制编译），且当前文件为改动，且之前通过QuickRun运行过，且自上次编译之后未改动过文件内容，则直接运行上次编译的可执行文件；否则重新编译
+  if !exists('a:1') && &modified == 0 && has_key(s:Quickrun_Path, src_file_path) && filereadable(s:Quickrun_Path[src_file_path]) && s:Quickrun_Path[src_file_path] =~# s:get_timestamp(src_file_path)
     call s:open_termwin()
     call termopen(qr_prepare .'echo "[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program![m";'. qr_running)
   else
@@ -246,9 +248,9 @@ endfunction
 
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCompiler call SpaceVim#plugins#quickrun#do('b:QuickRun_Compiler', <q-args>)
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCompileFlag call SpaceVim#plugins#quickrun#do('b:QuickRun_CompileFlag', <q-args>)
-autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCompileFlagAdd let b:QuickRun_CompileFlag = b:QuickRun_CompileFlag . <q-args>
+autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCompileFlagAdd let b:QuickRun_CompileFlag = b:QuickRun_CompileFlag .' '. <q-args>
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunDebugCompileFlag call SpaceVim#plugins#quickrun#do('b:QuickRun_debugCompileFlag', <q-args>)
-autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunDebugCompileFlagAdd let b:QuickRun_debugCompileFlag = b:QuickRun_debugCompileFlag . <q-args>
+autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunDebugCompileFlagAdd let b:QuickRun_debugCompileFlag = b:QuickRun_debugCompileFlag .' '. <q-args>
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunDebugCmd call SpaceVim#plugins#quickrun#do('b:QuickRun_debugCmd', <q-args>)
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCmd call SpaceVim#plugins#quickrun#do('b:QuickRun_Cmd', <q-args>)
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCmdArgs call SpaceVim#plugins#quickrun#do('b:QuickRun_CmdArgs', <q-args>)

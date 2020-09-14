@@ -231,6 +231,7 @@ function! s:language_specified_mappings() abort
   call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
         \ 'call SpaceVim#plugins#runner#open()',
         \ 'execute current file', 1)
+  inoremap <buffer><c-s> <c-left>std::<c-c>ea
 
   nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
 

@@ -24,6 +24,7 @@ hi MoreMsg  guifg=springgreen
 hi Question guifg=springgreen
 hi NonText guifg=blue
 hi CursorLine guibg=Grey25
+hi Cursor guibg=#ffffff
 
 " #d7cfff   基佬紫
 " #bfffff   基佬青

@@ -175,7 +175,8 @@ if $DARKBG != ''
 else
   colorscheme default-plus
 endif
-
+hi! ALEWarningSign guifg=#ffbc6b
+hi! BookmarkSignDefault guifg=yellow
 if $WSL_DISTRO_NAME != ''
   " WSL访问Windows剪切板，需要下载一个小工具
   " https://github.com/neovim/neovim/wiki/FAQ#how-to-use-the-windows-clipboard-from-wsl

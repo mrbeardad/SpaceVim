@@ -23,8 +23,8 @@ endfunction
 
 function! SpaceVim#layers#lang#markdown#plugins() abort
   let plugins = []
-  call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}])
-  call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_cmd' : ['RemoveToc', 'GenTocGFM']}])
+  call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}]) "注释该插件第872行 in ftplugin/markdown.vim
+  call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['iamcco/mathjax-support-for-mkdp',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['lvht/tagbar-markdown',{'merged' : 0}])
   " check node package managers to ensure building of 2 plugins below
@@ -49,14 +49,14 @@ endfunction
 function! SpaceVim#layers#lang#markdown#config() abort
   let g:markdown_fenced_languages = ['shell=sh', 'bash=sh', 'sh', 'viml=vim', 'java', 'coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
   let g:tex_conceal = ""
-  let g:vim_markdown_math = 0
+  let g:vim_markdown_math = 1
   let g:vim_markdown_emphasis_multiline = 0
   set conceallevel=0
   let g:vim_markdown_conceal = 0
   let g:vim_markdown_strikethrough = 1
   let g:vim_markdown_conceal_code_blocks = 0
 
-  let g:vmt_auto_update_on_save = 0
+  let g:vmt_auto_update_on_save = 1
   " do not highlight markdown error
   let g:markdown_hi_error = 0
   " the fenced languages based on loaded language layer
@@ -104,6 +104,8 @@ EOF
   augroup spacevim_layer_lang_markdown
     autocmd!
     autocmd FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
+    autocmd FileType markdown inoremap \<cr> <br><cr>
   augroup END
 endfunction
 
@@ -194,6 +196,4 @@ function! s:run_code_in_block() abort
     endif
   endif
 endfunction
-
-autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
 

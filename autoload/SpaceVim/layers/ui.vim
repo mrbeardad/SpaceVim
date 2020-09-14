@@ -15,6 +15,7 @@ function! SpaceVim#layers#ui#plugins() abort
         \ ['tenfyzhong/tagbar-proto.vim', {'on_cmd' : 'TagbarToggle','merged': 0}],
         \ ['t9md/vim-choosewin', {'on_cmd' : 'ChooseWin', 'merged' : 0}],
         \ ['mhinz/vim-startify', {'loadconf' : 1, 'merged' : 0}],
+        \ ['yangyangxcf/vim-nerd-font-cheatsheets', {'loadconf' : 1, 'merged' : 0}],
         \ ]
   if !SpaceVim#layers#isLoaded('core#statusline')
     call add(plugins, ['vim-airline/vim-airline',                { 'merged' : 0, 
