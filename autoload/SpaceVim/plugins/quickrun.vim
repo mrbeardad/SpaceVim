@@ -27,11 +27,11 @@ function! SpaceVim#plugins#quickrun#do(var, str) abort
 endfunction
 
 " add extended compile flags
-function! s:extend_compile_arguments(regex, flags)
+function! SpaceVim#plugins#quickrun#extend_compile_arguments(regex, flags)
   let cntr = 0
   let ret = ''
   for thisRegex in a:regex
-    if execute('g/'.thisRegex.'/echo 1') =~# '1'
+    if search(thisRegex, 'n') != 0
       let ret = ret . ' ' . a:flags[cntr]
     endif
     let cntr += 1
@@ -57,14 +57,10 @@ function! s:open_termwin() abort
 endfunction
 
 function! s:get_timestamp(file)
-  python3 << EOF
-filePath = vim.eval('a:file')
-vim.command("let l:tmp = '" + time.strftime('%M:%H:%S', time.localtime(os.path.getmtime(filePath))) + "'")
-EOF
-  return l:tmp
+  return py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%;p').'")))')
 endfunction
 
-function! s:parse_flags(str, srcfile, exefile)
+function! SpaceVim#plugins#quickrun#parse_flags(str, srcfile, exefile)
   let tmp = substitute(a:str, '\\\@<!\${thisFile}', a:srcfile, 'g')
   let tmp = substitute(tmp, '\\\@<!\${exeFile}', a:exefile, 'g')
   let tmp = substitute(tmp, '\\\@<!\${workspaceFolder}', SpaceVim#plugins#projectmanager#current_root(), 'g')
@@ -83,11 +79,11 @@ endif
 function! SpaceVim#plugins#quickrun#QuickRun(...)
   let src_file_path = expand('%:p')
   let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. s:get_timestamp(src_file_path).'.exe'
-  let qr_cl = s:parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
-  let qr_cf = s:parse_flags(b:QuickRun_CompileFlag, src_file_path, exe_file_path) .' '. s:parse_flags(s:extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
-  let qr_cmd = s:parse_flags(b:QuickRun_Cmd, src_file_path, exe_file_path)
-  let qr_args = s:parse_flags(b:QuickRun_CmdArgs, src_file_path, exe_file_path)
-  let qr_rd = s:parse_flags(b:QuickRun_CmdRedir, src_file_path, exe_file_path)
+  let qr_cl = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
+  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CompileFlag, src_file_path, exe_file_path) .' '. SpaceVim#plugins#quickrun#parse_flags(SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
+  let qr_cmd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Cmd, src_file_path, exe_file_path)
+  let qr_args = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CmdArgs, src_file_path, exe_file_path)
+  let qr_rd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CmdRedir, src_file_path, exe_file_path)
 
   let qr_compile = ''
   if qr_cl !=# ''
@@ -154,12 +150,12 @@ endfunction
 function! SpaceVim#plugins#quickrun#compile4debug()
   let src_file_path = expand('%:p')
   let exe_file_path = expand('%:r').'.exe'
-  let qr_cl = s:parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
-  let qr_cf = s:parse_flags(b:QuickRun_debugCompileFlag, src_file_path, exe_file_path) .' '. s:parse_flags(s:extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
+  let qr_cl = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
+  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_debugCompileFlag, src_file_path, exe_file_path) .' '. SpaceVim#plugins#quickrun#parse_flags(SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
   if qr_cf !=# ''
     let qr_cf = qr_cf.';'
   endif
-  let qr_cmd = s:parse_flags(b:QuickRun_debugCmd, src_file_path, exe_file_path)
+  let qr_cmd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_debugCmd, src_file_path, exe_file_path)
 
   if &modified == 0 && filereadable(exe_file_path) && py3eval('os.path.getmtime("'.exe_file_path.'")') > py3eval('os.path.getmtime("'.src_file_path.'")')
     if qr_cmd =~# '^!'

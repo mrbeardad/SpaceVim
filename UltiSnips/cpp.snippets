@@ -1,24 +1,24 @@
-snippet inc
+snippet inc  "description" w
 #include <${1:iostream}>
 endsnippet
 
-snippet incm
+snippet incm  "description" w
 #include "${1:myheader}.hpp"
 endsnippet
 
-snippet incb
+snippet incb  "description" w
 #include <boost/${1:shared_ptr.hpp}>
 endsnippet
 
-snippet ttem
+snippet ttem  "description" w
 template <template <typename> class ${1:T}>
 endsnippet
 
-snippet tem
+snippet tem  "description" w
 template <typename ${1:T}>
 endsnippet
 
-snippet cla
+snippet cla  "description" w
 class ${1:ClassName}
 {
 public:
@@ -28,20 +28,20 @@ private:
 };
 endsnippet
 
-snippet str
+snippet str  "description" w
 struct ${1:StructName}
 {
     $2
 };
 endsnippet
 
-snippet if
+snippet if  "description" w
 if ( ${1:true} ) {
     $2
 }
 endsnippet
 
-snippet ifel
+snippet ifel  "description" w
 if ( ${1:true} ) {
     $2
 } else {
@@ -49,31 +49,31 @@ if ( ${1:true} ) {
 }
 endsnippet
 
-snippet elif
+snippet elif  "description" w
 else if ( ${1:true} ) {
     $2
 }
 endsnippet
 
-snippet el
+snippet el  "description" w
 else {
     $1
 }
 endsnippet
 
-snippet do
+snippet do  "description" w
 do {
     $2
 } while ( ${1:true} );
 endsnippet
 
-snippet while
+snippet while  "description" w
 while ( {${1:true} ) {
     $2
 }
 endsnippet
 
-snippet getopt
+snippet getopt  "description" w
 while ( true )
 {
     /* struct option {
@@ -83,14 +83,13 @@ while ( true )
      *     int          val ; // function return a int to represent this long option
      * };
      */
-    static option LongOpts[] =
-    {
+    static option LongOpts[] {
         {"version", no_argument, 0, 'v'},
         {"help",    no_argument, 0, 'h'},
         {${1:struct_option}},
         {0, 0, 0, 0}
     };
-    int choice{getopt_long(argc, argv, "vh$2", LongOpts, nullptr)};
+    auto choice = getopt_long(argc, argv, "vh$2", LongOpts, nullptr);
     if ( choice == -1 ) {
         break;
     }
@@ -112,170 +111,170 @@ endsnippet
 
 ## STL Collections
 # std::array
-snippet arr
+snippet arr  "description" w
 std::array<${1:T}, ${2:N}> ${3};
 endsnippet
 
 # std::vector
-snippet vec
+snippet vec  "description" w
 std::vector<${1:T}> ${2};
 endsnippet
 
 # std::deque
-snippet deq
+snippet deq  "description" w
 std::deque<${1:T}> ${2};
 endsnippet
 
 # std::forward_list
-snippet fls
+snippet fls  "description" w
 std::forward_list<${1:T}> ${2};
 endsnippet
 
 # std::list
-snippet ls
+snippet ls  "description" w
 std::list<${1:T}> ${2};
 endsnippet
 
 # std::set
-snippet set
+snippet set  "description" w
 std::set<${1:T}> ${2};
 endsnippet
 
 # std::map
-snippet map
+snippet map  "description" w
 std::map<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::multiset
-snippet mset
+snippet mset  "description" w
 std::multiset<${1:T}> ${2};
 endsnippet
 
 # std::multimap
-snippet mmap
+snippet mmap  "description" w
 std::multimap<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::unordered_set
-snippet uset
+snippet uset  "description" w
 std::unordered_set<${1:T}> ${2};
 endsnippet
 
 # std::unordered_map
-snippet umap
+snippet umap  "description" w
 std::unordered_map<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::unordered_multiset
-snippet umset
+snippet umset  "description" w
 std::unordered_multiset<${1:T}> ${2};
 endsnippet
 
 # std::unordered_multimap
-snippet ummap
+snippet ummap  "description" w
 std::unordered_multimap<${1:Key}, ${2:T}> ${3};
 endsnippet
 
 # std::stack
-snippet stack
+snippet stack  "description" w
 std::stack<${1:T}> ${2};
 endsnippet
 
 # std::queue
-snippet queue
+snippet queue  "description" w
 std::queue<${1:T}> ${2};
 endsnippet
 
 # std::priority_queue
-snippet pqueue
+snippet pqueue  "description" w
 std::priority_queue<${1:T}> ${2};
 endsnippet
 
 ##
 ## STL smart pointers
 # std::shared_ptr
-snippet msp
+snippet msp  "description" w
 auto ${1} = std::make_shared<${2:T}>(${3});
 endsnippet
 
 # std::unique_ptr
-snippet mup
+snippet mup  "description" w
 auto ${1} = make_unique<${2:T}>(${3});
 endsnippet
 
-snippet cerr
+snippet cerr  "description" w
 std::cerr << ${1};
 endsnippet
 
 # std::cout
-snippet cout
+snippet cout  "description" w
 std::cout << ${1};
 endsnippet
 
-snippet coul
+snippet coul  "description" w
 std::cout << ${1} << std::endl;
 endsnippet
 
-snippet fuck
+snippet fuck  "description" w
 std::cout << "fuck!" << std::endl;
 endsnippet
 
-snippet coutf
+snippet coutf  "description" w
 std::cout << ${1} << std::flush;
 endsnippet
 
 # std::cin
-snippet cin
+snippet cin  "description" w
 std::cin >> ${1};
 endsnippet
 
 ##
 ## Casts
 # static
-snippet sc
+snippet sc  "description" w
 static_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
 # const
-snippet cc
+snippet cc  "description" w
 const_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
 # reinterpret
-snippet rc
+snippet rc  "description" w
 reinterpret_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
 # dynamic
-snippet dc
+snippet dc  "description" w
 dynamic_cast<${1:unsigned}>(${2:expr})${3}
 endsnippet
 
-snippet for
+snippet for  "description" w
 for ( ${1:int i\{\}}; ${2:i < num}; ${3:++i} ) {
     ${4}
 }
 endsnippet
 
 # range-based
-snippet forr
+snippet forr  "description" w
 for ( auto& ${1:t} : ${1:container} ) {
     ${2}
 }
 endsnippet
 
-snippet ld
+snippet ld  "description" w
 [${1}](${2}){${3}}
 endsnippet
 
 # lambda (multi-line)
-snippet ldd
+snippet ldd  "description" w
 [${1}] (${2}) {
     ${3}
 };
 endsnippet
 
-snippet try
+snippet try  "description" w
 try {
     $1
 } catch(${2}) {
@@ -283,7 +282,7 @@ try {
 }
 endsnippet
 
-snippet init
+snippet init  "description" w
 #include <iostream>
 
 int main()
@@ -298,7 +297,7 @@ int main()
 
 endsnippet
 
-snippet main
+snippet main  "description" w
 int main()
 {
     std::ios_base::sync_with_stdio(false);
@@ -310,7 +309,7 @@ int main()
 }
 endsnippet
 
-snippet maina
+snippet maina  "description" w
 int main(int argc, char* argv[])
 {
     std::ios_base::sync_with_stdio(false);
@@ -322,7 +321,7 @@ int main(int argc, char* argv[])
 }
 endsnippet
 
-snippet arg
+snippet arg  "description" w
 int argc, char* argv[]
 endsnippet
 

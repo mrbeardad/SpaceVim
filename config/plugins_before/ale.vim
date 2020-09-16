@@ -31,17 +31,12 @@ function! ALE_Cnt()
   let g:ale_lint_count = (g:ale_lint_count + 1) % g:ale_clangtidy_period
 endfunction
 
-let g:quickrun_compileflag_extension_regex = get(g:, 'quickrun_compileflag_extension_regex', [])
-let g:quickrun_compileflag_extension_flass = get(g:, 'quickrun_compileflag_extension_flags', [])
 function! ALE_CHOPT()
-  let cnter=0
-  for ext_qr_cf_grep in g:quickrun_compileflag_extension_regex
-    if execute('g/'.ext_qr_cf_grep.'/echo 1') =~# '1'
-      let g:ale_cpp_cc_options = g:ale_cpp_cc_options.' '.g:quickrun_compileflag_extension_flags[cnter]
-      let g:ale_cpp_clangtidy_options = g:ale_cpp_clangtidy_options.' '.g:quickrun_compileflag_extension_flags[cnter]
-    endif
-    let cnter+=1
-  endfor
+  let src_file_path = expand('%:p')
+  let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%;p').'")))').'.exe'
+  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
+  let g:ale_cpp_cc_options = g:ale_cpp_cc_options.' '.qr_cf
+  let g:ale_cpp_clangtidy_options = g:ale_cpp_clangtidy_options.' '.qr_cf
 endfunction
 au! InsertLeave *.cpp,*.hpp call ALE_CHOPT() | call ALE_Cnt()
 
