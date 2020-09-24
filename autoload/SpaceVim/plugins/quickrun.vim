@@ -31,7 +31,7 @@ function! SpaceVim#plugins#quickrun#extend_compile_arguments(regex, flags)
   let cntr = 0
   let ret = ''
   for thisRegex in a:regex
-    if search(thisRegex, 'n') != 0
+    if search(thisRegex, 'wn') != 0
       let ret = ret . ' ' . a:flags[cntr]
     endif
     let cntr += 1
@@ -68,7 +68,6 @@ function! SpaceVim#plugins#quickrun#parse_flags(str, srcfile, exefile)
 endfunction
 
 let s:bufnr = 0
-let s:Quickrun_Path = {}
 py3 import tempfile
 let g:QuickRun_Tempdir = get(g:,'QuickRun_Tempdir',py3eval('tempfile.gettempdir()') . '/QuickRun/')
 if !isdirectory(g:QuickRun_Tempdir)
@@ -77,10 +76,13 @@ endif
 
 
 function! SpaceVim#plugins#quickrun#QuickRun(...)
+  if &modified == 1
+    write
+  endif
   let src_file_path = expand('%:p')
   let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. s:get_timestamp(src_file_path).'.exe'
   let qr_cl = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
-  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CompileFlag, src_file_path, exe_file_path) .' '. SpaceVim#plugins#quickrun#parse_flags(SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
+  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CompileFlag .' '. SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
   let qr_cmd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Cmd, src_file_path, exe_file_path)
   let qr_args = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CmdArgs, src_file_path, exe_file_path)
   let qr_rd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CmdRedir, src_file_path, exe_file_path)
@@ -104,15 +106,11 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   endif
 
   " 若函数没有参数（有则表示强制编译），且当前文件为改动，且之前通过QuickRun运行过，且自上次编译之后未改动过文件内容，则直接运行上次编译的可执行文件；否则重新编译
-  if !exists('a:1') && &modified == 0 && has_key(s:Quickrun_Path, src_file_path) && filereadable(s:Quickrun_Path[src_file_path]) && s:Quickrun_Path[src_file_path] =~# s:get_timestamp(src_file_path)
+  if !exists('a:1') && &modified == 0 && filereadable(exe_file_path)
     call s:open_termwin()
     call termopen(qr_prepare .'echo "[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program![m";'. qr_running)
   else
-    if &modified == 1
-      write
-    endif
     call s:open_termwin()
-    let s:Quickrun_Path[src_file_path] = exe_file_path
     call termopen(qr_compile . qr_prepare . qr_running)
   endif
   let s:bufnr = bufnr('%')

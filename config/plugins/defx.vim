@@ -93,7 +93,7 @@ endfunction
 
 function! Open_wtih_gui()
   if has('unix') || has('wsl')
-    call jobstart('xdg-open '. substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g'))
+    call jobstart('xdg-open '. defx#get_candidate().action__path)
   elseif has('win32')
     call jobstart('explorer.exe '. substitute(defx#get_candidate().action__path, $PWD . '/', '', 'g'))
   endif
@@ -154,17 +154,8 @@ function! s:defx_init()
   nnoremap <silent><buffer><expr> l defx#do_action('call', 'DefxSmartL')
   nnoremap <silent><buffer><expr> <Right> defx#do_action('call', 'DefxSmartL')
   nnoremap <silent><buffer><expr> o defx#do_action('call', 'DefxSmartL')
-  nnoremap <silent><buffer><expr> <Cr>
-        \ defx#is_directory() ?
-        \ defx#do_action('open_directory') : defx#do_action('drop')
-  nnoremap <silent><buffer><expr> <2-LeftMouse>
-        \ defx#is_directory() ? 
-        \     (
-        \     defx#is_opened_tree() ?
-        \     defx#do_action('close_tree') :
-        \     defx#do_action('open_tree')
-        \     )
-        \ : defx#do_action('drop')
+  nnoremap <silent><buffer><expr> <Cr> defx#do_action('call', 'DefxSmartL')
+  nnoremap <silent><buffer><expr> <2-LeftMouse> defx#do_action('call', 'DefxSmartL')
   nnoremap <silent><buffer><expr> sg
         \ defx#do_action('drop', 'vsplit')
   nnoremap <silent><buffer><expr> sv

@@ -22,12 +22,12 @@ let g:quickrun_default_flags = {
         \ 'debugCmd': 'cgdb ${exeFile}'
     \ },
     \ 'cpp': {
-        \ 'compiler': 'g\++',
+        \ 'compiler': 'clang\++',
         \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
         \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
         \ 'extRegex': [
-            \ '^\#include\s*<future>',
-            \ '^\#include\s*<mysql++\/mysql++.h>'
+            \ '^#\s*include\s*<future>',
+            \ '^#\s*include\s*<mysql++.*>'
         \ ],
         \ 'extFlags': [
             \ '-lpthread',

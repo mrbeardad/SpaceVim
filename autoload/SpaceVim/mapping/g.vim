@@ -52,8 +52,8 @@ function! SpaceVim#mapping#g#init() abort
     nnoremap g< g<
     let g:_spacevim_mappings_g['f'] = ['call feedkeys("gf", "n")', 'edit file under cursor']
     nnoremap gf gf
-    let g:_spacevim_mappings_g['F'] = ['call feedkeys("gF", "n")', 'edit file under cursor(jump to line after name)']
-    nnoremap gF gF
+    let g:_spacevim_mappings_g['F'] = ['call feedkeys("gF", "n")', 'edit file under cursor with GUI']
+    nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
     " let g:_spacevim_mappings_g['j'] = ['call feedkeys("gj", "n")', 'move cursor down screen line']
     " nnoremap gj gj
     " let g:_spacevim_mappings_g['k'] = ['call feedkeys("gk", "n")', 'move cursor up screen line']
