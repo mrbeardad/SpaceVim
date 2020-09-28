@@ -56,14 +56,6 @@ function! SpaceVim#layers#core#config() abort
   let g:matchup_delim_stopline = 45
   let g:clever_f_smart_case = 1
   let g:clever_f_fix_key_direction = 1
-  nmap gss <Plug>(openbrowser-smart-search)
-  vmap gss <Plug>(openbrowser-smart-search)
-  "vnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
-  "nnoremap gsb :OpenBrowser http://www.baidu.com/s?wd=<C-R>=expand("<cword>")<cr><cr>
-  "vnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
-  "nnoremap gsg :OpenBrowser http://www.google.com/?#newwindow=1&q=<C-R>=expand("<cword>")<cr><cr>
-  "vnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
-  "nnoremap gsi :OpenBrowserSmartSearch http://www.iciba.com/<C-R>=expand("<cword>")<cr><cr>
 
   if g:spacevim_filemanager ==# 'nerdtree'
     noremap <silent> <F3> :NERDTreeToggle<CR>

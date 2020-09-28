@@ -48,8 +48,8 @@ function! SpaceVim#mapping#g#init() abort
   nnoremap g< g<
   let g:_spacevim_mappings_g['f'] = ['call feedkeys("gf", "n")', 'edit file under cursor']
   nnoremap gf gf
-  let g:_spacevim_mappings_g['F'] = ['call feedkeys("gF", "n")', 'edit file withline under cursor']
-  nnoremap gF gF
+    let g:_spacevim_mappings_g['F'] = ['call feedkeys("gF", "n")', 'edit file under cursor with GUI']
+    nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
   let g:_spacevim_mappings_g['j'] = ['call feedkeys("gj", "n")', 'move cursor down screen line']
   nnoremap gj gj
   let g:_spacevim_mappings_g['k'] = ['call feedkeys("gk", "n")', 'move cursor up screen line']
@@ -94,6 +94,8 @@ function! SpaceVim#mapping#g#init() abort
   nnoremap g~ g~
   let g:_spacevim_mappings_g['a'] = ['call feedkeys("ga", "n")', 'print ascii value of cursor character']
   nnoremap ga ga
+  let g:_spacevim_mappings_g['8'] = ['call feedkeys("g8", "n")', 'print ascii or unicode value of cursor character']
+  nnoremap g8 g8
   let g:_spacevim_mappings_g['g'] = ['call feedkeys("gg", "n")', 'go to line N']
   nnoremap gg gg
   let g:_spacevim_mappings_g['m'] = ['call feedkeys("gm", "n")', 'go to middle of screenline']
@@ -102,6 +104,8 @@ function! SpaceVim#mapping#g#init() abort
   nnoremap go go
   let g:_spacevim_mappings_g.s = ['call feedkeys("gs", "n")', 'sleep N seconds']
   nnoremap gs gs
+  let g:_spacevim_mappings_g['%'] = ['MatchupWhereAmI', 'show matchup']
+  nnoremap <silent>g% :MatchupWhereAmI<cr>
   let g:_spacevim_mappings_g['v'] = ['call feedkeys("gv", "n")', 'reselect the previous Visual area']
   nnoremap gv gv
   let g:_spacevim_mappings_g['<C-]>'] = ['call feedkeys("g<c-]>", "n")', 'jump to tag under cursor']

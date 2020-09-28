@@ -16,7 +16,7 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_max_num_candidates = 20
 
 let g:_spacevim_mappings_g['o'] = ['call feedkeys("go", "n")', 'go to definition/declaration']
-nnoremap <silent> go :YcmCompleter GoTo<CR>
+nnoremap <silent> gd :YcmCompleter GoTo<CR>
 let g:_spacevim_mappings_g['r'] = ['call feedkeys("go", "n")', 'go to reference']
 nnoremap <silent> gr :YcmCompleter GoToReferences<CR>
 let g:_spacevim_mappings_g['c'] = ['call feedkeys("gc", "n")', 'restructure']
