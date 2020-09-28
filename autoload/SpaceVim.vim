@@ -560,7 +560,20 @@ let g:spacevim_statusline_left_sections = ['winnr', 'filename', 'major mode',
 let g:spacevim_statusline_right_sections = ['fileformat', 'cursorpos', 'percentage']
 
 ""
-" Enable/Disable unicode symbols in statusline
+" @section statusline_unicode_symbols, options-statusline_unicode_symbols
+" @parentsection options
+" Enable/Disable unicode symbols in statusline, includes the mode icons and
+" fileformat icons. This option is enabled by default, to disable it:
+" >
+"   statusline_unicode_symbols = false
+" <
+
+""
+" Enable/Disable unicode symbols in statusline, includes the mode icons and
+" fileformat icons. This option is enabled by default, to disable it:
+" >
+"   let g:spacevim_statusline_unicode_symbols = 0
+" <
 let g:spacevim_statusline_unicode_symbols = 1
 ""
 " Enable/Disable language specific leader, by default you can use `,` ket
@@ -1028,14 +1041,55 @@ let g:spacevim_lint_on_save            = 1
 " 'pt', 'ack', 'grep', 'findstr', 'git']
 let g:spacevim_search_tools            = ['rg', 'ag', 'pt', 'ack', 'grep', 'findstr', 'git']
 ""
-" Set the project rooter patterns, by default it is
-" `['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']`
+" @section project_rooter_patterns, options-project_rooter_patterns
+" @parentsection options
+" Set the project root patterns, SpaceVim determines the root directory of the
+" project based on this option. By default it is:
+" >
+"   ['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']
+" <
+
+""
+" Set the project root patterns, SpaceVim determines the root directory of the
+" project based on this option. By default it is:
+" >
+"   ['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']
+" <
 let g:spacevim_project_rooter_patterns = ['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']
+""
+" @section project_rooter_automatically, options-project_rooter_automatically
+" @parentsection options
+" Enable/Disable project root detection. By default, SpaceVim will change the
+" directory to the project root directory based on `project_rooter_patterns`
+" option. To disable this feature:
+" >
+"   [options]
+"     project_rooter_automatically = false
+" <
+
 ""
 " Enable/Disable changing directory automatically. Enabled by default.
 let g:spacevim_project_rooter_automatically = 1
 ""
+" @section project_rooter_outermost, options-project_rooter_outermost
+" @parentsection options
 " Enable/Disable finding outermost directory for project root detection.
+" By default SpaceVim will find the outermost directory based on
+" `project_rooter_patterns`. To find nearest directory, you need to disable
+" this option:
+" >
+"   [options]
+"     project_rooter_outermost = false
+" <
+
+""
+" Enable/Disable finding outermost directory for project root detection.
+" By default SpaceVim will find the outermost directory based on
+" `project_rooter_patterns`. To find nearest directory, you need to disable
+" this option:
+" >
+"   let g:spacevim_project_rooter_outermost = 0
+" <
 let g:spacevim_project_rooter_outermost = 1
 
 ""
@@ -1216,10 +1270,6 @@ command -nargs=1 LeaderGuide call SpaceVim#mapping#guide#start_by_prefix('0', <a
 command -range -nargs=1 LeaderGuideVisual call SpaceVim#mapping#guide#start_by_prefix('1', <args>)
 
 function! SpaceVim#end() abort
-  if !g:spacevim_vimcompatible
-    call SpaceVim#mapping#def('nnoremap <silent>', '<Tab>', ':wincmd w<CR>', 'Switch to next window or tab','wincmd w')
-    call SpaceVim#mapping#def('nnoremap <silent>', '<S-Tab>', ':wincmd p<CR>', 'Switch to previous window or tab','wincmd p')
-  endif
   if g:spacevim_vimcompatible
     let g:spacevim_windows_leader = ''
     let g:spacevim_windows_smartclose = ''

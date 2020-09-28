@@ -309,7 +309,7 @@ with contents for example
 
 ```vim
 function! myspacevim#before() abort
-    let g:neomake_enabled_c_makers = ['clang']
+    let g:neomake_c_enabled_makers = ['clang']
     nnoremap jk <Esc>
 endfunction
 
@@ -674,17 +674,36 @@ switching between different colorschemes, you may need to set
 `custom_color_palette` in your custom configuration file. For example:
 
 ```toml
-custom_color_palette = [
-["#282828", "#a89984", 246, 235],
-["#a89984", "#504945", 239, 246],
-["#a89984", "#3c3836", 237, 246],
-["#665c54", 241],
-["#282828", "#83a598", 235, 109],
-["#282828", "#fe8019", 235, 208],
-["#282828", "#8ec07c", 235, 108],
-["#282828", "#689d6a", 235, 72],
-["#282828", "#8f3f71", 235, 132],
-]
+[options]
+    custom_color_palette = [
+        ["#282828", "#a89984", 246, 235],
+        ["#a89984", "#504945", 239, 246],
+        ["#a89984", "#3c3836", 237, 246],
+        ["#665c54", 241],
+        ["#282828", "#83a598", 235, 109],
+        ["#282828", "#fe8019", 235, 208],
+        ["#282828", "#8ec07c", 235, 108],
+        ["#282828", "#689d6a", 235, 72],
+        ["#282828", "#8f3f71", 235, 132],
+    ]
+```
+
+**Custion section**
+
+You can use bootstrap function to add custom section to statusline, for example:
+
+```vim
+function! s:test_section() abort
+  return 'ok'
+endfunction
+call SpaceVim#layers#core#statusline#register_sections('test', function('s:test_section'))
+```
+
+Then, add `test` section to `statusline_right_sections` option:
+
+```toml
+[options]
+    statusline_right_sections = ['cursorpos', 'percentage', 'test']
 ```
 
 ### Tabline
@@ -1133,20 +1152,19 @@ can change it via `windows_leader` option:
 windows_leader = "s"
 ```
 
-| Key Bindings | Descriptions                          |
-| ------------ | ------------------------------------- |
-| `q`          | Smart buffer close                    |
-| `WIN v`      | :split                                |
-| `WIN V`      | Split with previous buffer            |
-| `WIN g`      | :vsplit                               |
-| `WIN G`      | Vertically split with previous buffer |
-| `WIN t`      | Open new tab (:tabnew)                |
-| `WIN o`      | Close other windows (:only)           |
-| `WIN x`      | Remove buffer, leave blank window     |
-| `WIN q`      | Remove current buffer                 |
-| `WIN Q`      | Close current buffer (:close)         |
-| `<Tab>`      | Next window or tab                    |
-| `Shift-Tab`  | Previous window or tab                |
+| Key Bindings | Descriptions                                       |
+| ------------ | -------------------------------------------------- |
+| `q`          | Smart buffer close                                 |
+| `WIN v`      | :split                                             |
+| `WIN V`      | Split with previous buffer                         |
+| `WIN g`      | :vsplit                                            |
+| `WIN G`      | Vertically split with previous buffer              |
+| `WIN t`      | Open new tab (:tabnew)                             |
+| `WIN o`      | Close other windows (:only)                        |
+| `WIN x`      | Remove buffer, leave blank window                  |
+| `WIN q`      | Remove current buffer                              |
+| `WIN Q`      | Close current buffer (:close)                      |
+| `Shift-Tab`  | Switch to alternate window (switch back and forth) |
 
 SpaceVim has mapped normal `q` as smart buffer close, the normal func of `q`
 can be get by `<Leader> q r`, if you want to disable this feature, you can use `vimcompatible` mode.
@@ -1289,6 +1307,10 @@ Files manipulation commands (start with f):
 | `SPC f T`    | show file tree side bar                                   |
 | `SPC f d`    | toggle disk manager in Windows OS                         |
 | `SPC f y`    | show and copy current file absolute path in the cmdline   |
+
+**NOTE:** If you are using window, you need to install [findutils](https://www.gnu.org/software/findutils/) or [fd](https://github.com/sharkdp/fd).
+If you are using [scoop](https://github.com/lukesampson/scoop) to install packages, the commands in `C:\WINDOWS\system32` will override User path.
+so you need to put the scoop binary PATH before all the windows `C:\WINDOWS\system32` PATH.
 
 #### Vim and SpaceVim files
 
@@ -1582,6 +1604,7 @@ Key bindings in FlyGrep buffer:
 | ------------------- | --------------------------------- |
 | `<Esc>`             | close FlyGrep buffer              |
 | `<Enter>`           | open file at the cursor line      |
+| `Ctrl-t`            | open item in new tab              |
 | `<Tab>`             | move cursor line down             |
 | `Shift-<Tab>`       | move cursor line up               |
 | `<BackSpace>`       | remove last character             |

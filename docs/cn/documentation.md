@@ -294,7 +294,7 @@ SpaceVim 默认安装了一些插件，如果需要禁用某个插件，可以�
 
 ```vim
 function! myspacevim#before() abort
-    let g:neomake_enabled_c_makers = ['clang']
+    let g:neomake_c_enabled_makers = ['clang']
     nnoremap jk <esc>
 endfunction
 
@@ -646,6 +646,24 @@ endfunction
         ["#282828", "#689d6a", 235, 72],
         ["#282828", "#8f3f71", 235, 132],
     ]
+```
+
+**自定义板块**
+
+可以使用启动函数添加自定板块，比如：
+
+```vim
+function! s:test_section() abort
+  return 'ok'
+endfunction
+call SpaceVim#layers#core#statusline#register_sections('test', function('s:test_section'))
+```
+
+之后就可以在配置文件中添加 `test` 板块，比如，在状态栏右侧最后添加：
+
+```toml
+[options]
+    statusline_right_sections = ['cursorpos', 'percentage', 'test']
 ```
 
 ### 标签栏
@@ -1094,8 +1112,7 @@ SpaceVim 选项 `window_leader` 的值来设为其它按键：
 | `[Window] x`  | 关闭当前缓冲区，并保留新的空白缓冲区 |
 | `[Window] q`  | 关闭当前缓冲区                       |
 | `[Window] Q`  | 关闭当前窗口                         |
-| `<Tab>`       | 跳至下一个窗口                       |
-| `Shift-<Tab>` | 跳至上一个窗口                       |
+| `Shift-<Tab>` | 切换至前一窗口                       |
 
 常规模式下的按键 `q` 被用来快速关闭窗口，其原生的功能可以使用 `<Leader> q r` 来代替。
 
@@ -1234,6 +1251,11 @@ SpaceVim 选项 `window_leader` 的值来设为其它按键：
 | `SPC f T`            | 打开文件树侧栏                                         |
 | `SPC f d`            | Windows 下显示/隐藏磁盘管理器                          |
 | `SPC f y`            | 复制并显示当前文件的绝对路径                           |
+
+**注意：** 如果你使用的是 Window 系统，那么你需要额外 [findutils](https://www.gnu.org/software/findutils/)
+或者 [fd](https://github.com/sharkdp/fd)。
+如果是使用 [scoop](https://github.com/lukesampson/scoop) 安装的这些工具，系统默认的 `C:\WINDOWS\system32` 中的命令会覆盖掉用户定义的 `$PATH`，
+解决方案是将 scoop 默认的可执行文件所在的文件夹放置在系统环境变量 `$PATH` 内 `C:\WINDOWS\system32` 的前方。
 
 #### Vim 和 SpaceVim 相关文件
 
@@ -1548,6 +1570,7 @@ Flygrep 搜索窗口结果窗口内的常用快捷键：
 | ------------------- | ---------------------- |
 | `<Esc>`             | 关闭搜索窗口           |
 | `<Enter>`           | 打开当前选中的文件位置 |
+| `Ctrl-t`            | 在新标签栏打开选中项   |
 | `<Tab>`             | 选中下一行文件位置     |
 | `Shift-<Tab>`       | 选中上一行文件位置     |
 | `<Backspace>`       | 删除上一个输入字符     |
