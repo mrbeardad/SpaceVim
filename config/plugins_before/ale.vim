@@ -33,7 +33,10 @@ endfunction
 
 function! ALE_CHOPT()
   let src_file_path = expand('%:p')
-  let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%;p').'")))').'.exe'
+  if !filereadable(src_file_path)
+    return
+  endif
+  let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%:p').'")))').'.exe'
   let qr_cf = SpaceVim#plugins#quickrun#parse_flags(SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
   let g:ale_cpp_cc_options = g:ale_cpp_cc_options.' '.qr_cf
   let g:ale_cpp_clangtidy_options = g:ale_cpp_clangtidy_options.' '.qr_cf

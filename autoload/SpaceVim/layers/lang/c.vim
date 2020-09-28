@@ -236,12 +236,28 @@ function! SpaceVim#layers#lang#c#set_variable(var) abort
   let s:enable_clang_syntax = get(a:var, 'enable_clang_syntax_highlight', s:enable_clang_syntax)
 endfunction
 
+function! ChangeNamespace()
+  " getenv()
+  let WORD = expand('<cWORD>')
+  normal diW
+  if match(WORD, 'std\w*::') != 0
+    return 'std::'.WORD
+  elseif match(WORD, 'std::filesystem::') == 0
+    return substitute(WORD, 'std::filesystem::', 'std_fs::', 'g')
+  elseif match(WORD, 'std::chrono::') == 0
+    return substitute(WORD, 'std::chrono::', 'std_co::', 'g')
+  elseif match(WORD, 'std::ios_base::\|std::ios::') == 0
+    return substitute(WORD, 'std::ios\w\{-}::', 'std_ios::', 'g')
+  endif
+endfunction
+
 function! s:language_specified_mappings() abort
 
   call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
         \ 'call SpaceVim#plugins#runner#open()',
         \ 'execute current file', 1)
-  inoremap <buffer><c-s> <c-left>std::<c-c>ea
+  inoremap <buffer><m-s> <c-r>=ChangeNamespace()<cr>
+  nnoremap <buffer><m-s> i<c-r>=ChangeNamespace()<cr><c-c>
 
   nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
 

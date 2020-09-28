@@ -187,7 +187,12 @@ function! s:flygrep(expr) abort
   catch
   endtr
   hi def link FlyGrepPattern MoreMsg
-  let s:hi_id = s:matchadd('FlyGrepPattern', s:expr_to_pattern(a:expr), 2)
+  if string(s:grep_ignore_case) !=# '' || string(s:grep_smart_case) !=# ''
+    let ignore_case = '\c'
+  else
+    let ignore_case = ''
+  endif
+  let s:hi_id = s:matchadd('FlyGrepPattern', ignore_case.s:expr_to_pattern(a:expr), 2)
   let s:grep_expr = a:expr
   call timer_stop(s:grep_timer_id)
   let s:grep_timer_id = timer_start(200, function('s:grep_timer'), {'repeat' : 1})

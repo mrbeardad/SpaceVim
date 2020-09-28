@@ -1,3 +1,11 @@
+"=============================================================================
+" init.vim --- Entry file for nvim
+" Copyright (c) 2020 Heachen Bear
+" Author: Heachen Bear < mrbeardad@qq.com >
+" URL: https://spacevim.org
+" License: GPLv3
+"=============================================================================
+
 let g:quickrun_default_flags = {
     \ 'python': {
         \ 'compiler': '',
@@ -48,7 +56,7 @@ let g:ycm_filetype_whitelist = {
       \ "sh":1,
       \ }
 let g:ycm_semantic_triggers =  {
-      \ "c,cpp,python": ['re!\w{2}'],
+      \ "c,cpp,python": ['re!\w\w'],
       \ }
 let g:ycm_clangd_args = [ '--header-insertion=never' ]
 
@@ -60,6 +68,7 @@ let g:ale_linters = {
       \   'sh': ['shellcheck'],
       \   'python': ['flake8', 'pylint'],
       \}
+let g:ycm_server_log_level = 'debug'
 "=============================  Load SpaceVim ===============================
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
 "=============================== After Load =================================
@@ -106,6 +115,7 @@ set path+=/usr/include/c++/*/,/usr/include/boost/,/usr/include/mysql++/,.
 
 if $DARKBG != ''
   let colorNr = localtime() % 5
+  " let colorNr = 4
   if colorNr == 0
     colorscheme SpaceVim
     hi! CursorLineNr gui=bold guifg=#df5fdf
@@ -135,7 +145,7 @@ if $DARKBG != ''
     hi! NonText guifg=#596364
     hi! Normal guifg=#a5b4b4
     hi! CursorLineNr gui=bold guifg=#2aa198
-    hi! CursorLine guibg=#2c4b53
+    hi! CursorLine guibg=#2c4b53 gui=none
     hi! Operator gui=bold guifg=#8787af
     hi! Structure guifg=#5fafd7
     hi! StorageClass guifg=#d78700
@@ -163,7 +173,7 @@ if $DARKBG != ''
     hi! SignColumn guibg=#374349
     hi! Error guibg=#374349
     hi! ALEWarningSign guibg=#374349
-    hi! Pmenu guifg=#cfffff
+    hi! Pmenu guifg=#cfffff guibg=#323232
     hi! Structure guifg=#00dfd7
     hi! StorageClass guifg=#bd93f9
     hi! MatchParen gui=bold
@@ -171,6 +181,7 @@ if $DARKBG != ''
     hi! Function gui=bold guifg=#82aaff
     hi! Type gui=italic guifg=#ffcb6b
     hi! String gui=italic guifg=#c3e88d
+    hi! Pmenu guifg=#d7dfff
   endif
 else
   colorscheme default-plus
@@ -182,9 +193,9 @@ if $WSL_DISTRO_NAME != ''
   " https://github.com/neovim/neovim/wiki/FAQ#how-to-use-the-windows-clipboard-from-wsl
 
   " Windows Terminal暂时还不支持undercurl，且无法回滚为underline
-  hi! SpellBad gui=underline
-  hi! SpellCap gui=underline
-  hi! SpellRare gui=underline
+  hi! SpellBad gui=underline guifg=Red
+  hi! SpellCap gui=underline guifg=Yellow
+  hi! SpellRare gui=underline guifg=Green
 else
   hi! SpellBad gui=undercurl guisp=red
   hi! SpellCap gui=undercurl guisp=yellow

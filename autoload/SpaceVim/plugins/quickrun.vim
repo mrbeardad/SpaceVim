@@ -18,7 +18,10 @@ function! s:init(ft)
 endfunction
 
 " provide commands to change quickrun variables
-function! SpaceVim#plugins#quickrun#do(var, str) abort
+function! SpaceVim#plugins#quickrun#do(var, str, bang) abort
+  if a:bang ==# '!'
+    exe 'let '. a:var .'= ""'
+  endif
   if a:str ==# ''
     exe 'let '. a:var
   else
@@ -57,7 +60,7 @@ function! s:open_termwin() abort
 endfunction
 
 function! s:get_timestamp(file)
-  return py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%;p').'")))')
+  return py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%:p').'")))')
 endfunction
 
 function! SpaceVim#plugins#quickrun#parse_flags(str, srcfile, exefile)
@@ -146,6 +149,9 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
 endfunction
 
 function! SpaceVim#plugins#quickrun#compile4debug()
+  if &modified == 1
+    write
+  endif
   let src_file_path = expand('%:p')
   let exe_file_path = expand('%:r').'.exe'
   let qr_cl = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
@@ -247,8 +253,8 @@ autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunDebugCompile
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunDebugCompileFlagAdd let b:QuickRun_debugCompileFlag = b:QuickRun_debugCompileFlag .' '. <q-args>
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunDebugCmd call SpaceVim#plugins#quickrun#do('b:QuickRun_debugCmd', <q-args>)
 autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCmd call SpaceVim#plugins#quickrun#do('b:QuickRun_Cmd', <q-args>)
-autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCmdArgs call SpaceVim#plugins#quickrun#do('b:QuickRun_CmdArgs', <q-args>)
-autocmd FileType * command! -buffer -nargs=? -complete=file QuickrunCmdRedir call SpaceVim#plugins#quickrun#do('b:QuickRun_CmdRedir', <q-args>)
+autocmd FileType * command! -bang -buffer -nargs=? -complete=file QuickrunCmdArgs call SpaceVim#plugins#quickrun#do('b:QuickRun_CmdArgs', <q-args>, "<bang>")
+autocmd FileType * command! -bang -buffer -nargs=? -complete=file QuickrunCmdRedir call SpaceVim#plugins#quickrun#do('b:QuickRun_CmdRedir', <q-args>, "<bang>")
 
 " 终端模式
 if has('nvim')
