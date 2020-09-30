@@ -74,7 +74,11 @@ endfunction
 function! Leaderf_Defx_Search()
     let path = defx#get_candidate().action__path
     winc p
-    exe 'Leaderf file '. path
+    if execute('command Leaderf') !~? 'no user-defined commands found'
+      exe 'Leaderf file '. path
+    else
+      echoerr 'only for Leaderf'
+    endif
 endfunction
 
 function! Ranger_Preview()
@@ -87,7 +91,7 @@ function! Ranger_Preview()
   elseif executable('guake')
     exe '!guake -n 1 -s 1 -e "ranger --selectfile='. path . '" --show'
   else
-    echoerr 'You need to install guake , or you need to run your neovim in tmux'
+    echoerr 'you need to run your neovim in tmux, or You need to install guake!'
   endif
 endfunction
 
@@ -265,4 +269,3 @@ endfunction
 function! s:trim_right(str, trim)
   return substitute(a:str, printf('%s$', a:trim), '', 'g')
 endfunction
-" au! VimEnter * if buffer_name() == '' | Defx | winc p | else | Defx | Defx | endif

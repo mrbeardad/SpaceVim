@@ -10,49 +10,89 @@
 ""
 " @section lang#c, layer-lang-c
 " @parentsection layers
-" This layer provides C family language code completion and syntax checking.
-" Requires clang.
-"
-" Configuration for `tweekmonster/deoplete-clang2`:
-"
-"   1. Set the compile flags:
-"
-"       `let g:deoplete#sources#clang#flags = ['-Iwhatever', ...]`
-"
-"   2. Set the path to the clang executable:
-" 
-"       `let g:deoplete#sources#clang#executable = '/usr/bin/clang'
-"
-"   3. `g:deoplete#sources#clang#autofill_neomake` is a boolean that tells this
-"       plugin to fill in the `g:neomake_<filetype>_clang_maker` variable with the
-"       clang executable path and flags. You will still need to enable it with
-"       `g:neomake_<filetype>_enabled_make=['clang']`.
-"
-"   4. Set the standards for each language:
-"       `g:deoplete#sources#clang#std` is a dict containing the standards you want
-"       to use. It's not used if you already have `-std=whatever` in your flags. The
-"       defaults are:
+" This layer is for c/cpp development, disabled by default, to enable this
+" layer, add following snippet to your SpaceVim configuration file.
 " >
-"       {
-"           'c': 'c11',
-"           'cpp': 'c++1z',
-"           'objc': 'c11',
-"           'objcpp': 'c++1z',
-"       }
+"   [[layers]]
+"     name = 'lang#c'
 " <
-"   5. `g:deoplete#sources#clang#preproc_max_lines` sets the
-"      maximum number of lines to search for an #ifdef or #endif
-"      line. #ifdef lines are discarded to get completions within
-"      conditional preprocessor blocks. The default is 50, 
-"      setting it to 0 disables this feature.
 "
-
+" @subsection Layer options
+"
+" `clang_executable`: Set the path to the clang executable, by default, it is
+" `clang`.
+"
+" `enable_clang_syntax_highlight`: Enable/Disable clang based syntax
+" highlighting. By default it is disabled.
+"
+" `libclang_path`: The libclang shared object (dynamic library) file path.
+" By default it is empty
+"
+" `clang_std`: This is a dictionary for setting std for c/cpp. The default
+" valuable is :
+" >
+"   'c'     : 'c11',
+"   'cpp'   : 'c++1z',
+"   'objc'  : 'c11',
+"   'objcpp': 'c++1z',
+" <
+"
+" `clang_flag`: You should be able to just paste most of your compile
+" flags in there.
+"
+" Here is an example how to use above options:
+" >
+"   [[layers]]
+"     name = "lang#c"
+"     clang_executable = "/usr/bin/clang"
+"     clang_flag = ['-I/user/include']
+"     [layer.clang_std]
+"       c = "c11"
+"       cpp = "c++1z"
+"       objc = "c11"
+"       objcpp = "c++1z"
+" <
+"
+" Instead of using `clang_flag` options, You can also create a `.clang` file
+" in the root directory of your project. SpaceVim will load the options
+" defined in `.clang` file. For example:
+" >
+"   -std=c11
+"   -I/home/test
+" <
+" Note: If `.clang` file contains std configuration, it will override
+" `clang_std` layer option.
+"
+" @subsection Key bindings
+" >
+"   Mode            Key             Function
+"   ---------------------------------------------
+"   normal          SPC l r         run current file
+" <
+"
+" This layer also provides REPL support for c, the key bindings are:
+" >
+"   Key             Function
+"   ---------------------------------------------
+"   SPC l s i       Start a inferior REPL process
+"   SPC l s b       send whole buffer
+"   SPC l s l       send current line
+"   SPC l s s       send selection text
+" <
+"
 
 
 if exists('s:clang_executable')
   finish
 else
   let s:clang_executable = 'clang'
+  let s:clang_flag = []
+  let s:clang_std = {
+        \ 'c' : 'c11',
+        \ 'cpp': 'c++1z',
+        \ 'objc': 'c11',
+        \ 'objcpp': 'c++1z',
+        \ }
 endif
 let s:SYSTEM = SpaceVim#api#import('system')
 let s:CPT = SpaceVim#api#import('vim#compatible')
@@ -60,7 +100,7 @@ let s:CPT = SpaceVim#api#import('vim#compatible')
 
 function! SpaceVim#layers#lang#c#plugins() abort
   let plugins = []
-  call add(plugins, ['skywind3000/vim-cppman', {'on_ft':'c'}])
+  call add(plugins, ['skywind3000/vim-cppman', {'on_ft':'cpp'}])
   call add(plugins, ['agatan/vim-sort-include', {'on_ft':['c','cpp']}])
   if !SpaceVim#layers#lsp#check_filetype('c') && !SpaceVim#layers#lsp#check_filetype('cpp')
     if g:spacevim_autocomplete_method ==# 'deoplete'
@@ -99,18 +139,6 @@ function! SpaceVim#layers#lang#c#plugins() abort
 endfunction
 
 function! SpaceVim#layers#lang#c#config() abort
-  let g:cppman_open_mode = '<auto>'
-  let g:cpp_class_scope_highlight = 1
-  let g:cpp_member_variable_highlight = 1
-  let g:cpp_class_decl_highlight = 1
-  let g:cpp_concepts_highlight = 1
-  let g:cpp_posix_standard = 1
-  let g:cpp_experimental_simple_template_highlight = 1      " which works in most cases, but can be a little slow on large files
-  " let g:cpp_experimental_template_highlight = 1           " which is a faster implementation but has some corner cases where it doesn't work.
-  augroup sort-include
-    autocmd!
-    autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
-  augroup END
   call SpaceVim#mapping#gd#add('c',
         \ function('s:go_to_def'))
   call SpaceVim#mapping#gd#add('cpp',
@@ -119,7 +147,7 @@ function! SpaceVim#layers#lang#c#config() abort
   let runner1 = {
         \ 'exe' : 'gcc',
         \ 'targetopt' : '-o',
-        \ 'opt' : ['-xc', '-'],
+        \ 'opt' : ['-std=' . s:clang_std.c] + s:clang_flag + ['-xc', '-'],
         \ 'usestdin' : 1,
         \ }
   call SpaceVim#plugins#runner#reg_runner('c', [runner1, '#TEMP#'])
@@ -127,7 +155,7 @@ function! SpaceVim#layers#lang#c#config() abort
   let runner2 = {
         \ 'exe' : 'g++',
         \ 'targetopt' : '-o',
-        \ 'opt' : ['-xc++', '-'],
+        \ 'opt' : ['-std=' . s:clang_std.cpp] + s:clang_flag + ['-xc++', '-'],
         \ 'usestdin' : 1,
         \ }
   call SpaceVim#plugins#runner#reg_runner('cpp', [runner2, '#TEMP#'])
@@ -149,9 +177,6 @@ function! SpaceVim#layers#lang#c#config() abort
     autocmd!
     if s:enable_clang_syntax
       auto FileType c,cpp  call s:highlight()
-    endif
-    if g:spacevim_enable_ale == 1
-      auto FileType c,cpp call s:is_ale_ok()
     endif
   augroup END
   call add(g:spacevim_project_rooter_patterns, '.clang')
@@ -175,30 +200,6 @@ function! s:highlight() abort
     exe s:highlight_cmd
   catch
   endtry
-endfunction
-
-function! s:is_ale_ok()
-  let needcp_cppcheck = 1
-  let needcp_clangtidy = 1
-  let dir = g:spacevim_data_dir.'vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/'
-  for thisLinter in ['cppcheck', 'clangtidy']
-    if  match(execute('echo g:ale_linters'),thisLinter) != -1 && filereadable(dir.thisLinter.'.vim')
-      for thisLine in readfile(dir.thisLinter.'.vim')
-        if thisLine =~# 'ALE_CUSTOM_CHANGED'
-          let needcp_{thisLinter} =0
-        endif
-      endfor
-    endif
-  endfor
-  if  match(execute('echo g:ale_linters'),thisLinter) != -1 && filereadable(dir.thisLinter.'.vim')
-    py3 from shutil import copyfile
-    for thisLinter in ['cppcheck', 'clangtidy']
-      if needcp_{thisLinter} == 1
-        echo 'copy file from ~/.SpaceVim/custom/'.thisLinter.'.vim to '.dir.thisLinter.'.vim'
-        exe "py3 copyfile('".$HOME."/.SpaceVim/custom/".thisLinter.".vim', '".dir.thisLinter.".vim')"
-      endif
-    endfor
-  endif
 endfunction
 
 let s:enable_clang_syntax = 0
@@ -234,34 +235,19 @@ function! SpaceVim#layers#lang#c#set_variable(var) abort
     endif
   endif
 
+  let s:clang_flag = get(a:var, 'clang_flag', s:clang_flag)
+
   let s:enable_clang_syntax = get(a:var, 'enable_clang_syntax_highlight', s:enable_clang_syntax)
 endfunction
 
-function! ChangeNamespace()
-  " getenv()
-  let WORD = expand('<cWORD>')
-  normal diW
-  if match(WORD, 'std\w*::') != 0
-    return 'std::'.WORD
-  elseif match(WORD, 'std::filesystem::') == 0
-    return substitute(WORD, 'std::filesystem::', 'std_fs::', 'g')
-  elseif match(WORD, 'std::chrono::') == 0
-    return substitute(WORD, 'std::chrono::', 'std_co::', 'g')
-  elseif match(WORD, 'std::ios_base::\|std::ios::') == 0
-    return substitute(WORD, 'std::ios\w\{-}::', 'std_ios::', 'g')
-  endif
-endfunction
-
 function! s:language_specified_mappings() abort
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','c'],
+        \ 'let ale_cpp_clangtidy_executable = "clang-tidy" | ALELint',
+        \ 'Lint with all linters right now', 1)
 
   call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
         \ 'call SpaceVim#plugins#runner#open()',
         \ 'execute current file', 1)
-  inoremap <buffer><m-s> <c-r>=ChangeNamespace()<cr>
-  nnoremap <buffer><m-s> i<c-r>=ChangeNamespace()<cr><c-c>
-
-  nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
-
   if SpaceVim#layers#lsp#check_filetype('c')
     nnoremap <silent><buffer> K :call SpaceVim#lsp#show_doc()<CR>
 
@@ -307,6 +293,7 @@ function! s:update_clang_flag() abort
     call s:update_checkers_argv(argvs, ['c', 'cpp'])
     call s:update_autocomplete_argv(argvs, ['c', 'cpp'])
     call s:update_neoinclude(argvs, ['c', 'cpp'])
+    call s:update_runner(argvs, ['c', 'cpp'])
   endif
 endfunction
 
@@ -345,6 +332,40 @@ endif
 
 function! s:update_autocomplete_argv(argv, fts) abort
 
+endfunction
+
+function! s:has_std(argv) abort
+  for line in a:argv
+    if line =~# '^-std='
+      return 1
+    endif
+  endfor
+endfunction
+
+function! s:update_runner(argv, fts) abort
+  if s:has_std(a:argv)
+    let default_std = 1
+  else
+    let default_std = 0
+  endif
+  if index(a:fts, 'c') !=# -1
+    let runner1 = {
+          \ 'exe' : 'gcc',
+          \ 'targetopt' : '-o',
+          \ 'opt' : a:argv + (default_std ? [] : ['-std=' . s:clang_std.c]) + s:clang_flag + ['-xc', '-'],
+          \ 'usestdin' : 1,
+          \ }
+    call SpaceVim#plugins#runner#reg_runner('c', [runner1, '#TEMP#'])
+  endif
+  if index(a:fts, 'cpp') !=# -1
+    let runner2 = {
+          \ 'exe' : 'g++',
+          \ 'targetopt' : '-o',
+          \ 'opt' : a:argv + (default_std ? [] : ['-std=' . s:clang_std.cpp]) + s:clang_flag + ['-xc++', '-'],
+          \ 'usestdin' : 1,
+          \ }
+    call SpaceVim#plugins#runner#reg_runner('cpp', [runner2, '#TEMP#'])
+  endif
 endfunction
 
 function! s:update_neoinclude(argv, fts) abort

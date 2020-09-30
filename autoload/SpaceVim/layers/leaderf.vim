@@ -31,7 +31,6 @@ function! SpaceVim#layers#leaderf#plugins() abort
         \ }])
   call add(plugins, ['Shougo/neomru.vim', {'merged' : 0}])
   call add(plugins, ['Shougo/neoyank.vim', {'merged' : 0}])
-  let neoyank#save_registers = ['"']
 
   " use this repo unicode data
   call add(plugins, ['SpaceVim/Unite-sources', {'merged' : 0}])
@@ -176,6 +175,9 @@ function! SpaceVim#layers#leaderf#config() abort
         \       ],
         \  'after_enter' : string(s:_function('s:init_leaderf_win', 1))[10:-3]
         \ }
+
+  let g:_spacevim_mappings_space.i = {'name' : '+Insertion'}
+  call SpaceVim#mapping#space#def('nnoremap', ['i', 'u'], 'Leaderf unicode', 'search-and-insert-unicode', 1)
 
   let lnum = expand('<slnum>') + s:lnum - 1
   call SpaceVim#mapping#space#def('nnoremap', ['?'], 'call call('

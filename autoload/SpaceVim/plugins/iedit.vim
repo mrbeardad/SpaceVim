@@ -135,7 +135,9 @@ function! SpaceVim#plugins#iedit#start(...) abort
   endtry
   let s:hi_id = ''
   let &l:cursorline = save_cl
-  IndentLinesEnable
+  if execute('command IndentLinesEnable') !~? 'no user-defined commands found'
+    IndentLinesEnable
+  endif
   return symbol
 endfunction
 

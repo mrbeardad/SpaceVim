@@ -23,8 +23,9 @@ endfunction
 
 function! SpaceVim#layers#lang#markdown#plugins() abort
   let plugins = []
-  call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}]) "注释该插件第872行 in ftplugin/markdown.vim
+  " call add(plugins, ['SpaceVim/vim-markdown',{ 'on_ft' : 'markdown'}])
   " call add(plugins, ['joker1007/vim-markdown-quote-syntax',{ 'on_ft' : 'markdown'}])
+  call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}]) "comment line 872 in ftplugin/markdown.vim
   call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['iamcco/mathjax-support-for-mkdp',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['lvht/tagbar-markdown',{'merged' : 0}])
@@ -48,16 +49,6 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
 endfunction
 
 function! SpaceVim#layers#lang#markdown#config() abort
-  let g:markdown_fenced_languages = ['shell=sh', 'bash=sh', 'sh', 'viml=vim', 'java', 'coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
-  let g:tex_conceal = ""
-  let g:vim_markdown_math = 1
-  let g:vim_markdown_emphasis_multiline = 0
-  set conceallevel=0
-  let g:vim_markdown_conceal = 0
-  let g:vim_markdown_strikethrough = 1
-  let g:vim_markdown_conceal_code_blocks = 0
-
-  let g:vmt_auto_update_on_save = 1
   " do not highlight markdown error
   let g:markdown_hi_error = 0
   " the fenced languages based on loaded language layer
@@ -85,17 +76,6 @@ function! SpaceVim#layers#lang#markdown#config() abort
 
   " iamcco/markdown-preview.vim {{{
   let g:mkdp_browserfunc = 'openbrowser#open'
-  let g:mkdp_auto_close = 0
-  if $WSL_DISTRO_NAME != ''
-python3 << EOF
-import socket
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(('8.8.8.8', 80))
-ip = s.getsockname()[0]
-vim.command("let g:mkdp_open_ip = '" + ip + "'")
-EOF
-  endif
-  let g:mkdp_open_to_the_world = 1
   " }}}
   call SpaceVim#mapping#space#regesit_lang_mappings('markdown', function('s:mappings'))
   nnoremap <silent> <plug>(markdown-insert-link) :call <SID>markdown_insert_link(0, 0)<Cr>
@@ -105,17 +85,7 @@ EOF
   augroup spacevim_layer_lang_markdown
     autocmd!
     autocmd FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
-    autocmd FileType markdown inoremap \<cr> <br><cr>
   augroup END
-endfunction
-
-function! GenOrDelTocGFM()
-  if execute('w !grep -q "<\!-- vim-markdown-toc GFM -->" ; echo $?') =~ 0
-    RemoveToc
-  else
-    GenTocGFM
-  endif
 endfunction
 
 function! s:mappings() abort
@@ -124,7 +94,7 @@ function! s:mappings() abort
   endif
   let g:_spacevim_mappings_space.l = {'name' : '+Language Specified'}
   call SpaceVim#mapping#space#langSPC('nmap', ['l','p'], 'MarkdownPreview', 'Real-time markdown preview', 1)
-  call SpaceVim#mapping#space#langSPC('nmap', ['l','g'], 'call GenOrDelTocGFM()', 'Generate GFM TOC', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','g'], 'if search("<!-- vim-markdown-toc GFM -->", "nw") == 0 | exe "GenTocGFM" | else | exe "RemoveToc"| endif', 'Generate or Remove GFM TOC', 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l','k'], '<plug>(markdown-insert-link)', 'add link url', 0, 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l','K'], '<plug>(markdown-insert-picture)', 'add link picture', 0, 1)
   call SpaceVim#mapping#space#langSPC('nmap', ['l', 'r'], 

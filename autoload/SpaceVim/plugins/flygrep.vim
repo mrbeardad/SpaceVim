@@ -146,7 +146,8 @@ function! s:expr_to_pattern(expr) abort
   if s:grep_mode ==# 'expr'
     let items = split(a:expr)
     let pattern = join(items, '.*')
-    let pattern = s:filename_pattern . '.*\zs' . s:REGEX.parser(pattern, 0)
+    let ignorecase = &ignorecase ? '\c' : '\C'
+    let pattern = s:filename_pattern . '.*\zs' . ignorecase . s:REGEX.parser(pattern, 0)
     call s:LOGGER.info('matchadd pattern: ' . pattern)
     return pattern
   else
@@ -187,12 +188,7 @@ function! s:flygrep(expr) abort
   catch
   endtr
   hi def link FlyGrepPattern MoreMsg
-  if string(s:grep_ignore_case) !=# '' || string(s:grep_smart_case) !=# ''
-    let ignore_case = '\c'
-  else
-    let ignore_case = ''
-  endif
-  let s:hi_id = s:matchadd('FlyGrepPattern', ignore_case.s:expr_to_pattern(a:expr), 2)
+  let s:hi_id = s:matchadd('FlyGrepPattern', s:expr_to_pattern(a:expr), 2)
   let s:grep_expr = a:expr
   call timer_stop(s:grep_timer_id)
   let s:grep_timer_id = timer_start(200, function('s:grep_timer'), {'repeat' : 1})

@@ -40,20 +40,21 @@ endif
 
 function! SpaceVim#layers#autocomplete#plugins() abort
   let plugins = [
-        \ ['honza/vim-snippets',          { 'on_event' : 'InsertEnter', 'loadconf_before' : 1}],
-        \ ['Shougo/neco-syntax',          { 'on_event' : 'InsertEnter'}],
-        \ ['Shougo/context_filetype.vim', { 'on_event' : 'InsertEnter'}],
-        \ ['Shougo/neoinclude.vim',       { 'on_event' : 'InsertEnter'}],
-        \ ['Shougo/neosnippet-snippets',  { 'merged' : 0}],
-        \ ['Shougo/neopairs.vim',         { 'on_event' : 'InsertEnter'}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-snippets',          { 'on_event' : 'InsertEnter', 'loadconf_before' : 1}],
+        \ [g:_spacevim_root_dir . 'bundle/neco-syntax',          { 'on_event' : 'InsertEnter'}],
+        \ [g:_spacevim_root_dir . 'bundle/context_filetype.vim', { 'on_event' : 'InsertEnter'}],
+        \ [g:_spacevim_root_dir . 'bundle/neoinclude.vim',       { 'on_event' : 'InsertEnter'}],
+        \ [g:_spacevim_root_dir . 'bundle/neosnippet-snippets',  { 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/neopairs.vim',         { 'on_event' : 'InsertEnter'}],
         \ ]
-  call add(plugins, ['deoplete-plugins/deoplete-dictionary',        { 'merged' : 0}])
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/deoplete-dictionary',        { 'merged' : 0}])
   if g:spacevim_autocomplete_parens
+    " call add(plugins, [g:_spacevim_root_dir . 'bundle/delimitMate',        { 'merged' : 0}])
     call add(plugins, ['jiangmiao/auto-pairs',        { 'merged' : 0}])
   endif
   " snippet
   if g:spacevim_snippet_engine ==# 'neosnippet'
-    call add(plugins,  ['Shougo/neosnippet.vim', { 'on_event' : 'InsertEnter',
+    call add(plugins,  [g:_spacevim_root_dir . 'bundle/neosnippet.vim', { 'on_event' : 'InsertEnter',
           \ 'on_ft' : 'neosnippet',
           \ 'loadconf' : 1,
           \ 'on_cmd' : 'NeoSnippetEdit'}])
@@ -62,7 +63,7 @@ function! SpaceVim#layers#autocomplete#plugins() abort
           \ 'merged' : 0}])
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'
-    call add(plugins, ['ycm-core/YouCompleteMe', { 'on_ft': keys(g:ycm_filetype_whitelist), 'build' : './install.py --clangd-completer', 'loadconf_before' : 1, 'merged' : 0}])
+    call add(plugins, ['ycm-core/YouCompleteMe', { 'on_ft': keys(get(g:, "ycm_filetype_whitelist", [])), 'loadconf_before' : 1, 'merged' : 0}])
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
     call add(plugins, ['Shougo/neocomplete', {
           \ 'on_event' : 'InsertEnter',
@@ -80,13 +81,13 @@ function! SpaceVim#layers#autocomplete#plugins() abort
       call add(plugins, ['neoclide/coc.nvim',  {'merged': 0, 'rev': 'release'}])
     endif
   elseif g:spacevim_autocomplete_method ==# 'deoplete'
-    call add(plugins, ['Shougo/deoplete.nvim', {
+    call add(plugins, [g:_spacevim_root_dir . 'bundle/deoplete.nvim', {
           \ 'on_event' : 'InsertEnter',
           \ 'loadconf' : 1,
           \ }])
     if !has('nvim')
-      call add(plugins, ['SpaceVim/nvim-yarp',  {'merged': 0}])
-      call add(plugins, ['SpaceVim/vim-hug-neovim-rpc',  {'merged': 0}])
+      call add(plugins, [g:_spacevim_root_dir . 'bundle/nvim-yarp',  {'merged': 0}])
+      call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-hug-neovim-rpc',  {'merged': 0}])
     endif
   elseif g:spacevim_autocomplete_method ==# 'asyncomplete'
     call add(plugins, ['prabirshrestha/asyncomplete.vim', {
@@ -128,26 +129,16 @@ function! SpaceVim#layers#autocomplete#plugins() abort
   return plugins
 endfunction
 
-function! Ycm_and_AutoPair_Return()
-  if expand('<cWORD>') ==# '{}' || expand('<cWORD>') ==# '()'
-    return "\<CR>\<c-c>zz=ko"
-  else
-    let ret = substitute(substitute(execute('imap <s-cr>'),'^.*<SNR>','<SNR>', ''),'S-CR','CR','')
-    if ret =~ 'StopCompletion'
-      exe 'return '. ret
-    else
-      return "\<cr>"
-  endif
-endfunction
-
 function! SpaceVim#layers#autocomplete#config() abort
-  let g:AutoPairsMapCR = 0
-  let g:AutoPairsMultilineClose = 0
-  let g:AutoPairsShortcutJump = 0
-  inoremap <silent><m-n> <c-c>:call AutoPairsJump()<cr>a
-  if g:spacevim_autocomplete_parens && g:spacevim_autocomplete_method ==# 'ycm'
-    inoremap <silent><cr> <c-r>=Ycm_and_AutoPair_Return()<cr>
-  endif
+  " if g:spacevim_autocomplete_parens
+  "   imap <expr>(
+  "         \ pumvisible() ?
+  "         \ has('patch-7.4.744') ?
+  "         \ complete_parameter#pre_complete("()") : '(' :
+  "         \ (len(maparg('<Plug>delimitMate(', 'i')) == 0) ?
+  "         \ "\<Plug>delimitMate(" :
+  "         \ '('
+  " endif
 
   "mapping
   if s:tab_key_behavior ==# 'smart'

@@ -751,7 +751,7 @@ let g:spacevim_keep_server_alive = 1
 
 ""
 " The colorscheme of SpaceVim. Default is 'gruvbox'.
-let g:spacevim_colorscheme             = 'default-plus'
+let g:spacevim_colorscheme             = 'gruvbox'
 ""
 " @section colorscheme_bg, options-colorscheme_bg
 " @parentsection options
@@ -1189,7 +1189,7 @@ let g:spacevim_src_root                = 'E:\sources\'
 let g:spacevim_hosts_url
       \ = 'https://raw.githubusercontent.com/racaljk/hosts/master/hosts'
 let g:spacevim_wildignore
-      \ = '*.so,*.swp,*.zip,*.class,tags,*.jpg,
+      \ = '*/tmp/*,*.so,*.swp,*.zip,*.class,tags,*.jpg,
       \*.ttf,*.TTF,*.png,*/target/*,
       \.git,.svn,.hg,.DS_Store,*.svg'
 

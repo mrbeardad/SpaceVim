@@ -24,9 +24,9 @@ else
 endif
 
 function! SpaceVim#layers#format#plugins() abort
-    return [
-                \ ['neoformat/neoformat', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}],
-                \ ]
+  return [
+        \ [g:_spacevim_root_dir . 'bundle/neoformat', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}],
+        \ ]
 endfunction
 
 function! SpaceVim#layers#format#config() abort

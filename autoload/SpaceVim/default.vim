@@ -138,28 +138,6 @@ function! SpaceVim#default#options() abort
 
   set foldtext=SpaceVim#default#Customfoldtext()
 
-  set termguicolors
-  set tabstop=4
-  set softtabstop=4
-  set shiftwidth=4
-  set expandtab
-  set list
-  set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶
-  set foldmethod=indent
-  set nofoldenable
-  set showcmd
-  set noruler
-  set noshowmode
-  set virtualedit=block,onemore
-  set ignorecase
-  set smartcase
-  set nowrapscan
-  set scrolloff=2
-  set noautoread
-  set autochdir
-  set belloff=
-  set swapfile
-  set nobackup
 endfunction
 "}}}
 
@@ -176,24 +154,13 @@ function! SpaceVim#default#layers() abort
 endfunction
 
 function! SpaceVim#default#keyBindings() abort
-  " yank and paste
-  nnoremap <silent> , yl
-  nnoremap <silent> Y y$
-  xnoremap =p "0p
-  nnoremap =p "0p
-  nnoremap =P "0P
-  nnoremap <silent>=o :set paste<cr>o<c-r>0<c-c>:set nopaste<cr>
-  nnoremap <silent>=O :set paste<cr>O<c-r>0<c-c>:set nopaste<cr>
+  if g:spacevim_enable_insert_leader
+    inoremap <silent> <Leader><Tab> <C-r>=MyLeaderTabfunc()<CR>
+  endif
 
+  " yank and paste
   if has('unnamedplus')
     xnoremap <Leader>y "+y
-    nnoremap <leader>y "+y
-    nnoremap <leader>Y "+y$
-    nnoremap <leader>, "+yl
-    nnoremap <silent><leader>o :set paste<cr>o<c-r>+<c-c>:set nopaste<cr>
-    let g:_spacevim_mappings.o = ['normal! "+p', 'paste in next line']
-    nnoremap <silent><leader>O :set paste<cr>O<c-r>+<c-c>:set nopaste<cr>
-    let g:_spacevim_mappings.O = ['normal! "+p', 'paste in previous line']
     nnoremap <Leader>p "+p
     let g:_spacevim_mappings.p = ['normal! "+p', 'paste after here']
     nnoremap <Leader>P "+P
@@ -219,7 +186,7 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Jump to next quickfix list position',
         \ 'cnext',
         \ 'Next quickfix list')
-  call SpaceVim#mapping#def('nnoremap', '<Leader>qb', ':cprev<CR>',
+  call SpaceVim#mapping#def('nnoremap', '<Leader>qp', ':cprev<CR>',
         \ 'Jump to previous quickfix list position',
         \ 'cprev',
         \ 'Previous quickfix list')
@@ -227,20 +194,20 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Open quickfix list window',
         \ 'copen',
         \ 'Open quickfix list window')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qc', ':cclose<CR>',
-        \ 'Close quickfix list',
+  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qr', 'q',
+        \ 'Toggle recording',
         \ '',
-        \ 'Close quickfix list')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qC', ':call setqflist([])<CR>',
+        \ 'Toggle recording mode')
+  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qc', ':call setqflist([])<CR>',
         \ 'Clear quickfix list',
         \ '',
         \ 'Clear quickfix')
 
   " Use Ctrl+* to jump between windows
-  nnoremap <silent><s-Right> :<C-u>wincmd l<CR>
-  nnoremap <silent><s-Left>  :<C-u>wincmd h<CR>
-  nnoremap <silent><s-Up>    :<C-u>wincmd k<CR>
-  nnoremap <silent><s-Down>  :<C-u>wincmd j<CR>
+  nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
+  nnoremap <silent><C-Left>  :<C-u>wincmd h<CR>
+  nnoremap <silent><C-Up>    :<C-u>wincmd k<CR>
+  nnoremap <silent><C-Down>  :<C-u>wincmd j<CR>
 
 
   "]<End> or ]<Home> move current line to the end or the begin of current buffer
@@ -249,75 +216,12 @@ function! SpaceVim#default#keyBindings() abort
   vnoremap <silent>]<End> dGp``
   vnoremap <silent>]<Home> dggP``
 
-  function! s:Scroll(num) abort
-    if a:num == 0
-      exe 'normal '. winheight('.') / 5 * 2 ."\<c-t>"
-    else
-      exe 'normal '. winheight('.') / 5 * 2 ."\<c-y>"
-    endif
-  endfunction
-
-  " buffer与window操作
-  nnoremap <silent> <leader>n :bn<cr>
-  let g:_spacevim_mappings.n = ['', 'next buffer']
-  nnoremap <silent> <leader>b :bp<cr>
-  let g:_spacevim_mappings.b = ['', 'previous buffer']
-  nnoremap <silent><c-w>x :let bufnr_for_delete_with_ctrl_w_x = buffer_number()<cr>:bp<cr>:exe 'bd '.bufnr_for_delete_with_ctrl_w_x<cr>
-  nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
-  nnoremap <silent><tab> :winc w<cr>
-  nnoremap <silent><s-tab> :winc W<cr>
-
-  " 插入模式
-  inoremap <c-a> <home>
-  inoremap <c-e> <end>
-  inoremap <c-d> <c-c><c-d>i<right>
-  inoremap <c-b> <c-c><c-u>i<right>
-  inoremap <silent><c-down> <c-c>:call <SID>Scroll(1)<cr>i<right>
-  inoremap <silent><c-up> <c-c>:call <SID>Scroll(0)<cr>i<right>
-  inoremap <m-s> <c-c>%i
-  inoremap <c-l> <right><bs>
-  inoremap <c-u> <c-c><right>d^i
-  inoremap <c-k> <c-c><right>d$i
-  inoremap <c-y> <c-r>"
-  inoremap <c-o> <end><cr>
-  inoremap <silent><c-c> <c-c>:set cul<cr>
-  inoremap <s-right> <c-t>
-  inoremap <s-left> <c-d>
-
-  " 普通模式
-  nnoremap <c-a> 0
-  nnoremap <c-e> $
-  nnoremap <c-b> <c-u>
-  nnoremap <c-t> <c-e>
-  nnoremap <c-right> w
-  nnoremap <c-left> b
-  nnoremap <silent><c-down> :call <SID>Scroll(1)<cr>
-  nnoremap <silent><c-up> :call <SID>Scroll(0)<cr>
-  nnoremap <silent> <bs> :nohl<CR>
-  nnoremap <expr> n  'Nn'[v:searchforward]
-  nnoremap <expr> N  'nN'[v:searchforward]
-  nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
-  nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
-  nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
-  let g:_spacevim_mappings.m = ['', 'quickly modify your macros']
-  if has('unix') || has('wsl')
-    nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
-  elseif has ('win32')
-    nnoremap <silent> gF :call jobstart('explorer '. expand('<cfile>'))<cr>
-  endif
-
-  " 可视模式
-  vnoremap <c-a> 0
-  vnoremap <c-e> $
-
-  " 命令模式
-  cnoremap <c-a> <c-b>
 
   "Ctrl+Shift+Up/Down to move up and down
   nnoremap <silent><C-S-Down> :m .+1<CR>==
   nnoremap <silent><C-S-Up> :m .-2<CR>==
-  inoremap <silent><C-S-Down> <C-C>:m .+1<CR>==gi
-  inoremap <silent><C-S-Up> <C-C>:m .-2<CR>==gi
+  inoremap <silent><C-S-Down> <Esc>:m .+1<CR>==gi
+  inoremap <silent><C-S-Up> <Esc>:m .-2<CR>==gi
   vnoremap <silent><C-S-Down> :m '>+1<CR>gv=gv
   vnoremap <silent><C-S-Up> :m '<-2<CR>gv=gv
 
@@ -327,6 +231,12 @@ function! SpaceVim#default#keyBindings() abort
   " Improve scroll, credits: https://github.com/Shougo
   nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
         \ 'zt' : (winline() == &scrolloff + 1) ? 'zb' : 'zz'
+  noremap <expr> <C-f> max([winheight(0) - 2, 1])
+        \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "H")
+  noremap <expr> <C-b> max([winheight(0) - 2, 1])
+        \ ."\<C-u>".(line('w0') <= 1 ? "H" : "L")
+  noremap <expr> <C-e> (line("w$") >= line('$') ? "j" : "3\<C-e>")
+  noremap <expr> <C-y> (line("w0") <= 1         ? "k" : "3\<C-y>")
 
   " Select blocks after indenting
   xnoremap < <gv
@@ -342,19 +252,15 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent><Down> gj
   nnoremap <silent><Up> gk
 
-
-
   " Fast saving
   nnoremap <C-s> :<C-u>w<CR>
   vnoremap <C-s> :<C-u>w<CR>
   cnoremap <C-s> <C-u>w<CR>
 
-  " Tabs
-  nnoremap <silent> <leader>0 :<C-u>tabfirst<CR>
-  nnoremap <silent> <leader>$ :<C-u>tablast<CR>
-  nnoremap <C-q> :<c-u>q<cr>
-  vnoremap <C-q> :<c-u>q<cr>
-  cnoremap <C-q> <c-u>q<cr>
+  nnoremap <silent> gr :<C-u>call <SID>switch_tabs()<CR>
+
+  " Remove spaces at the end of lines
+  nnoremap <silent> ,<Space> :<C-u>silent! keeppatterns %substitute/\s\+$//e<CR>
 
   " C-r: Easier search and replace
   xnoremap <C-r> :<C-u>call <SID>VSetSearch()<CR>:,$s/<C-R>=@/<CR>//gc<left><left><left>

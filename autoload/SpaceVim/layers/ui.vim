@@ -17,18 +17,17 @@ endif
 
 function! SpaceVim#layers#ui#plugins() abort
   let plugins = [
-        \ ['Yggdroot/indentLine', {'merged' : 0}],
-        \ ['wsdjeg/tagbar', {'on_cmd' : 'TagbarToggle','loadconf' : 1, 'merged' : 0}],
-        \ ['tenfyzhong/tagbar-makefile.vim', {'on_cmd' : 'TagbarToggle','merged': 0}],
-        \ ['tenfyzhong/tagbar-proto.vim', {'on_cmd' : 'TagbarToggle','merged': 0}],
-        \ ['t9md/vim-choosewin', {'on_cmd' : 'ChooseWin', 'merged' : 0}],
-        \ ['mhinz/vim-startify', {'loadconf' : 1, 'merged' : 0}],
-        \ ['yangyangxcf/vim-nerd-font-cheatsheets', {'loadconf' : 1, 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/indentLine', {'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/tagbar', {'loadconf' : 1, 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/tagbar-makefile.vim', {'merged': 0}],
+        \ [g:_spacevim_root_dir . 'bundle/tagbar-proto.vim', {'merged': 0}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-choosewin', {'on_cmd' : 'ChooseWin', 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-startify', {'loadconf' : 1, 'merged' : 0}],
         \ ]
   if !SpaceVim#layers#isLoaded('core#statusline')
-    call add(plugins, ['vim-airline/vim-airline',                { 'merged' : 0, 
+    call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-airline',                { 'merged' : 0, 
           \ 'loadconf' : 1}])
-    call add(plugins, ['vim-airline/vim-airline-themes',         { 'merged' : 0}])
+    call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-airline-themes',         { 'merged' : 0}])
   endif
 
   return plugins
@@ -44,8 +43,6 @@ function! ToggleLinebreak()
         echo 'Linebreak Enable'
     endif
 endfunction
-" nnoremap <silent> <leader>l :call ToggleLinebreak()<cr>
-" call SpaceVim#mapping#space#def('nnoremap', ['t','l'], 'call ToggleLinebreak()', 'toggle linebreak',1)
 
 function! ToggleVirtuledit()
     if &virtualedit =~ "all"
@@ -56,8 +53,6 @@ function! ToggleVirtuledit()
         echo 'VirtualEdit Enable'
     endif
 endfunction
-" nnoremap <silent> <leader>v :call ToggleVirtuledit()<CR>
-" call SpaceVim#mapping#space#def('nnoremap', ['t','v'], 'call ToggleVirtuledit()', 'toggle virtul edit',1)
 
 function! ToggleExpandtab()
     if &expandtab == 1
@@ -68,8 +63,6 @@ function! ToggleExpandtab()
         echo 'ExpandTab Enable'
     endif
 endfunction
-" nnoremap <silent> <leader>e :call ToggleExpandtab()<CR>
-" call SpaceVim#mapping#space#def('nnoremap', ['t','e'], 'call ToggleExpandtab()', 'toggle expandtab',1)
 
 function! ToggleFoldMethod()
     if &foldmethod != 'manual'
@@ -80,10 +73,6 @@ function! ToggleFoldMethod()
         echo 'set foldmethod=indent'
     endif
 endfunction
-" nnoremap <silent> <leader>F :call ToggleFoldMethod()<cr>
-" call SpaceVim#mapping#space#def('nnoremap', ['t','f'], 'call ToggleFoldMethod()', 'toggle foldmethod',1)
-
-command! -nargs=* Rcmd :let tmp=<q-args> | put =execute(tmp)
 
 function! SpaceVim#layers#ui#config() abort
   if g:spacevim_colorscheme_bg ==# 'dark'
@@ -92,10 +81,10 @@ function! SpaceVim#layers#ui#config() abort
   else
     let g:indentLine_color_gui = get(g:, 'indentLine_color_gui', '#d5c4a1')
   endif
-  let g:indentLine_char = get(g:, 'indentLine_char', '¦')
+  let g:indentLine_char = get(g:, 'indentLine_char', '┊')
   let g:indentLine_concealcursor = 'niv'
   let g:indentLine_conceallevel = 2
-  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx', 'json']
+  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'json']
   let g:better_whitespace_filetypes_blacklist = ['diff', 'gitcommit', 'unite',
         \ 'qf', 'help', 'markdown', 'leaderGuide',
         \ 'startify'
@@ -104,11 +93,10 @@ function! SpaceVim#layers#ui#config() abort
   let g:signify_line_highlight = 0
 
   if s:enable_sidebar
-    noremap <silent> <F1> :call SpaceVim#plugins#sidebar#toggle()<CR>
+    noremap <silent> <F2> :call SpaceVim#plugins#sidebar#toggle()<CR>
   else
-    noremap <silent> <F1> :TagbarToggle<CR>
+    noremap <silent> <F2> :TagbarToggle<CR>
   endif
-  nnoremap <silent><F7> :call SpaceVim#plugins#tabmanager#open()<cr>
 
   if s:enable_scrollbar
     augroup spacevim_layer_ui
@@ -124,7 +112,7 @@ function! SpaceVim#layers#ui#config() abort
           \ 'call SpaceVim#mapping#SmartClose()')
   endif
   " Ui toggles
-  call SpaceVim#mapping#space#def('nnoremap', ['t','l'], 'call ToggleLinebreak()', 'toggle linebreak',1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t','L'], 'call ToggleLinebreak()', 'toggle linebreak',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','v'], 'call ToggleVirtuledit()', 'toggle virtul edit',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','e'], 'call ToggleExpandtab()', 'toggle expandtab',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','F'], 'call ToggleFoldMethod()', 'toggle foldmethod',1)
@@ -137,22 +125,22 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['w', '.'], 'call call('
         \ . string(s:_function('s:win_resize_transient_state')) . ', [])',
         \ 'windows-transient-state', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'C'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'c'], 'call call('
         \ . string(s:_function('s:toggle_conceallevel')) . ', [])',
         \ 'toggle conceallevel', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 't'], 'call SpaceVim#plugins#tabmanager#open()',
         \ 'open-tabs-manager', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'F'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'f'], 'call call('
         \ . string(s:_function('s:toggle_colorcolumn')) . ', [])',
         \ 'fill-column-indicator', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'l'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'h'], 'call call('
         \ . string(s:_function('s:toggle_cursorline')) . ', [])',
         \ ['toggle-highlight-current-line',
         \ [
         \ 'SPC t h h is to toggle the highlighting of cursorline'
         \ ]
         \ ], 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'i'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'i'], 'call call('
         \ . string(s:_function('s:toggle_indentline')) . ', [])',
         \ ['toggle-highlight-indentation-levels',
         \ [
@@ -179,17 +167,17 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['T', '~'], 'call call('
         \ . string(s:_function('s:toggle_end_of_buffer')) . ', [])',
         \ 'display ~ in the fringe on empty lines', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 's'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'S'], 'call call('
         \ . string(s:_function('s:toggle_spell_check')) . ', [])',
         \ 'toggle-spell-checker', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'p'], 'call call('
         \ . string(s:_function('s:toggle_paste')) . ', [])',
         \ 'toggle-paste-mode', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'c'], 'setlocal list!',
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'l'], 'setlocal list!',
         \ 'toggle-hidden-listchars', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'w'], 'setlocal wrap!',
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'W'], 'setlocal wrap!',
         \ 'toggle-wrap-line', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', '<space>'], 'call call('
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'w'], 'call call('
         \ . string(s:_function('s:toggle_whitespace')) . ', [])',
         \ 'toggle-highlight-tail-spaces', 1)
 
@@ -269,11 +257,7 @@ let s:fcflag = 0
 " use &textwidth option instead of 80
 function! s:toggle_fill_column() abort
   if !s:fcflag
-    if !&textwidth
-      set cc=100
-    else
-      set cc=100
-    endif
+    set cc=100
     let s:fcflag = 1
   else
     set cc=

@@ -152,12 +152,9 @@ endfunction
 function! s:major_mode() abort
     let icon = s:FILE.fticon(bufname())
     if icon ==# ''
-      let icon = s:FILE.fticon(&ft)
+      let icon = ' '
     endif
-    if icon ==# ''
-      let icon = ''
-    endif
-  return ' '.icon.'%{empty(&ft)? "Unkown" : " " . &ft . " "}'
+  return ' '.icon.'%{empty(&ft)? "UNKOWN" : " " . &ft . " "}'
 endfunction
 
 function! s:modes() abort
@@ -182,7 +179,7 @@ function! s:percentage() abort
 endfunction
 
 function! s:cursorpos() abort
-  return ' ☰ %l/%L :%c '
+  return '  %l/%L :%c '
 endfunction
 
 function! s:time() abort
@@ -622,8 +619,6 @@ function! SpaceVim#layers#core#statusline#init() abort
   augroup END
 endfunction
 
-nnoremap <silent><c-l> <c-l>:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
-nnoremap <silent><c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<CR>
 let s:colors_template = SpaceVim#mapping#guide#theme#gruvbox#palette()
 
 function! SpaceVim#layers#core#statusline#def_colors() abort

@@ -11,8 +11,10 @@ function! SpaceVim#layers#tools#plugins() abort
   call add(plugins, ['tpope/vim-scriptease',             { 'merged' : 0}])
   call add(plugins, ['lymslive/vimloo',                  { 'merged' : 0}])
   call add(plugins, ['lymslive/vnote',                   { 'depends' : 'vimloo', 'on_cmd' : ['NoteBook','NoteNew','NoteEdit', 'NoteList', 'NoteConfig', 'NoteIndex', 'NoteImport']}])
+  " call add(plugins, ['junegunn/rainbow_parentheses.vim', { 'merged' : 0}])
   call add(plugins, ['luochen1990/rainbow',              { 'merged' : 0}])
   call add(plugins, ['mbbill/fencview',                  { 'on_cmd' : 'FencAutoDetect'}])
+  " call add(plugins, ['simnalamburt/vim-mundo',           { 'on_cmd' : 'MundoToggle'}])
   call add(plugins, ['mbbill/undotree',                  { 'on_cmd' : 'UndotreeToggle'}])
   call add(plugins, ['wsdjeg/vim-cheat',                 { 'on_cmd' : 'Cheat'}])
   call add(plugins, ['wsdjeg/Mysql.vim',                 { 'on_cmd' : 'SQLGetConnection'}])
@@ -51,54 +53,24 @@ function! SpaceVim#layers#tools#config() abort
         \ 'Goyo', 'centered-buffer-mode', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['w', 'C'],
         \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['a', 'R'],
-        \ 'Goyo', 'read-mode', 1)
 
   " bootmark key binding
-  let g:bookmark_sign = ' '
-  let g:bookmark_annotation_sign = ' '
-  let g:bookmark_auto_save_file = $HOME.'/.cache/SpaceVim/vim_bookmarks'
-  let g:bookmark_no_default_key_mappings = 1
-  let g:_spacevim_mappings_space.m = {'name' : '+Major-mode/Marks'}
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'm'], 'BookmarkToggle', 'BookmarkToggle', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'i'], 'BookmarkAnnotate', 'BookmarkAnnotate', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'l'], 'BookmarkShowAll', 'BookmarkShowAll', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'n'], 'BookmarkNext', 'BookmarkNext', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'b'], 'BookmarkPrev', 'BookmarkPrev', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'c'], 'BookmarkClear', 'BookmarkClear', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'C'], 'BookmarkClearAll', 'BookmarkClearAll', 1)
-  nnoremap <silent> <F5> :UndotreeToggle<CR>
-  let g:rainbow_active = 1
-  let g:rainbow_conf = {
-  \ 'guifgs':  ['#e15078', '#95bcad', '#ff7300', '#3a5fcd', '#d7cfff', '#00dfd7', '#ffd700', '#ff00ff', '#40ffff'],
-  \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-  \ 'guis': [''],
-  \ 'cterms': [''],
-  \ 'operators': '_,_',
-  \ 'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-  \ 'separately': {
-  \     '*': {},
-  \     'markdown': {
-  \       'parentheses_options': 'containedin=markdownCode contained',
-  \     },
-  \     'lisp': {
-  \       'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
-  \     },
-  \     'haskell': {
-  \       'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/\v\{\ze[^-]/ end=/}/ fold'],
-  \     },
-  \     'vim': {
-  \       'parentheses_options': 'containedin=vimFuncBody',
-  \     },
-  \     'perl': {
-  \       'syn_name_prefix': 'perlBlockFoldRainbow',
-  \     },
-  \     'stylus': {
-  \       'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
-  \     },
-  \     'css': 0,
-  \ }
-  \}
+  " nnoremap <silent> mm :<C-u>BookmarkToggle<Cr>
+  " nnoremap <silent> mi :<C-u>BookmarkAnnotate<Cr>
+  " nnoremap <silent> ma :<C-u>BookmarkShowAll<Cr>
+  " nnoremap <silent> mn :<C-u>BookmarkNext<Cr>
+  " nnoremap <silent> mp :<C-u>BookmarkPrev<Cr>
+  " nnoremap <silent> <F7> :MundoToggle<CR>
+  " augroup rainbow_lisp
+  "   autocmd!
+  "   autocmd FileType lisp,clojure,scheme,racket,java RainbowParentheses
+  "   autocmd FileType vimcalc setlocal nonu nornu nofoldenable | inoremap <silent> <buffer> <c-d> <c-[>:q<cr>
+  "         \ | nnoremap <silent> <buffer> q :bdelete<cr>
+  " augroup END
+  " let g:rainbow#max_level = 16
+  " let g:rainbow#pairs = [['(', ')'], ['[', ']'],['{','}']]
+  " " List of colors that you do not want. ANSI code or #RRGGBB
+  " let g:rainbow#blacklist = [233, 234]
   if maparg('<C-_>', 'v') ==# ''
     vnoremap <silent> <C-_> <Esc>:Ydv<CR>
   endif
