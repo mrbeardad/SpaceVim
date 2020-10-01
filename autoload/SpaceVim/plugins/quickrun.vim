@@ -188,28 +188,26 @@ function! s:term_enter()
 endfunction
 
 function! s:HasOpenFileWindows() abort
-    for i in range(1, winnr('$'))
-        let buf = winbufnr(i)
+  for i in range(1, winnr('$'))
+    let buf = winbufnr(i)
 
-        " skip unlisted buffers, except for netrw
-        if !buflisted(buf) && getbufvar(buf, '&filetype') != 'netrw'
-            continue
-        endif
+    " skip unlisted buffers, except for netrw
+    if !buflisted(buf) && getbufvar(buf, '&filetype') != 'netrw'
+      continue
+    endif
+    " skip temporary buffers with buftype set
+    if getbufvar(buf, '&buftype') != ''
+      continue
+    endif
+    " skip the preview window
+    if getwinvar(i, '&previewwindow')
+      continue
+    endif
 
-        " skip temporary buffers with buftype set
-        if getbufvar(buf, '&buftype') != ''
-            continue
-        endif
+    return 1
+  endfor
 
-        " skip the preview window
-        if getwinvar(i, '&previewwindow')
-            continue
-        endif
-
-        return 1
-    endfor
-
-    return 0
+  return 0
 endfunction
 
 function WindowIsOnlyWindow()
@@ -238,7 +236,7 @@ function! SpaceVim#plugins#quickrun#prepare()
     endif
     au BufLeave *.input if &modified == 1 |w|endif
     au TermEnter * setlocal list nonu norelativenumber
-    au WinEnter * call WindowIsOnlyWindow()
+    " au WinEnter * call WindowIsOnlyWindow()
   augroup END
 
   py3 import time

@@ -16,21 +16,17 @@ if !(has('termguicolors') && &termguicolors) && !has('gui_running') && &t_Co != 
   " prevent change statuslines
   finish
 else
-  let g:colors_name='default-plus'
+  let g:colors_name='default-reduce'
 endif
 
 
-hi Pmenu guifg=#c0c0c0 guibg=#404080
-hi PmenuSel guifg=#c0c0c0 guibg=#2050d0
-hi PmenuSbar guifg=blue guibg=darkgray
-hi PmenuThumb guifg=#c0c0c0
-hi LineNr guifg=#d7daff
-hi CursorLineNr guifg=#d7ffff
-hi MoreMsg  guifg=springgreen
-hi Question guifg=springgreen
-hi NonText guifg=blue
-hi CursorLine guibg=Grey25
-hi Cursor guibg=#ffffff
+set notermguicolors
+hi PmenuSel ctermbg=146
+hi LineNr ctermfg=183
+hi CursorLineNr ctermfg=195
+hi NonText ctermfg=93
+hi CursorLine ctermbg=243 cterm=none
+hi Cursor ctermfg=black ctermbg=white
 
 " #d7cfff   基佬紫
 " #bfffff   基佬青

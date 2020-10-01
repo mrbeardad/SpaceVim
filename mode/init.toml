@@ -1,45 +1,62 @@
-########################### SpaceVim选项 ###########################
+########################### SpaceVim Options ###########################
 [options]
-    # Statusline和Tabline配置
+    # core#statusline
     statusline_separator = "arrow"
     statusline_iseparator = "arrow"
-    statusline_inactive_separator = "arrow"
-    enable_statusline_bfpath = true
     enable_statusline_mode = true
-    enable_statusline_tag = false
-    enable_os_fileformat_icon = true
-    enable_tabline_ft_icon = true
-    buffer_index_type = 4
+    enable_statusline_bfpath = true
+    enable_statusline_tag = true
     windows_index_type = 3
     statusline_left_sections = ['winnr', 'version control info']
-    statusline_right_sections = ['major mode', 'fileformat', 'cursorpos', 'percentage']
+    statusline_right_sections = ['syntax checking', 'major mode', 'fileformat', 'cursorpos', 'percentage']
 
-    # FileManager配置
+    # core#tabline
+    enable_tabline_ft_icon = true
+    buffer_index_type = 4
+
+    # core
     filemanager = "defx"
     enable_vimfiler_filetypeicon = true
     enable_vimfiler_gitstatus = true
-    enable_vimfiler_welcome = false
+    sidebar_width = 25
 
-    # Checker配置
-    enable_ale = true
+    # colorscheme
+    colorscheme = "default-reduce"
+
+    # checker
     enable_neomake = false
+    enable_ale = true
+    lint_on_save = false
+    error_symbol = ' '
+    warning_symbol = ' '
+    info_symbol = ' '
 
-    # Autocomplete配置
+    # autocomplete
     enable_ycm = true
     snippet_engine = "ultisnips"
 
-    # Quickrun配置
-    enable_quickrun = true
+    # lang#
+    terminal_runner = true
 
-    # SpaceVim配置
+    # SpaceVim
+    bootstrap_before = 'myspacevim#before'
+    bootstrap_after = 'myspacevim#after'
+    enable_guicolors = true
     default_indent = 4
     checkinstall = false
     vimcompatible = true
-    sidebar_width = 25
+    enable_insert_leader = false
     project_rooter_patterns = ['.root/', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', '.SpaceVim.d/']
+    wildignore = '*.so,*.swp,*.zip,*.class,tags,*.jpg,*.ttf,*.TTF,*.png,*/target/*,.git,.svn,.hg,.DS_Store,*.svg'
     disabled_plugins = [ 'neco-syntax', 'neoinclude.vim', 'neosnippet-snippets', 'neopairs.vim', 'deoplete-dictionary', 'CompleteParameter.vim']
 
-########################### Layer模块 ###########################
+
+########################### Plugins ###########################
+[[custom_plugins]]
+    repo = "yangyangxcf/vim-nerd-font-cheatsheets"
+    merged = false
+
+########################### Layers ###########################
 [[layers]]
     name = 'core#banner'
 
@@ -57,6 +74,7 @@
 
 [[layers]]
     name = 'ui'
+    enable_scrollbar = true
 
 [[layers]]
     name = 'edit'

@@ -8,6 +8,51 @@
 
 function! myspacevim#before() abort
   " ==================================
+  " CUSTOM: runner Before
+  " ==================================
+  let g:quickrun_default_flags = {
+      \ 'python': {
+          \ 'compiler': '',
+          \ 'compileFlags': '',
+          \ 'debugCompileFlags': '',
+          \ 'extRegex': [],
+          \ 'extFlags': [],
+          \ 'cmd': '/bin/python ${thisFile}',
+          \ 'cmdArgs': '',
+          \ 'cmdRedir': '',
+          \ 'debugCmd': ''
+      \ },
+      \ 'c': {
+          \ 'compiler': 'gcc',
+          \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+          \ 'debugCompileFlags': '-Og -g3 -std=c17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+          \ 'extRegex': [],
+          \ 'extFlags': [],
+          \ 'cmd': '${exeFile}',
+          \ 'cmdArgs': '',
+          \ 'cmdRedir': '',
+          \ 'debugCmd': 'cgdb ${exeFile}'
+      \ },
+      \ 'cpp': {
+          \ 'compiler': 'clang\++',
+          \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+          \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+          \ 'extRegex': [
+              \ '^#\s*include\s*<future>',
+              \ '^#\s*include\s*<mysql++.*>'
+          \ ],
+          \ 'extFlags': [
+              \ '-lpthread',
+              \ '-I/usr/include/mysql -lmysqlpp'
+          \ ],
+          \ 'cmd': '${exeFile}',
+          \ 'cmdArgs': '',
+          \ 'cmdRedir': '',
+          \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+      \ }
+  \ }
+
+  " ==================================
   " CUSTOM: autocomplete Before
   " ==================================
   let g:ycm_filetype_whitelist = {
@@ -26,15 +71,16 @@ function! myspacevim#before() abort
   " ==================================
   " CUSTOM: checker Before
   " ==================================
-  let g:ale_linters_explicit = 1
   let g:ale_sign_column_always = 1
   let g:ale_disable_lsp = 1
   let g:ale_completion_enabled = 0
   let g:ale_set_highlights = 1
+  let g:ale_lint_on_filetype_changed = 0
   let g:ale_lint_on_text_changed = 'never'
   let g:ale_lint_on_insert_leave = 1
   let g:ale_lint_on_enter = 0
   let g:ale_lint_on_save = 0
+  let g:ale_linters_explicit = 1
   let g:ale_linters = {
         \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
         \   'c': ['gcc', 'cppcheck'],
@@ -104,6 +150,7 @@ function! myspacevim#before() abort
 endfunction
 
 " ===================================================================================================
+" ===================================================================================================
 
 function! myspacevim#after() abort
   " ==================================
@@ -133,7 +180,7 @@ function! myspacevim#after() abort
     let g:_spacevim_mappings_g['r'] = ['YcmCompleter GoToReferences', 'Go to reference']
     nnoremap <silent> gr :YcmCompleter GoToReferences<CR>
     let g:_spacevim_mappings_g['c'] = ['YcmCompleter RefactorRename', 'Refactor and rename']
-    nnoremap <silent> gc :YcmCompleter RefactorRename 
+    nnoremap <silent> gc :YcmCompleter RefactorRename
     let g:_spacevim_mappings_g['t'] = ['YcmCompleter GetType', 'Get Type']
     nnoremap <silent> gt :YcmCompleter GetType<CR>
   endif
@@ -172,12 +219,12 @@ function! myspacevim#after() abort
       \ ]
 
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
-    let g:ale_sign_error = ' '
-    let g:ale_sign_warning = ' '
-    let g:ale_sign_info = ' '
-    let g:ale_echo_msg_error_str = 'Error'
-    let g:ale_echo_msg_warning_str = 'Warning'
-    let g:ale_echo_msg_info_str = 'Info'
+    " let g:ale_sign_error = ' '
+    " let g:ale_sign_warning = ' '
+    " let g:ale_sign_info = ' '
+    " let g:ale_echo_msg_error_str = 'Error'
+    " let g:ale_echo_msg_warning_str = 'Warning'
+    " let g:ale_echo_msg_info_str = 'Info'
 
   endif
 
@@ -205,6 +252,8 @@ function! myspacevim#after() abort
   nmap ; <Plug>(easymotion-overwin-f2)
   nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
   call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(easymotion-overwin-line)', 'jump to a line', 0)
+  nmap gs <Plug>(openbrowser-smart-search)
+  vmap gs <Plug>(openbrowser-smart-search)
 
 
   " ==================================
@@ -369,8 +418,6 @@ function! myspacevim#after() abort
       hi! String gui=italic guifg=#c3e88d
       hi! Pmenu guifg=#d7dfff
     endif
-  else
-    colorscheme default-plus
   endif
   hi! ALEWarningSign guifg=#ffbc6b
   hi! BookmarkSignDefault guifg=yellow
@@ -388,10 +435,9 @@ function! myspacevim#after() abort
 endfunction
 
 function! s:set_my_neovim() abort
-  set termguicolors
-  set tabstop=4
-  set softtabstop=4
-  set shiftwidth=4
+  " set tabstop=4
+  " set softtabstop=4
+  " set shiftwidth=4
   set expandtab
   set list
   set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶

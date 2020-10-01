@@ -154,7 +154,7 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
 
 # QuickRun
-在`~/.SpaceVim.d/init.toml`中的`[option]`下设置`enable_quickrun = true`
+在`~/.SpaceVim.d/init.toml`中的`[option]`下设置`enable_terminal_runner = true`
 即可启用QuickRun替代原版中的Runner来运行程序，QuickRun与后者区别在于：
 * 使用neovim的内建终端
 * 程序运行计时器更加准确
@@ -172,6 +172,8 @@ PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master
 * `QuickrunCmd`
 * `QuickrunCmdArgs`
 * `QuickrunCmdRedir`
+* `QuickrunCmdArgs!`    ：重置
+* `QuickrunCmdRedir!`   ：重置
 
 ```vim
 " 例：
@@ -239,7 +241,8 @@ let g:quickrun_default_flags = {
 &emsp;哈哈，编辑器这东西就是要称手才好用，所以你也不可避免的需要修改一些内容。
 接下来就简单说说怎么定制吧。
 
-&emsp;首先，一部分我觉得用户可能会需要修改的配置都被放到了[init.vim](init.vim)里。  
+&emsp;~~首先，一部分我觉得用户可能会需要修改的配置都被放到了[init.vim](init.vim)里。~~  
+现在都提取到**autoload/myspacevim.vim**里了
 
 &emsp;然后，如果init.vim里面没有内想要的该去哪找呢？这你的先看看[SpaceVim的官方文档](https://spacevim.org/documentation/)，
 官方给的选项都需要在~/.SpaceVim.d/init.toml里添加配置，本仓库的init.toml在[mode目录下](mode/init.toml)

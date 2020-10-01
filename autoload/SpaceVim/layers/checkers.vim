@@ -20,7 +20,11 @@ function! SpaceVim#layers#checkers#plugins() abort
   if g:spacevim_enable_neomake && g:spacevim_enable_ale == 0
     call add(plugins, [g:_spacevim_root_dir . 'bundle/neomake', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
   elseif g:spacevim_enable_ale
-    call add(plugins, ['dense-analysis/ale', {'on_ft' : keys(get(g:, "ale_linters", [])), 'merged' : 0, 'loadconf_before' : 1}])
+    if get(g:, 'ale_linters', {}) != {}
+      call add(plugins, ['dense-analysis/ale', {'on_ft' : keys(g:ale_linters), 'merged' : 0, 'loadconf_before' : 1}])
+    else
+      call add(plugins, ['dense-analysis/ale', {'merged' : 0, 'loadconf_before' : 1}])
+    endif
     call SpaceVim#custom#SPC('nore', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#custom#SPC('nore', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
     call SpaceVim#custom#SPC('nore', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)
@@ -122,7 +126,7 @@ function! SpaceVim#layers#checkers#config() abort
         endif
       endif
     elseif g:spacevim_enable_ale && SpaceVim#layers#isLoaded('core#statusline')
-      autocmd User ALELint 
+      autocmd User ALELintPost 
             \ let &l:statusline = SpaceVim#layers#core#statusline#get(1)
     endif
   augroup END

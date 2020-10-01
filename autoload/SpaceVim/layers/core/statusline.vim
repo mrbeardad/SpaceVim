@@ -28,7 +28,6 @@ let s:VIMCOMP = SpaceVim#api#import('vim#compatible')
 let s:SYSTEM = SpaceVim#api#import('system')
 let s:ICON = SpaceVim#api#import('unicode#icon')
 let s:VIM =  SpaceVim#api#import('vim')
-let s:FILE = SpaceVim#api#import('file')
 
 " init
 " " the separators icons:
@@ -150,10 +149,13 @@ function! s:fileformat() abort
 endfunction
 
 function! s:major_mode() abort
-    let icon = s:FILE.fticon(bufname())
+  let icon = ''
+  if g:spacevim_enable_tabline_ft_icon
+    let icon = SpaceVim#api#import('file').fticon(bufname())
     if icon ==# ''
       let icon = ' '
     endif
+  endif
   return ' '.icon.'%{empty(&ft)? "UNKOWN" : " " . &ft . " "}'
 endfunction
 
@@ -330,12 +332,8 @@ endfunction
 " enable_statusline_bfpath true
 function! s:buffer_name() abort
   if get(b:, '_spacevim_statusline_showbfname', 0) == 1 || g:spacevim_enable_statusline_bfpath
-    let fp_name = substitute(expand('%:p'), SpaceVim#plugins#projectmanager#current_root(), '', 'g')
-    if &readonly == 1
-      return  "🔒️ " . fp_name
-    else
-      return  ' ' . fp_name
-    endif
+    let fp_name = substitute(expand('%:p'), SpaceVim#plugins#projectmanager#current_root(), ' ', 'g')
+    return  &readonly ? '%#SpaceVim_statusline_ro#  %#SpaceVim_statusline_z#' . fp_name : fp_name
   else
     return ''
   endif
@@ -639,6 +637,7 @@ function! SpaceVim#layers#core#statusline#def_colors() abort
   exe 'hi! SpaceVim_statusline_b ctermbg=' . t[1][2] . ' ctermfg=' . t[1][3] . ' guibg=' . t[1][1] . ' guifg=' . t[1][0]
   exe 'hi! SpaceVim_statusline_c ctermbg=' . t[2][2] . ' ctermfg=' . t[2][3] . ' guibg=' . t[2][1] . ' guifg=' . t[2][0]
   exe 'hi! SpaceVim_statusline_z ctermbg=' . t[3][1] . ' ctermfg=' . t[2][2] . ' guibg=' . t[3][0] . ' guifg=' . t[2][0]
+  exe 'hi! SpaceVim_statusline_ro ctermbg=' . t[3][1] . ' ctermfg=Red guibg=' . t[3][0] . ' guifg=#ff5f00'
   hi! SpaceVim_statusline_error ctermbg=003 ctermfg=Black guibg=#504945 guifg=#fb4934 gui=bold
   hi! SpaceVim_statusline_warn ctermbg=003 ctermfg=Black guibg=#504945 guifg=#fabd2f gui=bold
   call s:HI.hi_separator('SpaceVim_statusline_a', 'SpaceVim_statusline_b')

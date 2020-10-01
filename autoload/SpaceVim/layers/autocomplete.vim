@@ -63,7 +63,11 @@ function! SpaceVim#layers#autocomplete#plugins() abort
           \ 'merged' : 0}])
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'
-    call add(plugins, ['ycm-core/YouCompleteMe', { 'on_ft': keys(get(g:, "ycm_filetype_whitelist", [])), 'loadconf_before' : 1, 'merged' : 0}])
+    if get(g: ,'ycm_filetype_whitelist', {}) != {}
+      call add(plugins, ['ycm-core/YouCompleteMe', { 'on_ft': keys(g:ycm_filetype_whitelist), 'loadconf_before' : 1, 'merged' : 0}])
+    else
+      call add(plugins, ['ycm-core/YouCompleteMe', {'loadconf_before' : 1, 'merged' : 0}])
+    endif
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
     call add(plugins, ['Shougo/neocomplete', {
           \ 'on_event' : 'InsertEnter',
