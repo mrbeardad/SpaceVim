@@ -836,9 +836,9 @@ call s:HL('BufTabLineFill', s:bg0, s:bg0)
 " }}}
 " Asynchronous Lint Engine: {{{
 
-call s:HL('ALEError', s:none, s:none, s:undercurl, s:red)
-call s:HL('ALEWarning', s:none, s:none, s:undercurl, s:yellow)
-call s:HL('ALEInfo', s:none, s:none, s:undercurl, s:blue)
+" call s:HL('ALEError', s:none, s:none, s:undercurl, s:red)
+" call s:HL('ALEWarning', s:none, s:none, s:undercurl, s:yellow)
+" call s:HL('ALEInfo', s:none, s:none, s:undercurl, s:blue)
 
 hi! link ALEErrorSign GruvboxRedSign
 hi! link ALEWarningSign GruvboxYellowSign

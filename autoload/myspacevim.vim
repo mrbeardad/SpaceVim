@@ -219,12 +219,6 @@ function! myspacevim#after() abort
       \ ]
 
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
-    " let g:ale_sign_error = ' '
-    " let g:ale_sign_warning = ' '
-    " let g:ale_sign_info = ' '
-    " let g:ale_echo_msg_error_str = 'Error'
-    " let g:ale_echo_msg_warning_str = 'Warning'
-    " let g:ale_echo_msg_info_str = 'Info'
 
   endif
 
@@ -302,13 +296,13 @@ function! myspacevim#after() abort
   " CUSTOM: lang#markdown After
   " ==================================
   let g:markdown_fenced_languages = ['shell=sh', 'bash=sh', 'sh', 'viml=vim', 'java', 'coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
-  let g:tex_conceal = ""
-  let g:vim_markdown_math = 1
   let g:vim_markdown_emphasis_multiline = 0
-  set conceallevel=0
-  let g:vim_markdown_conceal = 0
+  let g:vim_markdown_math = 1
+  " let g:tex_conceal = ""
+  " set conceallevel=0
+  " let g:vim_markdown_conceal = 0
   let g:vim_markdown_strikethrough = 1
-  let g:vim_markdown_conceal_code_blocks = 0
+  let g:vim_markdown_conceal_code_blocks = 1
   let g:vmt_auto_update_on_save = 1
   let g:mkdp_auto_close = 0
   let g:mkdp_open_to_the_world = 1
@@ -316,6 +310,8 @@ function! myspacevim#after() abort
     autocmd!
     autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
     autocmd FileType markdown inoremap <buffer><leader><cr> <br><cr>
+    autocmd InsertEnter *.md setl conceallevel=0
+    autocmd InsertLeave *.md setl conceallevel=2 | hi Conceal ctermfg=11
   augroup END
 
   " ==================================
@@ -344,93 +340,10 @@ function! myspacevim#after() abort
   noremap <silent> <F1> :TagbarToggle<CR>
   nnoremap <silent><F7> :call SpaceVim#plugins#tabmanager#open()<cr>
 
-
   " ==================================
-  " CUSTOM: colorscheme After
+  " CUSTOM: SpaceVim After
   " ==================================
-  if $DARKBG != ''
-    let colorNr = localtime() % 5
-    " let colorNr = 3
-    if colorNr == 0
-      colorscheme SpaceVim
-      hi! CursorLineNr gui=bold guifg=#df5fdf
-      hi! CursorLine guibg=#363636
-      hi! LineNr guifg=#6c6c6c
-      hi! Constant guifg=#af00ee
-      hi! Boolean guifg=#af00ee
-      hi! Structure guifg=#bd93f9
-      hi! StorageClass guifg=#47d0ff
-      hi! Comment gui=italic guifg=#007f7f
-      hi! String gui=italic guifg=#00dfd7
-      hi! Statement guifg=#ff5f87
-      hi! Repeat guifg=#ff5f87
-      hi! Conditional guifg=#ff5f87
-      hi! Label guifg=#ff5f87
-      hi! MatchParen gui=bold
-      hi! Operator gui=bold
-      hi! Function gui=bold guifg=#df5faf
-      hi! Type guifg=#ffafdf
-      hi! Typedef guifg=#ffafdf
-    elseif colorNr == 1  && &rtp =~ 'gruvbox'
-      colorscheme gruvbox
-      hi! CursorLineNr gui=bold
-      hi! GruvboxYellow gui=italic
-    elseif colorNr == 2  && &rtp =~ 'NeoSolarized'
-      colorscheme NeoSolarized
-      hi! NonText guifg=#596364
-      hi! Normal guifg=#a5b4b4
-      hi! CursorLineNr gui=bold guifg=#2aa198
-      hi! CursorLine guibg=#2c4b53 gui=none
-      hi! Operator gui=bold guifg=#8787af
-      hi! Structure guifg=#5fafd7
-      hi! StorageClass guifg=#d78700
-      hi! Function gui=bold guifg=#268bd2
-      hi! Type gui=italic
-      hi! String gui=italic guifg=#2aa198
-    elseif colorNr == 3  && &rtp =~ 'palenight.vim'
-      colorscheme palenight
-      hi! CursorLine guibg=#3c4658
-      hi! CursorLineNr gui=bold
-      hi! Structure guifg=#00dfd7
-      hi! StorageClass guifg=#87ff00
-      hi! StorageClass guifg=#c3e88d
-      hi! Operator gui=bold
-      hi! MatchParen gui=bold
-      hi! Constant guifg=#ff5370
-      hi! Function gui=bold guifg=#82b1ff
-      hi! Typedef gui=italic guifg=#ffcb6b
-      hi! Type gui=italic guifg=#ffcb6b
-      hi! String gui=italic guifg=#c3e88d
-    elseif colorNr == 4  && &rtp =~ 'vim-material'
-      colorscheme material
-      hi! Normal guifg=#ccdddd
-      hi! Search gui=underline guifg=#cfffff
-      hi! SignColumn guibg=#374349
-      hi! Error guibg=#374349
-      hi! ALEWarningSign guibg=#374349
-      hi! Pmenu guifg=#cfffff guibg=#323232
-      hi! Structure guifg=#00dfd7
-      hi! StorageClass guifg=#bd93f9
-      hi! MatchParen gui=bold
-      hi! Operator gui=bold
-      hi! Function gui=bold guifg=#82aaff
-      hi! Type gui=italic guifg=#ffcb6b
-      hi! String gui=italic guifg=#c3e88d
-      hi! Pmenu guifg=#d7dfff
-    endif
-  endif
-  hi! ALEWarningSign guifg=#ffbc6b
-  hi! BookmarkSignDefault guifg=yellow
-  if $WSL_DISTRO_NAME != ''
-    " Windows Terminal暂时还不支持undercurl，且无法回滚为underline
-    hi! SpellBad gui=underline guifg=Red
-    hi! SpellCap gui=underline guifg=Yellow
-    hi! SpellRare gui=underline guifg=Green
-  else
-    hi! SpellBad gui=undercurl guisp=red
-    hi! SpellCap gui=undercurl guisp=yellow
-    hi! SpellRare gui=undercurl guisp=magenta
-  endif
+  autocmd FileType SpaceVimFlyGrep map <buffer> <c-c> <esc>
 
 endfunction
 
@@ -503,6 +416,8 @@ function! s:set_my_neovim() abort
   nnoremap <c-y> <c-y>
   nnoremap <c-o> <c-o>
   nnoremap <c-p> <c-i>
+  nnoremap <expr><c-d> winheight('.') / 5 * 2 ."\<c-d>"
+  nnoremap <expr><c-b> winheight('.') / 5 * 2 ."\<c-u>"
   nnoremap <silent><c-down> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-y>"<cr>
   nnoremap <silent><c-up> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-t>"<cr>
   nnoremap <silent> <bs> :nohl<CR>
@@ -510,6 +425,7 @@ function! s:set_my_neovim() abort
   nnoremap <expr> N  'nN'[v:searchforward]
   nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
   nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
+  nnoremap <silent> <c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
   nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
   let g:_spacevim_mappings.m = ['try again...', "quickly modify your macros"]
   if has('unix') || has('wsl')

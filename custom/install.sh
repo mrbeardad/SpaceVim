@@ -29,9 +29,8 @@ else
 fi
 
 # 安装init.toml
-makedir ~/.SpaceVim.d
-backup ~/.SpaceVim.d/init.toml
-cp -v ~/.SpaceVim/mode/init.toml ~/.SpaceVim.d
+backup ~/.SpaceVim.d/
+ln -svf ~/.SpaceVim/mode ~/.SpaceVim.d
 
 # 安装配置需要的命令
 makedir ~/.local/bin
@@ -67,5 +66,5 @@ makedir ~/.cache/cppman/cplusplus.com
 
 echo -e "\033[32m [Note]:\033[m Now, startup your neovim and execute command \033[36m:SPInstall\033[m to install all plugins.
 When all the plug-ins are installed, you need to do one things following :
-\033[38;5;249m# This is to make ALE work better with cppcheck and clang-tidy
-\033[33mcp -f ~/.SpaceVim/custom/*.vim ~/.cache/vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/"
+\033[38;5;249m# install YCM
+\033[33mcd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/ && ./install.py --clangd-completer"

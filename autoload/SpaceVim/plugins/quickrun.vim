@@ -6,6 +6,7 @@
 " License: GPLv3
 "=============================================================================
 
+let g:quickrun_default_flags = get(g:, 'quickrun_default_flags', {})
 " init quickrun variables for buffers
 function! s:init(ft)
   let b:QuickRun_Compiler = g:quickrun_default_flags[a:ft].compiler

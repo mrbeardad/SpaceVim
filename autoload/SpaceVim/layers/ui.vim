@@ -34,6 +34,16 @@ function! SpaceVim#layers#ui#plugins() abort
 
 endfunction
 
+function! ToggleGuiColors()
+    if &termguicolors == 1
+        setl notermguicolors
+        echo 'Disable Gui Colors'
+    else
+        setl termguicolors
+        echo 'Enable Gui Colors'
+    endif
+endfunction
+
 function! ToggleLinebreak()
     if &linebreak == 1
         setl nolinebreak
@@ -116,6 +126,7 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['t','v'], 'call ToggleVirtuledit()', 'toggle virtul edit',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','e'], 'call ToggleExpandtab()', 'toggle expandtab',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','F'], 'call ToggleFoldMethod()', 'toggle foldmethod',1)
+  call SpaceVim#mapping#space#def('nnoremap', ['t','g'], 'call ToggleGuiColors()', 'toggle gui colors',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', '8'], 'call call('
         \ . string(s:_function('s:toggle_fill_column')) . ', [])',
         \ 'highlight-long-lines', 1)

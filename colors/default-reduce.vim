@@ -13,7 +13,6 @@ if v:version > 580
 endif
 
 if !(has('termguicolors') && &termguicolors) && !has('gui_running') && &t_Co != 256
-  " prevent change statuslines
   finish
 else
   let g:colors_name='default-reduce'
@@ -24,11 +23,12 @@ set notermguicolors
 hi PmenuSel ctermbg=146
 hi LineNr ctermfg=183
 hi CursorLineNr ctermfg=195
-hi NonText ctermfg=93
-hi CursorLine ctermbg=243 cterm=none
+hi NonText ctermfg=97
+hi CursorLine ctermbg=241 cterm=none
 hi Cursor ctermfg=black ctermbg=white
+hi Comment ctermfg=99
+hi DiffAdd ctermbg=33
+hi DiffChange ctermbg=141
+hi DiffText ctermbg=200
+hi Special ctermfg=217
 
-" #d7cfff   基佬紫
-" #bfffff   基佬青
-" #00dfd7   清山水彩
-" #40ffff   蓝天彩靛
