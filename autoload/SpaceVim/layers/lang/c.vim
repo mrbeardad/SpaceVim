@@ -133,7 +133,7 @@ function! SpaceVim#layers#lang#c#plugins() abort
       call add(plugins, ['bbchung/clighter', { 'if' : has('python')}])
     endif
   else
-    call add(plugins, ['mrbeardad/vim-cpp-enhanced-highlight', { 'merged' : 0}])
+    call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-cpp-modern', { 'merged' : 0}])
   endif
   return plugins
 endfunction

@@ -136,7 +136,7 @@ function! s:filename() abort
   if empty(name)
     let name = 'No Name'
   endif
-  return "%{ &modified ? ' * ' : ' - '}" . s:filesize() . name . ' '
+  return "%{ &modified ? ' * ' : ' - '}" . SpaceVim#layers#core#statusline#filesize() . name . ' '
 endfunction
 
 function! s:fileformat() abort
@@ -352,7 +352,7 @@ function! SpaceVim#layers#core#statusline#_current_tag() abort
   return tag
 endfunction
 
-function! s:filesize() abort
+function! SpaceVim#layers#core#statusline#filesize() abort
   let l:size = getfsize(bufname('%'))
   if l:size == 0 || l:size == -1 || l:size == -2
     return ''

@@ -770,7 +770,9 @@ let s:MPT._function_key = {
       \ "\<Up>" : function('s:previous_match_history'),
       \ "\<Down>" : function('s:next_match_history'),
       \ "\<PageDown>" : function('s:page_down'),
+      \ "\<C-d>" : function('s:page_down'),
       \ "\<PageUp>" : function('s:page_up'),
+      \ "\<C-b>" : function('s:page_up'),
       \ "\<C-End>" : function('s:page_end'),
       \ "\<C-Home>" : function('s:page_home'),
       \ }

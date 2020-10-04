@@ -92,12 +92,19 @@ function! myspacevim#before() abort
   " ==================================
   " CUSTOM: lang#c Before
   " ==================================
+  let g:cppman_open_mode = '<auto>'
+  let g:cpp_nofunction_highlight = 1
+  let g:cpp_simple_highlight = 0
+
   augroup MySpaceVim_lang_c
     autocmd!
     if g:spacevim_enable_ale == 1
       au! VimEnter call s:is_ale_ok()
       au! InsertLeave *.cpp,*.hpp call s:ale_chopt() | call s:ale_cnter()
     endif
+    autocmd FileType cpp inoremap <buffer><m-m> <c-r>=<SID>change_namespace()<cr>
+    autocmd FileType cpp nnoremap <buffer><m-m> i<c-r>=<SID>change_namespace()<cr><c-c>
+    autocmd FileType cpp nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
     autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
   augroup END
 
@@ -106,11 +113,13 @@ function! myspacevim#before() abort
   " CUSTOM: tools Before
   " ==================================
   let g:rainbow_active = 1
+  " \ 'guifgs':  ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff' ]
+  " \ 'guifgs':  ['#ff0000', '#00ffff', '#ff8800', '#ff8800', '#ffff00', '#0000ff', '#88ff00', '#8800ff', '#00ff00', '#ff00ff'],
   let g:rainbow_conf = {
-  \ 'guifgs':  ['#e15078', '#95bcad', '#ff7300', '#3a5fcd', '#d7cfff', '#00dfd7', '#ffd700', '#ff00ff', '#40ffff'],
+  \ 'guifgs':  ['#ff0000', '#95bcad', '#ff7300', '#d7cfff', '#00dfd7', '#ffd700', '#00ff00'],
   \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-  \ 'guis': [''],
-  \ 'cterms': [''],
+  \ 'guis': ['none', 'bold', 'italic'],
+  \ 'cterms': ['none', 'bold', 'italic'],
   \ 'operators': '_,_',
   \ 'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
   \ 'separately': {
@@ -142,9 +151,10 @@ function! myspacevim#before() abort
   " CUSTOM: colorscheme Before
   " ==================================
   let g:neosolarized_italic = 1
-  " comment 946
   let g:gruvbox_contrast_dark = 'hard'
-  let g:gruvbox_italicize_strings = 1
+  let g:gruvbox_italic = 1
+  let g:gruvbox_bold = 1
+  " let g:gruvbox_italicize_strings = 1
   let g:palenight_terminal_italics = 1
 
 endfunction
@@ -168,6 +178,7 @@ function! myspacevim#after() abort
     let g:ycm_show_diagnostics_ui = 0
     let g:ycm_max_num_candidates = 30
     let g:ycm_clangd_uses_ycmd_caching = 0
+    let g:ycm_key_invoke_completion = '<C-Z>'
     let g:ycm_key_list_stop_completion = ['<S-CR>']
     let g:ycm_key_list_select_completion = ['<TAB>']
     let g:ycm_key_list_previous_completion = ['<S-TAB>']
@@ -278,21 +289,6 @@ function! myspacevim#after() abort
   call SpaceVim#mapping#space#def('nnoremap', ['g', 'g'], 'GitGutterToggle', 'GitGutter Buffer Toggle', 1)
 
   " ==================================
-  " CUSTOM: lang#c After
-  " ==================================
-  let g:cppman_open_mode = '<auto>'
-  let g:cpp_class_scope_highlight = 1
-  let g:cpp_member_variable_highlight = 1
-  let g:cpp_class_decl_highlight = 1
-  let g:cpp_concepts_highlight = 1
-  let g:cpp_posix_standard = 1
-  let g:cpp_experimental_simple_template_highlight = 1      " which works in most cases, but can be a little slow on large files
-  " let g:cpp_experimental_template_highlight = 1           " which is a faster implementation but has some corner cases where it doesn't work.
-  inoremap <buffer><m-m> <c-r>=<SID>change_namespace()<cr>
-  nnoremap <buffer><m-m> i<c-r>=<SID>change_namespace()<cr><c-c>
-  nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
-
-  " ==================================
   " CUSTOM: lang#markdown After
   " ==================================
   let g:markdown_fenced_languages = ['shell=sh', 'bash=sh', 'sh', 'viml=vim', 'java', 'coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
@@ -310,6 +306,7 @@ function! myspacevim#after() abort
     autocmd!
     autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
     autocmd FileType markdown inoremap <buffer><leader><cr> <br><cr>
+    autocmd FileType markdown inoremap <buffer><c-c> <esc>
     autocmd InsertEnter *.md setl conceallevel=0
     autocmd InsertLeave *.md setl conceallevel=2 | hi Conceal ctermfg=11
   augroup END
@@ -344,6 +341,27 @@ function! myspacevim#after() abort
   " CUSTOM: SpaceVim After
   " ==================================
   autocmd FileType SpaceVimFlyGrep map <buffer> <c-c> <esc>
+  autocmd FileType leaderGuide map <buffer> <c-c> <esc>
+
+  " ==================================
+  " CUSTOM: LeaderF After
+  " ==================================
+  let g:Lf_IndexTimeLimit = 30
+  " let g:Lf_UseCache = 0
+
+  " ==================================
+  " CUSTOM: colorscheme After
+  " ==================================
+  if $WSL_DISTRO_NAME != ''
+    hi! SpellBad gui=underline guifg=Red
+    hi! SpellCap gui=underline guifg=Yellow
+    hi! SpellRare gui=underline guifg=Green
+  else
+    hi! SpellBad gui=undercurl guisp=red
+    hi! SpellCap gui=undercurl guisp=yellow
+    hi! SpellRare gui=undercurl guisp=magenta
+  endif
+
 
 endfunction
 
@@ -421,6 +439,7 @@ function! s:set_my_neovim() abort
   nnoremap <silent><c-down> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-y>"<cr>
   nnoremap <silent><c-up> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-t>"<cr>
   nnoremap <silent> <bs> :nohl<CR>
+  nnoremap <silent> <c-g> :echo '"'.expand('%:p').'" -- '.SpaceVim#layers#core#statusline#filesize()<cr>
   nnoremap <expr> n  'Nn'[v:searchforward]
   nnoremap <expr> N  'nN'[v:searchforward]
   nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>

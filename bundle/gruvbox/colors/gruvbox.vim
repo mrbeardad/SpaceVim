@@ -836,9 +836,9 @@ call s:HL('BufTabLineFill', s:bg0, s:bg0)
 " }}}
 " Asynchronous Lint Engine: {{{
 
-" call s:HL('ALEError', s:none, s:none, s:undercurl, s:red)
-" call s:HL('ALEWarning', s:none, s:none, s:undercurl, s:yellow)
-" call s:HL('ALEInfo', s:none, s:none, s:undercurl, s:blue)
+call s:HL('ALEError', s:none, s:none, s:undercurl, s:red)
+call s:HL('ALEWarning', s:none, s:none, s:undercurl, s:yellow)
+call s:HL('ALEInfo', s:none, s:none, s:undercurl, s:blue)
 
 hi! link ALEErrorSign GruvboxRedSign
 hi! link ALEWarningSign GruvboxYellowSign
@@ -1414,5 +1414,32 @@ function! GruvboxHlsHideCursor()
 endfunction
 
 " }}}
+
+" ======================================================================
+" Modified: Heachen Bear < mrbeardad@qq.com >
+" ======================================================================
+call s:HL('Normal',       s:fg1,    s:bg0)
+call s:HL('Comment',      s:gray,   s:none,           s:italic)
+call s:HL('NonText',      s:bg3,    s:none)
+call s:HL('CursorLine',   s:none,   s:bg1)
+call s:HL('CursorLineNr', s:yellow, s:bg1,            s:bold)
+call s:HL('LineNr',       s:bg4,    s:number_column)
+call s:HL('MatchParen',   s:none,   s:bg3,            s:bold)
+call s:HL('Search',       s:yellow, s:bg0,            s:inverse)
+
+hi! GruvboxYellow gui=italic
+
+" For C++ Syntax Highlight
+hi! link Type         GruvboxYellow
+hi! link StorageClass GruvboxOrange
+hi! link Operator     GruvboxPurple
+hi! link Function     GruvboxGreenBold
+hi! link Structure    GruvboxGreen
+hi! link Identifier   GruvboxBlue
+hi! link Float        GruvboxBlueBold
+hi! link String       GruvboxGreenSign
+hi! link Number       GruvboxAquaBold
+hi! link Constant     GruvboxAqua
+hi! link Statement    GruvboxRed
 
 " vim: set sw=2 ts=2 sts=2 et tw=80 ft=vim fdm=marker:

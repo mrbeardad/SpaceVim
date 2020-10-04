@@ -102,7 +102,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
     let qr_prepare = '{echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;'
   endif
 
-  let qr_running = 'echo "[1;32m[Running] [34m' . qr_cmd . '[0m ' . qr_args .' '. qr_rd .'"; echo;echo "[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[m";quickrun_time ' . qr_cmd .' '. qr_args .' '. qr_rd .';'
+  let qr_running = 'echo "[1;32m[Running] [34m' . qr_cmd . '[0m ' . qr_args .' '. qr_rd .'"; echo;echo "[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[m";quickrun_time sh -c "' . qr_cmd .' '. qr_args .' '. qr_rd .'";'
   if has('nvim')
     let qr_running = qr_running . 'echo;echo "[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ..."}'
   else

@@ -29,16 +29,16 @@ let s:JSON = SpaceVim#api#import('data#json')
 
 function! SpaceVim#layers#colorscheme#plugins() abort
   return [
-        \ ['Gabirel/molokai', { 'merged' : 0 }],
-        \ ['joshdick/onedark.vim', { 'merged' : 0 }],
-        \ ['nanotech/jellybeans.vim', { 'merged' : 0 }],
-        \ ['rakr/vim-one', { 'merged' : 0 }],
-        \ ['arcticicestudio/nord-vim', { 'merged' : 0 }],
-        \ ['icymind/NeoSolarized', { 'merged' : 0 }],
-        \ ['w0ng/vim-hybrid', { 'merged' : 0 }],
-        \ ['SpaceVim/vim-material', { 'merged' : 0}],
-        \ ['srcery-colors/srcery-vim', { 'merged' : 0}],
-        \ [ 'drewtempelmeyer/palenight.vim', {'merged': 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/molokai', { 'merged' : 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/onedark.vim', { 'merged' : 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/jellybeans.vim', { 'merged' : 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/vim-one', { 'merged' : 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/nord-vim', { 'merged' : 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/NeoSolarized', { 'merged' : 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/vim-hybrid', { 'merged' : 0 }],
+        \ [g:_spacevim_root_dir . 'bundle/vim-material', { 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/srcery-vim', { 'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/palenight.vim', {'merged': 0 }],
         \ ]
   "
   " TODO:
