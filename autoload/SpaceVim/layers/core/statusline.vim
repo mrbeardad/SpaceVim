@@ -333,7 +333,7 @@ endfunction
 function! s:buffer_name() abort
   if get(b:, '_spacevim_statusline_showbfname', 0) == 1 || g:spacevim_enable_statusline_bfpath
     let fp_name = substitute(expand('%:p'), SpaceVim#plugins#projectmanager#current_root(), ' ', 'g')
-    return  &readonly ? '%#SpaceVim_statusline_ro#  %#SpaceVim_statusline_z#' . fp_name : fp_name
+    return  &readonly ? '%#SpaceVim_statusline_ro#  %#SpaceVim_statusline_z#' . fp_name : ' '.fp_name
   else
     return ''
   endif
@@ -486,7 +486,7 @@ function! SpaceVim#layers#core#statusline#get(...) abort
     let st = '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
           \ . '%#SpaceVim_statusline_b# startify %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
     if index(g:spacevim_statusline_left_sections, 'vcs') != -1
-      let st .= '%#SpaceVim_statusline_c#' .  call(s:registed_sections['vcs'], [])
+      let st .= '%#SpaceVim_statusline_c#' .  call(s:registed_sections['major mode'], [])
             \ . '%#SpaceVim_statusline_c_SpaceVim_statusline_z#' . s:lsep
     endif
     return st

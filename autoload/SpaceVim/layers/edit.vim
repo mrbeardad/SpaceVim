@@ -27,7 +27,7 @@ function! SpaceVim#layers#edit#plugins() abort
         \ ['sgur/vim-textobj-parameter'],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-entire'],
         \ [g:_spacevim_root_dir . 'bundle/wildfire.vim',{'on_map' : '<Plug>(wildfire-'}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-easymotion', {'on_map' : ['<Plug>(easymotion-']}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-easymotion'],
         \ [g:_spacevim_root_dir . 'bundle/vim-easyoperator-line', {'on_map' : ['<Plug>(easymotion-']}],
         \ [g:_spacevim_root_dir . 'bundle/editorconfig-vim', { 'merged' : 0, 'if' : has('python') || has('python3')}],
         \ [g:_spacevim_root_dir . 'bundle/vim-jplus', { 'on_map' : '<Plug>(jplus' }],

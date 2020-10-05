@@ -157,6 +157,11 @@ function! myspacevim#before() abort
   " let g:gruvbox_italicize_strings = 1
   let g:palenight_terminal_italics = 1
 
+  " ==================================
+  " CUSTOM: core#banner Before
+  " ==================================
+  set list  " 放在before防止覆盖Startify设置
+
 endfunction
 
 " ===================================================================================================
@@ -208,7 +213,7 @@ function! myspacevim#after() abort
   " CUSTOM: checker After
   " ==================================
   if g:spacevim_enable_ale == 1
-    let g:ale_cpp_std = '-std=c++17'
+    let g:ale_cpp_std = get(g:, 'ale_cpp_std', '-std=c++17')
     let g:ale_cpp_cc_executable = 'gcc'
     let g:ale_cpp_cc_options = '-Wall -Wextra -O2 -I. ' . g:ale_cpp_std
     let g:ale_cpp_cppcheck_options = '--inconclusive --enable=warning,style,performance,portability -'.g:ale_cpp_std
@@ -260,6 +265,22 @@ function! myspacevim#after() abort
   nmap gs <Plug>(openbrowser-smart-search)
   vmap gs <Plug>(openbrowser-smart-search)
 
+  " ==================================
+  " CUSTOM: incsearch After
+  " ==================================
+  nmap z/ [SPC]b/
+  let g:_spacevim_mappings_z['z/'] = ['normal z/', 'fuzzy incsearch ']
+  function! s:config_easyfuzzymotion(...) abort
+    return extend(copy({
+    \   'converters': [incsearch#config#fuzzyword#converter()],
+    \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+    \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+    \   'is_expr': 0,
+    \   'is_stay': 1
+    \ }), get(a:, 1, {}))
+  endfunction
+  nnoremap <silent><expr> g/ incsearch#go(<SID>config_easyfuzzymotion())
+  let g:_spacevim_mappings_g['/'] = ['normal g/', 'fuzzy incsearch easymotion']
 
   " ==================================
   " CUSTOM: edit After
@@ -279,6 +300,8 @@ function! myspacevim#after() abort
         \ '',
         \ '',
         \ 'Toggle table mode')
+  call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'], 'SourceCounter', 'count in the selection region', 1, 1)
+  call SpaceVim#mapping#space#def('vmap', ['x', 'c'], '<Plug>CountSelectionRegion', 'count in the selection region', 0, 1)
 
 
   " ==================================
@@ -294,7 +317,7 @@ function! myspacevim#after() abort
   let g:markdown_fenced_languages = ['shell=sh', 'bash=sh', 'sh', 'viml=vim', 'java', 'coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
   let g:vim_markdown_emphasis_multiline = 0
   let g:vim_markdown_math = 1
-  " let g:tex_conceal = ""
+  let g:tex_conceal = "abdmg"
   " set conceallevel=0
   " let g:vim_markdown_conceal = 0
   let g:vim_markdown_strikethrough = 1
@@ -308,7 +331,7 @@ function! myspacevim#after() abort
     autocmd FileType markdown inoremap <buffer><leader><cr> <br><cr>
     autocmd FileType markdown inoremap <buffer><c-c> <esc>
     autocmd InsertEnter *.md setl conceallevel=0
-    autocmd InsertLeave *.md setl conceallevel=2 | hi Conceal ctermfg=11
+    autocmd InsertLeave *.md setl conceallevel=2
   augroup END
 
   " ==================================
@@ -347,7 +370,7 @@ function! myspacevim#after() abort
   " CUSTOM: LeaderF After
   " ==================================
   let g:Lf_IndexTimeLimit = 30
-  " let g:Lf_UseCache = 0
+  let g:Lf_UseCache = 0
 
   " ==================================
   " CUSTOM: colorscheme After
@@ -362,7 +385,6 @@ function! myspacevim#after() abort
     hi! SpellRare gui=undercurl guisp=magenta
   endif
 
-
 endfunction
 
 function! s:set_my_neovim() abort
@@ -370,7 +392,6 @@ function! s:set_my_neovim() abort
   " set softtabstop=4
   " set shiftwidth=4
   set expandtab
-  set list
   set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶
   set foldmethod=indent
   set nofoldenable

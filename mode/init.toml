@@ -73,6 +73,9 @@
     name = 'colorscheme'
 
 [[layers]]
+    name = 'incsearch'
+
+[[layers]]
     name = 'ui'
 
 [[layers]]
@@ -93,7 +96,7 @@
 
 [[layers]]
     name = 'checker'
-
+#
 [[layers]]
     name = "autocomplete"
     auto_completion_return_key_behavior = "nil"

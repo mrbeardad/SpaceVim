@@ -134,15 +134,6 @@ function! SpaceVim#layers#autocomplete#plugins() abort
 endfunction
 
 function! SpaceVim#layers#autocomplete#config() abort
-  " if g:spacevim_autocomplete_parens
-  "   imap <expr>(
-  "         \ pumvisible() ?
-  "         \ has('patch-7.4.744') ?
-  "         \ complete_parameter#pre_complete("()") : '(' :
-  "         \ (len(maparg('<Plug>delimitMate(', 'i')) == 0) ?
-  "         \ "\<Plug>delimitMate(" :
-  "         \ '('
-  " endif
 
   "mapping
   if s:tab_key_behavior ==# 'smart'

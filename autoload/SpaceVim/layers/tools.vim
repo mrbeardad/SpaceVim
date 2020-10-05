@@ -54,23 +54,6 @@ function! SpaceVim#layers#tools#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['w', 'C'],
         \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
 
-  " bootmark key binding
-  " nnoremap <silent> mm :<C-u>BookmarkToggle<Cr>
-  " nnoremap <silent> mi :<C-u>BookmarkAnnotate<Cr>
-  " nnoremap <silent> ma :<C-u>BookmarkShowAll<Cr>
-  " nnoremap <silent> mn :<C-u>BookmarkNext<Cr>
-  " nnoremap <silent> mp :<C-u>BookmarkPrev<Cr>
-  " nnoremap <silent> <F7> :MundoToggle<CR>
-  " augroup rainbow_lisp
-  "   autocmd!
-  "   autocmd FileType lisp,clojure,scheme,racket,java RainbowParentheses
-  "   autocmd FileType vimcalc setlocal nonu nornu nofoldenable | inoremap <silent> <buffer> <c-d> <c-[>:q<cr>
-  "         \ | nnoremap <silent> <buffer> q :bdelete<cr>
-  " augroup END
-  " let g:rainbow#max_level = 16
-  " let g:rainbow#pairs = [['(', ')'], ['[', ']'],['{','}']]
-  " " List of colors that you do not want. ANSI code or #RRGGBB
-  " let g:rainbow#blacklist = [233, 234]
   if maparg('<C-_>', 'v') ==# ''
     vnoremap <silent> <C-_> <Esc>:Ydv<CR>
   endif

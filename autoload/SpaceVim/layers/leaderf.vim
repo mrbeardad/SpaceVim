@@ -216,6 +216,7 @@ function! SpaceVim#layers#leaderf#config() abort
         \ 1)
 
   let g:_spacevim_mappings.f = {'name' : '+Fuzzy Finder'}
+  let g:_spacevim_mappings.s = {'name' : '+Search File'}
   call s:defind_fuzzy_finder()
 endfunction
 
@@ -566,46 +567,45 @@ function! s:defind_fuzzy_finder() abort
         \ ]
         \ ]
 
-  nnoremap <silent> <Leader>for :Leaderf neomru<CR>
-  let g:_spacevim_mappings.f.o = {'name' : '+Open file'}
+  nnoremap <silent> <Leader>sr :Leaderf neomru<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.o.r = ['Leaderf neomru',
+  let g:_spacevim_mappings.s.r = ['Leaderf neomru',
         \ 'open recent file',
         \ [
-        \ '[Leader f o r] is to fuzzy find recent file',
+        \ '[Leader s r] is to fuzzy find recent file',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
 
-  nnoremap <silent> <Leader>fod :exe "Leaderf file ".expand("%:p:h")<CR>
+  nnoremap <silent> <Leader>sd :exe "Leaderf file ".expand("%:p:h")<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.o.d = ['Leaderf file',
+  let g:_spacevim_mappings.s.d = ['Leaderf file',
         \ 'open file in current directory',
         \ [
-        \ '[Leader f o d] is to fuzzy find recent directory',
+        \ '[Leader s d] is to fuzzy find recent directory',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
 
-  nnoremap <silent> <Leader>fop :exe 'Leaderf file --fullPath ' . SpaceVim#plugins#projectmanager#current_root()<cr>
+  nnoremap <silent> <Leader>sp :exe 'Leaderf file --fullPath ' . SpaceVim#plugins#projectmanager#current_root()<cr>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.o.p = ['Leaderf file --fullPath',
+  let g:_spacevim_mappings.s.p = ['Leaderf file --fullPath',
         \ 'open file in current Project directory',
         \ [
-        \ '[Leader f o p] is to fuzzy find recent project directory',
+        \ '[Leader s p] is to fuzzy find recent project directory',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
 
-  nnoremap <silent> <Leader>fof :LeaderfFile 
+  nnoremap <silent> <Leader>sf :exe 'LeaderfFile ' .input('file: ')<cr>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.o.f = ['LeaderfFile',
-        \ 'open file in specified Project directory',
+  let g:_spacevim_mappings.s.f = ['exe "LeaderfFile "\. input("file: ")',
+        \ 'open file in specified directory',
         \ [
-        \ '[Leader f o f] is to fuzzy find recent project directory',
+        \ '[Leader s f] is to fuzzy find recent project directory',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
@@ -622,12 +622,12 @@ function! s:defind_fuzzy_finder() abort
         \ ]
         \ ]
 
-  nnoremap <silent> <Leader>fb :Leaderf buffer<cr>
+  nnoremap <silent> <Leader>sb :Leaderf buffer<cr>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.b = ['Leaderf buffer',
+  let g:_spacevim_mappings.s.b = ['Leaderf buffer',
         \ 'find list buffers',
         \ [
-        \ '[Leader f u] is to fuzzy find list buffers',
+        \ '[Leader f b] is to fuzzy find list buffers',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]

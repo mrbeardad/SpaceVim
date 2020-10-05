@@ -6,7 +6,9 @@
 " License: GPLv3
 "=============================================================================
 
+" ============================ Before Load SpaceVim ==========================
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
+" ============================ After Load SpaceVim  ==========================
 
 " ==================================
 " CUSTOM: colorscheme After
@@ -14,7 +16,7 @@ execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
 if $DARKBG != ''
   set termguicolors
   let colorNr = localtime() % 5
-  " let colorNr = 4
+  " let colorNr = 1
   if colorNr == 0
     colorscheme SpaceVim
   elseif colorNr == 1  && &rtp =~ 'gruvbox'
