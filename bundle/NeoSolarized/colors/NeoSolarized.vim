@@ -963,12 +963,12 @@ hi! Search        gui=reverse guifg=#b58900
 " For C++ Syntax Highlight
 exe "hi! Type"            .s:fmt_ital   .s:fg_yellow  .s:bg_none
 exe "hi! StorageClass "   .s:fmt_none   .s:fg_orange  .s:bg_none
+exe "hi! cppSTLnamespace" .s:fmt_none   .s:fg_magenta .s:bg_none
 exe "hi! Operator"        .s:fmt_none   .s:fg_violet  .s:bg_none
 exe "hi! Function"        .s:fmt_bold   .s:fg_blue    .s:bg_none
 exe "hi! Structure"       .s:fmt_none   .s:fg_blue    .s:bg_none
 exe "hi! Identifier"      .s:fmt_none   .s:fg_cyan    .s:bg_none
-exe "hi! Float"           .s:fmt_bold   .s:fg_cyan    .s:bg_none
-exe "hi! String"          .s:fmt_ital   .' guifg=#af8787'    .s:bg_none
 exe "hi! Number"          .s:fmt_bold   .s:fg_magenta .s:bg_none
-exe "hi! Constant"        .s:fmt_none   .s:fg_magenta .s:bg_none
+exe "hi! Float"           .s:fmt_bold   .s:fg_violet  .s:bg_none
+exe "hi! String"          .s:fmt_ital   .' guifg=#af8787'    .s:bg_none
 exe "hi! Statement"       .s:fmt_none   .' guifg=#859900'    .s:bg_none

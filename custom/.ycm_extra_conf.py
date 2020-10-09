@@ -1,2 +1,2 @@
 def Settings( **kwargs ):
-    return { 'flags': [ '-x', 'c++', '-std=c++17', '-I.', '-O2' ], }
+    return { 'flags': [ '-x', 'c++', '-std=c++17', '-I.', '-Iinclude', '-O2' ], }

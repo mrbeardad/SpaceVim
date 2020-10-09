@@ -158,24 +158,24 @@ endif
 " ======================================================================
 " Modified: Heachen Bear < mrbeardad@qq.com >
 " ======================================================================
-hi! Normal        gui=none    guifg=#b2b2b2 guibg=#262626
-hi! Comment       gui=ITALIC  guifg=#007f7f
-hi! NonText       gui=none    guifg=#606060
-hi! CursorLine    gui=none    guibg=#424242
-hi! CursorLineNr  gui=BOLD    guifg=#df5fdf
-hi! LineNr        gui=none    guifg=#6c6c6c
-hi! MatchParen    gui=BOLD    guifg=#00ff00 guibg=#1c1c1c
-hi! Search        gui=none    guifg=#000000 guibg=#5fdf00
+hi! Normal          gui=none    guifg=#b2b2b2 guibg=#262626
+hi! Comment         gui=ITALIC  guifg=#007f7f
+hi! NonText         gui=none    guifg=#606060
+hi! CursorLine      gui=none    guibg=#424242
+hi! CursorLineNr    gui=BOLD    guifg=#df5fdf
+hi! LineNr          gui=none    guifg=#6c6c6c
+hi! MatchParen      gui=BOLD    guifg=#00ff00 guibg=#1c1c1c
+hi! Search          gui=none    guifg=#000000 guibg=#5fdf00
 
 " For C++ Syntax Highlight
-hi! Type          gui=ITALIC  guifg=#ffafdf
-hi! StorageClass  gui=none    guifg=#dfaf00
-hi! Operator      gui=none    guifg=#87afff
-hi! Function      gui=BOLD    guifg=#df5faf
-hi! Identifier    gui=none    guifg=#00af87
-hi! Float         gui=BOLD    guifg=#00af87
-hi! String        gui=ITALIC  guifg=#00dfd7
-hi! Number        gui=BOLD    guifg=#5f87df
-hi! Constant      gui=none    guifg=#5f87df
-hi! Structure     gui=none    guifg=#df5faf
-hi! Statement     gui=none    guifg=#af5fff
+hi! Type            gui=ITALIC  guifg=#ffafdf
+hi! StorageClass    gui=none    guifg=#dfaf00
+hi! cppSTLnamespace gui=none    guifg=#5f87df
+hi! Operator        gui=none    guifg=#87afff
+hi! Function        gui=BOLD    guifg=#df5faf
+hi! Structure       gui=none    guifg=#df5faf
+hi! Identifier      gui=none    guifg=#00af87
+hi! Float           gui=BOLD    guifg=#87afff
+hi! Number          gui=BOLD    guifg=#5f87df
+hi! String          gui=ITALIC  guifg=#00dfd7
+hi! Statement       gui=none    guifg=#af5fff

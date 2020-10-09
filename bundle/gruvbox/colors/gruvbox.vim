@@ -1427,19 +1427,23 @@ call s:HL('LineNr',       s:bg4,    s:number_column)
 call s:HL('MatchParen',   s:none,   s:bg3,            s:bold)
 call s:HL('Search',       s:yellow, s:bg0,            s:inverse)
 
+hi! link ALEError SpellBad
+hi! link ALEWarning SpellCap
+hi! link ALEInfo SpellRare
 hi! GruvboxYellow gui=italic
 
 " For C++ Syntax Highlight
-hi! link Type         GruvboxYellow
-hi! link StorageClass GruvboxOrange
-hi! link Operator     GruvboxPurple
-hi! link Function     GruvboxGreenBold
-hi! link Structure    GruvboxGreen
-hi! link Identifier   GruvboxBlue
-hi! link Float        GruvboxBlueBold
-hi! link String       GruvboxGreenSign
-hi! link Number       GruvboxAquaBold
-hi! link Constant     GruvboxAqua
-hi! link Statement    GruvboxRed
+hi! link Type             GruvboxYellow
+hi! link StorageClass     GruvboxOrange
+hi! link cppSTLnamespace  GruvboxAqua
+hi! link Operator         GruvboxBlue
+hi! link cOperator        GruvboxBlue
+hi! link Function         GruvboxGreenBold
+hi! link Structure        GruvboxGreen
+hi! link Identifier       GruvboxPurple
+hi! link Number           GruvboxAquaBold
+hi! link Float            GruvboxBlueBold
+hi! link String           GruvboxGreenSign
+hi! link Statement        GruvboxRed
 
 " vim: set sw=2 ts=2 sts=2 et tw=80 ft=vim fdm=marker:

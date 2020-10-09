@@ -19,11 +19,10 @@ function! s:init(ft)
 endfunction
 
 " provide commands to change quickrun variables
-function! SpaceVim#plugins#quickrun#do(var, str, bang) abort
-  if a:bang ==# '!'
+function! SpaceVim#plugins#quickrun#do(var, str, ...) abort
+  if exists('a:1') && a:1 ==# '!'
     exe 'let '. a:var .'= ""'
-  endif
-  if a:str ==# ''
+  elseif a:str ==# ''
     exe 'let '. a:var
   else
     exe 'let '. a:var .' =  a:str'

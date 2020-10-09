@@ -62,6 +62,11 @@ function! myspacevim#before() abort
         \ "vim":1,
         \ "sh":1,
         \ }
+    let g:ycm_semantic_triggers = {
+          \ "c":['re!\w\w'],
+          \ "cpp":['re!\w\w'],
+          \ "python":['re!\w\w']
+          \ }
   let g:ycm_clangd_args = [ '--header-insertion=never' ]
   let g:AutoPairsMapCR = 0
   let g:AutoPairsShortcutJump = 0
@@ -182,7 +187,7 @@ function! myspacevim#after() abort
     let g:ycm_confirm_extra_conf = 0
     let g:ycm_show_diagnostics_ui = 0
     let g:ycm_max_num_candidates = 30
-    let g:ycm_clangd_uses_ycmd_caching = 0
+    let g:ycm_clangd_uses_ycmd_caching = 1
     let g:ycm_key_invoke_completion = '<C-Z>'
     let g:ycm_key_list_stop_completion = ['<S-CR>']
     let g:ycm_key_list_select_completion = ['<TAB>']
@@ -296,6 +301,7 @@ function! myspacevim#after() abort
   nmap <leader>tt <Plug>table-mode-tableize
   xmap <leader>tt <Plug>table-mode-tableize
   inoremap <silent><m-m> <c-r>=tablemode#Toggle()<cr><bs>
+  nnoremap <silent><m-m> <c-r>=tablemode#Toggle()<cr><bs>
   call SpaceVim#mapping#def('nnoremap', '<Leader>tm', ':call tablemode#Toggle()<cr>',
         \ '',
         \ '',

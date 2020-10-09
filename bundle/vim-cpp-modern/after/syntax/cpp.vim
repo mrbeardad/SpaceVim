@@ -47,8 +47,8 @@ syntax keyword cppSTLfunction
         \ use_facet has_facet get
 
 " Some of these keywords can be highlighted as cppSTLios or cppSTLconstant
-" syntax keyword cppSTLconstant
-"         \ adjustfield app ate basefield binary floatfield in out trunc boolalpha dec fixed hex internal left oct right scientific showbase showpoint showpos skipws unitbuf uppercase
+syntax keyword cppSTLconstant
+        \ adjustfield app ate basefield binary floatfield in out trunc boolalpha dec fixed hex internal left oct right scientific showbase showpoint showpos skipws unitbuf uppercase
 
 
 " C++11 extensions {{{1
@@ -93,7 +93,7 @@ endif
 
 " C++14 extensions {{{1
 if !exists('cpp_no_cpp14')
-    syntax keyword cppSTLnamespace literals chrono_literals string_literals string_literals
+    syntax keyword cppSTLnamespace literals chrono_literals string_literals string_view_literals
 
     syntax keyword cppSTLfunction make_unique
 
@@ -205,19 +205,27 @@ endif
 " =========================================================
 " Type
 hi! link Typedef Type
+
 " StrorageClass
 syntax keyword  StorageClass    inline typename
+
+" cppSTLnamespace
+
 " Operator
 syntax match    Operator        "\<\(const\|static\|dynamic\|reinterpret\)_cast\s*<"me=e-1
 syntax match    Operator        "\<\(const\|static\|dynamic\|reinterpret\)_cast\s*$"
 syntax keyword  Operator        decltype alignas _Alignas
+
 " Function
+
 " Identifier
-" Constant
-hi! link Boolean Constant
-syntax keyword  Constant        this nullptr
+hi! link Boolean Identifier
+hi! link Constant Identifier
+syntax keyword  Identifier      this nullptr
+
 " Structure
 syntax keyword  Structure       struct union enum
+
 " Statement
 syntax keyword  Statement       typedef
 hi! link Exception Statement
