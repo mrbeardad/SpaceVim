@@ -24,11 +24,12 @@ hi PmenuSel ctermbg=146
 hi LineNr ctermfg=183
 hi CursorLineNr ctermfg=195
 hi NonText ctermfg=97
-hi CursorLine ctermbg=241 cterm=none
+hi CursorLine ctermbg=black cterm=none
 hi Cursor ctermfg=black ctermbg=white
 hi Comment ctermfg=99
 hi DiffAdd ctermbg=33
 hi DiffChange ctermbg=141
 hi DiffText ctermbg=200
 hi Special ctermfg=217
+hi SignColumn ctermbg=none
 

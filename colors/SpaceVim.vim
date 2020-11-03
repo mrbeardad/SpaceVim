@@ -158,6 +158,12 @@ endif
 " ======================================================================
 " Modified: Heachen Bear < mrbeardad@qq.com >
 " ======================================================================
+let g:terminal_color_1 = '#df0000'
+let g:terminal_color_2 = '#00dfd7'
+let g:terminal_color_3 = '#af8700'
+let g:terminal_color_4 = '#5f87df'
+let g:terminal_color_5 = '#af5fff'
+let g:terminal_color_6 = '#87afff'
 hi! Normal          gui=none    guifg=#b2b2b2 guibg=#262626
 hi! Comment         gui=ITALIC  guifg=#007f7f
 hi! NonText         gui=none    guifg=#606060

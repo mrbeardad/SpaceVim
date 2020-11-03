@@ -143,6 +143,7 @@ function! SpaceVim#layers#lang#c#plugins() abort
     endif
   else
     call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-cpp-modern', { 'merged' : 0}])
+    call add(plugins, ['t6tn4k/vim-c-posix-syntax', { 'merged' : 0}])
   endif
   return plugins
 endfunction

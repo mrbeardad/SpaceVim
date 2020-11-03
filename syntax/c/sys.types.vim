@@ -1,0 +1,82 @@
+let s:save_cpo = &cpo
+set cpo&vim
+
+if !exists('c_no_posix_type')
+  syntax keyword cPosixType blkcnt_t
+  syntax keyword cPosixType blksize_t
+  syntax keyword cPosixType clock_t
+  syntax keyword cPosixType clockid_t
+  syntax keyword cPosixType dev_t
+  syntax keyword cPosixType fsblkcnt_t
+  syntax keyword cPosixType fsfilcnt_t
+  syntax keyword cPosixType gid_t
+  syntax keyword cPosixType id_t
+  syntax keyword cPosixType ino_t
+  syntax keyword cPosixType key_t
+  syntax keyword cPosixType mode_t
+  syntax keyword cPosixType nlink_t
+  syntax keyword cPosixType off_t
+  syntax keyword cPosixType pid_t
+  syntax keyword cPosixType pthread_attr_t
+  syntax keyword cPosixType pthread_barrier_t
+  syntax keyword cPosixType pthread_barrierattr_t
+  syntax keyword cPosixType pthread_cond_t
+  syntax keyword cPosixType pthread_condattr_t
+  syntax keyword cPosixType pthread_key_t
+  syntax keyword cPosixType pthread_mutex_t
+  syntax keyword cPosixType pthread_mutexattr_t
+  syntax keyword cPosixType pthread_once_t
+  syntax keyword cPosixType pthread_rwlock_t
+  syntax keyword cPosixType pthread_rwlockattr_t
+  syntax keyword cPosixType pthread_spinlock_t
+  syntax keyword cPosixType pthread_t
+  syntax keyword cPosixType size_t
+  syntax keyword cPosixType ssize_t
+  syntax keyword cPosixType suseconds_t
+  syntax keyword cPosixType time_t
+  syntax keyword cPosixType timer_t
+  syntax keyword cPosixType trace_attr_t
+  syntax keyword cPosixType trace_event_id_t
+  syntax keyword cPosixType trace_event_set_t
+  syntax keyword cPosixType trace_id_t
+  syntax keyword cPosixType uid_t
+  syntax keyword cPosixType pthread_attr_t
+  syntax keyword cPosixType pthread_barrier_t
+  syntax keyword cPosixType pthread_barrierattr_t
+  syntax keyword cPosixType pthread_cond_t
+  syntax keyword cPosixType pthread_condattr_t
+  syntax keyword cPosixType pthread_key_t
+  syntax keyword cPosixType pthread_mutex_t
+  syntax keyword cPosixType pthread_mutexattr_t
+  syntax keyword cPosixType pthread_once_t
+  syntax keyword cPosixType pthread_rwlock_t
+  syntax keyword cPosixType pthread_rwlockattr_t
+  syntax keyword cPosixType pthread_spinlock_t
+  syntax keyword cPosixType pthread_t
+  syntax keyword cPosixType trace_attr_t
+  syntax keyword cPosixType trace_event_id_t
+  syntax keyword cPosixType trace_event_set_t
+  syntax keyword cPosixType trace_id_t
+  syntax keyword cPosixType mode_t
+  syntax keyword cPosixType dev_t
+  syntax keyword cPosixType nlink_t
+  syntax keyword cPosixType uid_t
+  syntax keyword cPosixType gid_t
+  syntax keyword cPosixType id_t
+  syntax keyword cPosixType blkcnt_t
+  syntax keyword cPosixType off_t
+  syntax keyword cPosixType fsblkcnt_t
+  syntax keyword cPosixType fsfilcnt_t
+  syntax keyword cPosixType ino_t
+  syntax keyword cPosixType size_t
+  syntax keyword cPosixType blksize_t
+  syntax keyword cPosixType pid_t
+  syntax keyword cPosixType ssize_t
+  syntax keyword cPosixType clock_t
+  syntax keyword cPosixType time_t
+  syntax keyword cPosixType suseconds_t
+endif
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+

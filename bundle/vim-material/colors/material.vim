@@ -208,6 +208,7 @@ hi! Search        gui=underline guifg=#00ff00
 
 hi! SignColumn    gui=none      guibg=#374349
 hi! Pmenu         guifg=#d7dfff guibg=#323232
+call s:hi("ALEWarningSign",s:gui.yellow,     "",               "", "", "")
 
 " For C++ Syntax Highlight
 call s:hi("Type",         s:gui.yellow,     "",               "", "", "italic")

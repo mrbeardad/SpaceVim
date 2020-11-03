@@ -34,11 +34,11 @@ function! myspacevim#before() abort
           \ 'debugCmd': 'cgdb ${exeFile}'
       \ },
       \ 'cpp': {
-          \ 'compiler': 'clang\++',
+          \ 'compiler': 'g\++',
           \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
           \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
           \ 'extRegex': [
-              \ '^#\s*include\s*<future>',
+              \ '^#\s*include\s*<\(future\|pthread\.h\)>',
               \ '^#\s*include\s*<mysql++.*>'
           \ ],
           \ 'extFlags': [
@@ -100,6 +100,7 @@ function! myspacevim#before() abort
   let g:cppman_open_mode = '<auto>'
   let g:cpp_nofunction_highlight = 1
   let g:cpp_simple_highlight = 0
+  let g:c_no_posix_function = 1
 
   augroup MySpaceVim_lang_c
     autocmd!
@@ -107,8 +108,8 @@ function! myspacevim#before() abort
       au! VimEnter call s:is_ale_ok()
       au! InsertLeave *.cpp,*.hpp call s:ale_chopt() | call s:ale_cnter()
     endif
-    autocmd FileType cpp inoremap <buffer><m-m> <c-r>=<SID>change_namespace()<cr>
-    autocmd FileType cpp nnoremap <buffer><m-m> i<c-r>=<SID>change_namespace()<cr><c-c>
+    autocmd FileType cpp inoremap <silent><buffer><m-m> <c-r>=<SID>change_namespace()<cr>
+    autocmd FileType cpp nnoremap <silent><buffer><m-m> i<c-r>=<SID>change_namespace()<cr><c-c>
     autocmd FileType cpp nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
     autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
   augroup END
@@ -235,6 +236,9 @@ function! myspacevim#after() abort
       \ '-openmp*',
       \ '-zircon*',
       \ '-*avoid-c-arrays',
+      \ '-*deprecated-headers',
+      \ '-llvm-include-order',
+      \ '-cppcoreguidelines-pro-bounds-pointer-arithmetic',
       \ '-modernize-use-trailing-return-type',
       \ '-readability-isolate-declaration',
       \ ]
@@ -306,7 +310,12 @@ function! myspacevim#after() abort
         \ '',
         \ '',
         \ 'Toggle table mode')
-  call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'], 'SourceCounter', 'count in the selection region', 1, 1)
+  if executable('cloc')
+    call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'], '!cloc .', 'count in the selection region', 1, 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['x', 'C'], 'exe "!cloc ".SpaceVim#plugins#projectmanager#current_root()', 'count in the selection region', 1, 1)
+  else
+    call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'], 'SourceCounter', 'count in the selection region', 1, 1)
+  endif
   call SpaceVim#mapping#space#def('vmap', ['x', 'c'], '<Plug>CountSelectionRegion', 'count in the selection region', 0, 1)
 
 
@@ -363,8 +372,9 @@ function! myspacevim#after() abort
   " ==================================
   let g:indentLine_char =  '¦'
   let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx', 'json']
-  noremap <silent> <F1> :TagbarToggle<CR>
-  nnoremap <silent><F7> :call SpaceVim#plugins#tabmanager#open()<cr>
+  nnoremap <silent> <F1> :TagbarToggle<CR>
+  nnoremap <silent> <F3> :call <SID>defx_toggle_without_jump()<cr>
+  nnoremap <silent> <F7> :call SpaceVim#plugins#tabmanager#open()<cr>
 
   " ==================================
   " CUSTOM: SpaceVim After
@@ -555,16 +565,17 @@ function! s:is_ale_ok()
 endfunction
 
 function! s:change_namespace()
+  exe "normal \<left>"
   let WORD = expand('<cWORD>')
   normal diW
-  if match(WORD, 'std\w*::') != 0
+  if match(WORD, 'std::') != 0
     return 'std::'.WORD
   elseif match(WORD, 'std::filesystem::') == 0
-    return substitute(WORD, 'std::filesystem::', 'std_fs::', 'g')
+    return substitute(WORD, 'std::filesystem::', 'fs::', 'g')
   elseif match(WORD, 'std::chrono::') == 0
-    return substitute(WORD, 'std::chrono::', 'std_co::', 'g')
+    return substitute(WORD, 'std::chrono::', 'co::', 'g')
   elseif match(WORD, 'std::ios_base::\|std::ios::') == 0
-    return substitute(WORD, 'std::ios\w\{-}::', 'std_ios::', 'g')
+    return substitute(WORD, 'std::ios\w\{-}::', 'io::', 'g')
   endif
 endfunction
 
@@ -604,3 +615,12 @@ function! s:ale_chopt()
   let g:ale_cpp_clangtidy_options = g:ale_cpp_clangtidy_options.' '.qr_cf
 endfunction
 
+function! s:defx_toggle_without_jump()
+  let defxWinNr = win_findbuf(buffer_number('[defx] -0'))
+  if defxWinNr != []
+    Defx
+  else
+    Defx
+    winc p
+  endif
+endfunction

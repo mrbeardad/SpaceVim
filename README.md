@@ -9,7 +9,7 @@ PS: 本配置适用于 **NeoVim** ，vim的话有许多功能还未支持
 
 * * *
 
-几乎所有的快捷键都在[<u>这个快捷键列表</u>](https://github.com/mrbeardad/learning-notes-and-cheat-sheets/blob/master/notes/vim.md)中列出了，
+几乎所有的快捷键都在[<u>这个快捷键列表</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/notes/vim.md)中列出了，
 里面同时包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键。
 先look~look我改了哪些地方：  
 ![gdi upstream](custom/gdi.png)  
@@ -347,7 +347,7 @@ let g:quickrun_default_flags = {
 # 安装
 
 相比原生的SpaceVim需要自己配置，本魔改版本基本上算是开箱即用的，无需自己配置，
-你需要做到就是好好阅读[**快捷键文档**](https://github.com/mrbeardad/learning-notes-and-cheat-sheets/blob/master/notes/vim.md)即可
+你需要做到就是好好阅读[**快捷键文档**](https://github.com/mrbeardad/SeeCheatSheets/blob/master/notes/vim.md)即可
 
 接下来讲讲咋安装
 

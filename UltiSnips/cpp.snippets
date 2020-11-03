@@ -1,12 +1,12 @@
-snippet inc  "description" w
+snippet i  "description" w
 #include <${1:iostream}>
 endsnippet
 
-snippet incm  "description" w
+snippet im  "description" w
 #include "${1:myheader}.hpp"
 endsnippet
 
-snippet incb  "description" w
+snippet ib  "description" w
 #include <boost/${1:shared_ptr.hpp}>
 endsnippet
 
@@ -325,3 +325,9 @@ snippet arg  "description" w
 int argc, char* argv[]
 endsnippet
 
+snippet na "description" w
+namespace${1:}
+{
+	$2
+} // namespace$1
+endsnippet
