@@ -9,7 +9,7 @@ PS: 本配置适用于 **NeoVim** ，vim的话有许多功能还未支持
 
 * * *
 
-几乎所有的快捷键都在[<u>这个快捷键列表</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/notes/vim.md)中列出了，
+几乎所有的快捷键都在[<u>这个快捷键列表</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)中列出了，
 里面同时包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键。
 先look~look我改了哪些地方：  
 ![gdi upstream](custom/gdi.png)  
@@ -29,8 +29,6 @@ PS: 本配置适用于 **NeoVim** ，vim的话有许多功能还未支持
 - [git, VersionControl](#git-versioncontrol)
 - [checker](#checker)
 - [autocomplete](#autocomplete)
-- [插件安装完成后进入YouCompleteMe目录](#插件安装完成后进入youcompleteme目录)
-- [构建补全引擎，除了C++外还 支持其它语言，参数详见`--help`](#构建补全引擎除了c外还-支持其它语言参数详见--help)
 - [chinese](#chinese)
 - [runner](#runner)
 - [lang#c](#langc)
@@ -230,10 +228,10 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 ![autocomplete](custom/autocomplete.png)
  **注意** ：该插件需要手动安装
  ```sh
-# 插件安装完成后进入YouCompleteMe目录
+ # 插件安装完成后进入YouCompleteMe目录
 cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 
-# 构建补全引擎，除了C++外还 支持其它语言，参数详见`--help`
+ # 构建补全引擎，除了C++外还 支持其它语言，参数详见`--help`
 ./install.py --clangd-completer
  ```
 
@@ -347,7 +345,7 @@ let g:quickrun_default_flags = {
 # 安装
 
 相比原生的SpaceVim需要自己配置，本魔改版本基本上算是开箱即用的，无需自己配置，
-你需要做到就是好好阅读[**快捷键文档**](https://github.com/mrbeardad/SeeCheatSheets/blob/master/notes/vim.md)即可
+你需要做到就是好好阅读[**快捷键文档**](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)即可
 
 接下来讲讲咋安装
 

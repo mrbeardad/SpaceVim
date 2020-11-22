@@ -565,7 +565,7 @@ function! s:is_ale_ok()
 endfunction
 
 function! s:change_namespace()
-  exe "normal \<left>"
+  " exe "normal \<left>"
   let WORD = expand('<cWORD>')
   normal diW
   if match(WORD, 'std::') != 0
@@ -576,6 +576,8 @@ function! s:change_namespace()
     return substitute(WORD, 'std::chrono::', 'co::', 'g')
   elseif match(WORD, 'std::ios_base::\|std::ios::') == 0
     return substitute(WORD, 'std::ios\w\{-}::', 'io::', 'g')
+  elseif match(WORD, 'std::this_thread::') == 0
+    return substitute(WORD, 'std::this_thread::', 'th::', 'g')
   endif
 endfunction
 
