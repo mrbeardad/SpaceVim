@@ -156,9 +156,7 @@ function! s:major_mode() abort
   let icon = ''
   if g:spacevim_enable_tabline_ft_icon
     let icon = SpaceVim#api#import('file').fticon(bufname())
-    if icon ==# ''
-      let icon = ' '
-    endif
+    let icon = icon ==# '' ?  ' ' : icon
   endif
   return ' '.icon.'%{empty(&ft)? "UNKOWN" : " " . &ft . " "}'
 endfunction

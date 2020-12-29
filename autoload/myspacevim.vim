@@ -39,11 +39,13 @@ function! myspacevim#before() abort
           \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
           \ 'extRegex': [
               \ '^#\s*include\s*<\(future\|pthread\.h\)>',
-              \ '^#\s*include\s*<mysql++.*>'
+              \ '^#\s*include\s*<mysql++.*>',
+              \ '^#\s*include\s*<dlfcn.h>'
           \ ],
           \ 'extFlags': [
               \ '-lpthread',
-              \ '-I/usr/include/mysql -lmysqlpp'
+              \ '-I/usr/include/mysql -lmysqlpp',
+              \ '-ldl'
           \ ],
           \ 'cmd': '${exeFile}',
           \ 'cmdArgs': '',
@@ -241,9 +243,14 @@ function! myspacevim#after() abort
       \ '-cppcoreguidelines-pro-bounds-pointer-arithmetic',
       \ '-modernize-use-trailing-return-type',
       \ '-readability-isolate-declaration',
+      \ '-llvmlibc-restrict-system-libc-headers',
       \ ]
 
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
+
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)
 
   endif
 
@@ -271,8 +278,6 @@ function! myspacevim#after() abort
   nmap ; <Plug>(easymotion-overwin-f2)
   nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
   call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(easymotion-overwin-line)', 'jump to a line', 0)
-  nmap gs <Plug>(openbrowser-smart-search)
-  vmap gs <Plug>(openbrowser-smart-search)
 
   " ==================================
   " CUSTOM: incsearch After

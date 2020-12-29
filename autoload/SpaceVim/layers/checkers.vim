@@ -20,14 +20,8 @@ function! SpaceVim#layers#checkers#plugins() abort
   if g:spacevim_enable_neomake && g:spacevim_enable_ale == 0
     call add(plugins, [g:_spacevim_root_dir . 'bundle/neomake', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
   elseif g:spacevim_enable_ale
-    if get(g:, 'ale_linters', {}) != {}
-      call add(plugins, ['dense-analysis/ale', {'on_ft' : keys(g:ale_linters), 'merged' : 0, 'loadconf_before' : 1}])
-    else
-      call add(plugins, ['dense-analysis/ale', {'merged' : 0, 'loadconf_before' : 1}])
-    endif
-    call SpaceVim#custom#SPC('nore', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
-    call SpaceVim#custom#SPC('nore', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
-    call SpaceVim#custom#SPC('nore', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)
+    let load_on_ft =  get(g:, 'ale_linters', {}) != {} ? "'on_ft' : keys(g:ale_linters)," : ''
+    exe "call add(plugins, ['dense-analysis/ale', {". load_on_ft ."'merged' : 0, 'loadconf_before' : 1}])"
   else
     call add(plugins, ['wsdjeg/syntastic', {'on_event': 'WinEnter', 'loadconf' : 1, 'merged' : 0}])
   endif

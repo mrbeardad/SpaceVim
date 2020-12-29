@@ -127,6 +127,7 @@ let s:file_node_exact_matches = {
       \  '.gitconfig'                       : '',
       \  '.gitignore'                       : '',
       \  '.gitsubmodules'                   : '',
+      \  '.gitkepp'                         : '',
       \  '.gdbinit'                         : '',
       \  '.zshrc'                           : '',
       \  '.bashrc'                          : '',

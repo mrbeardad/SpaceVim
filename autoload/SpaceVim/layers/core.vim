@@ -39,7 +39,6 @@ function! SpaceVim#layers#core#plugins() abort
   endif
   call add(plugins, [g:_spacevim_root_dir . 'bundle/gruvbox', {'loadconf' : 1, 'merged' : 0}])
   call add(plugins, [g:_spacevim_root_dir . 'bundle/open-browser.vim', {
-        \ 'on_cmd' : ['OpenBrowserSmartSearch', 'OpenBrowser', 'OpenBrowserSearch'],
         \ 'on_map' : '<Plug>(openbrowser-',
         \ 'merged' : 0,
         \ 'loadconf' : 1,

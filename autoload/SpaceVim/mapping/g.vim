@@ -100,8 +100,9 @@ function! SpaceVim#mapping#g#init() abort
   nnoremap gm gm
   let g:_spacevim_mappings_g['o'] = ['call feedkeys("go", "n")', 'goto byte N in the buffer']
   nnoremap go go
-  let g:_spacevim_mappings_g.s = ['call feedkeys("gs", "n")', 'sleep N seconds']
-  nnoremap gs gs
+  let g:_spacevim_mappings_g.s = ['call feedkeys("gs", "n")', 'search in browser']
+  nmap gs <Plug>(openbrowser-smart-search)
+  vmap gs <Plug>(openbrowser-smart-search)
   let g:_spacevim_mappings_g['v'] = ['call feedkeys("gv", "n")', 'reselect the previous Visual area']
   nnoremap gv gv
   let g:_spacevim_mappings_g['<C-]>'] = ['call feedkeys("g<c-]>", "n")', 'jump to tag under cursor']

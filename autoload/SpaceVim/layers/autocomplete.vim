@@ -49,7 +49,6 @@ function! SpaceVim#layers#autocomplete#plugins() abort
         \ ]
   call add(plugins, [g:_spacevim_root_dir . 'bundle/deoplete-dictionary',        { 'merged' : 0}])
   if g:spacevim_autocomplete_parens
-    " call add(plugins, [g:_spacevim_root_dir . 'bundle/delimitMate',        { 'merged' : 0}])
     call add(plugins, ['jiangmiao/auto-pairs',        { 'merged' : 0}])
   endif
   " snippet
@@ -63,11 +62,8 @@ function! SpaceVim#layers#autocomplete#plugins() abort
           \ 'merged' : 0}])
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'
-    if get(g: ,'ycm_filetype_whitelist', {}) != {}
-      call add(plugins, ['ycm-core/YouCompleteMe', { 'on_ft': keys(g:ycm_filetype_whitelist), 'loadconf_before' : 1, 'merged' : 0}])
-    else
-      call add(plugins, ['ycm-core/YouCompleteMe', {'loadconf_before' : 1, 'merged' : 0}])
-    endif
+    let load_on_ft = get(g: ,'ycm_filetype_whitelist', {}) != {} ? '"on_ft": keys(g:ycm_filetype_whitelist), ' : ''
+    exe "call add(plugins, ['ycm-core/YouCompleteMe', {". load_on_ft ."'loadconf_before' : 1, 'merged' : 0}])"
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
     call add(plugins, ['Shougo/neocomplete', {
           \ 'on_event' : 'InsertEnter',

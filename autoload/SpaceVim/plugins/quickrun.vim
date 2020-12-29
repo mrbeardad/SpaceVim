@@ -101,7 +101,10 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
     let qr_prepare = '{echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;'
   endif
 
-  let qr_running = 'echo "[1;32m[Running] [34m' . qr_cmd . '[0m ' . qr_args .' '. qr_rd .'"; echo;echo "[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[m";quickrun_time sh -c "' . qr_cmd .' '. qr_args .' '. qr_rd .'";}'
+  let qr_running = 'echo "[1;32m[Running] [34m' . qr_cmd . '[0m ' . qr_args .' '. qr_rd .'"; echo;echo "[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[m";quickrun_time sh -c "' . qr_cmd .' '. qr_args .' '. qr_rd .'";} '
+  if has('nvim')
+    let qr_running .= ';echo "\n\033[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ..."'
+  endif
 
   " 若函数没有参数（有则表示强制编译），且当前文件为改动，且之前通过QuickRun运行过，且自上次编译之后未改动过文件内容，则直接运行上次编译的可执行文件；否则重新编译
   if !exists('a:1') && &modified == 0 && filereadable(exe_file_path)
