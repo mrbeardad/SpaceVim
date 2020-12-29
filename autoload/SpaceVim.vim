@@ -105,6 +105,22 @@ let g:spacevim_enable_bepo_layout  = 0
 " <
 let g:spacevim_max_column              = 120
 
+
+""
+" @section default_custom_leader, options-default_custom_leader
+" @parentsection options
+" Change the default custom leader of SpaceVim. Default is <Space>.
+" >
+"   default_custom_leader = "<Space>"
+" <
+
+""
+" Change the default custom leader of SpaceVim. Default is <Space>.
+" >
+"   let g:spacevim_default_custom_leader = '<Space>'
+" <
+let g:spacevim_default_custom_leader = '<Space>'
+
 ""
 " @section home_files_number, options-home_files_number
 " @parentsection options
@@ -195,6 +211,7 @@ let g:spacevim_windows_leader          = 's'
 
 ""
 " Enable/Disable spacevim's insert mode leader, default is enable
+" This options has been deprecated.
 let g:spacevim_enable_insert_leader    = 1
 
 ""
@@ -782,13 +799,13 @@ let g:spacevim_filemanager             = 'vimfiler'
 " @section filetree_direction, options-filetree_direction
 " @parentsection options
 " Config the direction of file tree. Default is 'right'. you can also set to
-" 'left'. 
+" 'left'.
 "
 " NOTE: if it is 'left', the tagbar will be move to right.
 
 ""
 " Config the direction of file tree. Default is 'right'. you can also set to
-" 'left'. 
+" 'left'.
 "
 " NOTE: if it is 'left', the tagbar will be move to right.
 let g:spacevim_filetree_direction             = 'right'
@@ -830,7 +847,7 @@ let g:spacevim_checkinstall            = 1
 ""
 " @section vimcompatible, options-vimcompatible
 " @parentsection options
-" Enable/Disable vimcompatible mode, by default it is false. 
+" Enable/Disable vimcompatible mode, by default it is false.
 " to enable vimcompatible mode, just add:
 " >
 "   vimcompatible = true
@@ -849,7 +866,7 @@ let g:spacevim_checkinstall            = 1
 " <
 
 ""
-" Enable/Disable vimcompatible mode, by default it is false. 
+" Enable/Disable vimcompatible mode, by default it is false.
 " to enable vimcompatible mode, just add:
 " >
 "   let g:spacevim_vimcompatible = 1
@@ -1057,6 +1074,22 @@ let g:spacevim_search_tools            = ['rg', 'ag', 'pt', 'ack', 'grep', 'find
 " <
 let g:spacevim_project_rooter_patterns = ['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']
 ""
+" @section enable_projects_cache, options-enable_projects_cache
+" @parentsection options
+" Enable/Disable cross session projects cache. Enabled by default.
+
+""
+" Enable/Disable cross session projects cache. Enabled by default.
+let g:spacevim_enable_projects_cache = 1
+""
+" @section projects_cache_num, options-projects_cache_num
+" @parentsection options
+" Setting the numbers of cached projects, by default it is 20.
+
+""
+" Setting the numbers of cached projects, by default it is 20.
+let g:spacevim_projects_cache_num = 20
+""
 " @section project_rooter_automatically, options-project_rooter_automatically
 " @parentsection options
 " Enable/Disable project root detection. By default, SpaceVim will change the
@@ -1200,6 +1233,8 @@ let g:spacevim_wildignore
 let g:_spacevim_mappings = {}
 let g:_spacevim_mappings_space_custom = []
 let g:_spacevim_mappings_space_custom_group_name = []
+let g:_spacevim_mappings_language_specified_space_custom = {}
+let g:_spacevim_mappings_language_specified_space_custom_group_name = {}
 let g:_spacevim_neobundle_installed     = 0
 let g:_spacevim_dein_installed          = 0
 let g:_spacevim_vim_plug_installed      = 0
@@ -1366,8 +1401,6 @@ function! SpaceVim#end() abort
   endif
   let g:leaderGuide_max_size = 15
   call SpaceVim#plugins#load()
-
-  call SpaceVim#plugins#projectmanager#RootchandgeCallback()
 
   call SpaceVim#util#loadConfig('general.vim')
 

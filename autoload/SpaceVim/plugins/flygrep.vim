@@ -578,6 +578,30 @@ function! s:open_item_horizontally() abort
   endif
 endfunction
 
+function! s:apply_to_quickfix() abort
+  let s:MPT._handle_fly = function('s:flygrep')
+  if getline('.') !=# ''
+    if s:grepid != 0
+      call s:JOB.stop(s:grepid)
+    endif
+    let s:MPT._quit = 1
+    if s:preview_able == 1
+      call s:close_preview_win()
+    endif
+    let s:preview_able = 0
+    let searching_result = s:BUFFER.buf_get_lines(s:buffer_id, 0, -1, 0)
+    noautocmd q
+    call s:update_history()
+    if !empty(searching_result)
+      cgetexpr join(searching_result, "\n")
+      call setqflist([], 'a', {'title' : 'FlyGrep partten:' . s:MPT._prompt.begin . s:MPT._prompt.cursor .s:MPT._prompt.end})
+      call s:MPT._clear_prompt()
+      copen
+    endif
+    noautocmd normal! :
+  endif
+endfunction
+
 function! s:double_click() abort
   if line('.') !=# ''
     if s:grepid != 0
@@ -764,6 +788,7 @@ let s:MPT._function_key = {
       \ "\<C-f>" : function('s:start_filter'),
       \ "\<C-v>" : function('s:open_item_vertically'),
       \ "\<C-s>" : function('s:open_item_horizontally'),
+      \ "\<C-q>" : function('s:apply_to_quickfix'),
       \ "\<M-r>" : function('s:start_replace'),
       \ "\<C-p>" : function('s:toggle_preview'),
       \ "\<C-e>" : function('s:toggle_expr_mode'),
@@ -890,6 +915,10 @@ endfunction
 " }}}
 
 function! s:update_statusline() abort
+  if !get(g:, 'FlyGrep_enable_statusline', 1)
+    return
+  endif
+
   if s:SL.support_float() && win_id2tabwin(s:flygrep_win_id)[0] ==# tabpagenr() && s:Window.is_float(win_id2win(s:flygrep_win_id))
     noautocmd call s:SL.open_float([
           \ ['FlyGrep ', 'SpaceVim_statusline_a_bold'],

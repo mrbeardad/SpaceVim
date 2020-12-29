@@ -97,9 +97,14 @@ function! SpaceVim#layers#checkers#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['e', '.'], 'call call('
         \ . string(s:_function('s:error_transient_state')) . ', [])',
         \ 'error-transient-state', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 's'], 'call call('
-        \ . string(s:_function('s:toggle_syntax_checker')) . ', [])',
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 's'], 'call SpaceVim#layers#core#statusline#toggle_mode("syntax-checking")',
         \ 'toggle-syntax-checker', 1)
+  call SpaceVim#layers#core#statusline#register_mode(
+        \ {
+        \ 'key' : 'syntax-checking',
+        \ 'func' : string(s:_function('s:toggle_syntax_checker')),
+        \ }
+        \ )
   call SpaceVim#mapping#space#def('nnoremap', ['e', 'e'], 'call call('
         \ . string(s:_function('s:explain_the_error')) . ', [])',
         \ 'explain-the-error', 1)
@@ -166,11 +171,19 @@ function! s:jump_to_next_error() abort
     lnext
   catch
     try
-      cnext
+      ll
     catch
-      echohl WarningMsg
-      echon 'There is no errors!'
-      echohl None
+      try
+        cnext
+      catch
+        try
+          cc
+        catch
+          echohl WarningMsg
+          echon 'There is no errors!'
+          echohl None
+        endtry
+      endtry
     endtry
   endtry
 endfunction
@@ -180,11 +193,19 @@ function! s:jump_to_previous_error() abort
     lprevious
   catch
     try
-      cprevious
+      ll
     catch
-      echohl WarningMsg
-      echon 'There is no errors!'
-      echohl None
+      try
+        cprevious
+      catch
+        try
+          cc
+        catch
+          echohl WarningMsg
+          echon 'There is no errors!'
+          echohl None
+        endtry
+      endtry
     endtry
   endtry
 endfunction
@@ -232,7 +253,6 @@ endfunction
 
 function! s:toggle_syntax_checker() abort
   call SpaceVim#layers#core#statusline#toggle_section('syntax checking')
-  call SpaceVim#layers#core#statusline#toggle_mode('syntax-checking')
   verbose NeomakeToggle
 endfunction
 

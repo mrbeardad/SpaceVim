@@ -6,6 +6,8 @@
 " License: GPLv3
 "=============================================================================
 
+let s:CMP = SpaceVim#api#import('vim#compatible')
+
 function! SpaceVim#layers#tools#plugins() abort
   let plugins = []
   call add(plugins, ['tpope/vim-scriptease',             { 'merged' : 0}])
@@ -14,7 +16,6 @@ function! SpaceVim#layers#tools#plugins() abort
   " call add(plugins, ['junegunn/rainbow_parentheses.vim', { 'merged' : 0}])
   call add(plugins, ['luochen1990/rainbow',              { 'merged' : 0}])
   call add(plugins, ['mbbill/fencview',                  { 'on_cmd' : 'FencAutoDetect'}])
-  " call add(plugins, ['simnalamburt/vim-mundo',           { 'on_cmd' : 'MundoToggle'}])
   call add(plugins, ['mbbill/undotree',                  { 'on_cmd' : 'UndotreeToggle'}])
   call add(plugins, ['wsdjeg/vim-cheat',                 { 'on_cmd' : 'Cheat'}])
   call add(plugins, ['wsdjeg/Mysql.vim',                 { 'on_cmd' : 'SQLGetConnection'}])
@@ -33,7 +34,6 @@ function! SpaceVim#layers#tools#plugins() abort
         \ 'BookmarkClearAll'
         \ ],
         \ 'loadconf_before' : 1}])
-  let s:CMP = SpaceVim#api#import('vim#compatible')
   if s:CMP.has('python')
     call add(plugins, ['gregsexton/VimCalc', {'on_cmd' : 'Calc'}])
   elseif s:CMP.has('python3')

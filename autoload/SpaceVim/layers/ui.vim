@@ -13,6 +13,7 @@ if exists('s:enable_sidebar')
 else
   let s:enable_sidebar = 0
   let s:enable_scrollbar = 0
+  let s:enable_indentline = 1
 endif
 
 function! SpaceVim#layers#ui#plugins() abort
@@ -94,7 +95,9 @@ function! SpaceVim#layers#ui#config() abort
   let g:indentLine_char = get(g:, 'indentLine_char', '┊')
   let g:indentLine_concealcursor = 'niv'
   let g:indentLine_conceallevel = 2
-  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'json']
+  let g:indentLine_enabled = s:enable_indentline
+  let g:indentLine_fileTypeExclude = get(g:, 'indentLine_fileTypeExclude', [])
+  let g:indentLine_fileTypeExclude += ['help', 'man', 'startify', 'vimfiler', 'json']
   let g:better_whitespace_filetypes_blacklist = ['diff', 'gitcommit', 'unite',
         \ 'qf', 'help', 'markdown', 'leaderGuide',
         \ 'startify'
@@ -111,9 +114,13 @@ function! SpaceVim#layers#ui#config() abort
   " this options only support neovim now.
   if s:enable_scrollbar && has('nvim')
     augroup spacevim_layer_ui
-        autocmd!
-        autocmd BufEnter,CursorMoved,VimResized,FocusGained    * call SpaceVim#plugins#scrollbar#show()
-        autocmd BufLeave,FocusLost,QuitPre    * call SpaceVim#plugins#scrollbar#clear()
+      autocmd!
+      autocmd BufEnter,CursorMoved,VimResized,FocusGained    * call SpaceVim#plugins#scrollbar#show()
+      autocmd BufLeave,FocusLost,QuitPre    * call SpaceVim#plugins#scrollbar#clear()
+      " why this autocmd is needed?
+      "
+      " because the startify use noautocmd enew
+      autocmd User Startified call s:clear_previous_scrollbar()
     augroup end
   endif
 
@@ -179,12 +186,20 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['T', '~'], 'call call('
         \ . string(s:_function('s:toggle_end_of_buffer')) . ', [])',
         \ 'display ~ in the fringe on empty lines', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['t', 'S'], 'call call('
-        \ . string(s:_function('s:toggle_spell_check')) . ', [])',
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'S'], 'call SpaceVim#layers#core#statusline#toggle_mode("spell-checking")',
         \ 'toggle-spell-checker', 1)
+
+  call SpaceVim#layers#core#statusline#register_mode(
+        \ {
+        \ 'key' : 'spell-checking',
+        \ 'func' : string(s:_function('s:toggle_spell_check')),
+        \ }
+        \ )
+
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'p'], 'call call('
         \ . string(s:_function('s:toggle_paste')) . ', [])',
         \ 'toggle-paste-mode', 1)
+
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'l'], 'setlocal list!',
         \ 'toggle-hidden-listchars', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'W'], 'setlocal wrap!',
@@ -338,7 +353,6 @@ function! s:toggle_spell_check() abort
   else
     let &l:spell = 1
   endif
-  call SpaceVim#layers#core#statusline#toggle_mode('spell-checking')
   if &l:spell == 1
     echo 'spell-checking enabled.'
   else
@@ -358,7 +372,7 @@ function! s:toggle_paste() abort
   else
     echo 'paste-mode disabled.'
   endif
-  
+
 endfunction
 
 let s:whitespace_enable = 0
@@ -375,21 +389,21 @@ function! s:toggle_whitespace() abort
 endfunction
 
 function! s:toggle_conceallevel() abort
-    if &conceallevel == 0 
-        setlocal conceallevel=2
-    else
-        setlocal conceallevel=0
-    endif
+  if &conceallevel == 0 
+    setlocal conceallevel=2
+  else
+    setlocal conceallevel=0
+  endif
 endfunction
 
 function! s:toggle_background() abort
-    let s:tbg = &background
-    " Inversion
-    if s:tbg ==# 'dark'
-        set background=light
-    else
-        set background=dark
-    endif
+  let s:tbg = &background
+  " Inversion
+  if s:tbg ==# 'dark'
+    set background=light
+  else
+    set background=dark
+  endif
 endfunction
 
 
@@ -473,5 +487,13 @@ function! SpaceVim#layers#ui#set_variable(var) abort
   let s:enable_scrollbar = get(a:var,
         \ 'enable_scrollbar',
         \ 0)
+  let s:enable_indentline = get(a:var,
+        \ 'enable_indentline',
+        \ 1)
 
+endfunction
+
+function! s:clear_previous_scrollbar() abort
+  let bufnr = bufnr('#')
+  call SpaceVim#plugins#scrollbar#clear(bufnr)
 endfunction

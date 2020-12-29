@@ -7,7 +7,7 @@ let g:Lf_WorkingDirectoryMode = get(g:, 'Lf_WorkingDirectoryMode', 'Ac')
 " disable default mru, and use neomru by default
 augroup LeaderF_Mru
   autocmd!
-  autocmd FileType leaderf setlocal nonumber
+  autocmd FileType leaderf setlocal nonumber nowrap
 augroup END
 
 " change the leaderf Colorscheme automatically
