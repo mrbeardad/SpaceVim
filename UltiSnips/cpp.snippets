@@ -90,9 +90,7 @@ while ( true )
         {0, 0, 0, 0}
     };
     auto choice = getopt_long(argc, argv, "vh$2", LongOpts, nullptr);
-    if ( choice == -1 ) {
-        break;
-    }
+    if ( choice == -1 ) break;
     switch ( choice ) {
         case 'v':
             $3
@@ -216,7 +214,7 @@ std::cout << ${1} << std::endl;
 endsnippet
 
 snippet fuck  "description" w
-std::cout << "fuck!" << std::endl;
+std::cout << "fuck: " ${1:<< } << std::endl;
 endsnippet
 
 snippet coutf  "description" w
@@ -285,11 +283,10 @@ endsnippet
 snippet init  "description" w
 #include <iostream>
 
+#include "mine.hpp"
+
 int main()
 {
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-
     $1
 
     return 0;
@@ -300,9 +297,6 @@ endsnippet
 snippet main  "description" w
 int main()
 {
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-
     $1
 
     return 0;
@@ -312,8 +306,6 @@ endsnippet
 snippet maina  "description" w
 int main(int argc, char* argv[])
 {
-    std::ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
 
     $1
 
@@ -330,4 +322,14 @@ namespace${1:}
 {
 	$2
 } // namespace$1
+endsnippet
+
+snippet sp "description" w
+/*************************************************************************************************/
+
+endsnippet
+
+snippet #
+#if $1
+#endif // $1
 endsnippet

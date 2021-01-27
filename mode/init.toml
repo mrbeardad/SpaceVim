@@ -24,6 +24,7 @@
     enable_neomake = false
     enable_ale = true
     lint_on_save = false
+    lint_on_the_fly = true
     error_symbol = ' '
     warning_symbol = ' '
     info_symbol = ' '

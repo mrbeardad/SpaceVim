@@ -13,9 +13,26 @@ execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
 " ==================================
 " CUSTOM: colorscheme After
 " ==================================
+if &diff == 1
+  set termguicolors
+  colorscheme gruvbox
+  finish
+endif
 if $DARKBG != ''
   set termguicolors
-  let colorNr = localtime() % 5
+  if $DARKBG == 'SpaceVim'
+    let colorNr = 0
+  elseif $DARKBG == 'gruvbox'
+    let colorNr = 1
+  elseif $DARKBG == 'NeoSolarized'
+    let colorNr = 2
+  elseif $DARKBG == 'palenight.vim'
+    let colorNr = 3
+  elseif $DARKBG == 'vim-material'
+    let colorNr = 4
+  else
+    let colorNr = localtime() % 5
+  endif
   " let colorNr = 4
   if colorNr == 0
     colorscheme SpaceVim

@@ -14,7 +14,6 @@ function! myspacevim#before() abort
       \ 'python': {
           \ 'compiler': '',
           \ 'compileFlags': '',
-          \ 'debugCompileFlags': '',
           \ 'extRegex': [],
           \ 'extFlags': [],
           \ 'cmd': '/bin/python ${thisFile}',
@@ -25,7 +24,6 @@ function! myspacevim#before() abort
       \ 'c': {
           \ 'compiler': 'gcc',
           \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
-          \ 'debugCompileFlags': '-Og -g3 -std=c17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
           \ 'extRegex': [],
           \ 'extFlags': [],
           \ 'cmd': '${exeFile}',
@@ -35,17 +33,32 @@ function! myspacevim#before() abort
       \ },
       \ 'cpp': {
           \ 'compiler': 'g\++',
-          \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
-          \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+          \ 'compileFlags': '-std=c++20 -g -ggdb -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
           \ 'extRegex': [
-              \ '^#\s*include\s*<\(future\|pthread\.h\)>',
-              \ '^#\s*include\s*<mysql++.*>',
-              \ '^#\s*include\s*<dlfcn.h>'
+              \ '^#\s*include\s*<(pthread\.h\|future\|thread\|.*asio\.hpp\|*gtest\.h)>',
+              \ '^#\s*include\s*<dlfcn.h>',
+              \ '^#\s*include\s*<pty.h>',
+              \ '^#\s*include\s*<boost/locale\.hpp>',
+              \ '^#\s*include\s*<*asio/ssl\.hpp>',
+              \ '^#\s*include\s*<(*asio/co_spawn\.hpp\|coroutine)>',
+              \ '^#\s*include\s*<glog/.*>',
+              \ '^#\s*include\s*<gtest/.*>',
+              \ '^#\s*include\s*<gmock/.*>',
+              \ '^#\s*include\s*<mysql++/.*>',
+              \ '^#\s*include\s*<srchilite/.*>',
           \ ],
           \ 'extFlags': [
               \ '-lpthread',
+              \ '-ldl',
+              \ '-lutil',
+              \ '-lboost_locale',
+              \ '-lssl -lcrypto',
+              \ '-fcoroutines',
+              \ '-lglog',
+              \ '-lgtest -lgtest_main',
+              \ '-lgmock',
               \ '-I/usr/include/mysql -lmysqlpp',
-              \ '-ldl'
+              \ '-lsource-highlight',
           \ ],
           \ 'cmd': '${exeFile}',
           \ 'cmdArgs': '',
@@ -63,6 +76,7 @@ function! myspacevim#before() abort
         \ "python":1,
         \ "vim":1,
         \ "sh":1,
+        \ "cmake":1
         \ }
     let g:ycm_semantic_triggers = {
           \ "c":['re!\w\w'],
@@ -83,7 +97,7 @@ function! myspacevim#before() abort
   let g:ale_completion_enabled = 0
   let g:ale_set_highlights = 1
   let g:ale_lint_on_filetype_changed = 0
-  let g:ale_lint_on_text_changed = 'never'
+  let g:ale_lint_on_text_changed = 'always'
   let g:ale_lint_on_insert_leave = 1
   let g:ale_lint_on_enter = 0
   let g:ale_lint_on_save = 0
@@ -103,17 +117,15 @@ function! myspacevim#before() abort
   let g:cpp_nofunction_highlight = 1
   let g:cpp_simple_highlight = 0
   let g:c_no_posix_function = 1
+  let g:cmake_ycm_symlinks = 1
 
   augroup MySpaceVim_lang_c
     autocmd!
-    if g:spacevim_enable_ale == 1
-      au! VimEnter call s:is_ale_ok()
-      au! InsertLeave *.cpp,*.hpp call s:ale_chopt() | call s:ale_cnter()
-    endif
-    autocmd FileType cpp inoremap <silent><buffer><m-m> <c-r>=<SID>change_namespace()<cr>
+    autocmd FileType cpp inoremap <silent><buffer><m-m> <c-c>i<c-r>=<SID>change_namespace()<cr>
     autocmd FileType cpp nnoremap <silent><buffer><m-m> i<c-r>=<SID>change_namespace()<cr><c-c>
     autocmd FileType cpp nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
     autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
+    autocmd User ALELintPost let g:ale_cpp_clangtidy_executable = 'echo'
   augroup END
 
 
@@ -151,6 +163,7 @@ function! myspacevim#before() abort
   \       'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
   \     },
   \     'css': 0,
+  \     'cmake':0
   \ }
   \}
 
@@ -221,12 +234,12 @@ function! myspacevim#after() abort
   " CUSTOM: checker After
   " ==================================
   if g:spacevim_enable_ale == 1
-    let g:ale_cpp_std = get(g:, 'ale_cpp_std', '-std=c++17')
+    let g:ale_cpp_std = get(g:, 'ale_cpp_std', '-std=c++20')
     let g:ale_cpp_cc_executable = 'gcc'
-    let g:ale_cpp_cc_options = '-Wall -Wextra -O2 -I. ' . g:ale_cpp_std
-    let g:ale_cpp_cppcheck_options = '--inconclusive --enable=warning,style,performance,portability -'.g:ale_cpp_std
+    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion' . g:ale_cpp_std
+    let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
     let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
-    let g:ale_clangtidy_period = 6
+    let g:ale_cpp_clangtidy_executable = 'echo'
     let g:ale_cpp_clangtidy_checks = ['*',
       \ '-abseil*',
       \ '-android*',
@@ -243,7 +256,7 @@ function! myspacevim#after() abort
       \ '-cppcoreguidelines-pro-bounds-pointer-arithmetic',
       \ '-modernize-use-trailing-return-type',
       \ '-readability-isolate-declaration',
-      \ '-llvmlibc-restrict-system-libc-headers',
+      \ '-*llvmlibc*',
       \ ]
 
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
@@ -299,8 +312,12 @@ function! myspacevim#after() abort
   " ==================================
   " CUSTOM: edit After
   " ==================================
+  let g:splitjoin_split_mapping = ''
+  let g:splitjoin_join_mapping = ''
   let g:EasyMotion_smartcase = 1
   let g:_spacevim_mappings.t = {'name' : '+Table-Mode/Translate'}
+  nnoremap <silent><space>J :SplitjoinJoin<cr>
+  nnoremap <silent><space>S :SplitjoinSplit<cr>
   xmap v <Plug>(expand_region_expand)
   xmap V <Plug>(expand_region_shrink)
   nmap ds <Plug>Dsurround
@@ -442,10 +459,11 @@ function! s:set_my_neovim() abort
   nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
   nnoremap <silent><tab> :winc w<cr>
   nnoremap <silent><s-tab> :winc W<cr>
-  nnoremap <silent><s-Right> :<C-u>wincmd l<CR>
-  nnoremap <silent><s-Left>  :<C-u>wincmd h<CR>
+  nnoremap <silent><s-Right> >>
+  nnoremap <silent><s-Left>  <<
   nnoremap <silent><s-Up>    :<C-u>wincmd k<CR>
   nnoremap <silent><s-Down>  :<C-u>wincmd j<CR>
+  nnoremap <m-s> %
 
   " insert mode
   inoremap <c-a> <home>
@@ -545,44 +563,24 @@ function! s:set_my_neovim() abort
 
 endfunction
 
-function! s:is_ale_ok()
-  let needcp_cppcheck = 1
-  let needcp_clangtidy = 1
-  let dir = g:spacevim_data_dir.'vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/'
-  for thisLinter in ['cppcheck', 'clangtidy']
-    if  match(execute('echo g:ale_linters'),thisLinter) != -1 && filereadable(dir.thisLinter.'.vim')
-      for thisLine in readfile(dir.thisLinter.'.vim')
-        if thisLine =~# 'ALE_CUSTOM_CHANGED'
-          let needcp_{thisLinter} =0
-        endif
-      endfor
-    endif
-  endfor
-  if  match(execute('echo g:ale_linters'),thisLinter) != -1 && filereadable(dir.thisLinter.'.vim')
-    py3 from shutil import copyfile
-    for thisLinter in ['cppcheck', 'clangtidy']
-      if needcp_{thisLinter} == 1
-        echo 'copy file from ~/.SpaceVim/custom/'.thisLinter.'.vim to '.dir.thisLinter.'.vim'
-        exe "py3 copyfile('".$HOME."/.SpaceVim/custom/".thisLinter.".vim', '".dir.thisLinter.".vim')"
-      endif
-    endfor
-  endif
-endfunction
 
 function! s:change_namespace()
-  " exe "normal \<left>"
   let WORD = expand('<cWORD>')
   normal diW
   if match(WORD, 'std::') != 0
     return 'std::'.WORD
-  elseif match(WORD, 'std::filesystem::') == 0
-    return substitute(WORD, 'std::filesystem::', 'fs::', 'g')
-  elseif match(WORD, 'std::chrono::') == 0
-    return substitute(WORD, 'std::chrono::', 'co::', 'g')
-  elseif match(WORD, 'std::ios_base::\|std::ios::') == 0
-    return substitute(WORD, 'std::ios\w\{-}::', 'io::', 'g')
-  elseif match(WORD, 'std::this_thread::') == 0
-    return substitute(WORD, 'std::this_thread::', 'th::', 'g')
+  elseif match(WORD, 'std::filesystem') == 0
+    return substitute(WORD, 'std::filesystem', 'fs', 'g')
+  elseif match(WORD, 'std::ios_base\>\|std::ios\>') == 0
+    return substitute(WORD, 'std::ios\w*', 'io', 'g')
+  elseif match(WORD, 'std::chrono') == 0
+    return substitute(WORD, 'std::chrono', 'ch', 'g')
+  elseif match(WORD, 'asio::ip') == 0
+    return substitute(WORD, 'asio::ip', 'net', 'g')
+  " elseif match(WORD, 'std::this_thread') == 0
+  "   return substitute(WORD, 'std::this_thread', 'th', 'g')
+  " elseif match(WORD, 'std::regex_constants') == 0
+  "   return substitute(WORD, 'std::regex_constants', 'reg', 'g')
   endif
 endfunction
 
@@ -601,26 +599,6 @@ endfunction
 let g:ale_clangtidy_executable = get(g:, 'ale_cpp_clangtidy_executable', 'clang-tidy')
 let g:ale_clangtidy_period = get(g:, 'ale_clangtidy_period', 6)
 let s:ale_lint_count = 0
-
-function! s:ale_cnter()
-  if s:ale_lint_count == 0
-    let g:ale_cpp_clangtidy_executable = g:ale_clangtidy_executable
-  else
-    let g:ale_cpp_clangtidy_executable = 'echo'
-  endif
-  let s:ale_lint_count = (s:ale_lint_count + 1) % g:ale_clangtidy_period
-endfunction
-
-function! s:ale_chopt()
-  let src_file_path = expand('%:p')
-  if !filereadable(src_file_path)
-    return
-  endif
-  let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%:p').'")))').'.exe'
-  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
-  let g:ale_cpp_cc_options = g:ale_cpp_cc_options.' '.qr_cf
-  let g:ale_cpp_clangtidy_options = g:ale_cpp_clangtidy_options.' '.qr_cf
-endfunction
 
 function! s:defx_toggle_without_jump()
   let defxWinNr = win_findbuf(buffer_number('[defx] -0'))

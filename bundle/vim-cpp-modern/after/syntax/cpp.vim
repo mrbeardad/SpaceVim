@@ -4,15 +4,22 @@
 " Original Author: Jon Haggblad <https://github.com/octol>
 " Maintainer:      bfrg <https://github.com/bfrg>
 " Website:         https://github.com/bfrg/vim-cpp-modern
-" Last Change:     Oct 3, 2020
+" Last Change:     Nov 23, 2020
 "
 " This syntax file is based on:
 " https://github.com/octol/vim-cpp-enhanced-highlight
-" http://www.vim.org/scripts/script.php?script_id=4293
 " ==============================================================================
 
+" C++ attributes {{{1
+if get(g:, 'cpp_attributes_highlight', 0)
+    syntax region cppAttribute matchgroup=cppAttributeBrackets start='\[\[' end=']]' contains=cString
+    hi def link cppAttribute         Macro
+    hi def link cppAttributeBrackets Identifier
+endif
+
+
 " Standard library {{{1
-syntax keyword cppSTLconstant
+syntax keyword cppSTLdefine
         \ MB_CUR_MAX MB_LEN_MAX WCHAR_MAX WCHAR_MIN WEOF __STDC_UTF_16__ __STDC_UTF_32__
 
 syntax keyword cppSTLnamespace
@@ -64,14 +71,13 @@ if !exists('cpp_no_cpp11')
     syntax keyword cppSTLtypedef
             \ atomic_char16_t atomic_char32_t atomic_int_fast16_t atomic_int_fast32_t atomic_int_fast64_t atomic_int_fast8_t atomic_int_least16_t atomic_int_least32_t atomic_int_least64_t atomic_int_least8_t atomic_intmax_t atomic_intptr_t atomic_ptrdiff_t atomic_size_t atomic_uint_fast16_t atomic_uint_fast32_t atomic_uint_fast64_t atomic_uint_fast8_t atomic_uint_least16_t atomic_uint_least32_t atomic_uint_least64_t atomic_uint_least8_t atomic_uintmax_t atomic_uintptr_t atomic_wchar_t nullptr_t max_align_t allocator_arg_t adopt_lock_t defer_lock_t try_to_lock_t piecewise_construct_t
 
-    syntax keyword cppSTLconstant
-            \ max_digits10 math_errhandling
+    syntax keyword cppSTLconstant max_digits10
 
     syntax keyword cppSTLvariable
             \ _1 _2 _3 _4 _5 _6 _7 _8 _9 defer_lock try_to_lock adopt_lock allocator_arg
 
-    syntax keyword cppSTLconstant
-            \ FLT_EVAL_METHOD FP_INFINITE FP_NAN FP_NORMAL FP_SUBNORMAL FP_ZERO HUGE_VALF HUGE_VALL INFINITY MATH_ERREXCEPT MATH_ERRNO NAN
+    syntax keyword cppSTLdefine
+            \ math_errhandling FLT_EVAL_METHOD FP_INFINITE FP_NAN FP_NORMAL FP_SUBNORMAL FP_ZERO HUGE_VALF HUGE_VALL INFINITY MATH_ERREXCEPT MATH_ERRNO NAN
 
     syntax keyword cppSTLenum
             \ memory_order future_status future_errc launch io_errc cv_status errc
@@ -93,7 +99,7 @@ endif
 
 " C++14 extensions {{{1
 if !exists('cpp_no_cpp14')
-    syntax keyword cppSTLnamespace literals chrono_literals string_literals string_view_literals
+    syntax keyword cppSTLnamespace literals chrono_literals string_literals complex_literals
 
     syntax keyword cppSTLfunction make_unique
 
@@ -107,7 +113,7 @@ endif
 
 " C++17 extensions {{{1
 if !exists('cpp_no_cpp17')
-    syntax keyword cppSTLnamespace filesystem execution
+    syntax keyword cppSTLnamespace filesystem execution string_view_literals
 
     syntax keyword cppSTLtype
             \ any is_execution_policy parallel_policy parallel_unsequenced_policy sequenced_policy directory_entry directory_iterator file_status file_time_type path recursive_directory_iterator space_info default_order default_searcher boyer_moore_searcher boyer_moore_horspool_searcher memory_resource monotonic_buffer_resource polymorphic_allocator pool_options synchronized_pool_resource unsynchronized_pool_resource scoped_lock optional shared_mutex basic_string_view string_view u16string_view u32string_view wstring_view bool_constant conjunction disjunction has_unique_object_representations invoke_result is_aggregate is_callable is_invocable is_invocable_r is_nothrow_invocable is_nothrow_invocable_r is_nothrow_swappable is_nothrow_swappable_with is_nowthrow_callable is_swappable is_swappable_with negation node_type insert_return_type in_place_tag monostate variant variant_size variant_alternative
@@ -133,17 +139,18 @@ if !exists('cpp_no_cpp17')
     " Note: There is std::filesystem::path::format and std::format() in <format>
     syntax match cppSTLenum "\<format\>(\@!"
 
+    " Note: these can be both member objects and methods
+    syntax match cppSTLvariable "\<\%(capacity\|free\|available\)\>(\@!"
+
     " Note: these keywords are very likely to coincide with user-defined variables
     " syntax keyword cppSTLconstant
     "         \ all mask unknown replace add remove nofollow none not_found regular directory symlink block character fifo socket unknown
-
-    " Note: these are also functions
-    " syntax keyword cppSTLconstant capacity free available
 endif
 
 
 " C++20 extensions {{{1
 if !exists('cpp_no_cpp20')
+    syntax keyword cppCoroutines co_await co_yield co_return
     syntax keyword cppSTLnamespace ranges views
     syntax keyword cppSTLconstant dynamic_extent
     syntax keyword cppSTLvariable default_sentinel unreachable_sentinel
@@ -175,8 +182,10 @@ endif
 
 " Default highlighting
 hi def link cppSTLbool         Boolean
+hi def link cppCoroutines      Statement
 hi def link cppStatement       Statement
 hi def link cppSTLfunction     Function
+hi def link cppSTLdefine       Constant
 hi def link cppSTLconstant     Constant
 hi def link cppSTLnamespace    Constant
 hi def link cppSTLexception    Type
@@ -190,14 +199,14 @@ hi def link cppSTLvariable     Identifier
 
 " The keywords {inline, virtual, explicit, export, override, final} are
 " standard C++ keywords and NOT types!
-hi link cppModifier Statement
+hi! def link cppModifier Statement
 
 
 " Highlight all standard C++ keywords as Statement
 if get(g:, 'cpp_simple_highlight', 0)
-    hi link cppStructure    Statement
-    hi link cppExceptions   Statement
-    hi link cppStorageClass Statement
+    hi! def link cppStructure    Statement
+    hi! def link cppExceptions   Statement
+    hi! def link cppStorageClass Statement
 endif
 
 " =========================================================

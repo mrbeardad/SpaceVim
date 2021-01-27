@@ -1,7 +1,6 @@
 " Author: vdeurzen <tim@kompiler.org>, w0rp <devw0rp@gmail.com>,
 " gagbo <gagbobada@gmail.com>
-" Description: clang-tidy linter for cpp files, changes to lint not only on
-" save
+" Description: clang-tidy linter for cpp files
 
 call ale#Set('cpp_clangtidy_executable', 'clang-tidy')
 " Set this option to check the checks clang-tidy will apply.
@@ -24,6 +23,13 @@ function! ale_linters#cpp#clangtidy#GetCommand(buffer, output) abort
         let l:options = ale#Var(a:buffer, 'cpp_clangtidy_options')
         let l:cflags = ale#c#GetCFlags(a:buffer, a:output)
         let l:options .= !empty(l:options) ? ale#Pad(l:cflags) : l:cflags
+
+        " Tell clang-tidy a .h header with a C++ filetype in Vim is a C++ file
+        " only when compile-commands.json file is not there. Adding these
+        " flags makes clang-tidy completely ignore compile commmands.
+        if expand('#' . a:buffer) =~# '\.h$'
+            let l:options .= !empty(l:options) ? ' -x c++' : '-x c++'
+        endif
     endif
 
     " Get the options to pass directly to clang-tidy
@@ -44,4 +50,3 @@ call ale#linter#Define('cpp', {
 \   'command': {b -> ale#c#RunMakeCommand(b, function('ale_linters#cpp#clangtidy#GetCommand'))},
 \   'callback': 'ale#handlers#gcc#HandleGCCFormat',
 \})
-" ALE_CUSTOM_CHANGED

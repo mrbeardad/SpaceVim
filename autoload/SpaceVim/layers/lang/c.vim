@@ -110,6 +110,8 @@ let s:CPT = SpaceVim#api#import('vim#compatible')
 function! SpaceVim#layers#lang#c#plugins() abort
   let plugins = []
   call add(plugins, ['skywind3000/vim-cppman', {'on_ft':'cpp'}])
+  call add(plugins, ['vhdirk/vim-cmake', {'on_ft':'cmake'}])
+  call add(plugins, ['pboettch/vim-cmake-syntax', {'on_ft':'cmake'}])
   call add(plugins, ['agatan/vim-sort-include', {'on_ft':['c','cpp']}])
   if !SpaceVim#layers#lsp#check_filetype('c') && !SpaceVim#layers#lsp#check_filetype('cpp')
     if g:spacevim_autocomplete_method ==# 'deoplete'
@@ -255,7 +257,7 @@ endfunction
 
 " local function: language_specified_mappings {{{
 function! s:language_specified_mappings() abort
-  call SpaceVim#mapping#space#langSPC('nmap', ['l','c'],
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','l'],
         \ 'let ale_cpp_clangtidy_executable = "clang-tidy" | ALELint',
         \ 'Lint with all linters right now', 1)
 
