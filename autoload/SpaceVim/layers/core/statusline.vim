@@ -27,6 +27,7 @@ let s:STATUSLINE = SpaceVim#api#import('vim#statusline')
 let s:VIMCOMP = SpaceVim#api#import('vim#compatible')
 let s:SYSTEM = SpaceVim#api#import('system')
 let s:ICON = SpaceVim#api#import('unicode#icon')
+let s:LANG = SpaceVim#api#import('language')
 
 let s:JSON = SpaceVim#api#import('data#json')
 
@@ -159,6 +160,8 @@ function! s:major_mode() abort
     let icon = icon ==# '' ?  ' ' : icon
   endif
   return ' '.icon.'%{empty(&ft)? "UNKOWN" : " " . &ft . " "}'
+  "let alias = s:LANG.get_alias(&filetype)
+  "return empty(alias) ? '' : ' ' . alias . ' '
 endfunction
 
 function! s:modes() abort
@@ -290,6 +293,9 @@ function! s:search_status() abort
     let tt = split(ttl[0])[0]
   endif
   keepjumps call setpos('.', save_cursor)
+  " errmsg in this function should be ignored, otherwise SPC f s will always
+  " print errmsg.
+  let v:errmsg = ''
   return ' ' . (str2nr(tt) - str2nr(ct) + 1) . '/' . tt . ' '
 endfunction
 
@@ -435,6 +441,9 @@ function! SpaceVim#layers#core#statusline#get(...) abort
   elseif &filetype ==# 'git-commit'
     return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
           \ . '%#SpaceVim_statusline_b# Git commit %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
+  elseif &filetype ==# 'git-rebase'
+    return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
+          \ . '%#SpaceVim_statusline_b# Git rebase %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
   elseif &filetype ==# 'git-diff'
     return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
           \ . '%#SpaceVim_statusline_b# Git diff %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
