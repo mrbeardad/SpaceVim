@@ -7,7 +7,7 @@
 "=============================================================================
 
 " ============================ Before Load SpaceVim ==========================
-execute 'source' fnamemodify(expand('<sfile>'), ':h').'/config/main.vim'
+execute 'source' fnamemodify(expand('<sfile>'), ':h').'/main.vim'
 " ============================ After Load SpaceVim  ==========================
 
 " ==================================

@@ -160,8 +160,6 @@ function! s:major_mode() abort
     let icon = icon ==# '' ?  ' ' : icon
   endif
   return ' '.icon.'%{empty(&ft)? "UNKOWN" : " " . &ft . " "}'
-  "let alias = s:LANG.get_alias(&filetype)
-  "return empty(alias) ? '' : ' ' . alias . ' '
 endfunction
 
 function! s:modes() abort

@@ -202,8 +202,9 @@ function! myspacevim#after() abort
     let g:ycm_cache_omnifunc = 0
     let g:ycm_confirm_extra_conf = 0
     let g:ycm_show_diagnostics_ui = 0
-    let g:ycm_max_num_candidates = 30
-    let g:ycm_clangd_uses_ycmd_caching = 1
+    let g:ycm_max_num_candidates = 50
+    let g:ycm_max_num_identifier_candidates = 20
+    let g:ycm_clangd_uses_ycmd_caching = 0
     let g:ycm_key_invoke_completion = '<C-Z>'
     let g:ycm_key_list_stop_completion = ['<S-CR>']
     let g:ycm_key_list_select_completion = ['<TAB>']

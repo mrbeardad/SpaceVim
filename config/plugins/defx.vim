@@ -142,19 +142,18 @@ function! s:defx_init()
   " Define mappings
   nnoremap <silent><buffer><expr> gx
         \ defx#do_action('execute_system')
-  " nnoremap <silent><buffer><expr> <c-c>
-  "       \ defx#do_action('copy')
-  " nnoremap <silent><buffer><expr> yy
+  nnoremap <silent><buffer><expr> c
         \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> q
         \ defx#do_action('quit')
-  nnoremap <silent><buffer><expr> <c-x>
+  nnoremap <silent><buffer><expr> m
         \ defx#do_action('move')
+  nnoremap <silent><buffer><expr> P
+        \ defx#do_action('paste')
+  nnoremap <silent><buffer><expr> yy
+        \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> dd
         \ defx#do_action('move')
-  map <silent><buffer> p <nop>
-  nnoremap <silent><buffer><expr> <c-v>
-        \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> pp
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> h defx#do_action('call', g:defx_config_sid . 'DefxSmartH')
@@ -165,7 +164,14 @@ function! s:defx_init()
   nnoremap <silent><buffer><expr> <Cr>
         \ defx#is_directory() ?
         \ defx#do_action('open_directory') : defx#do_action('drop')
-  nnoremap <silent><buffer><expr> <2-LeftMouse> defx#do_action('call', 'DefxSmartL')
+  nnoremap <silent><buffer><expr> <2-LeftMouse>
+        \ defx#is_directory() ? 
+        \     (
+        \     defx#is_opened_tree() ?
+        \     defx#do_action('close_tree') :
+        \     defx#do_action('open_tree')
+        \     )
+        \ : defx#do_action('drop')
   nnoremap <silent><buffer><expr> sg
         \ defx#do_action('drop', 'vsplit')
   nnoremap <silent><buffer><expr> sv
@@ -194,8 +200,6 @@ function! s:defx_init()
   nnoremap <silent><buffer><expr> rn
         \ defx#do_action('rename')
   nnoremap <silent><buffer><expr> yp defx#do_action('call', g:defx_config_sid . 'DefxYarkPath')
-  nnoremap <silent><buffer><expr> yy defx#do_action('call', g:defx_config_sid . 'DefxCopyFile')
-  nnoremap <silent><buffer><expr> pp defx#do_action('call', g:defx_config_sid . 'DefxPasteFile')
   nnoremap <silent><buffer><expr> .
         \ defx#do_action('toggle_ignored_files')
   nnoremap <silent><buffer><expr> <C-f>
