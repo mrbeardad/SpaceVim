@@ -113,6 +113,8 @@ function! SpaceVim#layers#lang#c#plugins() abort
   call add(plugins, ['vhdirk/vim-cmake', {'on_ft':'cmake'}])
   call add(plugins, ['pboettch/vim-cmake-syntax', {'on_ft':'cmake'}])
   call add(plugins, ['agatan/vim-sort-include', {'on_ft':['c','cpp']}])
+  call add(plugins, ['Pomakhin/vim-protodef-custom', {'on_ft':['c','cpp']}])
+  call add(plugins, ['derekwyatt/vim-fswitch', {'on_ft':['c','cpp']}])
   if !SpaceVim#layers#lsp#check_filetype('c') && !SpaceVim#layers#lsp#check_filetype('cpp')
     if g:spacevim_autocomplete_method ==# 'deoplete'
       call add(plugins, ['Shougo/deoplete-clangx', {'merged' : 0}])
@@ -264,6 +266,9 @@ function! s:language_specified_mappings() abort
   call SpaceVim#mapping#space#langSPC('nmap', ['l','r'],
         \ 'call SpaceVim#plugins#runner#open()',
         \ 'execute current file', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','p'],
+        \ ":set paste\<cr>i\<c-r>=protodef#ReturnSkeletonsFromPrototypesForCurrentBuffer({'includeNS' : 0})\<cr>\<esc>='[:set nopaste\<cr>",
+        \ 'protodef in namespace', 0)
   if SpaceVim#layers#lsp#check_filetype('c')
     nnoremap <silent><buffer> K :call SpaceVim#lsp#show_doc()<CR>
 

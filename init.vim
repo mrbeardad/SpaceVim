@@ -46,3 +46,4 @@ if $DARKBG != ''
     colorscheme material
   endif
 endif
+let g:header_auto_add_header = 0

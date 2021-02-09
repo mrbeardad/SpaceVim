@@ -57,6 +57,10 @@
     repo = "yangyangxcf/vim-nerd-font-cheatsheets"
     merged = false
 
+[[custom_plugins]]
+    repo = "alpertuna/vim-header"
+    merged = false
+
 ########################### Layers ###########################
 [[layers]]
     name = 'core#banner'

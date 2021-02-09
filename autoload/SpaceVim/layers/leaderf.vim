@@ -667,11 +667,12 @@ function! s:defind_fuzzy_finder() abort
         \ ]
         \ ]
 let g:Lf_GtagsAutoGenerate = 1
+let g:Lf_GtagsAutoUpdate = 1
 let g:Lf_WindowHeight = 0.3
 let g:Lf_CacheDirectory = $HOME . '/.cache/SpaceVim/'
 let g:Lf_RootMarkers = ['.root/', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', '.SpaceVim.d/']
 let g:Lf_WildIgnore = {
-        \ 'dir': ['.svn', '.git', '.root'],
+        \ 'dir': ['.svn', '.git', '.root', 'build'],
         \ 'file': ['*.bak', '*.save', '*.o', '*.so']
         \}
 let g:_spacevim_mappings_g['D'] = ['call feedkeys("gD", "n")', 'go to definition by gtags']

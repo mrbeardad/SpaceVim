@@ -1,10 +1,10 @@
-"=============================================================================
-" myspacevim.vim --- Customized configuration file for spacevim
-" Copyright (c) 2020 Heachen Bear
-" Author: Heachen Bear
-" Email: mrbeardad@qq.com
+" Copyright (c) 2020-2021 Heachen Bear & Contributors
+" File: myspacevim.vim
 " License: GPLv3
-"=============================================================================
+" Author: Heachen Bear <mrbeardad@qq.com>
+" Date: 09.02.2021
+" Last Modified Date: 09.02.2021
+" Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! myspacevim#before() abort
   " ==================================
@@ -16,7 +16,7 @@ function! myspacevim#before() abort
           \ 'compileFlags': '',
           \ 'extRegex': [],
           \ 'extFlags': [],
-          \ 'cmd': '/bin/python ${thisFile}',
+          \ 'cmd': '/bin/python ${thisFile}'
           \ 'cmdArgs': '',
           \ 'cmdRedir': '',
           \ 'debugCmd': ''
@@ -218,7 +218,7 @@ function! myspacevim#after() abort
     let g:_spacevim_mappings_g['r'] = ['YcmCompleter GoToReferences', 'Go to reference']
     nnoremap <silent> gr :YcmCompleter GoToReferences<CR>
     let g:_spacevim_mappings_g['c'] = ['YcmCompleter RefactorRename', 'Refactor and rename']
-    nnoremap <silent> gc :YcmCompleter RefactorRename
+    nnoremap <silent> gc :exe 'YcmCompleter RefactorRename '.input('refactor "'.expand('<cword>').'" to:')<cr>
     let g:_spacevim_mappings_g['t'] = ['YcmCompleter GetType', 'Get Type']
     nnoremap <silent> gt :YcmCompleter GetType<CR>
   endif
@@ -237,7 +237,7 @@ function! myspacevim#after() abort
   if g:spacevim_enable_ale == 1
     let g:ale_cpp_std = get(g:, 'ale_cpp_std', '-std=c++20')
     let g:ale_cpp_cc_executable = 'gcc'
-    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion' . g:ale_cpp_std
+    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
     let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
     let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
     let g:ale_cpp_clangtidy_executable = 'echo'
@@ -398,6 +398,7 @@ function! myspacevim#after() abort
   nnoremap <silent> <F1> :TagbarToggle<CR>
   nnoremap <silent> <F3> :call <SID>defx_toggle_without_jump()<cr>
   nnoremap <silent> <F7> :call SpaceVim#plugins#tabmanager#open()<cr>
+  autocmd BufEnter * set cc=100
 
   " ==================================
   " CUSTOM: SpaceVim After
@@ -423,6 +424,18 @@ function! myspacevim#after() abort
     hi! SpellCap gui=undercurl guisp=yellow
     hi! SpellRare gui=undercurl guisp=magenta
   endif
+
+  " ==================================
+  " CUSTOM: header After
+  " ==================================
+  call SpaceVim#mapping#space#def('nnoremap', ['f', 'h'], 'AddHeader', 'add file header', 1)
+  let g:header_field_author = 'Heachen Bear'
+  let g:header_field_author_email = 'mrbeardad@qq.com'
+  let g:header_field_license_id = 'GPLv3'
+  let g:header_field_copyright = 'Copyright (c) 2020-'.strftime("%Y").' Heachen Bear & Contributors'
+  let g:header_max_size = 7
+  let g:header_alignment = 0
+
 
 endfunction
 
