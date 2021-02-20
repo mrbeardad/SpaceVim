@@ -16,7 +16,7 @@ function! myspacevim#before() abort
           \ 'compileFlags': '',
           \ 'extRegex': [],
           \ 'extFlags': [],
-          \ 'cmd': '/bin/python ${thisFile}'
+          \ 'cmd': '/bin/python ${thisFile}',
           \ 'cmdArgs': '',
           \ 'cmdRedir': '',
           \ 'debugCmd': ''

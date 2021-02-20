@@ -65,7 +65,7 @@ function! SpaceVim#layers#autocomplete#plugins() abort
     let load_on_ft = get(g: ,'ycm_filetype_whitelist', {}) != {} ? '"on_ft": keys(g:ycm_filetype_whitelist), ' : ''
     exe "call add(plugins, ['ycm-core/YouCompleteMe', {". load_on_ft ."'loadconf_before' : 1, 'merged' : 0}])"
   elseif g:spacevim_autocomplete_method ==# 'neocomplete'
-    call add(plugins, ['Shougo/neocomplete', {
+    call add(plugins, [g:_spacevim_root_dir . 'bundle/neocomplete.vim', {
           \ 'on_event' : 'InsertEnter',
           \ 'loadconf' : 1,
           \ }])

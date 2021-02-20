@@ -11,23 +11,10 @@
 " @parentsection layers
 " SpaceVim uses neomake as default syntax checker.
 
-let s:SIG = SpaceVim#api#import('vim#signatures')
-let s:STRING = SpaceVim#api#import('data#string')
 
-function! SpaceVim#layers#checkers#plugins() abort
-  let plugins = []
-
-  if g:spacevim_enable_neomake && g:spacevim_enable_ale == 0
-    call add(plugins, [g:_spacevim_root_dir . 'bundle/neomake', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
-  elseif g:spacevim_enable_ale
-    let load_on_ft =  get(g:, 'ale_linters', {}) != {} ? "'on_ft' : keys(g:ale_linters)," : ''
-    exe "call add(plugins, ['dense-analysis/ale', {". load_on_ft ."'merged' : 0, 'loadconf_before' : 1}])"
-  else
-    call add(plugins, ['wsdjeg/syntastic', {'on_event': 'WinEnter', 'loadconf' : 1, 'merged' : 0}])
-  endif
-
-  return plugins
-endfunction
+if exists('s:show_cursor_error')
+  finish
+endif
 
 if has('timers')
   let s:show_cursor_error = 1
@@ -35,9 +22,33 @@ else
   let s:show_cursor_error = 0
 endif
 
+let s:SIG = SpaceVim#api#import('vim#signatures')
+let s:STRING = SpaceVim#api#import('data#string')
+
+function! SpaceVim#layers#checkers#plugins() abort
+  let plugins = []
+
+  if exists('g:spacevim_enable_neomake') || exists('g:spacevim_enable_ale')
+    call SpaceVim#logger#warn('enable_neomake and enable_ale is duplecated', 0)
+    call SpaceVim#logger#warn('please read :h spacevim-options-lint_engine for more info!', 0)
+  endif
+
+  if g:spacevim_lint_engine ==# 'neomake'
+    call add(plugins, [g:_spacevim_root_dir . 'bundle/neomake', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
+  elseif g:spacevim_lint_engine ==# 'ale'
+    let load_on_ft =  get(g:, 'ale_linters', {}) != {} ? "'on_ft' : keys(g:ale_linters)," : ''
+    exe "call add(plugins, ['dense-analysis/ale', {". load_on_ft ."'merged' : 0, 'loadconf' : 1 ,'loadconf_before' : 1}])"
+  elseif g:spacevim_lint_engine ==# 'syntastic'
+    call add(plugins, [g:_spacevim_root_dir . 'bundle/syntastic', {'merged' : 0, 'loadconf' : 1 , 'loadconf_before' : 1}])
+  endif
+
+  return plugins
+endfunction
+
 function! SpaceVim#layers#checkers#set_variable(var) abort
 
   let s:show_cursor_error = get(a:var, 'show_cursor_error', 1)
+  let s:lint_on_the_fly =  get(a:var, 'lint_on_the_fly', 1)
 
   if s:show_cursor_error && !has('timers')
     call SpaceVim#logger#warn('show_cursor_error in checkers layer needs timers feature')
@@ -53,17 +64,15 @@ endfunction
 
 
 function! SpaceVim#layers#checkers#config() abort
-  "" neomake/neomake {{{
-  " This setting will echo the error for the line your cursor is on, if any.
-  let g:neomake_echo_current_error = get(g:, 'neomake_echo_current_error', !s:show_cursor_error)
-  let g:neomake_cursormoved_delay = get(g:, 'neomake_cursormoved_delay', 300)
-  "" }}}
+  " neomake config
+  if g:spacevim_lint_engine ==# 'neomake'
+    let g:neomake_echo_current_error = get(g:, 'neomake_echo_current_error', !s:show_cursor_error)
+    let g:neomake_cursormoved_delay = get(g:, 'neomake_cursormoved_delay', 300)
+    let g:neomake_virtualtext_current_error = get(g:, 'neomake_virtualtext_current_error', !s:show_cursor_error)
 
-  let g:neomake_virtualtext_current_error = get(g:, 'neomake_virtualtext_current_error', !s:show_cursor_error)
-
-  "" w0rp/ale {{{
-  let g:ale_echo_delay = get(g:, 'ale_echo_delay', 300)
-  "" }}}
+  elseif g:spacevim_lint_engine ==# 'ale'
+    let g:ale_echo_delay = get(g:, 'ale_echo_delay', 300)
+  endif
 
   call SpaceVim#mapping#space#def('nnoremap', ['e', 'c'], 'call call('
         \ . string(s:_function('s:clear_errors')) . ', [])',
@@ -104,7 +113,7 @@ function! SpaceVim#layers#checkers#config() abort
         \ 'explain-the-error', 1)
   augroup SpaceVim_layer_checker
     autocmd!
-    if g:spacevim_enable_neomake
+    if g:spacevim_lint_engine ==# 'neomake'
       if SpaceVim#layers#isLoaded('core#statusline')
         autocmd User NeomakeFinished nested
               \ let &l:statusline = SpaceVim#layers#core#statusline#get(1)
@@ -124,8 +133,8 @@ function! SpaceVim#layers#checkers#config() abort
           autocmd InsertEnter,WinLeave * call <SID>neomake_signatures_clear()
         endif
       endif
-    elseif g:spacevim_enable_ale && SpaceVim#layers#isLoaded('core#statusline')
-      autocmd User ALELintPost 
+    elseif g:spacevim_lint_engine ==# 'ale' && SpaceVim#layers#isLoaded('core#statusline')
+      autocmd User ALELintPost
             \ let &l:statusline = SpaceVim#layers#core#statusline#get(1)
     endif
   augroup END
@@ -238,28 +247,34 @@ function! s:neomake_signatures_clear() abort
 endfunction
 
 function! s:verify_syntax_setup() abort
-  if g:spacevim_enable_neomake
+  if g:spacevim_lint_engine ==# 'neomake'
     NeomakeInfo
-  elseif g:spacevim_enable_ale
+  elseif g:spacevim_lint_engine ==# 'ale'
   else
   endif
 endfunction
 
 function! s:toggle_syntax_checker() abort
   call SpaceVim#layers#core#statusline#toggle_section('syntax checking')
-  verbose NeomakeToggle
+  call SpaceVim#layers#core#statusline#toggle_mode('syntax-checking')
+  if g:spacevim_lint_engine ==# 'neomake'
+    verbose NeomakeToggle
+  elseif g:spacevim_lint_engine ==# 'ale'
+    ALEToggle
+  endif
 endfunction
 
 
 function! s:explain_the_error() abort
-  if g:spacevim_enable_neomake
+  if g:spacevim_lint_engine ==# 'neomake'
     try
       let message = neomake#GetCurrentErrorMsg()
     catch /^Vim\%((\a\+)\)\=:E117/
       let message = ''
     endtry
-  elseif g:spacevim_enable_ale
+  elseif g:spacevim_lint_engine ==# 'ale'
     try
+      "@bug wrong func to get ale error message
       let message = neomake#GetCurrentErrorMsg()
     catch /^Vim\%((\a\+)\)\=:E117/
       let message = ''
@@ -273,9 +288,9 @@ function! s:explain_the_error() abort
 endfunction
 
 function! s:error_transient_state() abort
-  if g:spacevim_enable_neomake
+  if g:spacevim_lint_engine ==# 'neomake'
     let num_errors = neomake#statusline#LoclistCounts()
-  elseif g:spacevim_enable_ale
+  elseif g:spacevim_lint_engine ==# 'ale'
     let counts = ale#statusline#Count(buffer_name('%'))
     let num_errors = counts.error + counts.warning + counts.style_error
           \ + counts.style_warning
