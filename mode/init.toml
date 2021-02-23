@@ -1,56 +1,99 @@
-########################### SpaceVim Options ###########################
+########################### Options ###########################
 [options]
-    # core#statusline
-    statusline_separator = "arrow"
-    statusline_iseparator = "arrow"
+    # colorscheme
+    colorscheme_default = "default-reduce"
+    colorscheme = "default-reduce"
+    colorscheme_bg = "dark"
+    enable_guicolors = true
+    custom_color_palette = []
+
+    # statusline & tabline
+    enable_statusline_tag = true
     enable_statusline_mode = true
     enable_statusline_bfpath = true
-    enable_statusline_tag = true
-    windows_index_type = 3
-    statusline_left_sections = ['winnr', 'version control info']
-    statusline_right_sections = ['syntax checking', 'major mode', 'fileformat', 'cursorpos', 'percentage']
-
-    # core#tabline
+    enable_powerline_fonts = true
     enable_tabline_ft_icon = true
-    buffer_index_type = 4
+    enable_statusline_ft_icon = true
+    enable_os_fileformat_icon = true
+    buffer_index_type = 0
+    windows_index_type = 3
+    statusline_unicode_symbols = true
+    statusline_separator = "arrow"
+    statusline_iseparator = "arrow"
+    statusline_left_sections = ["winnr", "version control info"]
+    statusline_right_sections = ["syntax checking", "major mode", "fileformat", "cursorpos", "percentage"]
 
-    # core
+    # filemanager
     filemanager = "defx"
     enable_vimfiler_filetypeicon = true
     enable_vimfiler_gitstatus = true
+    enable_vimfiler_welcome = true
+    filetree_direction = "right"
     sidebar_width = 25
 
-    # checker
-    enable_neomake = false
-    enable_ale = true
+    # development
+    lint_engine = "ale"
+    autocomplete_method = "ycm"
+    snippet_engine = "ultisnips"
     lint_on_save = false
     lint_on_the_fly = true
-    error_symbol = ' '
-    warning_symbol = ' '
-    info_symbol = ' '
-
-    # autocomplete
-    enable_ycm = true
-    snippet_engine = "ultisnips"
-
-    # lang#
+    error_symbol = " "
+    warning_symbol = " "
+    info_symbol = " "
+    autocomplete_parens = true
+    enable_language_specific_leader = false
     terminal_runner = true
 
-    # colorscheme
-    colorscheme = "default-reduce"
+    hosts_url = "https://raw.githubusercontent.com/racaljk/hosts/master/hosts"
+
+    # projects
+    enable_projects_cache = true
+    projects_cache_num = 20
+    project_rooter_automatically = true
+    project_rooter_outermost = false
+    project_rooter_patterns = [".git/", "_darcs/", ".hg/", ".bzr/", ".svn/", ".SpaceVim.d/"]
+
+    # misc
+    terminal_cursor_shape = 2
+    default_indent = 4
+    enable_bepo_layout = false
+    enable_cursorline = true
+    enable_cursorcolumn = false
+    enable_key_frequency = false
+    relativenumber = true
+    escape_key_binding = ""
+    expand_tab = true
+    max_column = 100
 
     # SpaceVim
-    bootstrap_before = 'myspacevim#before'
-    bootstrap_after = 'myspacevim#after'
-    enable_guicolors = true
-    default_indent = 4
-    checkinstall = false
+    force_global_config = true
+    enable_debug = false
+    debug_level = 1
+    bootstrap_before = "myspacevim#before"
+    bootstrap_after = "myspacevim#after"
+    default_custom_leader = "<Space>"
+    language = "en_US.UTF-8"
+    vim_help_language = "en"
     vimcompatible = true
-    enable_insert_leader = false
-    project_rooter_patterns = ['.root/', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', '.SpaceVim.d/']
-    wildignore = '*.so,*.swp,*.zip,*.class,tags,*.jpg,*.ttf,*.TTF,*.png,*/target/*,.git,.svn,.hg,.DS_Store,*.svg'
-    disabled_plugins = [ 'neco-syntax', 'neoinclude.vim', 'neosnippet-snippets', 'neopairs.vim', 'deoplete-dictionary', 'CompleteParameter.vim']
+    realtime_leader_guide = true
+    search_tools = ["rg", "ag", "ack", "grep", "git"]
+    todo_labels = ["@fixme", "@question", "@todo", "@idea"]
+    wildignore = "*.so,*.swp,*.zip,*.class,tags,*.jpg,*.ttf,*.TTF,*.png,*/target/*,.git,.svn,.hg,.DS_Store,*.svg"
+    keep_server_alive = true
+    auto_disable_touchpad = false
 
+    # plugins
+    checkinstall = false
+    update_retry_cnt = 2
+    plugin_manager_processes = 16
+    disabled_plugins = [ 
+        "neco-syntax",
+        "neoinclude.vim",
+        "neosnippet-snippets",
+        "neopairs.vim",
+        "deoplete-dictionary",
+        "CompleteParameter.vim"
+    ]
 
 ########################### Plugins ###########################
 [[custom_plugins]]
@@ -61,46 +104,54 @@
     repo = "alpertuna/vim-header"
     merged = false
 
+[[custom_plugins]]
+    repo = "mg979/vim-visual-multi"
+    merged = false
+
+[[custom_plugins]]
+    repo = "Chiel92/vim-autoformat"
+    merged = false
+
 ########################### Layers ###########################
 [[layers]]
-    name = 'core#banner'
+    name = "core#banner"
 
 [[layers]]
-    name = 'core#statusline'
+    name = "core#statusline"
 
 [[layers]]
-    name = 'core#tabline'
+    name = "core#tabline"
 
 [[layers]]
-    name = 'core'
+    name = "core"
 
 [[layers]]
-    name = 'colorscheme'
+    name = "colorscheme"
 
 [[layers]]
-    name = 'incsearch'
+    name = "incsearch"
 
 [[layers]]
-    name = 'ui'
+    name = "ui"
 
 [[layers]]
-    name = 'edit'
+    name = "edit"
 
 [[layers]]
-    name = 'tools'
+    name = "tools"
 
 [[layers]]
-    name = 'leaderf'
+    name = "leaderf"
 
 [[layers]]
-    name = 'git'
+    name = "git"
     git-plugin = "fugitive"
 
 [[layers]]
   name = "VersionControl"
 
 [[layers]]
-    name = 'checker'
+    name = "checker"
 #
 [[layers]]
     name = "autocomplete"
@@ -110,20 +161,21 @@
     auto_completion_enable_snippets_in_popup = true
 
 [[layers]]
-    name = 'format'
+    name = "format"
     enable = false
 
 [[layers]]
-    name = 'lang#c'
+    name = "chinese"
 
 [[layers]]
-    name = 'lang#markdown'
+    name = "lang#c"
 
 [[layers]]
-    name ='lang#vim'
+    name = "lang#markdown"
 
 [[layers]]
-    name ='lang#python'
+    name ="lang#vim"
 
 [[layers]]
-    name = 'chinese'
+    name ="lang#python"
+

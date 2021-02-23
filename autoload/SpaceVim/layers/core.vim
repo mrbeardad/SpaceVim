@@ -185,11 +185,11 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'm'], 'call call('
         \ . string(s:_function('s:open_message_buffer')) . ', [])',
         \ 'open-message-buffer', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['b', 'P'], 'normal! ggdG"+P', 'copy-clipboard-to-whole-buffer', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['b', 'p'], 'normal! ggdG"+P', 'copy-clipboard-to-whole-buffer', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'R'], 'call call('
         \ . string(s:_function('s:safe_revert_buffer')) . ', [])',
         \ 'safe-revert-buffer', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['b', 'Y'], 'normal! ggVG"+y``', 'copy-whole-buffer-to-clipboard', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['b', 'y'], 'normal! ggVG"+y``', 'copy-whole-buffer-to-clipboard', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'w'], 'setl readonly!', 'read-only-mode', 1)
   let g:_spacevim_mappings_space.b.N = {'name' : '+New empty buffer'}
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'N', 'h'], 'topleft vertical new', 'new-empty-buffer-left', 1)
@@ -273,6 +273,10 @@ function! SpaceVim#layers#core#config() abort
   let g:vimproc#download_windows_dll = 1
   " call SpaceVim#mapping#space#def('nnoremap', ['p', 't'], 'call SpaceVim#plugins#projectmanager#current_root()', 'find-project-root', 1)
   let g:_spacevim_mappings_space.p.t = {'name' : '+Tasks'}
+  call SpaceVim#mapping#space#def('nnoremap', ['p', 'e'], 'call SpaceVim#plugins#tasks#edit()', 'edit-project-task', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['p', 'l'], 'call SpaceVim#plugins#tasks#list()', 'list-tasks', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['p', 'r'],
+        \ 'call SpaceVim#plugins#runner#run_task(SpaceVim#plugins#tasks#get())', 'pick-task-to-run', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['p', 't', 'e'], 'call SpaceVim#plugins#tasks#edit()', 'edit-project-task', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['p', 't', 'l'], 'call SpaceVim#plugins#tasks#list()', 'list-tasks', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['p', 't', 'r'],

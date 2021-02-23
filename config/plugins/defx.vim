@@ -56,8 +56,6 @@ call defx#custom#column('filename', {
       \ 'max_width': -90,
       \ })
 
-let g:defx_git#indicators = {'Untracked': '', 'Unmerged': '≠', 'Ignored': '○', 'Renamed': '', 'Modified': '', 'Deleted': '✗', 'Unknown': '⁇', 'Staged': ''}
-
 augroup vfinit
   au!
   autocmd FileType defx call s:defx_init()
@@ -75,19 +73,23 @@ function! s:close_last_vimfiler_windows() abort
   q
 endfunction
 
-function! Leaderf_Defx_Search()
+let g:defx_git#indicators = {'Untracked': '', 'Unmerged': '≠', 'Ignored': '○', 'Renamed': '', 'Modified': '', 'Deleted': '✗', 'Unknown': '⁇', 'Staged': ''}
+
+function! s:leaderf_search_defx()
     let path = defx#get_candidate().action__path
+    if !isdirectory(path) | let path = fnamemodify(path, ':p:h') | endif
     winc p
-    if execute('command Leaderf') !~? 'no user-defined commands found'
+    if exists(':Leaderf')
       exe 'Leaderf file '. path
     else
-      echoerr 'only for Leaderf'
+      echoerr 'Only for Leaderf'
     endif
 endfunction
 
-function! Ranger_Preview()
-  if ! executable('ranger')
+function! s:ranger_preview_defx()
+  if !executable('ranger')
     echoerr 'You need to install `ranger`'
+    return
   endif
   let path = defx#get_candidate().action__path
   if $TMUX !=# ''
@@ -99,7 +101,7 @@ function! Ranger_Preview()
   endif
 endfunction
 
-function! Open_wtih_gui()
+function! s:gui_preview_defx()
   if has('unix') || has('wsl')
     call jobstart('xdg-open '. defx#get_candidate().action__path)
   elseif has('win32')
@@ -163,7 +165,7 @@ function! s:defx_init()
   nnoremap <silent><buffer><expr> o defx#do_action('call', g:defx_config_sid . 'DefxSmartL')
   nnoremap <silent><buffer><expr> <Cr>
         \ defx#is_directory() ?
-        \ defx#do_action('open_directory') : defx#do_action('drop')
+        \ defx#do_action('open_directory') : defx#do_action('call', g:defx_config_sid . 'DefxSmartL')
   nnoremap <silent><buffer><expr> <2-LeftMouse>
         \ defx#is_directory() ? 
         \     (
@@ -178,23 +180,14 @@ function! s:defx_init()
         \ defx#do_action('drop', 'split')
   nnoremap <silent><buffer><expr> st
         \ defx#do_action('drop', 'tabedit')
-  nnoremap <silent><buffer> P :call Ranger_Preview()<cr><cr>
-  nnoremap <silent><buffer> <c-p> :call Ranger_Preview()<cr><cr>
-
-  nnoremap <silent><buffer> F :call Leaderf_Defx_Search()<cr>
-  nnoremap <silent><buffer> <c-f> :call Leaderf_Defx_Search()<cr>
-
+  nnoremap <silent><buffer> P :call <SID>ranger_preview_defx()<cr><cr>
+  nnoremap <silent><buffer> F :call <SID>leaderf_search_defx()<cr>
   nnoremap <silent><buffer> R :call defx#call_action('open_directory', SpaceVim#plugins#projectmanager#current_root())<cr>
-
-  nnoremap <silent><buffer> O :call Open_wtih_gui()<cr>
-  nnoremap <silent><buffer> <c-o> :call Open_wtih_gui()<cr>
-
+  nnoremap <silent><buffer> O :call <SID>gui_preview_defx()<cr>
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')
   nnoremap <silent><buffer><expr> N
         \ defx#do_action('new_file')
-  nnoremap <silent><buffer><expr> <del>
-        \ defx#do_action('remove')
   nnoremap <silent><buffer><expr> rm
         \ defx#do_action('remove')
   nnoremap <silent><buffer><expr> rn

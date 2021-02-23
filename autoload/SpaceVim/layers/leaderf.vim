@@ -25,7 +25,6 @@ function! SpaceVim#layers#leaderf#plugins() abort
   call add(plugins, 
         \ ['Yggdroot/LeaderF',
         \ {
-        \ 'on_cmd' : ['LeaderfHelpCword', 'LeaderfCommand', 'Leaderf','LeaderfFile'],
         \ 'loadconf' : 1,
         \ 'merged' : 0,
         \ }])
@@ -666,15 +665,6 @@ function! s:defind_fuzzy_finder() abort
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
-let g:Lf_GtagsAutoGenerate = 1
-let g:Lf_GtagsAutoUpdate = 1
-let g:Lf_WindowHeight = 0.3
-let g:Lf_CacheDirectory = $HOME . '/.cache/SpaceVim/'
-let g:Lf_RootMarkers = ['.root/', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', '.SpaceVim.d/']
-let g:Lf_WildIgnore = {
-        \ 'dir': ['.svn', '.git', '.root', 'build'],
-        \ 'file': ['*.bak', '*.save', '*.o', '*.so']
-        \}
 let g:_spacevim_mappings_g['D'] = ['call feedkeys("gD", "n")', 'go to definition by gtags']
 nnoremap <silent> gD :Leaderf! gtags -d  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
 let g:_spacevim_mappings_g['R'] = ['call feedkeys("gR", "n")', 'go to reference by gtags']

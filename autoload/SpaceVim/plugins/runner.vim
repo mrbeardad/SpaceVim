@@ -219,7 +219,7 @@ function! s:update_statusline() abort
 endfunction
 
 function! SpaceVim#plugins#runner#reg_runner(ft, runner) abort
-  if has('nvim') && exists("g:spacevim_terminal_runner") && g:spacevim_terminal_runner == 1
+  if has('nvim') && get(g:, 'spacevim_terminal_runner', 0)
     call SpaceVim#plugins#quickrun#prepare()
     return
   endif
@@ -396,10 +396,14 @@ function! SpaceVim#plugins#runner#run_task(task) abort
     if !empty(opts) && has_key(opts, 'env') && !empty(opts.env)
       call extend(opt, {'env' : opts.env})
     endif
-    if isBackground
-      call s:run_backgroud(cmd, opt)
+    if has('nvim') && get(g:, 'spacevim_terminal_runner', 0) && 0
+      call SpaceVim#plugins#quickrun#run_task(cmd, opt, isBackground)
     else
-      call SpaceVim#plugins#runner#open(cmd, opt) 
+      if isBackground
+        call s:run_backgroud(cmd, opt)
+      else
+        call SpaceVim#plugins#runner#open(cmd, opt) 
+      endif
     endif
   endif
 endfunction

@@ -6,34 +6,27 @@
 " Last Modified Date: 09.02.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
-function! myspacevim#before() abort
-  " ==================================
-  " CUSTOM: runner Before
-  " ==================================
+function! s:file_icons()
+  let g:spacevim_filename_icons = {
+        \ '.gitconfig'    : '',
+        \ '.gitignore'    : '',
+        \ '.gitsubmodules': '',
+        \ '.gitkepp'      : '',
+        \ '.gdbinit'      : '',
+        \ '.zshrc'        : '',
+        \}
+  let g:spacevim_filetype_icons = {
+        \ 'zsh' : '',
+        \ 'hpp' : '',
+        \ 'toml': '',
+        \}
+endfunction
+
+function! s:runner_before()
   let g:quickrun_default_flags = {
-      \ 'python': {
-          \ 'compiler': '',
-          \ 'compileFlags': '',
-          \ 'extRegex': [],
-          \ 'extFlags': [],
-          \ 'cmd': '/bin/python ${thisFile}',
-          \ 'cmdArgs': '',
-          \ 'cmdRedir': '',
-          \ 'debugCmd': ''
-      \ },
-      \ 'c': {
-          \ 'compiler': 'gcc',
-          \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
-          \ 'extRegex': [],
-          \ 'extFlags': [],
-          \ 'cmd': '${exeFile}',
-          \ 'cmdArgs': '',
-          \ 'cmdRedir': '',
-          \ 'debugCmd': 'cgdb ${exeFile}'
-      \ },
       \ 'cpp': {
-          \ 'compiler': 'g\++',
-          \ 'compileFlags': '-std=c++20 -g -ggdb -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}',
+          \ 'compiler': "g++",
+          \ 'compileFlags': '-std=c++20 -g -ggdb -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
           \ 'extRegex': [
               \ '^#\s*include\s*<(pthread\.h\|future\|thread\|.*asio\.hpp\|*gtest\.h)>',
               \ '^#\s*include\s*<dlfcn.h>',
@@ -64,77 +57,260 @@ function! myspacevim#before() abort
           \ 'cmdArgs': '',
           \ 'cmdRedir': '',
           \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
-      \ }
+      \ },
+      \ 'c': {
+          \ 'compiler': 'gcc',
+          \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
+          \ 'cmd': '${exeFile}',
+          \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+      \ },
+      \ 'python': {
+          \ 'cmd': '/bin/python ${file}',
+          \}
   \ }
+endfunction
 
-  " ==================================
-  " CUSTOM: autocomplete Before
-  " ==================================
-  let g:ycm_filetype_whitelist = {
-        \ "c":1,
-        \ "cpp":1,
-        \ "python":1,
-        \ "vim":1,
-        \ "sh":1,
-        \ "cmake":1
-        \ }
-    let g:ycm_semantic_triggers = {
-          \ "c":['re!\w\w'],
-          \ "cpp":['re!\w\w'],
-          \ "python":['re!\w\w']
+function! s:autocomplete_before()
+  if g:spacevim_autocomplete_method ==# 'ycm'
+    let g:ycm_filetype_whitelist = {
+          \ "c":1,
+          \ "cpp":1,
+          \ "python":1,
+          \ "vim":1,
+          \ "sh":1,
+          \ "cmake":1
           \ }
-  let g:ycm_clangd_args = [ '--header-insertion=never' ]
-  let g:AutoPairsMapCR = 0
-  let g:AutoPairsShortcutJump = 0
-  let g:AutoPairsMultilineClose = 0
+      let g:ycm_semantic_triggers = {
+            \ "c":['re!\w\w'],
+            \ "cpp":['re!\w\w'],
+            \ "python":['re!\w\w']
+            \ }
+    let g:ycm_clangd_args = [ '--header-insertion=never' ]
+  endif
+endfunction
 
+function! s:autocomplete_after()
+  if g:spacevim_autocomplete_method ==# 'ycm'
+    let g:ycm_clangd_uses_ycmd_caching = 0
+    let g:ycm_cache_omnifunc = 0
+    let g:ycm_confirm_extra_conf = 0
+    let g:ycm_show_diagnostics_ui = 0
+    let g:ycm_max_num_candidates = 50
+    let g:ycm_max_num_identifier_candidates = 20
+    let g:ycm_key_invoke_completion = '<C-Z>'
+    let g:ycm_key_list_select_completion = ['<TAB>']
+    let g:ycm_key_list_previous_completion = ['<S-TAB>']
+    let g:ycm_seed_identifiers_with_syntax = 1
+    let g:ycm_collect_identifiers_from_tags_files = 1
+    let g:ycm_collect_identifiers_from_comments_and_strings = 1
 
-  " ==================================
-  " CUSTOM: checker Before
-  " ==================================
-  let g:ale_sign_column_always = 1
-  let g:ale_disable_lsp = 1
-  let g:ale_completion_enabled = 0
-  let g:ale_set_highlights = 1
-  let g:ale_lint_on_filetype_changed = 0
-  let g:ale_lint_on_text_changed = 'always'
-  let g:ale_lint_on_insert_leave = 1
-  let g:ale_lint_on_enter = 0
-  let g:ale_lint_on_save = 0
-  let g:ale_linters_explicit = 1
-  let g:ale_linters = {
-        \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
-        \   'c': ['gcc', 'cppcheck'],
-        \   'sh': ['shellcheck'],
-        \   'python': ['flake8', 'pylint'],
-        \}
+    let g:_spacevim_mappings_g['d'] = ['YcmCompleter GoTo', 'Go to definition/declaration']
+    nnoremap <silent> gd :YcmCompleter GoTo<CR>
+    let g:_spacevim_mappings_g['r'] = ['YcmCompleter GoToReferences', 'Go to reference']
+    nnoremap <silent> gr :YcmCompleter GoToReferences<CR>
+    let g:_spacevim_mappings_g['c'] = ['YcmCompleter RefactorRename', 'Refactor and rename']
+    nnoremap <silent> gc :exe 'YcmCompleter RefactorRename '.input('refactor "'.expand('<cword>').'" to:')<cr>
+    let g:_spacevim_mappings_g['t'] = ['YcmCompleter GetType', 'Get Type']
+    nnoremap <silent> gt :YcmCompleter GetType<CR>
+  endif
+endfunction
 
+function! s:checker_before()
+  if g:spacevim_lint_engine == 'ale'
+    let g:ale_disable_lsp = 1
+    let g:ale_completion_enabled = 0
+    let g:ale_set_highlights = 1
+    let g:ale_sign_column_always = 1
+    let g:ale_lint_on_filetype_changed = 0
+    let g:ale_lint_on_text_changed = 'always'
+    let g:ale_lint_on_insert_leave = 1
+    let g:ale_lint_on_enter = 0
+    let g:ale_lint_on_save = 0
+    let g:ale_linters_explicit = 1
+    let g:ale_linters = {
+          \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
+          \   'c': ['gcc', 'cppcheck'],
+          \   'sh': ['shellcheck'],
+          \   'python': ['flake8', 'pylint'],
+          \}
+  endif
+endfunction
 
-  " ==================================
-  " CUSTOM: lang#c Before
-  " ==================================
+function! s:checker_after()
+  if g:spacevim_lint_engine == 'ale'
+    let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
+    let g:ale_cpp_std = '-std=c++20'
+    let g:ale_cpp_cc_executable = 'gcc'
+    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
+    let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
+    let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
+    let g:ale_cpp_clangtidy_executable = ':'
+    let g:ale_cpp_clangtidy_checks = ['*',
+      \ '-abseil*',
+      \ '-android*',
+      \ '-darwin*',
+      \ '-fuchsia*',
+      \ '-linuxkernel*',
+      \ '-*osx*',
+      \ '-*objc*',
+      \ '-openmp*',
+      \ '-zircon*',
+      \ '-*avoid-c-arrays',
+      \ '-*deprecated-headers',
+      \ '-llvm-include-order',
+      \ '-cppcoreguidelines-pro-bounds-pointer-arithmetic',
+      \ '-modernize-use-trailing-return-type',
+      \ '-readability-isolate-declaration',
+      \ '-*llvmlibc*',
+      \ ]
+
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)
+  endif
+endfunction
+
+function! s:lang_c_before()
+  function! s:change_namespace()
+    let WORD = expand('<cWORD>')
+    normal diW
+    if match(WORD, 'std::') != 0
+      return 'std::'.WORD
+    elseif match(WORD, 'std::filesystem') == 0
+      return substitute(WORD, 'std::filesystem', 'fs', 'g')
+    elseif match(WORD, 'std::ios_base\>\|std::ios\>') == 0
+      return substitute(WORD, 'std::ios\w*', 'io', 'g')
+    elseif match(WORD, 'std::chrono') == 0
+      return substitute(WORD, 'std::chrono', 'ch', 'g')
+    " elseif match(WORD, 'std::this_thread') == 0
+    "   return substitute(WORD, 'std::this_thread', 'th', 'g')
+    " elseif match(WORD, 'std::regex_constants') == 0
+    "   return substitute(WORD, 'std::regex_constants', 'reg', 'g')
+    endif
+  endfunction
+
   let g:cppman_open_mode = '<auto>'
   let g:cpp_nofunction_highlight = 1
   let g:cpp_simple_highlight = 0
   let g:c_no_posix_function = 1
   let g:cmake_ycm_symlinks = 1
-
-  augroup MySpaceVim_lang_c
+  call SpaceVim#custom#LangSPC('cpp', 'nnore', ['l'],
+        \ 'let ale_cpp_clangtidy_executable = "clang-tidy" | ALELint',
+        \ 'Lint with all linters', 1)
+  call SpaceVim#custom#LangSPC('cpp', 'nnore', ['p'],
+        \ ":set paste\<cr>i\<c-r>=protodef#ReturnSkeletonsFromPrototypesForCurrentBuffer({'includeNS' : 0})\<cr>\<esc>='[:set nopaste\<cr>",
+        \ 'protodef in namespace', 0)
+  augroup MySpaceVim
     autocmd!
     autocmd FileType cpp inoremap <silent><buffer><m-m> <c-c>i<c-r>=<SID>change_namespace()<cr>
     autocmd FileType cpp nnoremap <silent><buffer><m-m> i<c-r>=<SID>change_namespace()<cr><c-c>
     autocmd FileType cpp nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
     autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
-    autocmd User ALELintPost let g:ale_cpp_clangtidy_executable = 'echo'
+    autocmd User ALELintPost let g:ale_cpp_clangtidy_executable = ':'
   augroup END
+endfunction
 
+function! s:core_after()
+  let g:matchup_matchparen_stopline = 45
+  let g:matchup_delim_stopline = 45
+  let g:clever_f_smart_case = 1
+  let g:clever_f_fix_key_direction = 1
+  nmap + [SPC]n+
+  nmap - [SPC]n-
+  nmap ; <Plug>(easymotion-overwin-f2)
+  nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
+endfunction
 
-  " ==================================
-  " CUSTOM: tools Before
-  " ==================================
+function! s:edit_before()
+  let g:table_mode_disable_mappings = 1
+endfunction
+
+function! s:edit_after()
+  let g:splitjoin_split_mapping = ''
+  let g:splitjoin_join_mapping = ''
+  let g:EasyMotion_smartcase = 1
+  xmap v <Plug>(expand_region_expand)
+  xmap V <Plug>(expand_region_shrink)
+  nmap ds <Plug>Dsurround
+  nmap cs <Plug>Csurround
+  nmap ys <Plug>Ysurround
+  nmap yss <Plug>Yssurround
+  inoremap <silent><m-t> <c-r>=tablemode#Toggle()<cr><bs>
+  nnoremap <silent><m-t> :call tablemode#Toggle()<cr>
+  nnoremap <silent>S :SplitjoinSplit<cr>
+  if executable('cloc')
+    call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'],
+          \ 'exec "!cloc ". expand("%:p")',
+          \ 'count in the selection region', 1, 1
+          \)
+    call SpaceVim#mapping#space#def('nnoremap', ['x', 'C'],
+          \ 'exe "!cloc ".SpaceVim#plugins#projectmanager#current_root()',
+          \ 'count in the selection region', 1, 1
+          \)
+  else
+    call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'],
+          \ 'SourceCounter',
+          \ 'count in the selection region', 1, 1
+          \)
+  endif
+  call SpaceVim#mapping#space#def('vmap', ['x', 'c'], '<Plug>CountSelectionRegion', 'count in the selection region', 0, 1)
+  " call SpaceVim#mapping#space#def('nnoremap', ['s', 'e'],
+  "       \ ':set noignorecase | call SpaceVim#plugins#iedit#start() | set ignorecase<cr>',
+  "       \ 'start-iedit-mode', 0
+  "       \)
+  " call SpaceVim#mapping#space#def('vnoremap', ['s', 'e'],
+  "       \ ':set noignorecase | call SpaceVim#plugins#iedit#start(1) | set ignorecase<cr>',
+  "       \ 'start-iedit-mode', 0
+  "       \)
+endfunction
+
+function! s:lang_markdown_before()
+  let g:vim_markdown_no_default_key_mappings = 1
+  nmap [[ <Plug>Markdown_MoveToPreviousHeader
+  nmap ]] <Plug>Markdown_MoveToNextHeader
+  nmap [] <Plug>Markdown_MoveToCurHeader
+endfunction
+
+function! s:lang_markdown_after()
+  let g:vim_markdown_folding_style_pythonic = 1
+  let g:vim_markdown_emphasis_multiline = 0
+  let g:vim_markdown_math = 1
+  let g:tex_conceal = "abdmg"
+  let g:vim_markdown_strikethrough = 1
+  let g:vim_markdown_conceal_code_blocks = 1
+  let g:vmt_auto_update_on_save = 1
+  let g:mkdp_auto_close = 0
+  let g:mkdp_open_to_the_world = 1
+  let g:vim_markdown_override_foldtext = 0
+  nmap ][ <Plug>Markdown_MoveToParentHeader
+  augroup MySpaceVim
+    autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
+    if executable('fcitx5') || executable('fcitx')
+      autocmd FileType markdown inoremap <buffer><silent><c-c> <c-c>:call Fcitx2en()<cr>
+    else
+      autocmd FileType markdown iunmap <c-c>
+    endif
+    autocmd InsertEnter *.md setl conceallevel=0
+    autocmd InsertLeave *.md setl conceallevel=2
+  augroup END
+endfunction
+
+function! s:leaderf_before()
+  let g:Lf_GtagsAutoGenerate = 1
+  let g:Lf_GtagsAutoUpdate = 1
+  let g:Lf_WindowHeight = 0.3
+  let g:Lf_CacheDirectory = g:spacevim_data_dir.'SpaceVim/'
+  let g:Lf_RootMarkers = ['.git', '_darcs', '.hg', '.bzr', '.svn', '.SpaceVim.d']
+  let g:Lf_WildIgnore = {
+          \ 'dir': ['.svn', '.git', '.hg', 'build'],
+          \ 'file': ['*.swap', '*.jpg', '*.png', '*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
+          \}
+  let g:Lf_IndexTimeLimit = 30
+  let g:Lf_UseCache = 0
+endfunction
+
+function! s:tools_before()
   let g:rainbow_active = 1
-  " \ 'guifgs':  ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff' ]
-  " \ 'guifgs':  ['#ff0000', '#00ffff', '#ff8800', '#ff8800', '#ffff00', '#0000ff', '#88ff00', '#8800ff', '#00ff00', '#ff00ff'],
   let g:rainbow_conf = {
   \ 'guifgs':  ['#ff0000', '#95bcad', '#ff7300', '#d7cfff', '#00dfd7', '#ffd700', '#00ff00'],
   \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
@@ -166,287 +342,38 @@ function! myspacevim#before() abort
   \     'cmake':0
   \ }
   \}
-
-
-  " ==================================
-  " CUSTOM: colorscheme Before
-  " ==================================
-  let g:neosolarized_italic = 1
-  let g:gruvbox_contrast_dark = 'hard'
-  let g:gruvbox_italic = 1
-  let g:gruvbox_bold = 1
-  " let g:gruvbox_italicize_strings = 1
-  let g:palenight_terminal_italics = 1
-
-  " ==================================
-  " CUSTOM: core#banner Before
-  " ==================================
-  set list  " 放在before防止覆盖Startify设置
-
 endfunction
 
-" ===================================================================================================
-" ===================================================================================================
-
-function! myspacevim#after() abort
-  " ==================================
-  " CUSTOM: NeoVim
-  " ==================================
-  call s:set_my_neovim()
-
-
-  " ==================================
-  " CUSTOM: autocomplete After
-  " ==================================
-  if g:spacevim_autocomplete_method ==# 'ycm'
-    let g:ycm_cache_omnifunc = 0
-    let g:ycm_confirm_extra_conf = 0
-    let g:ycm_show_diagnostics_ui = 0
-    let g:ycm_max_num_candidates = 50
-    let g:ycm_max_num_identifier_candidates = 20
-    let g:ycm_clangd_uses_ycmd_caching = 0
-    let g:ycm_key_invoke_completion = '<C-Z>'
-    let g:ycm_key_list_stop_completion = ['<S-CR>']
-    let g:ycm_key_list_select_completion = ['<TAB>']
-    let g:ycm_key_list_previous_completion = ['<S-TAB>']
-    let g:ycm_seed_identifiers_with_syntax = 1
-    let g:ycm_collect_identifiers_from_tags_files = 1
-    let g:ycm_collect_identifiers_from_comments_and_strings = 1
-
-    let g:_spacevim_mappings_g['d'] = ['YcmCompleter GoTo', 'Go to definition/declaration']
-    nnoremap <silent> gd :YcmCompleter GoTo<CR>
-    let g:_spacevim_mappings_g['r'] = ['YcmCompleter GoToReferences', 'Go to reference']
-    nnoremap <silent> gr :YcmCompleter GoToReferences<CR>
-    let g:_spacevim_mappings_g['c'] = ['YcmCompleter RefactorRename', 'Refactor and rename']
-    nnoremap <silent> gc :exe 'YcmCompleter RefactorRename '.input('refactor "'.expand('<cword>').'" to:')<cr>
-    let g:_spacevim_mappings_g['t'] = ['YcmCompleter GetType', 'Get Type']
-    nnoremap <silent> gt :YcmCompleter GetType<CR>
-  endif
-
-  if g:spacevim_autocomplete_parens
-    inoremap <silent><m-n> <c-c>:call AutoPairsJump()<cr>a
-    if g:spacevim_autocomplete_method ==# 'ycm'
-      inoremap <silent><cr> <c-r>=<SID>ycm_and_autopair_return()<cr>
+function! s:ui_after()
+  function! s:defx_toggle_without_jump()
+    let defxWinNr = win_findbuf(buffer_number('[defx] -0'))
+    if defxWinNr != []
+      Defx
+    else
+      Defx
+      winc p
     endif
-  endif
-
-
-  " ==================================
-  " CUSTOM: checker After
-  " ==================================
-  if g:spacevim_enable_ale == 1
-    let g:ale_cpp_std = get(g:, 'ale_cpp_std', '-std=c++20')
-    let g:ale_cpp_cc_executable = 'gcc'
-    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
-    let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
-    let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
-    let g:ale_cpp_clangtidy_executable = 'echo'
-    let g:ale_cpp_clangtidy_checks = ['*',
-      \ '-abseil*',
-      \ '-android*',
-      \ '-darwin*',
-      \ '-fuchsia*',
-      \ '-linuxkernel*',
-      \ '-*osx*',
-      \ '-*objc*',
-      \ '-openmp*',
-      \ '-zircon*',
-      \ '-*avoid-c-arrays',
-      \ '-*deprecated-headers',
-      \ '-llvm-include-order',
-      \ '-cppcoreguidelines-pro-bounds-pointer-arithmetic',
-      \ '-modernize-use-trailing-return-type',
-      \ '-readability-isolate-declaration',
-      \ '-*llvmlibc*',
-      \ ]
-
-    let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
-
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)
-
-  endif
-
-
-  " ==================================
-  " CUSTOM: chinese After
-  " ==================================
-  let g:translator_default_engines = ['bing']
-  call SpaceVim#mapping#def('nnoremap', '<Leader>tc', ':Translate<cr>', '', '', 'Translate in cmdline')
-  call SpaceVim#mapping#def('nnoremap', '<Leader>tw', ':TranslateW<cr>', '', '', 'Translate in popwindow')
-  call SpaceVim#mapping#def('nnoremap', '<Leader>tx', ':TranslateX<cr>', '', '', 'Translate content in clipboard')
-  call SpaceVim#mapping#def('nnoremap', '<Leader>tr', ':TranslateR<cr>', '', '', 'Translate and replace')
-
-
-  " ==================================
-  " CUSTOM: core After
-  " ==================================
-  let g:matchup_matchparen_stopline = 45
-  let g:matchup_delim_stopline = 45
-  let g:clever_f_smart_case = 1
-  let g:clever_f_fix_key_direction = 1
-
-  nmap + [SPC]n+
-  nmap - [SPC]n-
-  nmap ; <Plug>(easymotion-overwin-f2)
-  nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
-  call SpaceVim#mapping#space#def('nmap', ['j', 'l'], '<Plug>(easymotion-overwin-line)', 'jump to a line', 0)
-
-  " ==================================
-  " CUSTOM: incsearch After
-  " ==================================
-  nmap z/ [SPC]b/
-  let g:_spacevim_mappings_z['z/'] = ['normal z/', 'fuzzy incsearch ']
-  function! s:config_easyfuzzymotion(...) abort
-    return extend(copy({
-    \   'converters': [incsearch#config#fuzzyword#converter()],
-    \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-    \   'keymap': {"\<CR>": '<Over>(easymotion)'},
-    \   'is_expr': 0,
-    \   'is_stay': 1
-    \ }), get(a:, 1, {}))
   endfunction
-  nnoremap <silent><expr> g/ incsearch#go(<SID>config_easyfuzzymotion())
-  let g:_spacevim_mappings_g['/'] = ['normal g/', 'fuzzy incsearch easymotion']
 
-  " ==================================
-  " CUSTOM: edit After
-  " ==================================
-  let g:splitjoin_split_mapping = ''
-  let g:splitjoin_join_mapping = ''
-  let g:EasyMotion_smartcase = 1
-  let g:_spacevim_mappings.t = {'name' : '+Table-Mode/Translate'}
-  nnoremap <silent><space>J :SplitjoinJoin<cr>
-  nnoremap <silent><space>S :SplitjoinSplit<cr>
-  xmap v <Plug>(expand_region_expand)
-  xmap V <Plug>(expand_region_shrink)
-  nmap ds <Plug>Dsurround
-  nmap cs <Plug>Csurround
-  nmap ys <Plug>Ysurround
-  nmap yss <Plug>Yssurround
-  nmap <leader>tt <Plug>table-mode-tableize
-  xmap <leader>tt <Plug>table-mode-tableize
-  inoremap <silent><m-m> <c-r>=tablemode#Toggle()<cr><bs>
-  nnoremap <silent><m-m> <c-r>=tablemode#Toggle()<cr><bs>
-  call SpaceVim#mapping#def('nnoremap', '<Leader>tm', ':call tablemode#Toggle()<cr>',
-        \ '',
-        \ '',
-        \ 'Toggle table mode')
-  if executable('cloc')
-    call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'], '!cloc .', 'count in the selection region', 1, 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['x', 'C'], 'exe "!cloc ".SpaceVim#plugins#projectmanager#current_root()', 'count in the selection region', 1, 1)
-  else
-    call SpaceVim#mapping#space#def('nnoremap', ['x', 'c'], 'SourceCounter', 'count in the selection region', 1, 1)
-  endif
-  call SpaceVim#mapping#space#def('vmap', ['x', 'c'], '<Plug>CountSelectionRegion', 'count in the selection region', 0, 1)
-
-
-  " ==================================
-  " CUSTOM: git After
-  " ==================================
-  let g:gitgutter_enabled = 0
-  call SpaceVim#mapping#space#def('nnoremap', ['g', 'm'], 'Git branch', 'branch-manager', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['g', 'g'], 'GitGutterToggle', 'GitGutter Buffer Toggle', 1)
-
-  " ==================================
-  " CUSTOM: lang#markdown After
-  " ==================================
-  let g:markdown_fenced_languages = ['shell=sh', 'bash=sh', 'sh', 'viml=vim', 'java', 'coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
-  let g:vim_markdown_emphasis_multiline = 0
-  let g:vim_markdown_math = 1
-  let g:tex_conceal = "abdmg"
-  " set conceallevel=0
-  " let g:vim_markdown_conceal = 0
-  let g:vim_markdown_strikethrough = 1
-  let g:vim_markdown_conceal_code_blocks = 1
-  let g:vmt_auto_update_on_save = 1
-  let g:mkdp_auto_close = 0
-  let g:mkdp_open_to_the_world = 1
-  augroup myspacevim_layer_lang_markdown
-    autocmd!
-    autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
-    autocmd FileType markdown inoremap <buffer><leader><cr> <br><cr>
-    autocmd FileType markdown inoremap <buffer><c-c> <esc>
-    autocmd InsertEnter *.md setl conceallevel=0
-    autocmd InsertLeave *.md setl conceallevel=2
-  augroup END
-
-  " ==================================
-  " CUSTOM: tools After
-  " ==================================
-  call SpaceVim#mapping#space#def('nnoremap', ['a', 'R'],
-        \ 'Goyo', 'read-mode', 1)
-  let g:bookmark_sign = ' '
-  let g:bookmark_annotation_sign = ' '
-  let g:bookmark_auto_save_file = $HOME.'/.cache/SpaceVim/vim_bookmarks'
-  let g:bookmark_no_default_key_mappings = 1
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'm'], 'BookmarkToggle', 'BookmarkToggle', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'i'], 'BookmarkAnnotate', 'BookmarkAnnotate', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'l'], 'BookmarkShowAll', 'BookmarkShowAll', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'n'], 'BookmarkNext', 'BookmarkNext', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'b'], 'BookmarkPrev', 'BookmarkPrev', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'c'], 'BookmarkClear', 'BookmarkClear', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['m', 'C'], 'BookmarkClearAll', 'BookmarkClearAll', 1)
-  nnoremap <silent> <F5> :UndotreeToggle<CR>
-
-  " ==================================
-  " CUSTOM: ui After
-  " ==================================
   let g:indentLine_char =  '¦'
   let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx', 'json']
   nnoremap <silent> <F1> :TagbarToggle<CR>
   nnoremap <silent> <F3> :call <SID>defx_toggle_without_jump()<cr>
   nnoremap <silent> <F7> :call SpaceVim#plugins#tabmanager#open()<cr>
-  autocmd BufEnter * set cc=100
-
-  " ==================================
-  " CUSTOM: SpaceVim After
-  " ==================================
-  autocmd FileType SpaceVimFlyGrep map <buffer> <c-c> <esc>
-  autocmd FileType leaderGuide map <buffer> <c-c> <esc>
-
-  " ==================================
-  " CUSTOM: LeaderF After
-  " ==================================
-  let g:Lf_IndexTimeLimit = 30
-  let g:Lf_UseCache = 0
-
-  " ==================================
-  " CUSTOM: colorscheme After
-  " ==================================
-  if $WSL_DISTRO_NAME != ''
-    hi! SpellBad gui=underline guifg=Red
-    hi! SpellCap gui=underline guifg=Yellow
-    hi! SpellRare gui=underline guifg=Green
-  else
-    hi! SpellBad gui=undercurl guisp=red
-    hi! SpellCap gui=undercurl guisp=yellow
-    hi! SpellRare gui=undercurl guisp=magenta
-  endif
-
-  " ==================================
-  " CUSTOM: header After
-  " ==================================
-  call SpaceVim#mapping#space#def('nnoremap', ['f', 'h'], 'AddHeader', 'add file header', 1)
-  let g:header_field_author = 'Heachen Bear'
-  let g:header_field_author_email = 'mrbeardad@qq.com'
-  let g:header_field_license_id = 'GPLv3'
-  let g:header_field_copyright = 'Copyright (c) 2020-'.strftime("%Y").' Heachen Bear & Contributors'
-  let g:header_max_size = 7
-  let g:header_alignment = 0
-
-
 endfunction
 
-function! s:set_my_neovim() abort
-  " set tabstop=4
-  " set softtabstop=4
-  " set shiftwidth=4
-  set expandtab
-  set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶
-  set foldmethod=indent
+function! s:colorscheme_before()
+  let g:neosolarized_italic = 1
+  let g:gruvbox_contrast_dark = 'hard'
+  let g:gruvbox_italic = 1
+  let g:gruvbox_bold = 1
+  let g:gruvbox_italicize_strings = 1
+  let g:palenight_terminal_italics = 1
+endfunction
+
+function! s:set_neovim_after() abort
   set nofoldenable
+  set foldmethod=indent
   set showcmd
   set noruler
   set noshowmode
@@ -461,7 +388,6 @@ function! s:set_my_neovim() abort
   set swapfile
   set nobackup
 
-
   " buffer and window operator
   " 若只设置guide则快捷键输入时会打开导航
   " 若只设置map则打开导航时输入的快捷键无效
@@ -471,6 +397,7 @@ function! s:set_my_neovim() abort
   nnoremap <silent> <leader>b :bp<cr>
   nnoremap <silent><c-w>x :let bufnr_for_delete_with_ctrl_w_x = buffer_number()<cr>:bp<cr>:exe 'bd '.bufnr_for_delete_with_ctrl_w_x<cr>
   nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
+  nnoremap <silent> qq <c-w>c
   nnoremap <silent><tab> :winc w<cr>
   nnoremap <silent><s-tab> :winc W<cr>
   nnoremap <silent><s-Right> >>
@@ -480,6 +407,7 @@ function! s:set_my_neovim() abort
   nnoremap <m-s> %
 
   " insert mode
+  inoremap <c-c> <esc>
   inoremap <c-a> <home>
   inoremap <c-e> <end>
   inoremap <c-d> <c-c><c-d>i<right>
@@ -492,7 +420,6 @@ function! s:set_my_neovim() abort
   inoremap <c-k> <c-c><right>d$i
   inoremap <c-y> <c-r>"
   inoremap <c-o> <end><cr>
-  inoremap <silent><c-c> <c-c>:set cul<cr>
   inoremap <s-right> <c-t>
   inoremap <s-left> <c-d>
   inoremap <silent><C-S-Down> <C-C>:m .+1<CR>==gi
@@ -513,19 +440,31 @@ function! s:set_my_neovim() abort
   nnoremap <silent><c-down> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-y>"<cr>
   nnoremap <silent><c-up> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-t>"<cr>
   nnoremap <silent> <bs> :nohl<CR>
-  nnoremap <silent> <c-g> :echo '"'.expand('%:p').'" -- '.SpaceVim#layers#core#statusline#filesize()<cr>
   nnoremap <expr> n  'Nn'[v:searchforward]
   nnoremap <expr> N  'nN'[v:searchforward]
   nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
   nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
   nnoremap <silent> <c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
+
+  function! s:filesize() abort
+    let l:size = getfsize(bufname('%'))
+    if l:size == 0 || l:size == -1 || l:size == -2
+      return ''
+    endif
+    if l:size < 1024
+      return l:size.' bytes '
+    elseif l:size < 1024*1024
+      return printf('%.1f', l:size/1024.0).'k '
+    elseif l:size < 1024*1024*1024
+      return printf('%.1f', l:size/1024.0/1024.0) . 'm '
+    else
+      return printf('%.1f', l:size/1024.0/1024.0/1024.0) . 'g '
+    endif
+  endfunction
+  nnoremap <silent> <c-g> :echo '"'.expand('%:p').'" -- '.<SID>filesize()<cr>
+
   nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
   let g:_spacevim_mappings.m = ['try again...', "quickly modify your macros"]
-  if has('unix') || has('wsl')
-    nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
-  elseif has ('win32')
-    nnoremap <silent> gF :call jobstart('explorer '. expand('<cfile>'))<cr>
-  endif
 
   " visual mode
   vnoremap <c-a> 0
@@ -558,12 +497,16 @@ function! s:set_my_neovim() abort
   " g mapping
   let g:_spacevim_mappings_g['&'] = ['exe "normal :s/\<up>\<cr>:nohl\<cr>"', 'repeat last ":s" on this lines']
   nnoremap <silent>g& :s/<up><cr>:nohl<cr>
-  let g:_spacevim_mappings_g['F'] = ['call jobstart("xdg-open ". expand("<cfile>"))', 'edit file under cursor with GUI']
-  nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
   let g:_spacevim_mappings_g['8'] = ['call feedkeys("g8", "n")', 'print ascii or unicode value of cursor character']
   nnoremap g8 g8
   let g:_spacevim_mappings_g['%'] = ['MatchupWhereAmI', 'show matchup']
   nnoremap <silent>g% :MatchupWhereAmI<cr>
+  let g:_spacevim_mappings_g['F'] = ['call jobstart("xdg-open ". expand("<cfile>"))', 'edit file under cursor with GUI']
+  if has('unix') || has('wsl')
+    nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
+  elseif has ('win32')
+    nnoremap <silent> gF :call jobstart('explorer '. expand('<cfile>'))<cr>
+  endif
 
   " z mapping
   let g:_spacevim_mappings_z['<Left>'] = ['call feedkeys("zH", "n")', 'scroll half a screenwidth to the left']
@@ -574,52 +517,116 @@ function! s:set_my_neovim() abort
   nnoremap z<up> 3<c-e>
   let g:_spacevim_mappings_z['<Down>'] = ['normal 3<c-e>', 'scroll down one line']
   nnoremap z<down> 3<c-y>
-
 endfunction
 
-
-function! s:change_namespace()
-  let WORD = expand('<cWORD>')
-  normal diW
-  if match(WORD, 'std::') != 0
-    return 'std::'.WORD
-  elseif match(WORD, 'std::filesystem') == 0
-    return substitute(WORD, 'std::filesystem', 'fs', 'g')
-  elseif match(WORD, 'std::ios_base\>\|std::ios\>') == 0
-    return substitute(WORD, 'std::ios\w*', 'io', 'g')
-  elseif match(WORD, 'std::chrono') == 0
-    return substitute(WORD, 'std::chrono', 'ch', 'g')
-  elseif match(WORD, 'asio::ip') == 0
-    return substitute(WORD, 'asio::ip', 'net', 'g')
-  " elseif match(WORD, 'std::this_thread') == 0
-  "   return substitute(WORD, 'std::this_thread', 'th', 'g')
-  " elseif match(WORD, 'std::regex_constants') == 0
-  "   return substitute(WORD, 'std::regex_constants', 'reg', 'g')
-  endif
+function! s:set_neovim_before() abort
+  set list  " 放在before防止覆盖Startify设置
+  " set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶
 endfunction
 
-function! s:ycm_and_autopair_return()
-  if expand('<cWORD>') ==# '{}' || expand('<cWORD>') ==# '()'
-    return "\<CR>\<c-c>zz=ko"
+function! s:incsearch_after()
+  function! s:config_easyfuzzymotion(...) abort
+    return extend(copy({
+    \   'converters': [incsearch#config#fuzzyword#converter()],
+    \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+    \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+    \   'is_expr': 0,
+    \   'is_stay': 1
+    \ }), get(a:, 1, {}))
+  endfunction
+  nnoremap <silent><expr> g/ incsearch#go(<SID>config_easyfuzzymotion())
+  nmap z/ <Plug>(incsearch-fuzzyword-/)
+endfunction
+
+function! s:git_after()
+  let g:gitgutter_enabled = 0
+  call SpaceVim#mapping#space#def('nnoremap', ['g', 'm'], 'Git branch', 'branch-manager', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['g', 'g'], 'GitGutterToggle', 'GitGutter Buffer Toggle', 1)
+endfunction
+
+function! s:colorscheme_after()
+  if $WSL_DISTRO_NAME != ''
+    hi! SpellBad gui=underline guisp=LightRed
+    hi! SpellCap gui=underline guisp=LightYellow
+    hi! SpellRare gui=underline guisp=LightCyan
   else
-    let ret = substitute(substitute(execute('imap <s-cr>'),'^.*<SNR>','<SNR>', ''),"S-CR",'CR','')
-    if ret =~ 'StopCompletion'
-      exe 'return '. ret
-    else
-      return "\<cr>"
+    hi! SpellBad gui=undercurl guisp=LightRed
+    hi! SpellCap gui=undercurl guisp=LightYellow
+    hi! SpellRare gui=undercurl guisp=LightCyan
   endif
 endfunction
 
-let g:ale_clangtidy_executable = get(g:, 'ale_cpp_clangtidy_executable', 'clang-tidy')
-let g:ale_clangtidy_period = get(g:, 'ale_clangtidy_period', 6)
-let s:ale_lint_count = 0
-
-function! s:defx_toggle_without_jump()
-  let defxWinNr = win_findbuf(buffer_number('[defx] -0'))
-  if defxWinNr != []
-    Defx
-  else
-    Defx
-    winc p
-  endif
+function! s:custom_plugins_before()
+  "=============== vim-header ================="
+  let g:header_field_author = 'Heachen Bear'
+  let g:header_field_author_email = 'mrbeardad@qq.com'
+  let g:header_field_license_id = 'GPLv3'
+  let g:header_field_copyright = 'Copyright (c) 2020-'.strftime("%Y").' Heachen Bear & Contributors'
+  let g:header_max_size = 7
+  let g:header_alignment = 0
+  let g:header_auto_add_header = 0
+  "=============== vim-visual-multi ================="
+  let g:VM_default_mappings = 0
+  let g:VM_maps = {}
+  let g:VM_maps['Find Under'] = '<m-e>'
+  let g:VM_maps['Find Subword Under'] = '<m-e>'
+  let g:VM_maps['Add Cursor At Pos'] = '<m-a>'
+  let g:VM_maps['Select Cursor Up'] = '<m-up>'
+  let g:VM_maps['Select Cursor Down'] = '<m-down>'
+  let g:VM_maps['Increase'] = '+'
+  let g:VM_maps['Decrease'] = '-'
+  "=============== vim-autoformat ================="
+  nnoremap <silent>g= :AutoformatLine<cr>
 endfunction
+
+function! s:custom_plugins_after()
+  "=============== vim-header =================
+  call SpaceVim#mapping#space#def('nnoremap', ['f', 'h'], 'AddHeader', 'add file header', 1)
+endfunction
+
+function! s:spacevim_after()
+  augroup MySpaceVim
+    autocmd FileType SpaceVimFlyGrep map <buffer> <c-c> <esc>
+    autocmd FileType leaderGuide map <buffer> <c-c> <esc>
+    autocmd FileType qf nnoremap <buffer><tab> <down>
+    autocmd FileType qf nnoremap <buffer><s-tab> <up>
+    autocmd FileType SpaceVimTasksInfo nnoremap <buffer><tab> <down>
+    autocmd FileType SpaceVimTasksInfo nnoremap <buffer><s-tab> <up>
+  augroup END
+endfunction
+
+" ===================================================================================================
+function! myspacevim#before() abort
+  call s:set_neovim_before()
+  call s:file_icons()
+  call s:runner_before()
+  call s:autocomplete_before()
+  call s:checker_before()
+  call s:edit_before()
+  call s:lang_c_before()
+  call s:leaderf_before()
+  call s:lang_markdown_before()
+  call s:tools_before()
+  call s:colorscheme_before()
+  call s:custom_plugins_before()
+endfunction
+" ===================================================================================================
+
+
+" ===================================================================================================
+function! myspacevim#after() abort
+  call s:custom_plugins_after()
+  call s:set_neovim_after()
+  call s:autocomplete_after()
+  call s:checker_after()
+  call s:core_after()
+  call s:edit_after()
+  call s:lang_markdown_after()
+  call s:ui_after()
+  call s:incsearch_after()
+  call s:git_after()
+  call s:spacevim_after()
+  call s:colorscheme_after()
+endfunction
+" ===================================================================================================
+

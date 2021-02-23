@@ -55,9 +55,6 @@ let s:file_node_extensions = {
       \  'gif'      : '',
       \  'ico'      : '',
       \  'twig'     : '',
-      \  'zsh'      : '',
-      \  'toml'     : '',
-      \  'hpp'      : '',
       \  'cpp'      : '',
       \  'c++'      : '',
       \  'cxx'      : '',
@@ -124,12 +121,8 @@ let s:file_node_exact_matches = {
       \  'gulpfile.ls'                      : '',
       \  'dropbox'                          : '',
       \  '.ds_store'                        : '',
-      \  '.gitconfig'                       : '',
-      \  '.gitignore'                       : '',
-      \  '.gitsubmodules'                   : '',
-      \  '.gitkepp'                         : '',
-      \  '.gdbinit'                         : '',
-      \  '.zshrc'                           : '',
+      \  '.gitconfig'                       : '',
+      \  '.gitignore'                       : '',
       \  '.bashrc'                          : '',
       \  '.bashprofile'                     : '',
       \  'favicon.ico'                      : '',
@@ -154,6 +147,9 @@ let s:file_node_pattern_matches = {
 
 function! s:filetypeIcon(path) abort
   let file = fnamemodify(a:path, ':t')
+  if exists('g:spacevim_filename_icons') && has_key(g:spacevim_filename_icons, file)
+    return g:spacevim_filename_icons[file]
+  endif
   if has_key(s:file_node_exact_matches, file)
     return s:file_node_exact_matches[file]
   endif

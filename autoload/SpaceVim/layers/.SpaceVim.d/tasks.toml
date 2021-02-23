@@ -1,0 +1,3 @@
+[test]
+    command = 'echo'
+    args = ['hello', 'world']

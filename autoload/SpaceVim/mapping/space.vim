@@ -726,12 +726,12 @@ function! SpaceVim#mapping#space#langSPC(m, keys, cmd, desc, is_cmd, ...) abort
     call SpaceVim#mapping#space#langSPC('nmap', ['l','R'],
           \ 'call SpaceVim#plugins#quickrun#QuickRun(1)',
           \ 'execute current file(force compile)', 1)
+    call SpaceVim#mapping#space#langSPC('nmap', ['l','d'],
+          \ 'call SpaceVim#plugins#quickrun#QuickRun(2)',
+          \ 'compile for debug', 1)
     call SpaceVim#mapping#space#langSPC('nmap', ['l','i'],
           \ 'call SpaceVim#plugins#quickrun#OpenInputWin()',
           \ 'open input window', 1)
-    call SpaceVim#mapping#space#langSPC('nmap', ['l','d'],
-          \ 'call SpaceVim#plugins#quickrun#QuickRun(1, 1)',
-          \ 'compile for debug', 1)
   endif
 endfunction
 

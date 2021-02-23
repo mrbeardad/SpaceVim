@@ -6,41 +6,6 @@
 " License: GPLv3
 "=============================================================================
 
-let g:quickrun_default_flags = get(g:, 'quickrun_default_flags', {})
-" init quickrun variables for buffers
-function! s:init(ft)
-  let b:QuickRun_Compiler = g:quickrun_default_flags[a:ft].compiler
-  let b:QuickRun_CompileFlag = g:quickrun_default_flags[a:ft].compileFlags
-  let b:QuickRun_debugCmd = g:quickrun_default_flags[a:ft].debugCmd
-  let b:QuickRun_Cmd = g:quickrun_default_flags[a:ft].cmd
-  let b:QuickRun_CmdArgs = g:quickrun_default_flags[a:ft].cmdArgs
-  let b:QuickRun_CmdRedir = get(b:,'QuickRun_CmdRedir',g:quickrun_default_flags[a:ft].cmdRedir)
-endfunction
-
-" provide commands to change quickrun variables
-function! SpaceVim#plugins#quickrun#do(var, str, ...) abort
-  if exists('a:1') && a:1 ==# '!'
-    exe 'let '. a:var .'= ""'
-  elseif a:str ==# ''
-    exe 'let '. a:var
-  else
-    exe 'let '. a:var .' =  a:str'
-  endif
-endfunction
-
-" add extended compile flags
-function! SpaceVim#plugins#quickrun#extend_compile_arguments(regex, flags)
-  let cntr = 0
-  let ret = ''
-  for thisRegex in a:regex
-    if search(thisRegex, 'wn') != 0
-      let ret = ret . ' ' . a:flags[cntr]
-    endif
-    let cntr += 1
-  endfor
-  return ret
-endfunction
-
 function! s:open_termwin() abort
   if s:bufnr != 0 && bufexists(s:bufnr)
     execute 'bd! ' . s:bufnr
@@ -59,91 +24,132 @@ function! s:open_termwin() abort
 endfunction
 
 function! s:get_timestamp(file)
-  return py3eval('time.strftime("%M:%H:%S", time.localtime(os.path.getmtime("'.expand('%:p').'")))')
+  return py3eval('time.strftime("%M:%S:%H", time.localtime(os.path.getmtime("'.expand('%:p').'")))')
 endfunction
 
-function! SpaceVim#plugins#quickrun#parse_flags(str, srcfile, exefile)
-  let tmp = substitute(a:str, '\\\@<!\${thisFile}', a:srcfile, 'g')
+" add extended compile flags
+function! s:extend_compile_flags()
+  let regex = has_key(g:quickrun_default_flags[&ft], 'extRegex') ? g:quickrun_default_flags[&ft].extRegex : []
+  let flags = has_key(g:quickrun_default_flags[&ft], 'extFlags') ? g:quickrun_default_flags[&ft].extFlags : []
+  let ret = ''
+  let idx = 0
+  for thisRegex in regex
+    if search(thisRegex, 'wn') != 0
+      let ret = ret . ' ' . flags[idx]
+    endif
+    let idx += 1
+  endfor
+  return ret
+endfunction
+
+function! s:parse_flags(str, srcfile, exefile)
+  let tmp = substitute(a:str, '\\\@<!\${file}', a:srcfile, 'g')
   let tmp = substitute(tmp, '\\\@<!\${exeFile}', a:exefile, 'g')
-  let tmp = substitute(tmp, '\\\@<!\${workspaceFolder}', SpaceVim#plugins#projectmanager#current_root(), 'g')
+  let tmp = substitute(tmp, '\\\@<!\${workspaceFolder}', fnamemodify(SpaceVim#plugins#projectmanager#current_root(), ':p:h'), 'g')
   return tmp
 endfunction
 
-let s:bufnr = 0
-py3 import tempfile
-let g:QuickRun_Tempdir = get(g:,'QuickRun_Tempdir',py3eval('tempfile.gettempdir()') . '/QuickRun/')
-if !isdirectory(g:QuickRun_Tempdir)
-  call mkdir(g:QuickRun_Tempdir)
-endif
-
-
+" a:1 == 1 表示强制重新编译，a:1 == 2 表示启动调试进程，a:1 == 3 表示两者都
 function! SpaceVim#plugins#quickrun#QuickRun(...)
-  if &modified == 1
-    write
-  endif
+  if &modified == 1 | write | endif
   let src_file_path = expand('%:p')
-  let exe_file_path = g:QuickRun_Tempdir . expand('%:t') .'.'. s:get_timestamp(src_file_path).'.exe'
-  let qr_cl = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
-  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CompileFlag .' '. SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
-  let qr_cmd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Cmd, src_file_path, exe_file_path)
-  let qr_args = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CmdArgs, src_file_path, exe_file_path)
-  let qr_rd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_CmdRedir, src_file_path, exe_file_path)
+  let exe_file_path = g:QuickrunTmpdir . expand('%:t') .'.'. s:get_timestamp(src_file_path).'.exe'
+  let qr_cl = s:parse_flags(b:QuickrunCompiler, src_file_path, exe_file_path)
+  let qr_cf = s:parse_flags(b:QuickrunCompileFlag .' '. s:extend_compile_flags(), src_file_path, exe_file_path)
+  let qr_cmd = s:parse_flags(b:QuickrunCmd, src_file_path, exe_file_path)
+  let qr_args = s:parse_flags(b:QuickrunCmdArgs, src_file_path, exe_file_path)
+  let qr_rd = s:parse_flags(b:QuickrunCmdRedir, src_file_path, exe_file_path)
 
-  let qr_compile = ''
-  if qr_cl !=# ''
-    let qr_compile = 'echo "[1;32m[Compile] [34m' . qr_cl . '[0m ' . qr_cf . '";' . qr_cl .' '. qr_cf .'&& '
-  endif
-
-  let qr_prepare = '{'
-  if (has('unix') || has('wsl')) && !isdirectory('/sys/fs/cgroup/memory/quickrun')
-    call jobstart('sudo mkdir /sys/fs/cgroup/memory/quickrun')
-    let qr_prepare = '{echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;'
-  endif
-
-  let qr_end = '-'
+  " neovim would close terminal automatically
   if has('nvim')
-    let qr_end = "echo '\n\033[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ...';exit"
+    let qr_end = "echo -e '\n\e[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ...'; exit;"
+  else
+    let qr_end = ''
+  endif
+  let qr_begin = 'set -e; trap "'.qr_end.'" 2;'
+
+  " if need to compile
+  if qr_cl !=# ''
+    let qr_compile = 'echo -e "\e[1;32m[Compile] \e[34m' . qr_cl . '\e[0m ' . qr_cf . '";'
+          \ . qr_cl .' '. qr_cf .';'
+  else
+    let qr_compile = ''
   endif
 
-  let qr_running = 'echo "[1;32m[Running] [34m' . qr_cmd . '[0m ' . qr_args .' '. qr_rd .'"; echo;echo "[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[35m--[34m--[31m--[34m--[35m--[33m--[32m--[36m--[37m--[36m--[32m--[33m--[m";trap "'.qr_end.'" 2;quickrun_time sh -c "' . qr_cmd .' '. qr_args .' '. qr_rd .'";};'
-  let qr_running .= qr_end
+  " limit memory using by CGroups
+  if (has('unix') || has('wsl'))
+    if !isdirectory('/sys/fs/cgroup/memory/quickrun')
+      call jobstart('sudo mkdir /sys/fs/cgroup/memory/quickrun')
+    endif
+    let qr_prepare = 'echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;'
+          \ .'echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;'
+          \ .'echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;'
+  else
+    let qr_prepare = ''
+  endif
 
-  let qr_debug = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_debugCmd, src_file_path, exe_file_path)
-  " 若函数没有参数（有则表示强制编译），且当前文件为改动，且之前通过QuickRun运行过，且自上次编译之后未改动过文件内容，则直接运行上次编译的可执行文件；否则重新编译
-  if !exists('a:1') && &modified == 0 && filereadable(exe_file_path)
-    call s:open_termwin()
-    if !exists('a:2')
-      call termopen(qr_prepare .'echo "[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program![m";'. qr_running)
-    else
-      if qr_debug =~# '^!'
-        call termopen(qr_prepare .'echo "[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program![m";echo "[Debugging]";}')
-        call jobstart(substitute(qr_debug, '^!', '', ''))
-      else
-        call termopen(qr_prepare .'echo "[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program![m";echo "[Debugging]";'.qr_debug.'}')
-      endif
+  let qr_running = 'echo "\e[1;32m[Running] \e[34m' . qr_cmd . '\e[0m ' . qr_args .' '. qr_rd .'";'
+        \ .'echo -e "\n\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[m";'
+        \ .'quickrun_time ' . qr_cmd .' '. qr_args .' '. qr_rd .';'
+        \ .qr_end
+  let qr_debug = s:parse_flags(b:QuickrunDebugCmd, src_file_path, exe_file_path)
+
+  let debug_mode = get(a:, '1', 0) > 1 " 2 or 3
+  let force_compile = get(a:, '1', 0) % 2 == 1 " 1 or 3
+
+  if force_compile == 1 || &modified == 1 || !filereadable(exe_file_path) " need compilation
+    let qr_prepare = qr_begin . qr_compile . qr_prepare
+  else  " run directly
+    let qr_prepare = qr_begin . qr_prepare . 'echo -e "\e[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program!\e[m";'
+  endif
+
+  call s:open_termwin()
+  if debug_mode
+    if qr_debug =~# '^!'  " backgroud mode
+      call termopen(qr_prepare
+            \ .'echo -e "\e[1;33m[Debugging]\e[m";'.qr_end)
+      call jobstart(substitute(qr_debug, '^!', '', ''))
+    else  " terminal mode
+      call termopen(qr_prepare
+            \ .'echo -e "\e[1;33m[Debugging]\e[m";'.qr_end
+            \ .qr_debug.'}')
     endif
   else
-    call s:open_termwin()
-    if !exists('a:2')
-      call termopen(qr_compile . qr_prepare . qr_running)
-    else
-      if qr_debug =~# '^!'
-        call termopen(qr_compile . qr_prepare .'echo "[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program![m";echo "[Debugging]";}')
-        call jobstart(substitute(qr_debug, '^!', '', ''))
-      else
-        call termopen(qr_compile . qr_prepare .'echo "[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program![m";echo "[Debugging]";'.qr_debug.'}')
-      endif
-    endif
+    call termopen(qr_prepare . qr_running)
   endif
   let s:bufnr = bufnr('%')
   wincmd p
 endfunction
 
-let s:last_input_winid = -1
+function! SpaceVim#plugins#quickrun#run_task(cmd, opts, isBackground) abort
+  call s:open_termwin()
+  let cmd = split(a:cmd)[0]
+  let args = substitute(a:cmd, '^\w*\s*', '', 'g')
+  let env = ''
+  if has_key(a:opts, 'cwd')
+    let env = 'PWD='.a:opts.cwd
+  endif
 
+  if has('nvim')
+    let qr_end = "echo -e '\n\e[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ...'; exit;"
+  else
+    let qr_end = ''
+  endif
+  let qr_begin = 'set -e; trap "'.qr_end.'" 2;'
+
+  call termopen(qr_begin
+        \ .'echo "\e[1;32m[Running] \e[34m' . cmd . '\e[0m ' . args. '";'
+        \ .'echo -e "\n\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[m";'
+        \ .'env '.env.' quickrun_time '. cmd .' '.args .';'
+        \ .qr_end)
+  let s:bufnr = bufnr('%')
+  wincmd p
+endfunction
+
+let s:last_input_winid = -1
 function! SpaceVim#plugins#quickrun#OpenInputWin()
-  let inputfile = g:QuickRun_Tempdir . expand('%:t') . '.input'
-  let b:QuickRun_CmdRedir = '< '.inputfile
+  let inputfile = g:QuickrunTmpdir . expand('%:t') . '.input'
+  let b:QuickrunCmdRedir = '< '.inputfile
   if execute('echo winlayout()') =~# s:last_input_winid
     exe 'bd '.winbufnr(s:last_input_winid)
   endif
@@ -167,131 +173,81 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
   let s:last_input_winid = win_getid()
 endfunction
 
-function! SpaceVim#plugins#quickrun#compile4debug()
-  if &modified == 1
-    write
-  endif
-  let src_file_path = expand('%:p')
-  let exe_file_path = expand('%:r').'.exe'
-  let qr_cl = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_Compiler, src_file_path, exe_file_path)
-  let qr_cf = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_debugCompileFlag, src_file_path, exe_file_path) .' '. SpaceVim#plugins#quickrun#parse_flags(SpaceVim#plugins#quickrun#extend_compile_arguments(g:quickrun_default_flags[&ft].extRegex, g:quickrun_default_flags[&ft].extFlags), src_file_path, exe_file_path)
-  if qr_cf !=# ''
-    let qr_cf = qr_cf.';'
-  endif
-  let qr_cmd = SpaceVim#plugins#quickrun#parse_flags(b:QuickRun_debugCmd, src_file_path, exe_file_path)
+"==================================================================================================
 
-  if &modified == 0 && filereadable(exe_file_path) && py3eval('os.path.getmtime("'.exe_file_path.'")') > py3eval('os.path.getmtime("'.src_file_path.'")')
-    if qr_cmd =~# '^!'
-      call jobstart(substitute(qr_cmd, '^!', '', ''))
-    else
-      call s:open_termwin()
-      call termopen(qr_cmd)
-    endif
+" provide commands to change quickrun variables
+function! s:key_binding(var, str, ...) abort
+  " `cmd!` means modify it
+  if exists('a:1') && a:1 ==# '!'
+    exe 'nnoremap 0 :nunmap 0<cr>:'.a:var.' '.eval('b:'.a:var)
+    echom 'Beacause of the limitation of nevim, please press 0 to continue...'
+  elseif a:str ==# ''
+    exe 'let b:'. a:var
   else
-    if &modified == 1
-      write
-    endif
-    if qr_cmd =~# '^!'
-      call jobstart(qr_cl.' '.qr_cf. substitute(qr_cmd, '^!', '', ''))
-    else
-      call s:open_termwin()
-      call termopen(qr_cl.' '.qr_cf. substitute(qr_cmd, '^!', '', ''))
-    endif
+    exe 'let b:'. a:var .' =  a:str'
   endif
+endfunction
+
+" initialize buffer variables
+function! s:init_buffer(ft)
+  let b:QuickrunCompiler = has_key(g:quickrun_default_flags[a:ft], 'compiler') ? g:quickrun_default_flags[a:ft].compiler : ''
+  let b:QuickrunCompileFlag = has_key(g:quickrun_default_flags[a:ft], 'compileFlags') ? g:quickrun_default_flags[a:ft].compileFlags : ''
+  let b:QuickrunDebugCmd = has_key(g:quickrun_default_flags[a:ft], 'debugCmd') ? g:quickrun_default_flags[a:ft].debugCmd : ''
+  let b:QuickrunCmd = has_key(g:quickrun_default_flags[a:ft], 'cmd') ? g:quickrun_default_flags[a:ft].cmd : ''
+  let b:QuickrunCmdArgs = has_key(g:quickrun_default_flags[a:ft], 'cmdArgs') ? g:quickrun_default_flags[a:ft].cmdArgs : ''
+  let b:QuickrunCmdRedir = has_key(g:quickrun_default_flags[a:ft], 'cmdRedir') ? g:quickrun_default_flags[a:ft].cmdRedir : ''
+  command! -buffer -bang -nargs=? -complete=file QuickrunCompiler    call s:key_binding('QuickrunCompiler', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunCompileFlag call s:key_binding('QuickrunCompileFlag', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunDebugCmd    call s:key_binding('QuickrunDebugCmd', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunCmd         call s:key_binding('QuickrunCmd', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunCmdArgs     call s:key_binding('QuickrunCmdArgs', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunCmdRedir    call s:key_binding('QuickrunCmdRedir', <q-args>, "<bang>")
 endfunction
 
 function! s:term_enter()
   if buffer_name() =~# 'term://'
-    call feedkeys("\<c-\>\<c-n>:call setpos('.', b:pos)\<cr>:\<cr>")
-  endif
-endfunction
-
-function! s:HasOpenFileWindows() abort
-  for i in range(1, winnr('$'))
-    let buf = winbufnr(i)
-
-    " skip unlisted buffers, except for netrw
-    if !buflisted(buf) && getbufvar(buf, '&filetype') != 'netrw'
-      continue
-    endif
-    " skip temporary buffers with buftype set
-    if getbufvar(buf, '&buftype') != ''
-      continue
-    endif
-    " skip the preview window
-    if getwinvar(i, '&previewwindow')
-      continue
-    endif
-
-    return 1
-  endfor
-
-  return 0
-endfunction
-
-function WindowIsOnlyWindow()
-  if !s:HasOpenFileWindows()
-    quit
+    call feedkeys("\<c-\>\<c-n>:call setpos('.', b:quickrun_term_pos)\<cr>:\<cr>")
   endif
 endfunction
 
 let s:already_loaded = 0
-" 初始化b:QuickRun_*
-" 设置g:QuickRun_Tempdir 
+" plugin entry function
 function! SpaceVim#plugins#quickrun#prepare()
+  " load only once
   if s:already_loaded == 1
     return
   else
     let s:already_loaded = 1
   endif
-  augroup QuickRun
-    autocmd!
-    for thisFT in keys(g:quickrun_default_flags)
-      exe 'autocmd FileType '.thisFT.' call s:init(&ft)'
-    endfor
-    if has('nvim')
-      au WinEnter * call s:term_enter()
-      au WinLeave * let b:pos = getcurpos()
-    endif
-    au BufLeave *.input if &modified == 1 |w|endif
-    au TermEnter * setlocal list nonu norelativenumber
-    " au WinEnter * call WindowIsOnlyWindow()
-  augroup END
 
+  " import required python modules
+  py3 import os
   py3 import time
   py3 import datetime
-  py3 import os
+  py3 import tempfile
+
+  " build temporary directory
+  let s:bufnr = 0
+  let g:QuickrunTmpdir = get(g:,'QuickrunTmpdir',py3eval('tempfile.gettempdir()') . '/Quickrun/')
+  if !isdirectory(g:QuickrunTmpdir)
+    call mkdir(g:QuickrunTmpdir)
+  endif
+
+  " set autocmds
+  augroup Quickrun
+    for thisFT in keys(g:quickrun_default_flags)
+      exe 'autocmd FileType '.thisFT.' call s:init_buffer(&ft)'
+    endfor
+
+    if has('nvim')
+      au WinEnter * call s:term_enter()
+      au WinLeave * let b:quickrun_term_pos = getcurpos()
+      tnoremap <esc> <c-\><c-n>
+    endif
+
+    au BufLeave *.input if &modified == 1 | w | endif
+    au TermEnter * setlocal list norelativenumber
+  augroup END
 endfunction
 
-command! -nargs=? -complete=file QuickrunCompiler               call SpaceVim#plugins#quickrun#do('b:QuickRun_Compiler', <q-args>)
-command! -nargs=? -complete=file QuickrunCompileFlag            call SpaceVim#plugins#quickrun#do('b:QuickRun_CompileFlag', <q-args>)
-command! -bang -nargs=? -complete=file QuickrunCompileFlagAppend      if "<bang>" ==# '!' | let b:QuickRun_CompileFlag = g:quickrun_default_flags[&ft].compileFlags | else |  let b:QuickRun_CompileFlag = b:QuickRun_CompileFlag .' '. <q-args> | endif
-command! -nargs=? -complete=file QuickrunDebugCompileFlag       call SpaceVim#plugins#quickrun#do('b:QuickRun_debugCompileFlag', <q-args>)
-command! -nargs=? -complete=file QuickrunDebugCompileFlagAppend let b:QuickRun_debugCompileFlag = b:QuickRun_debugCompileFlag .' '. <q-args>
-command! -nargs=? -complete=file QuickrunDebugCmd               call SpaceVim#plugins#quickrun#do('b:QuickRun_debugCmd', <q-args>)
-command! -nargs=? -complete=file QuickrunCmd                    call SpaceVim#plugins#quickrun#do('b:QuickRun_Cmd', <q-args>)
-command! -bang -nargs=? -complete=file QuickrunCmdArgs          call SpaceVim#plugins#quickrun#do('b:QuickRun_CmdArgs', <q-args>, "<bang>")
-command! -bang -nargs=? -complete=file QuickrunCmdRedir         call SpaceVim#plugins#quickrun#do('b:QuickRun_CmdRedir', <q-args>, "<bang>")
-
-" 终端模式
-if has('nvim')
-  tnoremap <esc> <c-\><c-n>
-  " tnoremap <c-up> <c-\><c-n><c-up>
-  " tnoremap <c-down> <c-\><c-n><c-down>
-  " tnoremap <c-right> <c-\><c-n><c-right>
-  " tnoremap <c-left> <c-\><c-n><c-left>
-  " tnoremap <c-w> <c-\><c-n><c-w>
-  " tnoremap <silent><tab> <c-\><c-n>:winc w<cr>
-  " tnoremap <silent><s-tab> <c-\><c-n>:winc p<cr>
-  " tnoremap <c-a> <c-\><c-n><home>
-  " tnoremap <c-e> <c-\><c-n><end>
-  " tnoremap <up> <c-\><c-n><up>
-  " tnoremap <down> <c-\><c-n><down>
-  " tnoremap <left> <c-\><c-n><left>
-  " tnoremap <right> <c-\><c-n><right>
-  " tnoremap <silent><s-down> :call <SID>Scroll(1)<cr>
-  " tnoremap <silent><s-up> :call <SID>Scroll(0)<cr>
-endif
-" Read more in autoload/SpaceVim/plugins/runner.vim and autoload/SpaceVim/mapping/space.vim
-" SpaceVim#plugins#runner#reg_runner()执行SpaceVim#plugins#quickrun#prepare()，后者只会执行一次
-" SpaceVim#mapping#space#langSPC()中若映射了SpaceVim#plugins#runner#open()会修改映射
+" more detail in autoload/SpaceVim/plugins/runner.vim and autoload/SpaceVim/mapping/space.vim

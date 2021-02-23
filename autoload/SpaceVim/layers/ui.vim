@@ -130,6 +130,7 @@ function! SpaceVim#layers#ui#config() abort
           \ 'call SpaceVim#mapping#SmartClose()')
   endif
   " Ui toggles
+  autocmd VimEnter * call s:toggle_colorcolumn()
   call SpaceVim#mapping#space#def('nnoremap', ['t','L'], 'call ToggleLinebreak()', 'toggle linebreak',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','v'], 'call ToggleVirtuledit()', 'toggle virtul edit',1)
   call SpaceVim#mapping#space#def('nnoremap', ['t','e'], 'call ToggleExpandtab()', 'toggle expandtab',1)
@@ -284,7 +285,11 @@ let s:fcflag = 0
 " use &textwidth option instead of 80
 function! s:toggle_fill_column() abort
   if !s:fcflag
-    set cc=100
+    if !&textwidth
+      let &colorcolumn=join(range(81,999),',')
+    else
+      let &colorcolumn=join(range(&textwidth + 1,999),',')
+    endif
     let s:fcflag = 1
   else
     set cc=

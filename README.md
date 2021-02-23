@@ -5,11 +5,11 @@
 虽然作者建议将custom配置写到单独的文件，但编辑器要用得顺手就是要配置的十分个性化嘛，
 custom文件显然不能满足，于是就自己动手魔改呗。这时模块化配置就体现出优势了，哪里不顺改那里，精准打击✺◟(∗❛ัᴗ❛ั∗)◞✺
 
-PS: 本配置适用于 **NeoVim** ，vim的话有许多功能还未支持
+PS: 本配置适用于 **NeoVim** ，Vim的话有许多功能还未支持
 
 * * *
 
-几乎所有的快捷键都在[<u>这个快捷键列表</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)中列出了，
+几乎所有的快捷键都在[<u>**这个快捷键列表**</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)中列出了，
 里面同时包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键。
 先look~look我改了哪些地方：  
 ![gdi upstream](custom/gdi.png)  
@@ -26,13 +26,14 @@ PS: 本配置适用于 **NeoVim** ，vim的话有许多功能还未支持
 - [edit](#edit)
 - [leaderf](#leaderf)
 - [flygrep](#flygrep)
-- [git, VersionControl](#git-versioncontrol)
+- [VersionControl](#versioncontrol)
 - [checker](#checker)
 - [autocomplete](#autocomplete)
 - [chinese](#chinese)
 - [runner](#runner)
 - [lang#c](#langc)
 - [lang#markdown](#langmarkdown)
+- [自定义](#自定义)
 - [安装](#安装)
   - [依赖](#依赖)
   - [安装指导](#安装指导)
@@ -44,8 +45,6 @@ PS: 本配置适用于 **NeoVim** ，vim的话有许多功能还未支持
 &emsp;只需要在启动nvim时设置环境变量`DARKBG`即可随机启用那些花里胡哨的主题中的一个，
 可以将`alias vi='DARKBG=1 nvim'`加入你的 *.bashrc|.zshrc* ，
 不然默认使用透明背景主题 *default-reduce* 。
-
-> PS：演示字体为[NerdCode](https://github.com/mrbeardad/DotFiles/tree/master/fonts)，是我将三种字体合成一个font family得到的。  
 
 **default-reduce**
 （该主题关闭了nvim的终端真色支持，从而使用终端的配色方案）  
@@ -71,6 +70,8 @@ PS: 本配置适用于 **NeoVim** ，vim的话有许多功能还未支持
 
 # core#banner
 这个模块提供了许多`SpaceVim`启动界面的字符画，拉风的很。
+> 有惊喜哦>_<
+
 ![banner](custom/banner.png "俺画的独角兽")
 
 # core#statusline,core#tabline
@@ -187,7 +188,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 | `<c-c>或<esc>` | 关闭flygrep      |
 
 
-# git, VersionControl
+# VersionControl
 这俩模块我一半就只用来给statusline加个分支提示，我tmux开个zsh来管理项目不香吗  
 ( ◔ ڼ ◔  )  
 不过还是点用滴：
@@ -213,11 +214,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 在错误代码的位置下显示波浪线（若终端不支持undercurl则回滚为underline下划线）
 ![checker](custom/checker.png)
 * `g:ale_lint_on_*` ：这几个变量设置何时触发语法检测，用`:h`查看详细信息，
-    默认只有`InsertLeave`（即退出插入模式进入普通模式）才触发ALE检测
-    （按`<c-c>`代替`<esc>`退出插入模式避免触发）
-
-* `g:ale_sign_*`  ：这几个变量设置侧边栏显示的错误或警告图标，用`:h`查看详细信息
-
+    默认只有文件有改动就会触发
 
 # autocomplete
 &emsp;C++语义补全使用的[YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)，
@@ -256,29 +253,18 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 **但现在还不完善，只支持Linux + Neovim**
 
 &emsp;**命令：**  
-* `QuickrunCompiler`
-* `QuickrunCompileFlag`
-* `QuickrunCompileFlagAdd`
-* `QuickrunDebugCompileFlag`
-* `QuickrunDebugCompileFlagAdd`
-* `QuickrunDebugCmd`
-* `QuickrunCmd`
-* `QuickrunCmdArgs`
-* `QuickrunCmdRedir`
-* `QuickrunCmdArgs!`    ：重置
-* `QuickrunCmdRedir!`   ：重置
+* 命令以`Quickrun`开头，如`QuickrunCompileFlag`表示修改编译参数，默认编译参数见下述选项
+* 命令带`!`后缀表示修改参数，需要再按一下0键触发（=.=真得不知道咋利用函数或命令进入命令行模式，只有用键映射了）
 
 ```vim
 " 例：
 :QuickrunCompileFlag -std=c++17 -lpthread " 设置编译参数（覆盖）为`-std=c++ -lpthread`
-:QuickrunCompileFlagAdd -DNDEBUG          " 设置编译参数（追加）为`-std=c++ -lpthread -DNDEBUG`
 
 " 以下三个命令设置命令行参数为`cmd -opt arg < file`
 :QuickrunCmd cmd            " cmd
 :QuickrunCmdArgs -opt arg   " cmd -opt arg
 :QuickrunCmdRedir < file    " cmd -opt arg < file
 :QuickrunCmdRedir | file    " cmd -opt arg | file
-:QuickrunCmdRedir!          " cmd -opt arg
 ```
 
 &emsp;**选项：**  
@@ -286,8 +272,8 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 let g:quickrun_default_flags = {
     \ 'cpp': {
         \ 'compiler': 'g\++',   " 设置编译器为g++（注意可能出现的vim特殊字符），可以为空
-        \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}', " 设置编译器参数
-        \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${thisFile}', " 设置调试时的编译器参数
+        \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${file}', " 设置编译器参数
+        \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${file}', " 设置调试时的编译器参数
         \ 'extRegex': [         " 若文件内容匹配到其中的pattern，则添加extFlags中对应参数
             \ '^\#include\s*<future>',
             \ '^\#include\s*<mysql++\/mysql++.h>'
@@ -303,15 +289,15 @@ let g:quickrun_default_flags = {
     \ }
 \ }
 " 特殊变量：
-" ${thisFile}           当前文件名
-" ${exeFile}            QuickRun自动选择的编译后的可执行文件位置，脚本无需编译则应该用${thisFile}
+" ${file}           当前文件名
+" ${exeFile}            QuickRun自动选择的编译后的可执行文件位置，脚本无需编译则应该用${file}
 " ${workspaceFolder}    项目根目录
 ```
 
 | 按键        | 作用                               |
 |-------------|------------------------------------|
 | `<space>lr` | 运行程序（若时间戳较未变则不编译） |
-| `<space>lr` | 强制编译并运行程序                 |
+| `<space>lR` | 强制编译并运行程序                 |
 | `<space>li` | 快速打开输入窗口                   |
 | `<space>ld` | 启动调试程序                       |
 | `<space>ls` | SpaceVim的REPL                     |
@@ -321,16 +307,9 @@ let g:quickrun_default_flags = {
 
 # lang#c
 选项：
-* `g:ale_cpp_std` ：设置C++标准版本，默认值为`-std=c++17`，若想修改该项则添加在`init.vim`中`Before Load SpaceVim`前面
-
-* `g:ale_cpp_clangtidy_checks ` ：指定静态语法检测器clang-tidy
-所启用的[checks](https://clang.llvm.org/extra/clang-tidy/checks/list.html)，从而可以针对某一问题进行语法检测进而提示用户。
-默认几乎启动了全部checkes。。。
-
-* `g:ale_clangtidy_period`  ：`clang-tidy`的启动周期，在init.vim中启用了绝大多数的checks，
-    导致它的检测速度相当感人，所以让它在一个周期内只启动一次。默认值为`6`，
-    即每6次从插入模式退出到普通模式，只会触发一次clang-tidy，而gcc与cppcheck无此限制
-
+* `g:ale_cpp_std` ：设置C++标准版本，默认值为`-std=c++20`
+映射：
+* `<space>ll`：手动启动所有linter进行静态语法解析，包括clang-tidy（这家伙启动所有checker后太慢了）
 # lang#markdown
 &emsp;[*UltiSnips目录*](UltiSnips)提供了一些markdown的代码补全片段。  
 此外，还对markdown的语法高亮进行了调整；  
@@ -342,6 +321,8 @@ let g:quickrun_default_flags = {
 | `<space>lg` | 添加或删除GFM目录               |
 | `<space>lk` | 利用系统剪切板的URL插入链接元素 |
 
+# 自定义
+大部分可能需要修改的配置都位于`~/.SpaceVim.d/init.toml`、`~/.SpaceVim/autoload/myspacevim.vim`与`~/.SpaceVim/init.vim`
 # 安装
 
 相比原生的SpaceVim需要自己配置，本魔改版本基本上算是开箱即用的，无需自己配置，

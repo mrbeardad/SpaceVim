@@ -141,7 +141,7 @@ function! s:filename() abort
   if empty(name)
     let name = 'No Name'
   endif
-  return "%{ &modified ? ' * ' : ' - '}" . SpaceVim#layers#core#statusline#filesize() . name . ' '
+  return "%{ &modified ? ' * ' : ' - '}" . s:filesize() . name . ' '
 endfunction
 
 function! s:fileformat() abort
@@ -154,12 +154,15 @@ function! s:fileformat() abort
 endfunction
 
 function! s:major_mode() abort
-  let icon = ''
-  if g:spacevim_enable_tabline_ft_icon
-    let icon = SpaceVim#api#import('file').fticon(bufname())
-    let icon = icon ==# '' ?  ' ' : icon
+  let alias = s:LANG.get_alias(&filetype)
+  if g:spacevim_enable_os_fileformat_icon || g:spacevim_enable_statusline_ft_icon
+    let icon = SpaceVim#api#import('file').fticon(alias)
+    let icon = empty(icon) ?  SpaceVim#api#import('file').fticon(bufname()) : icon
+    let icon = empty(icon) ?  ' ' : icon
+    return ' '.icon.' '.alias.' '
+  else
+    return empty(alias) ? '' : ' ' . alias . ' '
   endif
-  return ' '.icon.'%{empty(&ft)? "UNKOWN" : " " . &ft . " "}'
 endfunction
 
 function! s:modes() abort
@@ -358,7 +361,7 @@ function! SpaceVim#layers#core#statusline#_current_tag() abort
   return tag
 endfunction
 
-function! SpaceVim#layers#core#statusline#filesize() abort
+function! s:filesize() abort
   let l:size = getfsize(bufname('%'))
   if l:size == 0 || l:size == -1 || l:size == -2
     return ''
@@ -493,9 +496,9 @@ function! SpaceVim#layers#core#statusline#get(...) abort
     catch
     endtry
     let st = '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
-          \ . '%#SpaceVim_statusline_b# startify %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
+          \ . '%#SpaceVim_statusline_b#  startify %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
     if index(g:spacevim_statusline_left_sections, 'vcs') != -1
-      let st .= '%#SpaceVim_statusline_c#' .  call(s:registed_sections['major mode'], [])
+      let st .= '%#SpaceVim_statusline_c#' .  call(s:registed_sections['vcs'], [])
             \ . '%#SpaceVim_statusline_c_SpaceVim_statusline_z#' . s:lsep
     endif
     return st

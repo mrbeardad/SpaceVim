@@ -76,7 +76,7 @@ function! SpaceVim#default#options() abort
   set backup
   set undofile
   set undolevels=1000
-  let g:data_dir = g:spacevim_data_dir.'/SpaceVim/'
+  let g:data_dir = g:spacevim_data_dir.'SpaceVim/'
   let g:backup_dir = g:data_dir . 'backup'
   let g:swap_dir = g:data_dir . 'swap'
   let g:undo_dir = g:data_dir . 'undofile'

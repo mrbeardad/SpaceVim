@@ -53,6 +53,22 @@ function! SpaceVim#layers#tools#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['w', 'C'],
         \ 'ChooseWin | Goyo', 'choose-window-centered-buffer-mode', 1)
 
+  " bootmark key binding
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'm'], 'BookmarkToggle', 'BookmarkToggle', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'i'], 'BookmarkAnnotate', 'BookmarkAnnotate', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'l'], 'BookmarkShowAll', 'BookmarkShowAll', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'n'], 'BookmarkNext', 'BookmarkNext', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'b'], 'BookmarkPrev', 'BookmarkPrev', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'c'], 'BookmarkClear', 'BookmarkClear', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['m', 'C'], 'BookmarkClearAll', 'BookmarkClearAll', 1)
+  let g:bookmark_sign = ' '
+  let g:bookmark_annotation_sign = ' '
+  let g:bookmark_auto_save_file = g:spacevim_data_dir.'SpaceVim/vim_bookmarks'
+  let g:bookmark_auto_close = 1
+  let g:bookmark_no_default_key_mappings = 1
+  call SpaceVim#mapping#space#def('nnoremap', ['a', 'R'],
+        \ 'Goyo', 'read-mode', 1)
+  nnoremap <silent> <F5> :UndotreeToggle<CR>
   if maparg('<C-_>', 'v') ==# ''
     vnoremap <silent> <C-_> <Esc>:Ydv<CR>
   endif

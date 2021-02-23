@@ -170,9 +170,9 @@ function! s:self.syntax_of(pattern, ...) abort
 
   let l:pos_init = getpos('.')
   call cursor(1, 1)
-  let found = search(a:pattern, 'cW')
+  let found = search(a:pattern, 'cnW')
   while found != 0 && nth > 1
-    let found = search(a:pattern, 'W')
+    let found = search(a:pattern, 'nW')
     let nth -= 1
   endwhile
 

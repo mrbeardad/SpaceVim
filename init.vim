@@ -10,40 +10,26 @@
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/main.vim'
 " ============================ After Load SpaceVim  ==========================
 
-" ==================================
-" CUSTOM: colorscheme After
-" ==================================
 if &diff == 1
   set termguicolors
   colorscheme gruvbox
   finish
 endif
+
+let colorschemes = [
+      \ 'SpaceVim',
+      \ 'gruvbox',
+      \ 'NeoSolarized',
+      \ 'palenight',
+      \ 'material',
+      \]
 if $DARKBG != ''
   set termguicolors
-  if $DARKBG == 'SpaceVim'
-    let colorNr = 0
-  elseif $DARKBG == 'gruvbox'
-    let colorNr = 1
-  elseif $DARKBG == 'NeoSolarized'
-    let colorNr = 2
-  elseif $DARKBG == 'palenight.vim'
-    let colorNr = 3
-  elseif $DARKBG == 'vim-material'
-    let colorNr = 4
+  if index(colorschemes, $DARKBG) > 0
+    exe 'colorscheme '. $DARKBG
   else
+    " let colorNr = 4
     let colorNr = localtime() % 5
-  endif
-  " let colorNr = 4
-  if colorNr == 0
-    colorscheme SpaceVim
-  elseif colorNr == 1  && &rtp =~ 'gruvbox'
-    colorscheme gruvbox
-  elseif colorNr == 2  && &rtp =~ 'NeoSolarized'
-    colorscheme NeoSolarized
-  elseif colorNr == 3  && &rtp =~ 'palenight.vim'
-    colorscheme palenight
-  elseif colorNr == 4  && &rtp =~ 'vim-material'
-    colorscheme material
+    exe 'colorscheme '. colorschemes[colorNr]
   endif
 endif
-let g:header_auto_add_header = 0

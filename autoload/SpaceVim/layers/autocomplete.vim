@@ -49,7 +49,7 @@ function! SpaceVim#layers#autocomplete#plugins() abort
         \ ]
   call add(plugins, [g:_spacevim_root_dir . 'bundle/deoplete-dictionary',        { 'merged' : 0}])
   if g:spacevim_autocomplete_parens
-    call add(plugins, ['jiangmiao/auto-pairs',        { 'merged' : 0}])
+    call add(plugins, ['jiangmiao/auto-pairs',        { 'loadconf' : 1, 'merged' : 0}])
   endif
   " snippet
   if g:spacevim_snippet_engine ==# 'neosnippet'
@@ -177,8 +177,9 @@ function! SpaceVim#layers#autocomplete#config() abort
           \ neosnippet#expandable() ?
           \ "\<Plug>(neosnippet_expand)" : ""
   elseif g:spacevim_snippet_engine ==# 'ultisnips'
-    inoremap <silent> <M-/> <C-C><right>:call UltiSnips#ExpandSnippetOrJump()<cr>
-    vnoremap <silent> <M-/> <C-C>a
+    inoremap <silent> <M-/> <C-R>=UltiSnips#ExpandSnippetOrJump()<cr>
+    vnoremap <silent> <M-/> <Esc>a
+    inoremap <silent> <M-?> <C-r>=UltiSnips#JumpBackwards()<cr>
   endif
 
   let g:_spacevim_mappings_space.i = {'name' : '+Insertion'}

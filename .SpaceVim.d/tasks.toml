@@ -3,3 +3,7 @@
     isBackground = false
 [file-run.options]
     cwd = '${workspaceFolder}bin/'
+
+[test]
+    command = 'echo'
+    args = ['fuck','you']

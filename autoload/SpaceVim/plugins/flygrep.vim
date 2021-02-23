@@ -334,7 +334,7 @@ function! s:close_buffer() abort
       endtry
     endfor
     noautocmd call s:close_preview_win()
-    " let s:preview_able = 0
+    let s:preview_able = 0
   endif
   noautocmd q
 endfunction
@@ -634,7 +634,7 @@ function! s:move_cursor() abort
   call s:MPT._build_prompt()
 endfunction
 
-let s:preview_able = 1
+let s:preview_able = 0
 function! s:toggle_preview() abort
   if s:preview_able == 0
     let s:preview_able = 1
