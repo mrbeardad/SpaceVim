@@ -285,8 +285,10 @@ function! s:lang_markdown_after()
   nmap ][ <Plug>Markdown_MoveToParentHeader
   augroup MySpaceVim
     autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
-    if executable('fcitx5') || executable('fcitx')
+    if executable('fcitx5')
       autocmd FileType markdown inoremap <buffer><silent><c-c> <c-c>:call Fcitx2en()<cr>
+    elseif executable('fcitx')
+      autocmd FileType markdown inoremap <buffer><silent><c-c> <c-c>:py3 fcitx2en()<cr>
     else
       autocmd FileType markdown iunmap <c-c>
     endif
