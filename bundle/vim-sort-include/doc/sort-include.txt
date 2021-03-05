@@ -1,0 +1,21 @@
+*sort-include* Sort include statements in C/C++
+
+CONTENTS					  *sort-include-contents*
+
+Introduction					  |sort-include-introduction|
+COMMANDS					  |sort-include-commands|
+
+==============================================================================
+INTRODUCTION                                      *sort-include-introduction*
+
+This is a plugin to sort #include statements in C/C++ source code.
+
+------------------------------------------------------------------------------
+COMMANDS                                          *sort-include-commands*
+
+SortInclude                                       *SortInclude*
+      Sort #include statements in the current buffer.
+
+
+==============================================================================
+vim:tw=78:sw=4:ts=8:ft=help:norl:noet:

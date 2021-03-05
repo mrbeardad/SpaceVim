@@ -336,7 +336,7 @@ let g:quickrun_default_flags = {
 | 依赖包                    | 作用                              |
 |---------------------------|-----------------------------------|
 | neovim                    | 本配置仅适用于neovim而非vim       |
-| xsel                      | neovim的系统剪切板交互            |
+| xsel                      | neovim与系统剪切板交互            |
 | python-pynvim             | neovim的python支持                |
 | cmake                     | build YCM时需要                   |
 | ripgrep                   | 模糊搜索模块的后端工具            |
@@ -354,13 +354,16 @@ let g:quickrun_default_flags = {
 
 注意：执行前需要保证没有`~/.SpaceVim`目录，否则不会下载而直接进行其它步骤
 ```sh
-# 方法一：
-curl -fsSL https://github.com/mrbeardad/SpaceVim/raw/master/custom/install.sh | bash
-
-# 方法二：
 git clone --depth=1 https://github.com/mrbeardad/SpaceVim ~/.SpaceVim
-cd ~/.SpaceVim
-./custom/install.sh
+ln -svf ~/.SpaceVim ~/.config/nvim
+ln -svf ~/.SpaceVim/mode ~/.SpaceVim.d
+g++ -O3 -std=c++17 -o ~/.local/bin/quickrun_time ~/.SpaceVim/custom/quickrun_time.cpp
+# 安装插件，启动neovim后执行 :SPInstall
+nvim
+# 构建YCM代码补全引擎，如果需要其他语言的语义补全，见 ./install.py --help
+cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/ && ./install.py --clangd-completer
+# 修改ALE语法检测引擎
+cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/clangtidy.vim
 ```
 
 安装操作会下载[颜色主题](#颜色主题)中提到的[NerdCode字体](https://github.com/mrbeardad/DotFiles/tree/master/fonts)，

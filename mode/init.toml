@@ -92,7 +92,11 @@
         "neosnippet-snippets",
         "neopairs.vim",
         "deoplete-dictionary",
-        "CompleteParameter.vim"
+        "CompleteParameter.vim",
+        "fcitx.vim",
+        "fcitx5.vim",
+        "jedi-vim",
+        "deoplete-jedi",
     ]
 
 ########################### Plugins ###########################

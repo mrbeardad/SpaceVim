@@ -177,9 +177,10 @@ function! SpaceVim#layers#autocomplete#config() abort
           \ neosnippet#expandable() ?
           \ "\<Plug>(neosnippet_expand)" : ""
   elseif g:spacevim_snippet_engine ==# 'ultisnips'
-    inoremap <silent> <M-/> <C-R>=UltiSnips#ExpandSnippetOrJump()<cr>
-    vnoremap <silent> <M-/> <Esc>a
-    inoremap <silent> <M-?> <C-r>=UltiSnips#JumpBackwards()<cr>
+    inoremap <silent> <M-/> <C-C><right>:call UltiSnips#ExpandSnippetOrJump()<cr>
+    vnoremap <silent> <M-/> <C-C>a
+    inoremap <silent> <M-?> <C-C>:call UltiSnips#JumpBackwards()<cr>
+    vnoremap <silent> <M-?> <C-C>:call UltiSnips#JumpBackwards()<cr>
   endif
 
   let g:_spacevim_mappings_space.i = {'name' : '+Insertion'}

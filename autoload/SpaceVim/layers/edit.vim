@@ -23,7 +23,7 @@ function! SpaceVim#layers#edit#plugins() abort
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-user'],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-indent'],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-line'],
-        \ [g:_spacevim_root_dir . 'bundle/vim-table-mode', {'on_map':'<Plug>table-mode-tableize', 'on_func':'tablemode#Toggle'}],
+        \ ['dhruvasagar/vim-table-mode', {'on_map':'<Plug>table-mode-tableize', 'on_func':'tablemode#Toggle'}],
         \ ['kana/vim-textobj-function'],
         \ ['sgur/vim-textobj-parameter'],
         \ [g:_spacevim_root_dir . 'bundle/vim-textobj-entire'],

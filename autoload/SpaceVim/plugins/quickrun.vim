@@ -17,8 +17,6 @@ function! s:open_termwin() abort
         \ nowrap
         \ cursorline
         \ nospell
-        \ nonu
-        \ norelativenumber
         \ winfixheight
         \ nomodifiable
 endfunction

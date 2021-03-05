@@ -28,7 +28,7 @@ function! s:runner_before()
           \ 'compiler': "g++",
           \ 'compileFlags': '-std=c++20 -g -ggdb -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
           \ 'extRegex': [
-              \ '^#\s*include\s*<(pthread\.h\|future\|thread\|.*asio\.hpp\|*gtest\.h)>',
+              \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
               \ '^#\s*include\s*<dlfcn.h>',
               \ '^#\s*include\s*<pty.h>',
               \ '^#\s*include\s*<boost/locale\.hpp>',
@@ -141,7 +141,7 @@ function! s:checker_after()
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
     let g:ale_cpp_std = '-std=c++20'
     let g:ale_cpp_cc_executable = 'gcc'
-    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
+    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
     let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
     let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
     let g:ale_cpp_clangtidy_executable = ':'
@@ -222,7 +222,8 @@ function! s:core_after()
 endfunction
 
 function! s:edit_before()
-  let g:table_mode_disable_mappings = 1
+  let g:table_mode_auto_align = 0
+  " let g:table_mode_disable_mappings = 1
 endfunction
 
 function! s:edit_after()
@@ -285,13 +286,13 @@ function! s:lang_markdown_after()
   nmap ][ <Plug>Markdown_MoveToParentHeader
   augroup MySpaceVim
     autocmd FileType markdown inoremap <buffer><s-tab> &emsp;
-    if executable('fcitx5')
-      autocmd FileType markdown inoremap <buffer><silent><c-c> <c-c>:call Fcitx2en()<cr>
-    elseif executable('fcitx')
-      autocmd FileType markdown inoremap <buffer><silent><c-c> <c-c>:py3 fcitx2en()<cr>
-    else
-      autocmd FileType markdown iunmap <c-c>
-    endif
+    " if executable('fcitx5')
+    "   autocmd FileType markdown inoremap <buffer><silent><c-c> <c-c>:call Fcitx2en()<cr>
+    " elseif executable('fcitx')
+    "   autocmd FileType markdown inoremap <buffer><silent><c-c> <c-c>:py3 fcitx2en()<cr>
+    " else
+    "   autocmd FileType markdown iunmap <c-c>
+    " endif
     autocmd InsertEnter *.md setl conceallevel=0
     autocmd InsertLeave *.md setl conceallevel=2
   augroup END
@@ -315,9 +316,9 @@ function! s:tools_before()
   let g:rainbow_active = 1
   let g:rainbow_conf = {
   \ 'guifgs':  ['#ff0000', '#95bcad', '#ff7300', '#d7cfff', '#00dfd7', '#ffd700', '#00ff00'],
+  \ 'guis': ['none', 'italic'],
   \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-  \ 'guis': ['none', 'bold', 'italic'],
-  \ 'cterms': ['none', 'bold', 'italic'],
+  \ 'cterms': ['none', 'italic'],
   \ 'operators': '_,_',
   \ 'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
   \ 'separately': {
@@ -399,7 +400,7 @@ function! s:set_neovim_after() abort
   nnoremap <silent> <leader>b :bp<cr>
   nnoremap <silent><c-w>x :let bufnr_for_delete_with_ctrl_w_x = buffer_number()<cr>:bp<cr>:exe 'bd '.bufnr_for_delete_with_ctrl_w_x<cr>
   nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
-  nnoremap <silent> qq <c-w>c
+  nnoremap <silent> Q :q<cr>
   nnoremap <silent><tab> :winc w<cr>
   nnoremap <silent><s-tab> :winc W<cr>
   nnoremap <silent><s-Right> >>
@@ -409,7 +410,7 @@ function! s:set_neovim_after() abort
   nnoremap <m-s> %
 
   " insert mode
-  inoremap <c-c> <esc>
+  " inoremap <c-c> <esc>
   inoremap <c-a> <home>
   inoremap <c-e> <end>
   inoremap <c-d> <c-c><c-d>i<right>
@@ -548,13 +549,13 @@ endfunction
 
 function! s:colorscheme_after()
   if $WSL_DISTRO_NAME != ''
-    hi! SpellBad gui=underline guisp=LightRed
-    hi! SpellCap gui=underline guisp=LightYellow
-    hi! SpellRare gui=underline guisp=LightCyan
+    hi! SpellBad gui=underline guisp=Red
+    hi! SpellCap gui=underline guisp=Yellow
+    hi! SpellRare gui=underline guisp=Cyan
   else
-    hi! SpellBad gui=undercurl guisp=LightRed
-    hi! SpellCap gui=undercurl guisp=LightYellow
-    hi! SpellRare gui=undercurl guisp=LightCyan
+    hi! SpellBad gui=undercurl guisp=Red
+    hi! SpellCap gui=undercurl guisp=Yellow
+    hi! SpellRare gui=undercurl guisp=Cyan
   endif
 endfunction
 
@@ -568,15 +569,30 @@ function! s:custom_plugins_before()
   let g:header_alignment = 0
   let g:header_auto_add_header = 0
   "=============== vim-visual-multi ================="
+  let g:VM_case_setting = 'sensitive'
+  let g:VM_set_statusline = 3
   let g:VM_default_mappings = 0
   let g:VM_maps = {}
   let g:VM_maps['Find Under'] = '<m-e>'
   let g:VM_maps['Find Subword Under'] = '<m-e>'
   let g:VM_maps['Add Cursor At Pos'] = '<m-a>'
-  let g:VM_maps['Select Cursor Up'] = '<m-up>'
-  let g:VM_maps['Select Cursor Down'] = '<m-down>'
+  let g:VM_maps['Add Cursor Up'] = '<m-up>'
+  let g:VM_maps['Add Cursor Down'] = '<m-down>'
+  let g:VM_maps['Select Operator'] = 'v'
   let g:VM_maps['Increase'] = '+'
   let g:VM_maps['Decrease'] = '-'
+  function! g:VM_Start()
+    nmap <buffer> <C-C> <Esc>
+    imap <buffer> <C-C> <Esc>
+    nmap <buffer> \\A <Plug>(VM-Select-All)
+    nmap <buffer> s cl
+  endfunction
+  function! g:VM_Exit()
+    nunmap <buffer> <C-C>
+    iunmap <buffer> <C-C>
+    nunmap <buffer> \\A
+    nunmap <buffer> s
+  endfunction
   "=============== vim-autoformat ================="
   nnoremap <silent>g= :AutoformatLine<cr>
 endfunction
