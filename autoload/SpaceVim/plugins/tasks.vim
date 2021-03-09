@@ -41,8 +41,8 @@ function! s:load() abort
       let global_conf[task_key]['isGlobal'] = 1
     endfor
   endif
-  if filereadable('.SpaceVim.d/tasks.toml')
-    let local_conf = s:TOML.parse_file('.SpaceVim.d/tasks.toml')
+  if filereadable(SpaceVim#plugins#projectmanager#current_root().'.SpaceVim.d/tasks.toml')
+    let local_conf = s:TOML.parse_file(SpaceVim#plugins#projectmanager#current_root().'.SpaceVim.d/tasks.toml')
   endif
   let s:conf = extend(global_conf, local_conf)
 endfunction
@@ -206,7 +206,7 @@ function! SpaceVim#plugins#tasks#edit(...) abort
   if get(a:000, 0, 0)
     exe 'e ~/.SpaceVim.d/tasks.toml'
   else
-    exe 'e .SpaceVim.d/tasks.toml'
+    exe 'e '.SpaceVim#plugins#projectmanager#current_root().'.SpaceVim.d/tasks.toml'
   endif
 endfunction
 

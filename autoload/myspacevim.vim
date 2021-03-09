@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 09.02.2021
+" Last Modified Date: 09.03.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -26,7 +26,7 @@ function! s:runner_before()
   let g:quickrun_default_flags = {
       \ 'cpp': {
           \ 'compiler': "g++",
-          \ 'compileFlags': '-std=c++20 -g -ggdb -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
+          \ 'compileFlags': '-std=c++20 -g3 -ggdb3 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
           \ 'extRegex': [
               \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
               \ '^#\s*include\s*<dlfcn.h>',
@@ -91,6 +91,7 @@ endfunction
 
 function! s:autocomplete_after()
   if g:spacevim_autocomplete_method ==# 'ycm'
+    let g:ycm_global_ycm_extra_conf = $HOME.'.SpaceVim.d/.ycm_extra_conf.py'
     let g:ycm_clangd_uses_ycmd_caching = 0
     let g:ycm_cache_omnifunc = 0
     let g:ycm_confirm_extra_conf = 0
@@ -139,12 +140,8 @@ endfunction
 function! s:checker_after()
   if g:spacevim_lint_engine == 'ale'
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
-    let g:ale_cpp_std = '-std=c++20'
     let g:ale_cpp_cc_executable = 'gcc'
-    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
-    let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
-    let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
-    let g:ale_cpp_clangtidy_executable = ':'
+    let g:ale_cpp_clangtidy_executable = 'echo'
     let g:ale_cpp_clangtidy_checks = ['*',
       \ '-abseil*',
       \ '-android*',
@@ -163,6 +160,18 @@ function! s:checker_after()
       \ '-readability-isolate-declaration',
       \ '-*llvmlibc*',
       \ ]
+
+    function! s:update_ale_cpp_std()
+      let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
+      let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
+      let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
+    endfunction
+    let g:ale_cpp_std = get(g:, 'ale_cpp_std', '-std=c++20')
+    call s:update_ale_cpp_std()
+
+    augroup MySpaceVim
+      autocmd! User ALELintPre call s:update_ale_cpp_std()
+    augroup END
 
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
@@ -442,12 +451,15 @@ function! s:set_neovim_after() abort
   nnoremap <expr><c-b> winheight('.') / 5 * 2 ."\<c-u>"
   nnoremap <silent><c-down> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-y>"<cr>
   nnoremap <silent><c-up> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-t>"<cr>
+  nnoremap <silent><c-j> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-y>"<cr>
+  nnoremap <silent><c-k> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-t>"<cr>
   nnoremap <silent> <bs> :nohl<CR>
   nnoremap <expr> n  'Nn'[v:searchforward]
   nnoremap <expr> N  'nN'[v:searchforward]
   nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
   nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
   nnoremap <silent> <c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
+  nnoremap <silent> <c-l> :let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
 
   function! s:filesize() abort
     let l:size = getfsize(bufname('%'))
@@ -565,7 +577,7 @@ function! s:custom_plugins_before()
   let g:header_field_author_email = 'mrbeardad@qq.com'
   let g:header_field_license_id = 'GPLv3'
   let g:header_field_copyright = 'Copyright (c) 2020-'.strftime("%Y").' Heachen Bear & Contributors'
-  let g:header_max_size = 7
+  let g:header_max_size = 9
   let g:header_alignment = 0
   let g:header_auto_add_header = 0
   "=============== vim-visual-multi ================="

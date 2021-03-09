@@ -15,8 +15,8 @@
     enable_tabline_ft_icon = true
     enable_statusline_ft_icon = true
     enable_os_fileformat_icon = true
-    buffer_index_type = 0
-    windows_index_type = 3
+    buffer_index_type = 4
+    windows_index_type = 0
     statusline_unicode_symbols = true
     statusline_separator = "arrow"
     statusline_iseparator = "arrow"
@@ -105,7 +105,7 @@
     merged = false
 
 [[custom_plugins]]
-    repo = "alpertuna/vim-header"
+    repo = "mrbeardad/vim-header"
     merged = false
 
 [[custom_plugins]]

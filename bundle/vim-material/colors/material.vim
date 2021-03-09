@@ -203,7 +203,7 @@ hi! NonText       gui=bold      guifg=#5D818E
 hi! CursorLine    gui=none      guibg=#212121
 hi! CursorLineNr  gui=bold      guifg=#89DDFF guibg=#212121
 hi! LineNr        gui=none      guifg=#5D818E
-hi! MatchParen    gui=bold      guifg=#455a64
+hi! MatchParen    gui=bold
 hi! Search        gui=underline guifg=#00ff00
 
 hi! SignColumn    gui=none      guibg=#374349
