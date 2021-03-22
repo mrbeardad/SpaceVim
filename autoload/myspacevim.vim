@@ -573,6 +573,7 @@ function! s:set_neovim_before() abort
 endfunction
 
 function! s:incsearch_after()
+  let g:incsearch#auto_nohlsearch = 0
   function! s:config_easyfuzzymotion(...) abort
     return extend(copy({
     \   'converters': [incsearch#config#fuzzyword#converter()],
