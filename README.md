@@ -46,6 +46,8 @@ PS: 本配置适用于 **NeoVim** ，Vim的话有许多功能还未支持
 可以将`alias vi='DARKBG=1 nvim'`加入你的 *.bashrc|.zshrc* ，
 不然默认使用透明背景主题 *default-reduce* 。
 
+演示使用[NerdCode字体](https://github.com/mrbeardad/DotFiles/tree/master/fonts)
+
 **default-reduce**
 （该主题关闭了nvim的终端真色支持，从而使用终端的配色方案）  
 ![default-reduce](custom/default-reduce.png)
@@ -366,6 +368,4 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/ && ./install.py --
 cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/clangtidy.vim
 ```
 
-安装操作会下载[颜色主题](#颜色主题)中提到的[NerdCode字体](https://github.com/mrbeardad/DotFiles/tree/master/fonts)，
-同时下载cppman的cplusplus模式的缓存
 

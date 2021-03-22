@@ -10,15 +10,31 @@ function! s:open_termwin() abort
   if s:bufnr != 0 && bufexists(s:bufnr)
     execute 'bd! ' . s:bufnr
   endif
-
-  belowright 12 split __quickrun__
+  if execute('echo winlayout()') =~# s:last_input_winid
+    exe 'bd '.winbufnr(s:last_input_winid)
+    let inputFile = expand('%:t')
+  endif
+  belowright 10 split __quickrun__
   setlocal buftype=nofile bufhidden=wipe nobuflisted list nomodifiable noim
         \ noswapfile
         \ nowrap
         \ cursorline
         \ nospell
-        \ winfixheight
         \ nomodifiable
+        \ winfixheight
+  if exists('inputFile')
+    exe 'silent belowright vert 30 split ' . inputFile . '.input'
+    setlocal nobuflisted ft=Input
+        \ noswapfile
+        \ nowrap
+        \ cursorline
+        \ nospell
+        \ nu
+        \ norelativenumber
+        \ winfixheight
+    let s:last_input_winid = win_getid()
+    winc p 
+  endif
 endfunction
 
 function! s:get_timestamp(file)
@@ -101,6 +117,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
     let qr_prepare = qr_begin . qr_prepare . 'echo -e "\e[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program!\e[m";'
   endif
 
+  let win = win_getid()
   call s:open_termwin()
   if debug_mode
     if qr_debug =~# '^!'  " backgroud mode
@@ -116,7 +133,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
     call termopen(qr_prepare . qr_running)
   endif
   let s:bufnr = bufnr('%')
-  wincmd p
+  call win_gotoid(win)
 endfunction
 
 function! SpaceVim#plugins#quickrun#run_task(cmd, opts, isBackground) abort
@@ -146,20 +163,20 @@ endfunction
 
 let s:last_input_winid = -1
 function! SpaceVim#plugins#quickrun#OpenInputWin()
-  let inputfile = g:QuickrunTmpdir . expand('%:t') . '.input'
+  let inputfile = expand('%:t') . '.input'
   let b:QuickrunCmdRedir = '< '.inputfile
   if execute('echo winlayout()') =~# s:last_input_winid
     exe 'bd '.winbufnr(s:last_input_winid)
   endif
 
-  let defxWinNr = win_findbuf(buffer_number('[defx] -0'))
-  if defxWinNr != []
-    call win_gotoid(defxWinNr[0])
+  let termWinNr = win_findbuf(s:bufnr)
+  if termWinNr != []
+    call win_gotoid(termWinNr[0])
+    exe 'silent belowright vert 30 split ' . inputfile
   else
-    Defx
+    exe 'silent belowright 10 split ' . inputfile
   endif
 
-  exe 'abo 20 split ' . inputfile
   setlocal nobuflisted ft=Input
       \ noswapfile
       \ nowrap
@@ -177,8 +194,7 @@ endfunction
 function! s:key_binding(var, str, ...) abort
   " `cmd!` means modify it
   if exists('a:1') && a:1 ==# '!'
-    exe 'nnoremap 0 :nunmap 0<cr>:'.a:var.' '.eval('b:'.a:var)
-    echom 'Beacause of the limitation of nevim, please press 0 to continue...'
+    call feedkeys(":".a:var.' '.eval('b:'.a:var))
   elseif a:str ==# ''
     exe 'let b:'. a:var
   else
@@ -204,7 +220,7 @@ endfunction
 
 function! s:term_enter()
   if buffer_name() =~# 'term://'
-    call feedkeys("\<c-\>\<c-n>:call setpos('.', b:quickrun_term_pos)\<cr>:\<cr>")
+    call feedkeys("\<c-\>\<c-n>:call setpos('.', get(b:, 'quickrun_term_pos', [0, 1, 1, 0, 1]))\<cr>:\<cr>")
   endif
 endfunction
 
@@ -243,7 +259,7 @@ function! SpaceVim#plugins#quickrun#prepare()
       tnoremap <esc> <c-\><c-n>
     endif
 
-    au BufLeave *.input if &modified == 1 | w | endif
+    au BufLeave *.input w
     au TermEnter * setlocal list norelativenumber
   augroup END
 endfunction

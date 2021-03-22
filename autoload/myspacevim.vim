@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 09.03.2021
+" Last Modified Date: 22.03.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -26,7 +26,7 @@ function! s:runner_before()
   let g:quickrun_default_flags = {
       \ 'cpp': {
           \ 'compiler': "g++",
-          \ 'compileFlags': '-std=c++20 -g3 -ggdb3 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
+          \ 'compileFlags': '-g3 -ggdb3 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
           \ 'extRegex': [
               \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
               \ '^#\s*include\s*<dlfcn.h>',
@@ -132,7 +132,7 @@ function! s:checker_before()
           \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
           \   'c': ['gcc', 'cppcheck'],
           \   'sh': ['shellcheck'],
-          \   'python': ['flake8', 'pylint'],
+          \   'python': ['bandit', 'pylint'],
           \}
   endif
 endfunction
@@ -140,6 +140,7 @@ endfunction
 function! s:checker_after()
   if g:spacevim_lint_engine == 'ale'
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
+    let g:ale_python_pylint_options = '-d C0103,C0301,C0112,C0115,C0116,C0114'
     let g:ale_cpp_cc_executable = 'gcc'
     let g:ale_cpp_clangtidy_executable = 'echo'
     let g:ale_cpp_clangtidy_checks = ['*',
@@ -162,16 +163,13 @@ function! s:checker_after()
       \ ]
 
     function! s:update_ale_cpp_std()
-      let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . g:ale_cpp_std
-      let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.g:ale_cpp_std
-      let g:ale_cpp_clangtidy_options = ' -I. ' . g:ale_cpp_std
+      if !exists('b:lang_cpp_std')
+        return
+      endif
+      let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . b:lang_cpp_std
+      let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.b:lang_cpp_std
+      let g:ale_cpp_clangtidy_options = ' -I. ' . b:lang_cpp_std
     endfunction
-    let g:ale_cpp_std = get(g:, 'ale_cpp_std', '-std=c++20')
-    call s:update_ale_cpp_std()
-
-    augroup MySpaceVim
-      autocmd! User ALELintPre call s:update_ale_cpp_std()
-    augroup END
 
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
@@ -218,6 +216,37 @@ function! s:lang_c_before()
     autocmd User ALELintPost let g:ale_cpp_clangtidy_executable = ':'
   augroup END
 endfunction
+
+function! s:set_lang_cpp_std()
+  let line = filter(split(execute('YcmDebugInfo'), '\n'), 'v:val =~ "-- Extra configuration path:"')
+  if len(line) == 0
+    let b:lang_cpp_std = '-std=c++20'
+  else
+    let ycmConfigFile = substitute(line[0], '-- Extra configuration path: ', '', '')
+    let line = filter(readfile(ycmConfigFile), 'v:val =~ "-std=c++"')
+    if len(line) == 0
+      let b:lang_cpp_std = '-std=c++20'
+    else
+      let b:lang_cpp_std = substitute(line[0], '.*\(-std=c++\d\+\).*', '\1', '')
+    endif
+  endif
+  let g:fuck = 1
+endfunction
+
+function! s:lang_c_after()
+  if g:spacevim_autocomplete_method ==# 'ycm'
+    " follow ycm cpp std config
+    augroup MySpaceVim
+      autocmd! FileType cpp call s:set_lang_cpp_std() | let b:QuickrunCompileFlag = b:lang_cpp_std.' '.b:QuickrunCompileFlag
+    augroup END
+    if g:spacevim_lint_engine == 'ale'
+      augroup MySpaceVim
+        autocmd! User ALELintPre call s:update_ale_cpp_std()
+      augroup END
+    endif
+  endif
+endfunction
+
 
 function! s:core_after()
   let g:matchup_matchparen_stopline = 45
@@ -360,9 +389,9 @@ function! s:ui_after()
   function! s:defx_toggle_without_jump()
     let defxWinNr = win_findbuf(buffer_number('[defx] -0'))
     if defxWinNr != []
-      Defx
+      Defx -direction=botright
     else
-      Defx
+      Defx -direction=botright
       winc p
     endif
   endfunction
@@ -385,7 +414,6 @@ endfunction
 
 function! s:set_neovim_after() abort
   set nofoldenable
-  set foldmethod=indent
   set showcmd
   set noruler
   set noshowmode
@@ -399,6 +427,11 @@ function! s:set_neovim_after() abort
   set belloff=
   set swapfile
   set nobackup
+
+  augroup MySpaceVim
+      autocmd InsertEnter *.py setlocal foldmethod=marker
+      autocmd InsertLeave *.py setlocal foldmethod=expr
+  augroup END
 
   " buffer and window operator
   " 若只设置guide则快捷键输入时会打开导航
@@ -652,6 +685,7 @@ function! myspacevim#after() abort
   call s:core_after()
   call s:edit_after()
   call s:lang_markdown_after()
+  call s:lang_c_after()
   call s:ui_after()
   call s:incsearch_after()
   call s:git_after()
