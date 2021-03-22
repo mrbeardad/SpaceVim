@@ -217,7 +217,8 @@ function! SpaceVim#mapping#close_term_buffer(...) abort
     if bufexists(abuf)
       exe 'bd!' . abuf
     endif
-    " fuck the terminal windows
+    " can not close the terminal windows
+    " close again
     if get(w:, 'shell_layer_win', 0) == 1
       close
     endif
@@ -302,7 +303,7 @@ fu! SpaceVim#mapping#SmartClose() abort
         \ && exists('*popup_list')
         \ && exists('*popup_getoptions')
         \ && exists('*popup_getpos')
-    let popup_count =  len(
+    let win_count =  len(
           \ filter(
           \ map(
           \ filter(popup_list(), 'popup_getpos(v:val).visible'),
