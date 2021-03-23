@@ -28,8 +28,8 @@ if $DARKBG != ''
   if index(colorschemes, $DARKBG) > 0
     exe 'colorscheme '. $DARKBG
   else
-    " let colorNr = 4
     let colorNr = localtime() % 5
+    " let colorNr = 4
     exe 'colorscheme '. colorschemes[colorNr]
   endif
 endif

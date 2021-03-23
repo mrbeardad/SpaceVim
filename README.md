@@ -1,59 +1,62 @@
 # 写在前面
 
-&emsp; **SpaceVim** 确实是个很棒的配置集合。相比于其他热门vim配置，它的文档更详细，开发更活跃，
+&emsp; [SpaceVim](https://github.com/SpaceVim/SpaceVim) 确实是个很棒的配置集合。相比于其他热门vim配置，它的文档更详细，开发更活跃，
 而且模块化的设计使得用户可以更方便、更精准地进行自定义，魔改原配置。
 虽然作者建议将custom配置写到单独的文件，但编辑器要用得顺手就是要配置的十分个性化嘛，
 custom文件显然不能满足，于是就自己动手魔改呗。这时模块化配置就体现出优势了，哪里不顺改那里，精准打击✺◟(∗❛ัᴗ❛ั∗)◞✺
 
-PS: 本配置适用于 **NeoVim** ，Vim的话有许多功能还未支持
+PS: 本配置仅适用于***NeoVim***，Vim的话有许多功能还未支持
 
 * * *
 
-几乎所有的快捷键都在[<u>**这个快捷键列表**</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)中列出了，
-里面同时包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键。
-先look~look我改了哪些地方：  
-![gdi upstream](custom/gdi.png)  
+几乎所有的快捷键都在[<u>**这个快捷键列表**</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md "超重要的！")
+中列出了， 里面同时包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键。  
+
+先look~look我改了哪些地方：
+
+![gdi](custom/gdi.png "啊哈！我又换回Manjaro啦！")
 
 接下来就按一个个模块来讲解各种特性吧
+
 # 目录
 <!-- vim-markdown-toc GFM -->
 
-- [colorscheme](#colorscheme)
-- [core#banner](#corebanner)
-- [core#statusline,core#tabline](#corestatuslinecoretabline)
+- [颜色主题colorscheme](#颜色主题colorscheme)
+- [启动界面字符画core#banner](#启动界面字符画corebanner)
+- [状态栏与标签栏core#statusline,core#tabline](#状态栏与标签栏corestatuslinecoretabline)
 - [符号表、文件树、撤销树](#符号表文件树撤销树)
-- [incsearch](#incsearch)
-- [edit](#edit)
+- [编辑模块edit](#编辑模块edit)
 - [leaderf](#leaderf)
 - [flygrep](#flygrep)
 - [VersionControl](#versioncontrol)
 - [checker](#checker)
 - [autocomplete](#autocomplete)
-- [chinese](#chinese)
+- [注意：将~/.SpaceVim.d/.ycm_extra_conf.py复制到源文件项目目录下即可启用YCM](#注意将spacevimdycm_extra_confpy复制到源文件项目目录下即可启用ycm)
+- [其中的编译器参数自己看着改](#其中的编译器参数自己看着改)
 - [runner](#runner)
 - [lang#c](#langc)
 - [lang#markdown](#langmarkdown)
+- [chinese](#chinese)
 - [自定义](#自定义)
 - [安装](#安装)
   - [依赖](#依赖)
   - [安装指导](#安装指导)
 
 <!-- vim-markdown-toc -->
-# colorscheme
-&emsp;SpaceVim的 ***colorscheme模块*** 提供了不少颜色主题。我选取了其中几个比较好看的，
-针对C++语法高亮进行微调，同时也对C++语法高亮插件进行了微调。  
+# 颜色主题colorscheme
+&emsp;SpaceVim的 ***colorscheme模块*** 提供了不少颜色主题。
+我将其针对C++语法高亮进行微调，同时也对C++语法高亮插件本身进行了微调。  
 &emsp;只需要在启动nvim时设置环境变量`DARKBG`即可随机启用那些花里胡哨的主题中的一个，
-可以将`alias vi='DARKBG=1 nvim'`加入你的 *.bashrc|.zshrc* ，
+可以将`alias vi='DARKBG=1 nvim'`加入你的 ***.bashrc /.zshrc*** ，
 不然默认使用透明背景主题 *default-reduce* 。
 
-演示使用[NerdCode字体](https://github.com/mrbeardad/DotFiles/tree/master/fonts)
+&emsp;演示使用[NerdCodePro字体](https://github.com/mrbeardad/DotFiles/tree/master/fonts)，
+该字体集成了3种字体于一身，使得regular、bold、italic三种style使用三种不同的字体，
+看起来赏心悦目超nice。  
+PS：要是所有终端都像alacritty一样支持不同style不同字体，我至于这么折腾自己吗(*￣︿￣)
 
-**default-reduce**
-（该主题关闭了nvim的终端真色支持，从而使用终端的配色方案）  
+**default-reduce**（该主题关闭了nvim的终端真色支持，从而使用终端的配色方案，而且不会影响切换其他主题）  
 ![default-reduce](custom/default-reduce.png)
-
-**default-plus**  
-![default-plus](custom/default.png)  
 
 **SpaceVim**  
 ![SpaceVim](custom/SpaceVim.png)  
@@ -70,13 +73,13 @@ PS: 本配置适用于 **NeoVim** ，Vim的话有许多功能还未支持
 **material**
 ![material](custom/material.png)  
 
-# core#banner
+# 启动界面字符画core#banner
 这个模块提供了许多`SpaceVim`启动界面的字符画，拉风的很。
 > 有惊喜哦>_<
 
 ![banner](custom/banner.png "俺画的独角兽")
 
-# core#statusline,core#tabline
+# 状态栏与标签栏core#statusline,core#tabline
 这个模块提供了状态栏与标签栏的配置，若禁用该模块则会启用备胎[vim-airline](https://github.com/vim-airline/vim-airline)
 
 **标签栏**  
@@ -107,17 +110,7 @@ PS: 本配置适用于 **NeoVim** ，Vim的话有许多功能还未支持
 <img align="left" height=700 src="custom/defx.png"></img>
 <img align="center" height=700 src="custom/undo.png"></img>
 
-# incsearch
-增强了搜索快捷键如`/` `?` `*` `#` 等等，大致快捷键如下：
-
-| 快捷键 | 功能                             |
-|--------|----------------------------------|
-| `/`    | 前向搜索                         |
-| `?`    | 后向搜索                         |
-| `z/`   | 模糊搜索                         |
-| `g/`   | 模糊搜索并easymotion跳转（见下） |
-
-# edit
+# 编辑模块edit
 提供了许多插件用于快速、舒服地写代码：
 * 提供许多额外的文本对象：如`e`（entire）、`i`（indent）、`l`（line）、`f`（function）以及最好用的`,`（表示一个逗号分割的函数参数）
 
@@ -125,6 +118,9 @@ PS: 本配置适用于 **NeoVim** ，Vim的话有许多功能还未支持
 
 * 还提供了一个快速跳转光标的插件（以下只是其功能之一）：
 ![easymotion](https://raw.githubusercontent.com/haya14busa/i/eab1d12a8bd322223d551956a4fd8a21d5c4bfe9/easymotion/fuzzy-incsearch-easymotion.gif)
+
+* 虽然这个插件不属于edit模块，但还是放这儿一起show一波吧。[多光标编辑](https://github.com/mg979/vim-visual-multi)，大杀器！
+![VM](https://i.imgur.com/u5pPY5W.gif)
 
 # leaderf
 这个模块即是围绕[LeaderF搜索插件](https://github.com/Yggdroot/LeaderF)打造的
@@ -232,6 +228,9 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 
  # 构建补全引擎，除了C++外还 支持其它语言，参数详见`--help`
 ./install.py --clangd-completer
+
+# 注意：将~/.SpaceVim.d/.ycm_extra_conf.py复制到源文件项目目录下即可启用YCM
+# 其中的编译器参数自己看着改
  ```
 
 &emsp;除了语义补全，还有代码片段补全，插件为[UltiSnips](https://github.com/SirVer/ultisnips)。
@@ -239,10 +238,6 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 然后按`<M-/>`（<kbd>Alt</kbd>+<kbd>/</kbd>）触发，就会将关键字替换为配置文件中的完整片段。
 然后一路`<M-/>`修改锚点  
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
-
-# chinese
-提供了vim的中文文档，以及联网翻译器：
-![trans](custom/translator.png)
 
 # runner
 在`~/.SpaceVim.d/init.toml`中的`[option]`下设置`enable_terminal_runner = true`
@@ -252,11 +247,10 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 * 设置参数比较方便
 
 ![runner](custom/runner.png)
-**但现在还不完善，只支持Linux + Neovim**
 
 &emsp;**命令：**  
 * 命令以`Quickrun`开头，如`QuickrunCompileFlag`表示修改编译参数，默认编译参数见下述选项
-* 命令带`!`后缀表示修改参数，需要再按一下0键触发（=.=真得不知道咋利用函数或命令进入命令行模式，只有用键映射了）
+* 命令带`!`后缀表示修改参数
 
 ```vim
 " 例：
@@ -288,7 +282,11 @@ let g:quickrun_default_flags = {
         \ 'cmdArgs': '',        " 运行程序的参数
         \ 'cmdRedir': '',       " 运行程序的IO重定向
         \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"' "设置调试器命令，头部'!'表示不打开终端
-    \ }
+    \ },
+    \ 'python': {
+        \ 'cmd': '/bin/python ${file}',
+        \ 'debugCmd': '!tmux new-window "pudb3 ${exeFile}"'
+        \}
 \ }
 " 特殊变量：
 " ${file}           当前文件名
@@ -296,20 +294,22 @@ let g:quickrun_default_flags = {
 " ${workspaceFolder}    项目根目录
 ```
 
-| 按键        | 作用                               |
-|-------------|------------------------------------|
-| `<space>lr` | 运行程序（若时间戳较未变则不编译） |
-| `<space>lR` | 强制编译并运行程序                 |
-| `<space>li` | 快速打开输入窗口                   |
-| `<space>ld` | 启动调试程序                       |
-| `<space>ls` | SpaceVim的REPL                     |
+| 按键        | 作用                                   |
+|-------------|----------------------------------------|
+| `<space>lr` | 运行程序（若时间戳较未变则不编译）     |
+| `<space>lR` | 强制编译并运行程序                     |
+| `<space>li` | 快速打开输入窗口                       |
+| `<F9>`      | 开启或关闭程序运行窗口（如果存在的话） |
+| `<space>ld` | 启动调试程序                           |
+| `<space>ls` | SpaceVim的REPL                         |
 
 &emsp;注意：`<space>li`快速打开窗口，会自动使用 QuickrunRedirect命令将当前buffer将要运行的程序重定向到该输入窗口。
 离开输入窗口时会自动写回硬盘。
 
 # lang#c
-选项：
-* `g:ale_cpp_std` ：设置C++标准版本，默认值为`-std=c++20`
+补全引擎YCM、语法检测引擎ALE、快速运行程序Runner所需要的默认C++标准都由
+YCM读取的`.ycm_extra_conf.py`中设置的标准确定。
+
 映射：
 * `<space>ll`：手动启动所有linter进行静态语法解析，包括clang-tidy（这家伙启动所有checker后太慢了）
 # lang#markdown
@@ -322,6 +322,10 @@ let g:quickrun_default_flags = {
 | `<space>lp` | 开启markdown预览（需要浏览器）  |
 | `<space>lg` | 添加或删除GFM目录               |
 | `<space>lk` | 利用系统剪切板的URL插入链接元素 |
+
+# chinese
+提供了vim的中文文档，以及联网翻译器：
+![trans](custom/translator.png)
 
 # 自定义
 大部分可能需要修改的配置都位于`~/.SpaceVim.d/init.toml`、`~/.SpaceVim/autoload/myspacevim.vim`与`~/.SpaceVim/init.vim`

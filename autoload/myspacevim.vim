@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 22.03.2021
+" Last Modified Date: 23.03.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -66,6 +66,7 @@ function! s:runner_before()
       \ },
       \ 'python': {
           \ 'cmd': '/bin/python ${file}',
+          \ 'debugCmd': '!tmux new-window "pudb3 ${exeFile}"'
           \}
   \ }
 endfunction
@@ -124,7 +125,7 @@ function! s:checker_before()
     let g:ale_sign_column_always = 1
     let g:ale_lint_on_filetype_changed = 0
     let g:ale_lint_on_text_changed = 'always'
-    let g:ale_lint_on_insert_leave = 1
+    let g:ale_lint_on_insert_leave = 0
     let g:ale_lint_on_enter = 0
     let g:ale_lint_on_save = 0
     let g:ale_linters_explicit = 1
@@ -492,7 +493,7 @@ function! s:set_neovim_after() abort
   nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
   nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
   nnoremap <silent> <c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
-  nnoremap <silent> <c-l> :let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
+  nnoremap <c-l> :let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
 
   function! s:filesize() abort
     let l:size = getfsize(bufname('%'))
