@@ -12,6 +12,8 @@ PS: 本配置仅适用于***NeoVim***，Vim的话有许多功能还未支持
 几乎所有的快捷键都在[<u>**这个快捷键列表**</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md "超重要的！")
 中列出了， 里面同时包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键。  
 
+# 注意注意！敲黑板！[使用手册在此！](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)这个更新更勤快
+
 先look~look我改了哪些地方：
 
 ![gdi](custom/gdi.png "啊哈！我又换回Manjaro啦！")
@@ -106,9 +108,13 @@ PS：要是所有终端都像alacritty一样支持不同style不同字体，我�
 &emsp;符号表插件使用的是[tagbar](https://github.com/wsdjep/tagbar)，按`<F1>`开启  
 &emsp;文件树插件使用的是[defx](https://github.com/Shougo/defx.nvim)，按`<F3>`开启  
 &emsp;撤销树插件使用的是[undotree](https://github.com/mbbill/undotree)，按`<F5>`开启  
-<img align="left" height=700 src="custom/tagbar.png"></img>
-<img align="left" height=700 src="custom/defx.png"></img>
-<img align="center" height=700 src="custom/undo.png"></img>
+<!-- <img align="left" height=700 src="custom/tagbar.png"></img> -->
+<!-- <img align="left" height=700 src="custom/defx.png"></img> -->
+<!-- <img align="center" height=700 src="custom/undo.png"></img> -->
+
+![tagbar](custom/tagbar.png)
+![tagbar](custom/defx.png)
+![tagbar](custom/undo.png)
 
 # 编辑模块edit
 提供了许多插件用于快速、舒服地写代码：
