@@ -55,7 +55,7 @@ namespace
     };
 
 
-    int fork_and_exec(char* const argv[]) noexcept
+    std::pair<int, int> fork_and_exec(char* const argv[]) noexcept
     {
         auto pid = fork();
         if ( pid == -1 ) {
@@ -74,14 +74,14 @@ namespace
             }
         }
         int status{};
-        wait(&status);
+        pid = wait(&status);
 
         // 恢复前台进程组
         auto origHandle = signal(SIGTTOU, SIG_IGN);
         tcsetpgrp(STDIN_FILENO, getpgid(0));
         signal(SIGTTOU, origHandle);
 
-        return status;
+        return {status, pid};
     }
 } // namespace
 
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
 
     // 执行子进程并计时
     auto runtimeBegin = ch::steady_clock::now();
-    auto status = fork_and_exec(argv + 1);
+    auto [status, pid] = fork_and_exec(argv + 1);
     auto runtimeLen = ch::duration_cast<ch::microseconds>(ch::steady_clock::now() - runtimeBegin);
 
     std::string exitString{};
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
     auto timeLen = runtimeLenCnt > 1e6 ? runtimeLenCnt / 1e6 : runtimeLenCnt / 1e3; // 使用合适的时间单位
     std::string timeUnit = runtimeLenCnt > 1e6 ? " s." : " ms.";
     std::cout << std::setprecision(3) << std::fixed
-        << "\n\033[32m[END]\033[m exit with " << exitString << " in \033[36m" << timeLen << timeUnit << std::endl;
+        << "\n\033[32m[END]\033[m process \033[35m" << pid << "\033[m exit with " << exitString << " in \033[36m" << timeLen << timeUnit << std::endl;
 
     return 0 ;
 }

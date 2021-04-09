@@ -16,7 +16,7 @@
     enable_statusline_ft_icon = true
     enable_os_fileformat_icon = true
     buffer_index_type = 4
-    windows_index_type = 0
+    windows_index_type = 2
     statusline_unicode_symbols = true
     statusline_separator = "arrow"
     statusline_iseparator = "arrow"

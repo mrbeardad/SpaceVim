@@ -1,24 +1,25 @@
-snippet i  "description" w
+snippet #
+#if $1
+#endif // $1
+endsnippet
+
+snippet i
 #include <${1:iostream}>
 endsnippet
 
-snippet im  "description" w
+snippet ii
 #include "${1:myheader}.hpp"
 endsnippet
 
-snippet ib  "description" w
-#include <boost/${1:shared_ptr.hpp}>
-endsnippet
-
-snippet ttem  "description" w
-template<template <typename> class ${1:T}>
-endsnippet
-
-snippet tem  "description" w
+snippet tem
 template<typename ${1:T}>
 endsnippet
 
-snippet cla  "description" w
+snippet ttem
+template<template <typename> class ${1:T}>
+endsnippet
+
+snippet cla
 class ${1:ClassName}
 {
 public:
@@ -28,20 +29,20 @@ private:
 };
 endsnippet
 
-snippet str  "description" w
+snippet str
 struct ${1:StructName}
 {
     $2
 };
 endsnippet
 
-snippet if  "description" w
+snippet if
 if ( ${1:true} ) {
     $2
 }
 endsnippet
 
-snippet ifel  "description" w
+snippet ifel
 if ( ${1:true} ) {
     $2
 } else {
@@ -49,31 +50,31 @@ if ( ${1:true} ) {
 }
 endsnippet
 
-snippet elif  "description" w
+snippet elif
 else if ( ${1:true} ) {
     $2
 }
 endsnippet
 
-snippet el  "description" w
+snippet el
 else {
     $1
 }
 endsnippet
 
-snippet do  "description" w
+snippet do
 do {
     $2
 } while ( ${1:true} );
 endsnippet
 
-snippet while  "description" w
+snippet while
 while ( ${1:true} ) {
     $2
 }
 endsnippet
 
-snippet getopt  "description" w
+snippet getopt
 while ( true )
 {
     /* struct option {
@@ -214,7 +215,7 @@ std::cout << ${1} << std::endl;
 endsnippet
 
 snippet fuck  "description" w
-std::cout << "fuck: " ${1:<< } << std::endl;
+std::cout << "\e[31mfuck:\e[m " ${1:<< } << std::endl;
 endsnippet
 
 snippet coutf  "description" w
@@ -262,11 +263,6 @@ for ( auto& ${1:t} : ${1:container} ) {
 endsnippet
 
 snippet ld  "description" w
-[${1}](${2}){${3}}
-endsnippet
-
-# lambda (multi-line)
-snippet ldd  "description" w
 [${1}] (${2}) {
     ${3}
 };
@@ -285,6 +281,7 @@ snippet acm  "description" w
 #include <iostream>
 #include <iterator>
 #include <limits>
+#include <numeric>
 
 int main()
 {
@@ -293,6 +290,20 @@ int main()
     return 0;
 }
 
+endsnippet
+
+snippet core  "description" w
+#include <algorithm>
+#include <gtest/gtest.h>
+#include <iostream>
+#include <iterator>
+#include <limits>
+#include <numeric>
+
+TEST(TestSuit, TestCase)
+{
+
+}
 endsnippet
 
 snippet init  "description" w
@@ -345,7 +356,3 @@ snippet sp "description" w
 /*************************************************************************************************/
 endsnippet
 
-snippet #
-#if $1
-#endif // $1
-endsnippet

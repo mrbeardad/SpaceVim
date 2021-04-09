@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 23.03.2021
+" Last Modified Date: 29.03.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -26,19 +26,19 @@ function! s:runner_before()
   let g:quickrun_default_flags = {
       \ 'cpp': {
           \ 'compiler': "g++",
-          \ 'compileFlags': '-g3 -ggdb3 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
+          \ 'compileFlags': '-g3 -ggdb3 -D_GLIBCXX_DEBUG -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
           \ 'extRegex': [
               \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
-              \ '^#\s*include\s*<dlfcn.h>',
-              \ '^#\s*include\s*<pty.h>',
-              \ '^#\s*include\s*<boost/locale\.hpp>',
-              \ '^#\s*include\s*<*asio/ssl\.hpp>',
-              \ '^#\s*include\s*<(*asio/co_spawn\.hpp\|coroutine)>',
-              \ '^#\s*include\s*<glog/.*>',
-              \ '^#\s*include\s*<gtest/.*>',
-              \ '^#\s*include\s*<gmock/.*>',
-              \ '^#\s*include\s*<mysql++/.*>',
-              \ '^#\s*include\s*<srchilite/.*>',
+              \ '^#\s*include\s*[<"]dlfcn.h[>"]',
+              \ '^#\s*include\s*[<"]pty.h[>"]',
+              \ '^#\s*include\s*[<"]boost/locale\.hpp[>"]',
+              \ '^#\s*include\s*[<"]*asio/ssl\.hpp[>"]',
+              \ '^#\s*include\s*[<"](*asio/co_spawn\.hpp\|coroutine)[>"]',
+              \ '^#\s*include\s*[<"]glog/.*[>"]',
+              \ '^#\s*include\s*[<"]gtest/.*[>"]',
+              \ '^#\s*include\s*[<"]gmock/.*[>"]',
+              \ '^#\s*include\s*[<"]mysql++/.*[>"]',
+              \ '^#\s*include\s*[<"]srchilite/.*[>"]',
           \ ],
           \ 'extFlags': [
               \ '-lpthread',
@@ -66,7 +66,7 @@ function! s:runner_before()
       \ },
       \ 'python': {
           \ 'cmd': '/bin/python ${file}',
-          \ 'debugCmd': '!tmux new-window "pudb3 ${exeFile}"'
+          \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
           \}
   \ }
 endfunction
@@ -493,7 +493,7 @@ function! s:set_neovim_after() abort
   nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
   nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
   nnoremap <silent> <c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
-  nnoremap <c-l> :let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
+  nnoremap <c-l> :let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>:<cr>
 
   function! s:filesize() abort
     let l:size = getfsize(bufname('%'))

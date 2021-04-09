@@ -60,13 +60,16 @@ function! s:open_termwin(...) abort
   " 切换buf时是否打开该buf的term
   elseif curTermBufnr != -1 && exists('openTermOrInput')
     belowright 10 split +exe\ 'b\ '.curTermBufnr
+    setl winfixheight
   endif
 
   if curInputBufnr != -1 && bufexists(curInputBufnr) && exists('openTermOrInput')
     if bufnr() == origBufnr " 没有打开term
       silent belowright 10 split +exe\ 'b\ '.curInputBufnr
+      setl winfixheight
     else
       silent belowright vert 30 split +exe\ 'b\ '.curInputBufnr
+      setl winfixheight
     endif
     winc p
   endif
@@ -109,6 +112,10 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
   if !filereadable(inputfile)
     w
   endif
+endfunction
+
+function! s:get_timestamp(file)
+  return py3eval('time.strftime("%y%m%d%H%M%S", time.localtime(os.path.getmtime("'.a:file.'")))')
 endfunction
 
 " add extended compile flags
@@ -180,8 +187,9 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
 
   let debug_mode = get(a:, '1', 0) > 1 " 2 or 3
   let force_compile = get(a:, '1', 0) % 2 == 1 " 1 or 3
-
-  if force_compile == 1 || &modified == 1 || !filereadable(exe_file_path) " need compilation
+  " need compilation
+  if force_compile == 1 || &modified == 1 || !filereadable(exe_file_path)
+        \ || s:get_timestamp(expand('%:p').'.exe') < s:get_timestamp(expand('%:p'))
     let qr_prepare = qr_begin . qr_compile . qr_prepare
   else  " run directly
     let qr_prepare = qr_begin . qr_prepare . 'echo -e "\e[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program!\e[m";'
@@ -282,6 +290,8 @@ function! SpaceVim#plugins#quickrun#prepare()
 
   " import required python modules
   py3 import os
+  py3 import time
+  py3 import datetime
 
   " set autocmds
   augroup Quickrun
