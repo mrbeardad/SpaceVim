@@ -177,7 +177,7 @@ function! SpaceVim#layers#ui#config() abort
         \ . string(s:_function('s:toggle_syntax_hi')) . ', [])',
         \ 'toggle-syntax-highlighting', 1)
 
-  call SpaceVim#mapping#space#def('nnoremap', ['T', 'F'], '<F11>',
+  call SpaceVim#mapping#space#def('nmap', ['T', 'F'], '<F11>',
         \ 'fullscreen-frame', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['T', 'm'], 'call call('
         \ . string(s:_function('s:toggle_menu_bar')) . ', [])',
@@ -197,7 +197,7 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#layers#core#statusline#register_mode(
         \ {
         \ 'key' : 'spell-checking',
-        \ 'func' : string(s:_function('s:toggle_spell_check')),
+        \ 'func' : s:_function('s:toggle_spell_check'),
         \ }
         \ )
 
