@@ -48,7 +48,7 @@ function! s:open_termwin(...) abort
     if curTermBufnr != -1 && bufexists(curTermBufnr)
       execute 'bw! ' . curTermBufnr
     endif
-    belowright 10 split __quickrun__
+    belowright 11 split __quickrun__
     setlocal buftype=nofile
           \ nobuflisted
           \ nomodifiable
@@ -59,13 +59,13 @@ function! s:open_termwin(...) abort
     let s:TermBufnr[origBufnr] = bufnr()
   " 切换buf时是否打开该buf的term
   elseif curTermBufnr != -1 && exists('openTermOrInput')
-    belowright 10 split +exe\ 'b\ '.curTermBufnr
+    belowright 11 split +exe\ 'b\ '.curTermBufnr
     setl winfixheight
   endif
 
   if curInputBufnr != -1 && bufexists(curInputBufnr) && exists('openTermOrInput')
     if bufnr() == origBufnr " 没有打开term
-      silent belowright 10 split +exe\ 'b\ '.curInputBufnr
+      silent belowright 11 split +exe\ 'b\ '.curInputBufnr
       setl winfixheight
     else
       silent belowright vert 30 split +exe\ 'b\ '.curInputBufnr
@@ -101,7 +101,7 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
     call win_gotoid(tagTermWinid)
     execute 'silent belowright vert 30 split ' . inputfile
   else
-    execute 'silent belowright 10 split ' . inputfile
+    execute 'silent belowright 11 split ' . inputfile
   endif
   let s:InputBufnr[origBufnr] = bufnr()
   setlocal ft=Input

@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 29.03.2021
+" Last Modified Date: 19.04.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -355,7 +355,7 @@ function! s:tools_before()
   let g:rainbow_active = 1
   let g:rainbow_conf = {
   \ 'guifgs':  ['#ff0000', '#95bcad', '#ff7300', '#d7cfff', '#00dfd7', '#ffd700', '#00ff00'],
-  \ 'guis': ['none', 'italic'],
+  \ 'guis': ['none'],
   \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
   \ 'cterms': ['none', 'italic'],
   \ 'operators': '_,_',

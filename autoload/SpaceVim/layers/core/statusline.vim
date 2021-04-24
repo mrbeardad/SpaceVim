@@ -19,9 +19,9 @@
 
 scriptencoding utf-8
 
-if exists('g:_spacevim_statusline_loaded')
-  finish
-endif
+" if exists('g:_spacevim_statusline_loaded')
+  " finish
+" endif
 
 let g:_spacevim_statusline_loaded = 1
 
