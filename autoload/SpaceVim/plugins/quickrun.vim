@@ -8,111 +8,134 @@
 
 let s:TermBufnr = {}
 let s:InputBufnr = {}
-" 先关闭当前所有term或input窗口，若当前buffer有对应term则切出来，没有则创建。input窗口只在已存在情况下才切出来
-" 存在a:1表示强制创建一个新term，并且不跳回原窗口
-function! s:open_termwin(...) abort
-  if index(keys(g:quickrun_default_flags), &ft) == -1
-    if get(a:, '1', 0) != 2 || (&ft != 'Input' && &buftype != 'terminal')
-      return
-    endif
-  endif
+let g:InputBufnr = s:InputBufnr
+" @parme
+" a:1 为空表示用于自动切换或关闭term
+" a:1 == 1 表示强制创建一个新term，并且不跳回原窗口
+" a:1 == 2 表示手动开启或关闭term
+function! s:close_all_term_and_input() abort
   let terms = values(s:TermBufnr)
   let inputs = values(s:InputBufnr)
   let winLayout = split(substitute(string(winlayout()), '\D', ' ', 'g'))
-  let origBufnr = bufnr()
+
+  let anyClosed = 0
   for winid in winLayout
     let bufnr = winbufnr(winid)
     if index(terms, bufnr) != -1 || index(inputs, bufnr) != -1
-      call win_gotoid(winid)
-      winc c
-      " 关掉了至少一个term或input，表示用户希望term处于开启状态
-      let openTermOrInput = 1
+      exe win_id2win(winid).'close'
+      " 关掉了至少一个term或input，表示term之前处于开启状态
+      let anyClosed = 1
     endif
   endfor
-  if win_getid(origBufnr) != 0
-    call win_gotoid(bufwinid(origBufnr))
-  endif
-  " 表示toggle：若存在窗口则关闭之，否则启动之
-  if exists('a:1') && a:1 == 2
-    if exists('openTermOrInput')
-      return
-    else
-      let openTermOrInput = 1
-    endif
-  endif
+  return anyClosed
+endfunction
 
+
+function! s:open_termwin_quickrun() abort
+  call s:close_all_term_and_input()
   let curTermBufnr = get(s:TermBufnr, bufnr(), -1)
   let curInputBufnr = get(s:InputBufnr, bufnr(), -1)
-  let inputFile = expand('%:t')
-  if exists('a:1') && a:1 == 1  " 只能在此创建新term
-    if curTermBufnr != -1 && bufexists(curTermBufnr)
-      execute 'bw! ' . curTermBufnr
-    endif
-    belowright 11 split __quickrun__
-    setlocal buftype=nofile
-          \ nobuflisted
-          \ nomodifiable
-          \ noim
-          \ noswapfile
-          \ nospell
-          \ winfixheight
-    let s:TermBufnr[origBufnr] = bufnr()
-  " 切换buf时是否打开该buf的term
-  elseif curTermBufnr != -1 && exists('openTermOrInput')
+  let origBufnr = bufnr()
+
+  " 删除之前term窗口
+  if curTermBufnr != -1 && bufexists(curTermBufnr)
+    execute 'bw! ' . curTermBufnr
+  endif
+  " 开启新term窗口
+  belowright 11 split __quickrun__
+  setlocal buftype=nofile
+        \ nobuflisted
+        \ nomodifiable
+        \ noim
+        \ noswapfile
+        \ nospell
+        \ winfixheight
+  let s:TermBufnr[origBufnr] = bufnr()
+
+  " 开启input窗口并跳回term窗口
+  if curInputBufnr != -1 && bufexists(curInputBufnr)
+    silent belowright vert 30 split +exe\ 'b\ '.curInputBufnr
+    setl winfixheight
+    winc p
+  endif
+endfunction
+
+function! s:try_open_term_and_input() abort
+  let curTermBufnr = get(s:TermBufnr, bufnr(), -1)
+  let curInputBufnr = get(s:InputBufnr, bufnr(), -1)
+  let origBufnr = bufnr()
+
+  if curTermBufnr != -1 && bufexists(curTermBufnr)
     belowright 11 split +exe\ 'b\ '.curTermBufnr
     setl winfixheight
   endif
 
-  if curInputBufnr != -1 && bufexists(curInputBufnr) && exists('openTermOrInput')
-    if bufnr() == origBufnr " 没有打开term
+  if curInputBufnr != -1 && bufexists(curInputBufnr)
+    if bufnr() == origBufnr
       silent belowright 11 split +exe\ 'b\ '.curInputBufnr
       setl winfixheight
     else
       silent belowright vert 30 split +exe\ 'b\ '.curInputBufnr
       setl winfixheight
     endif
-    winc p
   endif
-  " 创建新term时不跳回原buf，用于调用termopen()
-  if !exists('a:1') || a:1 != 1
-    call win_gotoid(bufwinid(origBufnr))
-  endif
+
+  call win_gotoid(bufwinid(origBufnr))
 endfunction
 
-function! SpaceVim#plugins#quickrun#OpenInputWin()
-  let inputfile = expand('%:t') . '.input'
-  let b:QuickrunCmdRedir = '< '.inputfile
 
-  let winLayout = split(substitute(string(winlayout()), '\D', ' ', 'g'))
-  let terms = values(s:TermBufnr)
-  let origBufnr = bufnr()
-  let tagInputWinid = bufwinid(get(s:InputBufnr, origBufnr, -1))
-  for winid in winLayout
-    let bufnr = winbufnr(winid)
-    if index(terms, bufnr) != -1
-      let tagTermWinid = winid
-    endif
-    if winid == tagInputWinid
-      call win_gotoid(tagInputWinid)
-      return
-    endif
-  endfor
-  if exists('tagTermWinid')
-    call win_gotoid(tagTermWinid)
-    execute 'silent belowright vert 30 split ' . inputfile
-  else
-    execute 'silent belowright 11 split ' . inputfile
+function! s:toggle_termwin_manually() abort
+  let isOpend = s:close_all_term_and_input()
+
+  if isOpend
+    return
   endif
-  let s:InputBufnr[origBufnr] = bufnr()
-  setlocal ft=Input
-      \ nobuflisted
-      \ noswapfile
-      \ nospell
-      \ winfixheight
+
+  call s:try_open_term_and_input()
+endfunction
+
+
+function! s:toggle_termwin_automatically()
+  if &buflisted ==# 0
+    return
+  endif
+
+  call s:close_all_term_and_input()
+  call s:try_open_term_and_input()
+endfunction
+
+
+function! SpaceVim#plugins#quickrun#OpenInputWin()
+  let curInputBufnr = get(s:InputBufnr, bufnr(), -1)
+  let origBufnr = bufnr()
+
+  if bufwinid(curInputBufnr) != -1
+    call win_gotoid(bufwinid(curInputBufnr))
+    return
+  endif
+
+  call s:close_all_term_and_input()
+  if curInputBufnr == -1
+    let inputfile = expand('%:t') . '.input'
+    let b:QuickrunCmdRedir = '< '.inputfile
+    execute 'silent belowright 11 split ' . inputfile
+    let s:InputBufnr[origBufnr] = bufnr()
+    setlocal ft=Input
+        \ nobuflisted
+        \ noswapfile
+        \ nospell
+        \ winfixheight
+    winc p  " 触发toggle_termwin_automatically()
+  else
+    call s:try_open_term_and_input()
+  endif
+  call win_gotoid(bufwinid(s:InputBufnr[origBufnr]))
+
   if !filereadable(inputfile)
     w
   endif
 endfunction
+
 
 function! s:get_timestamp(file)
   return py3eval('time.strftime("%y%m%d%H%M%S", time.localtime(os.path.getmtime("'.a:file.'")))')
@@ -198,7 +221,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   endif
 
   let win = win_getid()
-  call s:open_termwin(1)
+  call s:open_termwin_quickrun()
   if debug_mode
     if qr_debug =~# '^!'  " backgroud mode
       call termopen(qr_prepare
@@ -216,7 +239,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
 endfunction
 
 function! SpaceVim#plugins#quickrun#run_task(cmd, opts, isBackground) abort
-  call s:open_termwin(1)
+  call s:open_termwin_quickrun()
   let cmd = split(a:cmd)[0]
   let args = substitute(a:cmd, '^\w*\s*', '', 'g')
   let env = ''
@@ -301,8 +324,8 @@ function! SpaceVim#plugins#quickrun#prepare()
       exe 'autocmd FileType '.thisFT.' call s:init_buffer(&ft)'
     endfor
 
-    autocmd BufEnter * call s:open_termwin()
-    nnoremap <silent> <F9> :call <SID>open_termwin(2)<cr>
+    autocmd BufEnter * call s:toggle_termwin_automatically()
+    nnoremap <silent> <F9> :call <SID>toggle_termwin_manually()<cr>
 
     if has('nvim')
       " au WinEnter * call s:term_enter()
