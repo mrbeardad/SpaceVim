@@ -111,7 +111,6 @@ function! s:autocomplete_after()
     let g:ycm_clangd_uses_ycmd_caching = 0
     let g:ycm_cache_omnifunc = 0
     let g:ycm_confirm_extra_conf = 0
-    let g:ycm_show_diagnostics_ui = 0
     let g:ycm_max_num_candidates = 50
     let g:ycm_max_num_identifier_candidates = 20
     let g:ycm_key_invoke_completion = '<C-Z>'
@@ -139,10 +138,10 @@ function! s:checker_before()
     let g:ale_linters_explicit = 1
     let g:ale_linters = {
                 \ 'c': ['gcc', 'cppcheck'],
-                \ 'cpp': ['cppcheck', 'gcc', 'clangtidy'],
+                \ 'cpp': ['cppcheck', 'clangtidy'],
                 \ 'python': ['bandit', 'pylint'],
                 \ 'sh': ['shellcheck'],
-                \ 'vim': ['ale_custom_linting_rules', 'vimls', 'vint'],
+                \ 'vim': ['ale_custom_linting_rules', 'vint'],
                 \ }
   endif
 endfunction
@@ -175,6 +174,9 @@ function! s:checker_after()
       \ '-*llvmlibc*',
       \ ]
     let g:ale_python_pylint_options = '-d C0103,C0301,C0112,C0115,C0116,C0114'
+    let g:ycm_show_diagnostics_ui = 1
+    let g:ycm_error_symbol = g:spacevim_error_symbol
+    let g:ycm_warning_symbol = g:spacevim_warning_symbol
 
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
@@ -206,16 +208,17 @@ endfunction
 
 function! s:lang_c_after()
   function! s:set_lang_cpp_std()
-    let line = filter(split(execute('YcmDebugInfo'), '\n'), 'v:val =~# "Clangd Compilation Command:"')
-    if len(line) == 0
+    let file = findfile('.ycm_extra_conf.py', '.;'.$HOME)
+    if file !=# ''
+      exe 'py3file '. file
+      for thisFlag in py3eval('Settings()').flags
+        if thisFlag =~# '-std='
+          let b:lang_cpp_std = thisFlag
+        endif
+      endfor
+    endif
+    if get(b:, 'lang_cpp_std', '') ==# ''
       let b:lang_cpp_std = '-std=c++20'
-    else
-      let line = substitute(line[0], '.*\(-std=c++\d\+\).*', '\1', '')
-      if len(line) == 0
-        let b:lang_cpp_std = '-std=c++20'
-      else
-        let b:lang_cpp_std = line
-      endif
     endif
 
     let g:ale_cpp_cc_options = b:lang_cpp_std . ' -O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion '

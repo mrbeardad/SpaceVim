@@ -1441,8 +1441,8 @@ hi! link cOperator        GruvboxBlue
 hi! link Function         GruvboxGreenBold
 hi! link Structure        GruvboxGreen
 hi! link Identifier       GruvboxPurple
-hi! link Number           GruvboxAquaBold
-hi! link Float            GruvboxBlueBold
+hi! link Number           GruvboxPurpleBold
+hi! link Float            GruvboxRedBold
 hi! link String           GruvboxGreenSign
 hi! link Statement        GruvboxRed
 

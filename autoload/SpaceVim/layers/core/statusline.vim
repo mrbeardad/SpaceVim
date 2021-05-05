@@ -266,6 +266,10 @@ elseif g:spacevim_lint_engine ==# 'ale'
     let counts = ale#statusline#Count(bufnr(''))
     let warnings = counts.warning + counts.style_warning
     let errors = counts.error + counts.style_error
+    if exists('b:ycm_completing')
+      let warnings += youcompleteme#GetWarningCount()
+      let errors += youcompleteme#GetErrorCount()
+    endif
     let l =  warnings ? '%#SpaceVim_statusline_warn# ● ' . warnings . ' ' : ''
     let l .=  errors ? (warnings ? '' : ' ') . '%#SpaceVim_statusline_error#● ' . errors  . ' ' : ''
     return l

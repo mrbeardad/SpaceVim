@@ -959,6 +959,8 @@ hi! CursorLineNr  gui=BOLD    guifg=#2aa198
 hi! LineNr        gui=none    guifg=#586e75
 hi! MatchParen    gui=BOLD    guifg=#dc322f guibg=#586e75
 hi! Search        gui=reverse guifg=#b58900
+exe "hi! YcmErrorSign"          . s:fg_orange   .s:bg_none   .s:fmt_none
+exe "hi! YcmWarningSign"        . s:fg_yellow   .s:bg_none   .s:fmt_none
 
 " For C++ Syntax Highlight
 exe "hi! Type"            .s:fmt_ital   .s:fg_yellow  .s:bg_none

@@ -592,6 +592,7 @@ call s:h("Search",        { "fg": s:black,        "bg": s:yellow })
 call s:h("MoreMsg",        { "fg": s:black,        "bg": s:yellow })
 
 call s:h("ALEWarningSign",{ "fg": s:yellow, })
+call s:h("YcmWarningSign",{ "fg": s:yellow, })
 
 " For C++ Syntax Highlight
 call s:h("Type",          { "fg": s:yellow,       "gui": "italic" })
@@ -601,7 +602,7 @@ call s:h("Operator",      { "fg": s:cyan })
 call s:h("Function",      { "fg": s:blue,         "gui": "bold" })
 call s:h("Structure",     { "fg": s:blue })
 call s:h("Identifier",    { "fg": s:red })
-call s:h("Number",        { "fg": s:blue_purple,  "gui": "bold" })
-call s:h("Float",         { "fg": s:cyan,         "gui": "bold" })
+call s:h("Number",        { "fg": s:dark_yellow,  "gui": "bold" })
+call s:h("Float",         { "fg": s:cyan,         "gui": "italic" })
 call s:h("String",        { "fg": s:green,        "gui": "italic" })
 call s:h("Statement",     { "fg": s:purple })

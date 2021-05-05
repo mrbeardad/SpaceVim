@@ -181,7 +181,9 @@ hi! Operator        gui=none    guifg=#87afff
 hi! Function        gui=BOLD    guifg=#df5faf
 hi! Structure       gui=none    guifg=#df5faf
 hi! Identifier      gui=none    guifg=#00af87
-hi! Float           gui=BOLD    guifg=#87afff
-hi! Number          gui=BOLD    guifg=#5f87df
+hi! Float           gui=ITALIC
+hi! Number          gui=BOLD
+" hi! Float           gui=BOLD    guifg=#87afff
+" hi! Number          gui=BOLD    guifg=#5f87df
 hi! String          gui=ITALIC  guifg=#00dfd7
 hi! Statement       gui=none    guifg=#af5fff

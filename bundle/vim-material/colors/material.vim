@@ -209,6 +209,7 @@ hi! Search        gui=underline guifg=#00ff00
 hi! SignColumn    gui=none      guibg=#374349
 hi! Pmenu         guifg=#d7dfff guibg=#323232
 call s:hi("ALEWarningSign",s:gui.yellow,     "",               "", "", "")
+call s:hi("YcmWarningSign",s:gui.yellow,     "",               "", "", "")
 
 " For C++ Syntax Highlight
 call s:hi("Type",         s:gui.yellow,     "",               "", "", "italic")
@@ -219,6 +220,6 @@ call s:hi("Function",     s:gui.blue,       "",               "", "", "bold")
 call s:hi("Structure",    s:gui.blue,       "",               "", "", "")
 call s:hi("Identifier",   s:gui.brown,      "",               "", "", "")
 call s:hi("Number",       s:gui.red,        "",               "", "", "bold")
-call s:hi("Float",        s:gui.cyan,       "",               "", "", "bold")
+call s:hi("Float",        s:gui.cyan,       "",               "", "", "italic")
 call s:hi("String",       s:gui.light_teal, "",               "", "", "italic")
 call s:hi("Statement",    s:gui.purple,     "",               "", "", "")
