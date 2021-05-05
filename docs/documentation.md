@@ -847,7 +847,7 @@ Navigation is centered on the `hjkl` keys with the hope of providing a fast navi
 | `y y`                 | Copy file full path to system clipboard           |
 | `y Y`                 | Copy file to system clipboard                     |
 | `P`                   | Paste file to the position under the cursor       |
-| `.`                   | Toggle visible ignored files                      |
+| `.`                   | Toggle hidden files                               |
 | `s v`                 | Split edit                                        |
 | `s g`                 | Vertical split edit                               |
 | `p`                   | Preview                                           |
@@ -856,8 +856,8 @@ Navigation is centered on the `hjkl` keys with the hope of providing a fast navi
 | `g x`                 | Execute with vimfiler associated                  |
 | `'`                   | Toggle mark current line                          |
 | `V`                   | Clear all marks                                   |
-| `>`                   | iecrease filetree screenwidth                     |
-| `<`                   | dncrease filetree screenwidth                     |
+| `>`                   | increase filetree screenwidth                     |
+| `<`                   | decrease filetree screenwidth                     |
 | `<Home>`              | Jump to first line                                |
 | `<End>`               | Jump to last line                                 |
 | `Ctrl-Home`           | Switch to project root directory                  |
@@ -1408,6 +1408,17 @@ After pressing `SPC f /`, the find window will be opened. It is going to run `fi
 By default, `find` is the default tool, you can use `ctrl-e` to switch tools.
 
 ![find](https://user-images.githubusercontent.com/13142418/97999590-79717000-1e26-11eb-91b1-458ab30d6254.gif)
+
+To change the default file searching tool, you can use `file_searching_tools` option.
+It is `[]` by default.
+
+```toml
+[options]
+    file_searching_tools = ['find', 'find -not -iwholename "*.git*" ']
+```
+
+The first item is the name of the tool, the second one is the default searching command.
+
 
 #### Vim and SpaceVim files
 
