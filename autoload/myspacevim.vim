@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 19.04.2021
+" Last Modified Date: 05.05.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -22,73 +22,88 @@ function! s:file_icons()
         \}
 endfunction
 
+
 function! s:runner_before()
-  let g:quickrun_default_flags = {
-      \ 'cpp': {
-          \ 'compiler': "g++",
-          \ 'compileFlags': '-g3 -ggdb3 -D_GLIBCXX_DEBUG -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
-          \ 'extRegex': [
-              \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
-              \ '^#\s*include\s*[<"]dlfcn.h[>"]',
-              \ '^#\s*include\s*[<"]pty.h[>"]',
-              \ '^#\s*include\s*[<"]boost/locale\.hpp[>"]',
-              \ '^#\s*include\s*[<"]*asio/ssl\.hpp[>"]',
-              \ '^#\s*include\s*[<"](*asio/co_spawn\.hpp\|coroutine)[>"]',
-              \ '^#\s*include\s*[<"]glog/.*[>"]',
-              \ '^#\s*include\s*[<"]gtest/.*[>"]',
-              \ '^#\s*include\s*[<"]gmock/.*[>"]',
-              \ '^#\s*include\s*[<"]mysql++/.*[>"]',
-              \ '^#\s*include\s*[<"]srchilite/.*[>"]',
-          \ ],
-          \ 'extFlags': [
-              \ '-lpthread',
-              \ '-ldl',
-              \ '-lutil',
-              \ '-lboost_locale',
-              \ '-lssl -lcrypto',
-              \ '-fcoroutines',
-              \ '-lglog',
-              \ '-lgtest -lgtest_main',
-              \ '-lgmock',
-              \ '-I/usr/include/mysql -lmysqlpp',
-              \ '-lsource-highlight',
-          \ ],
-          \ 'cmd': '${exeFile}',
-          \ 'cmdArgs': '',
-          \ 'cmdRedir': '',
-          \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
-      \ },
-      \ 'c': {
-          \ 'compiler': 'gcc',
-          \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
-          \ 'cmd': '${exeFile}',
-          \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
-      \ },
-      \ 'python': {
-          \ 'cmd': '/bin/python ${file}',
-          \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
-          \}
-  \ }
+  if g:spacevim_terminal_runner
+    let g:quickrun_default_flags = {
+        \ 'cpp': {
+            \ 'compiler': 'g++',
+            \ 'compileFlags': '-g3 -ggdb3 -D_GLIBCXX_DEBUG -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
+            \ 'extRegex': [
+                \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
+                \ '^#\s*include\s*[<"]dlfcn.h[>"]',
+                \ '^#\s*include\s*[<"]pty.h[>"]',
+                \ '^#\s*include\s*[<"]boost/locale\.hpp[>"]',
+                \ '^#\s*include\s*[<"]*asio/ssl\.hpp[>"]',
+                \ '^#\s*include\s*[<"](*asio/co_spawn\.hpp\|coroutine)[>"]',
+                \ '^#\s*include\s*[<"]glog/.*[>"]',
+                \ '^#\s*include\s*[<"]gtest/.*[>"]',
+                \ '^#\s*include\s*[<"]gmock/.*[>"]',
+                \ '^#\s*include\s*[<"]mysql++/.*[>"]',
+                \ '^#\s*include\s*[<"]srchilite/.*[>"]',
+            \ ],
+            \ 'extFlags': [
+                \ '-lpthread',
+                \ '-ldl',
+                \ '-lutil',
+                \ '-lboost_locale',
+                \ '-lssl -lcrypto',
+                \ '-fcoroutines',
+                \ '-lglog',
+                \ '-lgtest -lgtest_main',
+                \ '-lgmock',
+                \ '-I/usr/include/mysql -lmysqlpp',
+                \ '-lsource-highlight',
+            \ ],
+            \ 'cmd': '${exeFile}',
+            \ 'cmdArgs': '',
+            \ 'cmdRedir': '',
+            \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+        \ },
+        \ 'c': {
+            \ 'compiler': 'gcc',
+            \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
+            \ 'cmd': '${exeFile}',
+            \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+        \ },
+        \ 'python': {
+            \ 'cmd': '/bin/python ${file}',
+            \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
+            \}
+    \ }
+  endif
 endfunction
+
 
 function! s:autocomplete_before()
   if g:spacevim_autocomplete_method ==# 'ycm'
     let g:ycm_filetype_whitelist = {
-          \ "c":1,
-          \ "cpp":1,
-          \ "python":1,
-          \ "vim":1,
-          \ "sh":1,
-          \ "cmake":1
-          \ }
+            \ 'c':1,
+            \ 'cpp':1,
+            \ 'python':1,
+            \ 'sh':1,
+            \ 'vim':1,
+            \ 'cmake':1
+            \ }
       let g:ycm_semantic_triggers = {
-            \ "c":['re!\w\w'],
-            \ "cpp":['re!\w\w'],
-            \ "python":['re!\w\w']
+            \ 'c':['re!\w\w'],
+            \ 'cpp':['re!\w\w'],
+            \ 'python':['re!\w\w'],
+            \ 'sh':['re![\w-]{2}', '/', '-'],
+            \ 'vim':['re!\w\w'],
             \ }
     let g:ycm_clangd_args = [ '--header-insertion=never' ]
+    augroup MySpaceVimAutocomplete
+      for ft in keys(g:ycm_semantic_triggers)
+        exe 'autocmd FileType '.ft.' nnoremap <silent> gd :YcmCompleter GoTo<CR>'
+        exe 'autocmd FileType '.ft.' nnoremap <silent> gr :YcmCompleter GoToReferences<CR>'
+        exe 'autocmd FileType '.ft." nnoremap <silent> gc :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
+        exe 'autocmd FileType '.ft.' nnoremap <silent> gt :YcmCompleter GetType<CR>'
+      endfor
+    augroup END
   endif
 endfunction
+
 
 function! s:autocomplete_after()
   if g:spacevim_autocomplete_method ==# 'ycm'
@@ -103,22 +118,15 @@ function! s:autocomplete_after()
     let g:ycm_key_list_select_completion = ['<TAB>']
     let g:ycm_key_list_previous_completion = ['<S-TAB>']
     let g:ycm_seed_identifiers_with_syntax = 1
-    let g:ycm_collect_identifiers_from_tags_files = 1
+    let g:ycm_collect_identifiers_from_tags_files = 0
     let g:ycm_collect_identifiers_from_comments_and_strings = 1
 
-    let g:_spacevim_mappings_g['d'] = ['YcmCompleter GoTo', 'Go to definition/declaration']
-    nnoremap <silent> gd :YcmCompleter GoTo<CR>
-    let g:_spacevim_mappings_g['r'] = ['YcmCompleter GoToReferences', 'Go to reference']
-    nnoremap <silent> gr :YcmCompleter GoToReferences<CR>
-    let g:_spacevim_mappings_g['c'] = ['YcmCompleter RefactorRename', 'Refactor and rename']
-    nnoremap <silent> gc :exe 'YcmCompleter RefactorRename '.input('refactor "'.expand('<cword>').'" to:')<cr>
-    let g:_spacevim_mappings_g['t'] = ['YcmCompleter GetType', 'Get Type']
-    nnoremap <silent> gt :YcmCompleter GetType<CR>
   endif
 endfunction
 
+
 function! s:checker_before()
-  if g:spacevim_lint_engine == 'ale'
+  if g:spacevim_lint_engine ==# 'ale'
     let g:ale_disable_lsp = 1
     let g:ale_completion_enabled = 0
     let g:ale_set_highlights = 1
@@ -130,20 +138,24 @@ function! s:checker_before()
     let g:ale_lint_on_save = 0
     let g:ale_linters_explicit = 1
     let g:ale_linters = {
-          \   'cpp': ['cppcheck', 'gcc', 'clangtidy'],
-          \   'c': ['gcc', 'cppcheck'],
-          \   'sh': ['shellcheck'],
-          \   'python': ['bandit', 'pylint'],
-          \}
+                \ 'c': ['gcc', 'cppcheck'],
+                \ 'cpp': ['cppcheck', 'gcc', 'clangtidy'],
+                \ 'python': ['bandit', 'pylint'],
+                \ 'sh': ['shellcheck'],
+                \ 'vim': ['ale_custom_linting_rules', 'vimls', 'vint'],
+                \ }
   endif
 endfunction
 
+
 function! s:checker_after()
-  if g:spacevim_lint_engine == 'ale'
+  if g:spacevim_lint_engine ==# 'ale'
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
-    let g:ale_python_pylint_options = '-d C0103,C0301,C0112,C0115,C0116,C0114'
+    let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability'
     let g:ale_cpp_cc_executable = 'gcc'
+    let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion '
     let g:ale_cpp_clangtidy_executable = 'echo'
+    let g:ale_cpp_clangtidy_options = ' -I. '
     let g:ale_cpp_clangtidy_checks = ['*',
       \ '-abseil*',
       \ '-android*',
@@ -162,15 +174,7 @@ function! s:checker_after()
       \ '-readability-isolate-declaration',
       \ '-*llvmlibc*',
       \ ]
-
-    function! s:update_ale_cpp_std()
-      if !exists('b:lang_cpp_std')
-        return
-      endif
-      let g:ale_cpp_cc_options = '-O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion ' . b:lang_cpp_std
-      let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.b:lang_cpp_std
-      let g:ale_cpp_clangtidy_options = ' -I. ' . b:lang_cpp_std
-    endfunction
+    let g:ale_python_pylint_options = '-d C0103,C0301,C0112,C0115,C0116,C0114'
 
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
@@ -178,25 +182,8 @@ function! s:checker_after()
   endif
 endfunction
 
-function! s:lang_c_before()
-  function! s:change_namespace()
-    let WORD = expand('<cWORD>')
-    normal diW
-    if match(WORD, 'std::') != 0
-      return 'std::'.WORD
-    elseif match(WORD, 'std::filesystem') == 0
-      return substitute(WORD, 'std::filesystem', 'fs', 'g')
-    elseif match(WORD, 'std::ios_base\>\|std::ios\>') == 0
-      return substitute(WORD, 'std::ios\w*', 'io', 'g')
-    elseif match(WORD, 'std::chrono') == 0
-      return substitute(WORD, 'std::chrono', 'ch', 'g')
-    " elseif match(WORD, 'std::this_thread') == 0
-    "   return substitute(WORD, 'std::this_thread', 'th', 'g')
-    " elseif match(WORD, 'std::regex_constants') == 0
-    "   return substitute(WORD, 'std::regex_constants', 'reg', 'g')
-    endif
-  endfunction
 
+function! s:lang_c_before()
   let g:cppman_open_mode = '<auto>'
   let g:cpp_nofunction_highlight = 1
   let g:cpp_simple_highlight = 0
@@ -208,44 +195,39 @@ function! s:lang_c_before()
   call SpaceVim#custom#LangSPC('cpp', 'nnore', ['p'],
         \ ":set paste\<cr>i\<c-r>=protodef#ReturnSkeletonsFromPrototypesForCurrentBuffer({'includeNS' : 0})\<cr>\<esc>='[:set nopaste\<cr>",
         \ 'protodef in namespace', 0)
-  augroup MySpaceVim
-    autocmd!
-    autocmd FileType cpp inoremap <silent><buffer><m-m> <c-c>i<c-r>=<SID>change_namespace()<cr>
-    autocmd FileType cpp nnoremap <silent><buffer><m-m> i<c-r>=<SID>change_namespace()<cr><c-c>
+
+  augroup MySpaceVimLangC
     autocmd FileType cpp nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
     autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
-    autocmd User ALELintPost let g:ale_cpp_clangtidy_executable = ':'
+    autocmd User ALELintPost let g:ale_cpp_clangtidy_executable = 'echo'
   augroup END
 endfunction
 
-function! s:set_lang_cpp_std()
-  let line = filter(split(execute('YcmDebugInfo'), '\n'), 'v:val =~ "-- Extra configuration path:"')
-  if len(line) == 0
-    let b:lang_cpp_std = '-std=c++20'
-  else
-    let ycmConfigFile = substitute(line[0], '-- Extra configuration path: ', '', '')
-    let line = filter(readfile(ycmConfigFile), 'v:val =~ "-std=c++"')
+
+function! s:lang_c_after()
+  function! s:set_lang_cpp_std()
+    let line = filter(split(execute('YcmDebugInfo'), '\n'), 'v:val =~# "Clangd Compilation Command:"')
     if len(line) == 0
       let b:lang_cpp_std = '-std=c++20'
     else
-      let b:lang_cpp_std = substitute(line[0], '.*\(-std=c++\d\+\).*', '\1', '')
+      let line = substitute(line[0], '.*\(-std=c++\d\+\).*', '\1', '')
+      if len(line) == 0
+        let b:lang_cpp_std = '-std=c++20'
+      else
+        let b:lang_cpp_std = line
+      endif
     endif
-  endif
-  let g:fuck = 1
-endfunction
 
-function! s:lang_c_after()
-  if g:spacevim_autocomplete_method ==# 'ycm'
-    " follow ycm cpp std config
-    augroup MySpaceVim
-      autocmd! FileType cpp call s:set_lang_cpp_std() | let b:QuickrunCompileFlag = b:lang_cpp_std.' '.b:QuickrunCompileFlag
-    augroup END
-    if g:spacevim_lint_engine == 'ale'
-      augroup MySpaceVim
-        autocmd! User ALELintPre call s:update_ale_cpp_std()
-      augroup END
-    endif
-  endif
+    let g:ale_cpp_cc_options = b:lang_cpp_std . ' -O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion '
+    let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.b:lang_cpp_std
+    let g:ale_cpp_clangtidy_options = ' -I. ' . b:lang_cpp_std
+
+    let b:QuickrunCompileFlag = b:lang_cpp_std.' '.b:QuickrunCompileFlag
+  endfunction
+
+  augroup MySpaceVimLangC
+    autocmd FileType cpp call s:set_lang_cpp_std()
+  augroup END
 endfunction
 
 
@@ -387,20 +369,10 @@ function! s:tools_before()
 endfunction
 
 function! s:ui_after()
-  function! s:defx_toggle_without_jump()
-    let defxWinNr = win_findbuf(buffer_number('[defx] -0'))
-    if defxWinNr != []
-      Defx -direction=botright
-    else
-      Defx -direction=botright
-      winc p
-    endif
-  endfunction
-
   let g:indentLine_char =  '¦'
   let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx', 'json']
   nnoremap <silent> <F1> :TagbarToggle<CR>
-  nnoremap <silent> <F3> :call <SID>defx_toggle_without_jump()<cr>
+  nnoremap <silent> <F3> :Defx -direction=botright -no-focus<cr>
   nnoremap <silent> <F7> :call SpaceVim#plugins#tabmanager#open()<cr>
 endfunction
 

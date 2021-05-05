@@ -175,11 +175,14 @@
     name = "lang#c"
 
 [[layers]]
-    name = "lang#markdown"
+    name = "lang#python"
+
+[[layers]]
+    name ="lang#sh"
 
 [[layers]]
     name ="lang#vim"
 
 [[layers]]
-    name ="lang#python"
+    name = "lang#markdown"
 

@@ -589,6 +589,7 @@ call s:h("CursorLineNr",  { "fg": s:light_red,    "gui": "bold" })
 call s:h("LineNr",        { "fg": s:comment_grey })
 call s:h("MatchParen",    { "fg": s:blue,         "gui": "reverse,bold" })
 call s:h("Search",        { "fg": s:black,        "bg": s:yellow })
+call s:h("MoreMsg",        { "fg": s:black,        "bg": s:yellow })
 
 call s:h("ALEWarningSign",{ "fg": s:yellow, })
 

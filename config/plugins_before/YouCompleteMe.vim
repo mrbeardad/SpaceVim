@@ -16,6 +16,7 @@ let g:ycm_key_invoke_completion =
 let g:ycm_semantic_triggers = get(g:, 'ycm_semantic_triggers', {})
 
 function! s:set_ft_triggers(ft, expr, override) abort
+  return
   if a:override
     let g:ycm_semantic_triggers[a:ft] = a:expr
   elseif !has_key(g:ycm_semantic_triggers, a:ft)
