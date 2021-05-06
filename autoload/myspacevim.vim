@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 05.05.2021
+" Last Modified Date: 06.05.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -180,8 +180,53 @@ function! s:checker_after()
 
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'ALEDetail', 'Detail error information', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'call myspacevim#show_detailed_diagnostic()', 'Detail error information', 1)
   endif
+endfunction
+
+function! myspacevim#show_detailed_diagnostic() abort
+  let bufnr = bufnr('YcmShowDetailedDiagnostic')
+  let winid = bufwinid(bufnr)
+  if ( winid != -1 )
+    exe 'bd! '.bufnr
+  endif
+
+  let content = execute('YcmShowDetailedDiagnostic')
+  if content ==# "\nNo diagnostics for current line."
+    let content = ''
+  else
+    let content .= "\n\n"
+  endif
+
+  let [l:info, l:loc] = ale#util#FindItemAtCursor(bufnr())
+  if !empty(l:loc)
+    let content .= get(l:loc, 'detail', l:loc.text)
+  endif
+
+  let content = split(content, "\n")
+  if len(content) == 0
+    echom 'No diagnostics for current line.'
+    return
+  endif
+
+  silent pedit YcmShowDetailedDiagnostic
+  wincmd P
+
+  setlocal modifiable
+  setlocal noreadonly
+  setlocal nobuflisted
+  setlocal buftype=nofile
+  setlocal bufhidden=wipe
+  :%d
+  call setline(1, content)
+  setlocal nomodifiable
+  setlocal readonly
+
+  syntax keyword ErrorMsg error
+  syntax keyword WarningMsg warning
+  syntax keyword Include note
+
+  winc p
 endfunction
 
 
