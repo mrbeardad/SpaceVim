@@ -954,7 +954,7 @@ autocmd GUIEnter * if (has('gui_running')) | exe "colorscheme " . g:colors_name 
 hi! Normal        gui=none    guifg=#b4b4b4
 hi! Comment       gui=ITALIC  guifg=#586e75
 hi! NonText       gui=none    guifg=#555555
-hi! CursorLine    gui=none    guibg=#2c4b53
+hi! CursorLine    gui=none    guibg=#2c3c50
 hi! CursorLineNr  gui=BOLD    guifg=#2aa198
 hi! LineNr        gui=none    guifg=#586e75
 hi! MatchParen    gui=BOLD    guifg=#dc322f guibg=#586e75

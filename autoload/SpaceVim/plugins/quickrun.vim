@@ -8,12 +8,8 @@
 
 let s:TermBufnr = {}
 let s:InputBufnr = {}
-let g:InputBufnr = s:InputBufnr
-" @parme
-" a:1 为空表示用于自动切换或关闭term
-" a:1 == 1 表示强制创建一个新term，并且不跳回原窗口
-" a:1 == 2 表示手动开启或关闭term
-function! s:close_all_term_and_input() abort
+
+function! s:close_term_and_input() abort
   let terms = values(s:TermBufnr)
   let inputs = values(s:InputBufnr)
   let winLayout = split(substitute(string(winlayout()), '\D', ' ', 'g'))
@@ -23,7 +19,6 @@ function! s:close_all_term_and_input() abort
     let bufnr = winbufnr(winid)
     if index(terms, bufnr) != -1 || index(inputs, bufnr) != -1
       exe win_id2win(winid).'close'
-      " 关掉了至少一个term或input，表示term之前处于开启状态
       let anyClosed = 1
     endif
   endfor
@@ -32,7 +27,7 @@ endfunction
 
 
 function! s:open_termwin_quickrun() abort
-  call s:close_all_term_and_input()
+  call s:close_term_and_input()
   let curTermBufnr = get(s:TermBufnr, bufnr(), -1)
   let curInputBufnr = get(s:InputBufnr, bufnr(), -1)
   let origBufnr = bufnr()
@@ -60,7 +55,7 @@ function! s:open_termwin_quickrun() abort
   endif
 endfunction
 
-function! s:try_open_term_and_input() abort
+function! s:try_open_term_with_input() abort
   let curTermBufnr = get(s:TermBufnr, bufnr(), -1)
   let curInputBufnr = get(s:InputBufnr, bufnr(), -1)
   let origBufnr = bufnr()
@@ -68,13 +63,7 @@ function! s:try_open_term_and_input() abort
   if curTermBufnr != -1 && bufexists(curTermBufnr)
     belowright 11 split +exe\ 'b\ '.curTermBufnr
     setl winfixheight
-  endif
-
-  if curInputBufnr != -1 && bufexists(curInputBufnr)
-    if bufnr() == origBufnr
-      silent belowright 11 split +exe\ 'b\ '.curInputBufnr
-      setl winfixheight
-    else
+    if curInputBufnr != -1 && bufexists(curInputBufnr)
       silent belowright vert 30 split +exe\ 'b\ '.curInputBufnr
       setl winfixheight
     endif
@@ -85,13 +74,13 @@ endfunction
 
 
 function! s:toggle_termwin_manually() abort
-  let isOpend = s:close_all_term_and_input()
+  let isOpend = s:close_term_and_input()
 
   if isOpend
     return
   endif
 
-  call s:try_open_term_and_input()
+  call s:try_open_term_with_input()
 endfunction
 
 
@@ -100,21 +89,24 @@ function! s:toggle_termwin_automatically()
     return
   endif
 
-  call s:close_all_term_and_input()
-  call s:try_open_term_and_input()
+  call s:close_term_and_input()
+  call s:try_open_term_with_input()
 endfunction
 
 
 function! SpaceVim#plugins#quickrun#OpenInputWin()
+  let curTermBufnr = get(s:TermBufnr, bufnr(), -1)
   let curInputBufnr = get(s:InputBufnr, bufnr(), -1)
   let origBufnr = bufnr()
 
-  if bufwinid(curInputBufnr) != -1
-    call win_gotoid(bufwinid(curInputBufnr))
+  let tagWinId = bufwinid(curInputBufnr)
+  if tagWinId != -1
+    call win_gotoid(tagWinId)
     return
   endif
 
-  call s:close_all_term_and_input()
+  call s:close_term_and_input()
+
   if curInputBufnr == -1
     let inputfile = expand('%:t') . '.input'
     let b:QuickrunCmdRedir = '< '.inputfile
@@ -125,11 +117,16 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
         \ noswapfile
         \ nospell
         \ winfixheight
-    winc p  " 触发toggle_termwin_automatically()
   else
-    call s:try_open_term_and_input()
+    silent belowright 11 split +exe\ 'b\ '.curInputBufnr
   endif
-  call win_gotoid(bufwinid(s:InputBufnr[origBufnr]))
+
+  if curTermBufnr != -1
+    silent belowright vert 30 split
+    winc p
+    exe 'b '.curTermBufnr
+    winc p
+  endif
 
   if !filereadable(inputfile)
     w

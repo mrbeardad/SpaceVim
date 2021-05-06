@@ -181,6 +181,7 @@ function! s:checker_after()
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'call myspacevim#show_detailed_diagnostic()', 'Detail error information', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['e', 'L'], 'YcmDiags', 'Show YcmDiags list', 1)
   endif
 endfunction
 
@@ -192,7 +193,7 @@ function! myspacevim#show_detailed_diagnostic() abort
   endif
 
   let content = execute('YcmShowDetailedDiagnostic')
-  if content ==# "\nNo diagnostics for current line."
+  if content =~# 'No diagnostics for current '
     let content = ''
   else
     let content .= "\n\n"
