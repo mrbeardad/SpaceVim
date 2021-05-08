@@ -162,8 +162,6 @@ endfunction
 
 " a:1 == 1 表示强制重新编译，a:1 == 2 表示启动调试进程，a:1 == 3 表示两者都
 function! SpaceVim#plugins#quickrun#QuickRun(...)
-  " 有些autocmd FileType启动太迟无法触发
-  exe 'set ft='.&ft
   if &modified == 1 | write | endif
   let src_file_path = fnamemodify(expand('%:p'), ':.')
   let exe_file_path = './'.fnamemodify(expand('%:p'), ':.').'.exe'

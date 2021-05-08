@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 06.05.2021
+" Last Modified Date: 08.05.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -41,6 +41,7 @@ function! s:runner_before()
                 \ '^#\s*include\s*[<"]gmock/.*[>"]',
                 \ '^#\s*include\s*[<"]mysql++/.*[>"]',
                 \ '^#\s*include\s*[<"]srchilite/.*[>"]',
+                \ '^#\s*include\s*[<"]fmt/.*[>"]',
             \ ],
             \ 'extFlags': [
                 \ '-lpthread',
@@ -54,6 +55,7 @@ function! s:runner_before()
                 \ '-lgmock',
                 \ '-I/usr/include/mysql -lmysqlpp',
                 \ '-lsource-highlight',
+                \ '-lfmt',
             \ ],
             \ 'cmd': '${exeFile}',
             \ 'cmdArgs': '',
@@ -97,8 +99,8 @@ function! s:autocomplete_before()
       for ft in keys(g:ycm_semantic_triggers)
         exe 'autocmd FileType '.ft.' nnoremap <silent> gd :YcmCompleter GoTo<CR>'
         exe 'autocmd FileType '.ft.' nnoremap <silent> gr :YcmCompleter GoToReferences<CR>'
-        exe 'autocmd FileType '.ft." nnoremap <silent> gc :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
         exe 'autocmd FileType '.ft.' nnoremap <silent> gt :YcmCompleter GetType<CR>'
+        exe 'autocmd FileType '.ft." nnoremap <silent> <m-r> :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
       endfor
     augroup END
   endif
@@ -514,7 +516,7 @@ function! s:set_neovim_after() abort
   nnoremap <silent>d<space> :s/ *$//<cr>:nohl<cr>
   nnoremap <silent>da<space> :%s/ *$//<cr>:nohl<cr>
   nnoremap <silent> <c-w>o <c-w>o:let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>
-  nnoremap <c-l> :let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr>:<cr>
+  nnoremap <c-l> :let &l:statusline = SpaceVim#layers#core#statusline#get(1)<cr><c-l>
 
   function! s:filesize() abort
     let l:size = getfsize(bufname('%'))
