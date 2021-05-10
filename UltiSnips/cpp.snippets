@@ -8,7 +8,7 @@ snippet i
 endsnippet
 
 snippet ii
-#include "${1:myheader}.hpp"
+#include "${1:myheader}"
 endsnippet
 
 snippet tem
@@ -292,11 +292,12 @@ endsnippet
 
 snippet core  "description" w
 #include <algorithm>
-#include <gtest/gtest.h>
 #include <iostream>
 #include <iterator>
 #include <limits>
 #include <numeric>
+
+#include "gtest/gtest.h"
 
 TEST(TestSuit, TestCase)
 {

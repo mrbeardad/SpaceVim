@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 08.05.2021
+" Last Modified Date: 09.05.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -427,6 +427,14 @@ function! s:ui_after()
   nnoremap <silent> <F7> :call SpaceVim#plugins#tabmanager#open()<cr>
 endfunction
 
+function! s:close_window(range)
+  if a:range ==# ''
+    quit
+  else
+    exe substitute(a:range, '.*\(\d\)', '\1', 'g')+1.'close'
+  endif
+endfunction
+
 function! s:colorscheme_before()
   let g:neosolarized_italic = 1
   let g:gruvbox_contrast_dark = 'hard'
@@ -466,7 +474,7 @@ function! s:set_neovim_after() abort
   nnoremap <silent> <leader>b :bp<cr>
   nnoremap <silent><c-w>x :let bufnr_for_delete_with_ctrl_w_x = buffer_number()<cr>:bp<cr>:exe 'bd '.bufnr_for_delete_with_ctrl_w_x<cr>
   nnoremap <silent> <c-w>W :w !sudo tee % > /dev/null<CR><CR>
-  nnoremap <silent> Q :q<cr>
+  nnoremap <silent> Q :<c-b>call <SID>close_window('<c-e>')<cr>
   nnoremap <silent><tab> :winc w<cr>
   nnoremap <silent><s-tab> :winc W<cr>
   nnoremap <silent><s-Right> >>
