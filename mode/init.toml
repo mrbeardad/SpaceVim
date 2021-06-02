@@ -97,6 +97,7 @@
         "fcitx5.vim",
         "jedi-vim",
         "deoplete-jedi",
+        "vim-go"
     ]
 
 ########################### Plugins ###########################
@@ -173,6 +174,9 @@
 
 [[layers]]
     name = "lang#c"
+
+[[layers]]
+    name = "lang#go"
 
 [[layers]]
     name = "lang#python"

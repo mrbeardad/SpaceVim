@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 09.05.2021
+" Last Modified Date: 02.06.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -69,9 +69,12 @@ function! s:runner_before()
             \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
         \ },
         \ 'python': {
-            \ 'cmd': '/bin/python ${file}',
+            \ 'cmd': 'python ${file}',
             \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
-            \}
+        \},
+        \ 'go': {
+            \ 'cmd': 'go run ${file}'
+            \ }
     \ }
   endif
 endfunction
@@ -82,6 +85,7 @@ function! s:autocomplete_before()
     let g:ycm_filetype_whitelist = {
             \ 'c':1,
             \ 'cpp':1,
+            \ 'go':1,
             \ 'python':1,
             \ 'sh':1,
             \ 'vim':1,
@@ -90,6 +94,7 @@ function! s:autocomplete_before()
       let g:ycm_semantic_triggers = {
             \ 'c':['re!\w\w'],
             \ 'cpp':['re!\w\w'],
+            \ 'go':['re!\w\w'],
             \ 'python':['re!\w\w'],
             \ 'sh':['re![\w-]{2}', '/', '-'],
             \ 'vim':['re!\w\w'],
@@ -139,8 +144,9 @@ function! s:checker_before()
     let g:ale_lint_on_save = 0
     let g:ale_linters_explicit = 1
     let g:ale_linters = {
-                \ 'c': ['gcc', 'cppcheck'],
+                \ 'c': ['cppcheck'],
                 \ 'cpp': ['cppcheck', 'clangtidy'],
+                \ 'go': ['golangci-lint'],
                 \ 'python': ['bandit', 'pylint'],
                 \ 'sh': ['shellcheck'],
                 \ 'vim': ['ale_custom_linting_rules', 'vint'],
@@ -230,6 +236,11 @@ function! myspacevim#show_detailed_diagnostic() abort
   syntax keyword Include note
 
   winc p
+endfunction
+
+
+function! s:lang_go_before()
+  let g:go_code_completion_enabled = 0
 endfunction
 
 
@@ -700,6 +711,7 @@ function! myspacevim#before() abort
   call s:checker_before()
   call s:edit_before()
   call s:lang_c_before()
+  call s:lang_go_before()
   call s:leaderf_before()
   call s:lang_markdown_before()
   call s:tools_before()
