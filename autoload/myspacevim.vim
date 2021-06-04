@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 02.06.2021
+" Last Modified Date: 04.06.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -73,7 +73,9 @@ function! s:runner_before()
             \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
         \},
         \ 'go': {
-            \ 'cmd': 'go run ${file}'
+            \ 'compiler': 'go',
+            \ 'compileFlags': 'build -o ${exeFile} ${file}',
+            \ 'cmd': '${exeFile}'
             \ }
     \ }
   endif
@@ -146,7 +148,7 @@ function! s:checker_before()
     let g:ale_linters = {
                 \ 'c': ['cppcheck'],
                 \ 'cpp': ['cppcheck', 'clangtidy'],
-                \ 'go': ['golangci-lint'],
+                \ 'go': ['gofmt', 'govet'],
                 \ 'python': ['bandit', 'pylint'],
                 \ 'sh': ['shellcheck'],
                 \ 'vim': ['ale_custom_linting_rules', 'vint'],
@@ -241,6 +243,14 @@ endfunction
 
 function! s:lang_go_before()
   let g:go_code_completion_enabled = 0
+  let g:go_jump_to_error = 0
+  let g:go_fmt_autosave = 0
+  let g:go_imports_autosave = 0
+endfunction
+
+
+function! s:lang_go_after()
+  au FileType go set expandtab
 endfunction
 
 
@@ -732,6 +742,7 @@ function! myspacevim#after() abort
   call s:lang_markdown_after()
   call s:lang_c_after()
   call s:ui_after()
+  call s:lang_go_after()
   call s:incsearch_after()
   call s:git_after()
   call s:spacevim_after()
