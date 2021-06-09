@@ -1,24 +1,18 @@
 # 写在前面
 
-&emsp; [SpaceVim](https://github.com/SpaceVim/SpaceVim) 确实是个很棒的配置集合。相比于其他热门vim配置，它的文档更详细，开发更活跃，
-而且模块化的设计使得用户可以更方便、更精准地进行自定义，魔改原配置。
-虽然作者建议将custom配置写到单独的文件，但编辑器要用得顺手就是要配置的十分个性化嘛，
-custom文件显然不能满足，于是就自己动手魔改呗。这时模块化配置就体现出优势了，哪里不顺改那里，精准打击✺◟(∗❛ัᴗ❛ั∗)◞✺
+&emsp; [SpaceVim](https://github.com/SpaceVim/SpaceVim) 是一个非常棒的配置集合。
+相比于其他热门vim配置，SpaceVim开发最活跃，功能最完善，文档最齐全。
+模块化的设计使得用户可以更方便、更精准地进行自定义，魔改原配置。
+哪里不顺改那里，精准打击✺◟(∗❛ัᴗ❛ั∗)◞✺
 
-PS: 本配置仅适用于***NeoVim***，Vim的话有许多功能还未支持
+* * * * * * * * * *
 
-* * *
+# 注意注意！敲黑板！[使用手册在此！](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)
 
-几乎所有的快捷键都在[<u>**这个快捷键列表**</u>](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md "超重要的！")
-中列出了， 里面同时包含了vim自带快捷键、SpaceVim原版快捷键以及本魔改版快捷键。  
-
-# 注意注意！敲黑板！[使用手册在此！](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)这个更新更勤快
-
-先look~look我改了哪些地方：
+先look~look我改了哪些地方，然后再按一个个模块来讲解各种特性吧
 
 ![gdi](custom/gdi.png "啊哈！我又换回Manjaro啦！")
 
-接下来就按一个个模块来讲解各种特性吧
 
 # 目录
 <!-- vim-markdown-toc GFM -->
@@ -28,13 +22,13 @@ PS: 本配置仅适用于***NeoVim***，Vim的话有许多功能还未支持
 - [状态栏与标签栏core#statusline,core#tabline](#状态栏与标签栏corestatuslinecoretabline)
 - [符号表、文件树、撤销树](#符号表文件树撤销树)
 - [编辑模块edit](#编辑模块edit)
-- [leaderf](#leaderf)
-- [flygrep](#flygrep)
-- [VersionControl](#versioncontrol)
-- [checker](#checker)
-- [autocomplete](#autocomplete)
+- [模糊搜索leaderf](#模糊搜索leaderf)
+- [文本搜索flygrep](#文本搜索flygrep)
+- [版本管理VersionControl](#版本管理versioncontrol)
+- [代码补全autocomplete](#代码补全autocomplete)
 - [注意：将~/.SpaceVim.d/.ycm_extra_conf.py复制到源文件项目目录下即可启用YCM](#注意将spacevimdycm_extra_confpy复制到源文件项目目录下即可启用ycm)
 - [其中的编译器参数自己看着改](#其中的编译器参数自己看着改)
+- [语法检测checker](#语法检测checker)
 - [runner](#runner)
 - [lang#c](#langc)
 - [lang#markdown](#langmarkdown)
@@ -47,15 +41,16 @@ PS: 本配置仅适用于***NeoVim***，Vim的话有许多功能还未支持
 <!-- vim-markdown-toc -->
 # 颜色主题colorscheme
 &emsp;SpaceVim的 ***colorscheme模块*** 提供了不少颜色主题。
-我将其针对C++语法高亮进行微调，同时也对C++语法高亮插件本身进行了微调。  
-&emsp;只需要在启动nvim时设置环境变量`DARKBG`即可随机启用那些花里胡哨的主题中的一个，
-可以将`alias vi='DARKBG=1 nvim'`加入你的 ***.bashrc /.zshrc*** ，
-不然默认使用透明背景主题 *default-reduce* 。
+我将语法高亮与颜色主题都针对C++源码进行了微调。
+
+&emsp;只需要在启动nvim时设置环境变量`DARKBG=1`即可随机启用那些花里胡哨的主题中的一个，
+或者设置`DARKBG=gruvbox`可指定使用gruvbox主题。
+我一般设置命令别名`alias vi='DARKBG=1 nvim'`
 
 &emsp;演示使用[NerdCodePro字体](https://github.com/mrbeardad/DotFiles/tree/master/fonts)，
 该字体集成了3种字体于一身，使得regular、bold、italic三种style使用三种不同的字体，
-看起来赏心悦目超nice。  
-PS：要是所有终端都像alacritty一样支持不同style不同字体，我至于这么折腾自己吗(*￣︿￣)
+看起来赏心悦目超nice。
+> PS：要是所有终端都像alacritty一样支持不同style不同字体，我至于这么折腾自己吗(*￣︿￣)
 
 **default-reduce**（该主题关闭了nvim的终端真色支持，从而使用终端的配色方案，而且不会影响切换其他主题）  
 ![default-reduce](custom/default-reduce.png)
@@ -76,29 +71,34 @@ PS：要是所有终端都像alacritty一样支持不同style不同字体，我�
 ![material](custom/material.png)  
 
 # 启动界面字符画core#banner
-这个模块提供了许多`SpaceVim`启动界面的字符画，拉风的很。
-> 有惊喜哦>_<
+这个模块提供了许多`SpaceVim`启动界面的字符画，拉风的很。而且有惊喜哦>_<
 
 ![banner](custom/banner.png "俺画的独角兽")
 
 # 状态栏与标签栏core#statusline,core#tabline
-这个模块提供了状态栏与标签栏的配置，若禁用该模块则会启用备胎[vim-airline](https://github.com/vim-airline/vim-airline)
+这两个模块提供了状态栏与标签栏的配置，若禁用该模块则会启用备胎[vim-airline](https://github.com/vim-airline/vim-airline)
 
-**标签栏**  
-![tabline](custom/tabl.png)  
-左边的每块标签包括：标签号与文件名  
+**标签栏**
+
+![tabline](custom/tabl.png)
+
+左边的每块标签包括：
+* 标签号
+* 文件名
+
 最右边的表示：
-1. Buffers：指明左边的标签为buffer
-2. Tabs：指明左边的标签为tab
+* Buffers：指明左边的标签为buffer
+* Tabs：指明左边的标签为tab
 
-**状态栏**  
-![new statusline](custom/new_statusline.png)  
+**状态栏**
+
+![new statusline](custom/new_statusline.png)
+
 从左至右依次是：
 1. 当前vim模式以及窗口号
-
 2. 当前git分支
-3. 当前文件相对项目目录的路径（若文件只读还会显示特殊符号，该符号为[Nerd字体](https://github.com/ryanoasis/nerd-fonts)）
-4. 语法检错报错
+3. 当前文件相对项目目录的路径（若文件只读还会显示特殊符号锁）
+4. 源码语法检错报错
 4. 文件类型
 5. 文件格式|编码格式
 6. 当前行号/总行数 :当前列号
@@ -128,7 +128,7 @@ PS：要是所有终端都像alacritty一样支持不同style不同字体，我�
 * 虽然这个插件不属于edit模块，但还是放这儿一起show一波吧。[多光标编辑](https://github.com/mg979/vim-visual-multi)，大杀器！
 ![VM](https://i.imgur.com/u5pPY5W.gif)
 
-# leaderf
+# 模糊搜索leaderf
 这个模块即是围绕[LeaderF搜索插件](https://github.com/Yggdroot/LeaderF)打造的
 ![leaderf](https://github.com/Yggdroot/Images/raw/master/leaderf/leaderf_2.gif)
 SpaceVim集成该插件时做了一些定制，会与上述官方演示有些不一样，不过都是配置好了的，用就完事儿！
@@ -145,8 +145,10 @@ SpaceVim集成该插件时做了一些定制，会与上述官方演示有些不
 | `<leader>fj`       | 搜索跳转表并跳转        |
 | `<leader>fy`       | 搜索"寄存器历史并复制   |
 | `<leader>fe`       | 搜索所有寄存器并复制    |
-| `<leader>ff`       | 搜索函数(尾缀F全局)     |
-| `<leader>ft`       | 搜寻符号(尾缀T全局)     |
+| `<leader>ff`       | 搜索当前buffer函数      |
+| `<leader>fF`       | 搜索所有buffer函数      |
+| `<leader>ft`       | 搜寻当前buffer符号      |
+| `<leader>fT`       | 搜寻所有buffer符号      |
 | `<leader>fg`       | 利用gtags搜寻标识符     |
 | `<leader>sr`       | 搜索最近打开文件        |
 | `<leader>sb`       | 搜索打开的缓冲区        |
@@ -154,15 +156,13 @@ SpaceVim集成该插件时做了一些定制，会与上述官方演示有些不
 | `<leader>sf`       | 搜索指定目录            |
 | `<leader>sp`       | 搜索当时工程目录文件    |
 
-在Leaderf中的快捷键有：
+在Leaderf窗口中的快捷键有：
 | 快捷键  | 功能                                |
 |---------|-------------------------------------|
-| `<c-e>` | 切换模糊搜索模式                    |
+| `<c-e>` | 切换模糊搜索模式或正则表达式模式    |
 | `<c-c>` | 关闭leaderf                         |
-| `<esc>` | 进入leaderf结果窗口                 |
-| `<F1>`  | 进入leaderf结果窗口后打开快捷键提示 |
 
-# flygrep
+# 文本搜索flygrep
 flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于LeaderF，
 后者用来搜索文件名、代码符号，flygrep用来搜索文件内容
 
@@ -175,52 +175,32 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 | `<space>sd` | 搜索当前目录         |
 | `<space>sf` | 搜索指定目录         |
 | `<space>sp` | 搜索工程目录         |
-| `<space>sj` | 后台搜索工程目录     |
-| `<space>sl` | 打开上次后台搜索结果 |
 
-在flygrep中的快捷键
+在flygrep窗口中的快捷键
 
-| 按键           | 作用             |
-|----------------|------------------|
-| `<c-e>`        | 切换正则搜索模式 |
-| `<m-r>`        | 进入替换模式     |
-| `<c-p>`        | 浮窗预览         |
-| `<c-d>`        | 向下翻页         |
-| `<c-b>`        | 向上翻页         |
-| `<c-s>`        | 水平分屏打开文件 |
-| `<c-v>`        | 竖直分屏打开文件 |
-| `<c-c>或<esc>` | 关闭flygrep      |
+| 按键           | 作用                             |
+|----------------|----------------------------------|
+| `<c-e>`        | 切换正则搜索模式或字符串锁搜模式 |
+| `<m-r>`        | 进入替换模式                     |
+| `<c-p>`        | 浮窗预览                         |
+| `<c-d>`        | 向下翻页                         |
+| `<c-b>`        | 向上翻页                         |
+| `<c-c>或<esc>` | 关闭flygrep                      |
 
 
-# VersionControl
-这俩模块我一半就只用来给statusline加个分支提示，我tmux开个zsh来管理项目不香吗  
-( ◔ ڼ ◔  )  
-不过还是点用滴：
+# 版本管理VersionControl
+这俩模块我一半就只用来给statusline加个分支提示，我tmux开个zsh来管理项目不香吗( ◔ ڼ ◔  )
 
 ![gitgutter](custom/gitgutter.png)
 
 | 快捷键       | 功能                                   |
 |--------------|----------------------------------------|
-| `<space>gs`  | git status                             |
-| `<space>gd`  | git diff                               |
-| `<space>gv`  | 当前文件的git-log                      |
-| `<space>gV`  | 当前仓库的git-log                      |
-| `<space>gS`  | 暂存当前文件                           |
 | `<space>gg`  | 侧栏显示diff（开启gitgutter）          |
 | `<space>ghv` | 浮窗显示diff（需要开启上述gitgutter）  |
 | `<space>ghr` | 撤销diff修改 （需要开启上述gitgutter） |
 
 
-# checker
-&emsp;语法检测使用[ALE](https://github.com/dense-analysis/ale)，
-该插件通过shell来调用使用静态分析器来进行语法检测。
-在底部命令行的位置显示报错与警告，并在边栏显示错误或警告图标，
-在错误代码的位置下显示波浪线（若终端不支持undercurl则回滚为underline下划线）
-![checker](custom/checker.png)
-* `g:ale_lint_on_*` ：这几个变量设置何时触发语法检测，用`:h`查看详细信息，
-    默认只有文件有改动就会触发
-
-# autocomplete
+# 代码补全autocomplete
 &emsp;C++语义补全使用的[YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)，
 可以帮你补全已引入头文件中的函数、变量、类、类成员等等。任意输入两个字母就自动打开补全列表，
 `<tab>`与`<s-tab>`上下选择，`<cr>`完成选择。  
@@ -244,6 +224,16 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 然后按`<M-/>`（<kbd>Alt</kbd>+<kbd>/</kbd>）触发，就会将关键字替换为配置文件中的完整片段。
 然后一路`<M-/>`修改锚点  
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
+
+# 语法检测checker
+&emsp;语法检测使用[ALE](https://github.com/dense-analysis/ale)，
+该插件通过shell来调用使用静态分析器来进行语法检测。
+在底部命令行的位置显示报错与警告，并在边栏显示错误或警告图标，
+在错误代码的位置下显示波浪线（若终端不支持undercurl则回滚为underline下划线）
+![checker](custom/checker.png)
+* `g:ale_lint_on_*` ：这几个变量设置何时触发语法检测，用`:h`查看详细信息，
+    默认只有文件有改动就会触发
+
 
 # runner
 在`~/.SpaceVim.d/init.toml`中的`[option]`下设置`enable_terminal_runner = true`

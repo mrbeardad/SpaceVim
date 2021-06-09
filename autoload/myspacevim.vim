@@ -96,7 +96,7 @@ function! s:autocomplete_before()
             \ 'vim':1,
             \ 'cmake':1
             \ }
-      let g:ycm_semantic_triggers = {
+    let g:ycm_semantic_triggers = {
             \ 'c':['re!\w\w'],
             \ 'cpp':['re!\w\w'],
             \ 'go':['re!\w\w'],
@@ -104,6 +104,14 @@ function! s:autocomplete_before()
             \ 'sh':['re![\w-]{2}', '/', '-'],
             \ 'vim':['re!\w\w'],
             \ }
+    let g:ycm_language_server = 
+      \ [ 
+      \   {
+      \     'name': 'vim',
+      \     'cmdline': [ 'vim-language-server', '--stdio' ],
+      \     'filetypes': [ 'vim' ],
+      \    }
+      \ ]
     let g:ycm_clangd_args = [ '--header-insertion=never' ]
     augroup MySpaceVimAutocomplete
       for ft in keys(g:ycm_semantic_triggers)
