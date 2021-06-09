@@ -110,6 +110,11 @@ function! s:autocomplete_before()
       \     'name': 'vim',
       \     'cmdline': [ 'vim-language-server', '--stdio' ],
       \     'filetypes': [ 'vim' ],
+      \    },
+      \   {
+      \     'name': 'bash',
+      \     'cmdline': [ 'bash-language-server', 'start' ],
+      \     'filetypes': [ 'sh' ],
       \    }
       \ ]
     let g:ycm_clangd_args = [ '--header-insertion=never' ]
