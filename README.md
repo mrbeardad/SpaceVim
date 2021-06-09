@@ -39,7 +39,7 @@
   - [安装指导](#安装指导)
 
 <!-- vim-markdown-toc -->
-# 颜色主题colorscheme
+# 颜色主题
 &emsp;SpaceVim的 ***colorscheme模块*** 提供了不少颜色主题。
 我将语法高亮与颜色主题都针对C++源码进行了微调。
 
@@ -75,7 +75,7 @@
 
 ![banner](custom/banner.png "俺画的独角兽")
 
-# 状态栏与标签栏core#statusline,core#tabline
+# 状态栏与标签栏
 这两个模块提供了状态栏与标签栏的配置，若禁用该模块则会启用备胎[vim-airline](https://github.com/vim-airline/vim-airline)
 
 **标签栏**
@@ -116,7 +116,7 @@
 ![tagbar](custom/defx.png)
 ![tagbar](custom/undo.png)
 
-# 编辑模块edit
+# 高效编辑
 提供了许多插件用于快速、舒服地写代码：
 * 提供许多额外的文本对象：如`e`（entire）、`i`（indent）、`l`（line）、`f`（function）以及最好用的`,`（表示一个逗号分割的函数参数）
 
@@ -128,7 +128,7 @@
 * 虽然这个插件不属于edit模块，但还是放这儿一起show一波吧。[多光标编辑](https://github.com/mg979/vim-visual-multi)，大杀器！
 ![VM](https://i.imgur.com/u5pPY5W.gif)
 
-# 模糊搜索leaderf
+# 模糊搜索
 这个模块即是围绕[LeaderF搜索插件](https://github.com/Yggdroot/LeaderF)打造的
 ![leaderf](https://github.com/Yggdroot/Images/raw/master/leaderf/leaderf_2.gif)
 SpaceVim集成该插件时做了一些定制，会与上述官方演示有些不一样，不过都是配置好了的，用就完事儿！
@@ -162,7 +162,7 @@ SpaceVim集成该插件时做了一些定制，会与上述官方演示有些不
 | `<c-e>` | 切换模糊搜索模式或正则表达式模式    |
 | `<c-c>` | 关闭leaderf                         |
 
-# 文本搜索flygrep
+# 文本搜索
 flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于LeaderF，
 后者用来搜索文件名、代码符号，flygrep用来搜索文件内容
 
@@ -188,7 +188,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 | `<c-c>或<esc>` | 关闭flygrep                      |
 
 
-# 版本管理VersionControl
+# 版本管理
 这俩模块我一半就只用来给statusline加个分支提示，我tmux开个zsh来管理项目不香吗( ◔ ڼ ◔  )
 
 ![gitgutter](custom/gitgutter.png)
@@ -200,23 +200,30 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 | `<space>ghr` | 撤销diff修改 （需要开启上述gitgutter） |
 
 
-# 代码补全autocomplete
-&emsp;C++语义补全使用的[YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)，
-可以帮你补全已引入头文件中的函数、变量、类、类成员等等。任意输入两个字母就自动打开补全列表，
-`<tab>`与`<s-tab>`上下选择，`<cr>`完成选择。  
+# chinese
+提供了vim的中文文档，以及联网翻译器：
+![trans](custom/translator.png)
+
+
+# 代码补全
+&emsp;语义补全引擎默认使用[YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)。
+可以帮你补全命名变量、函数、类、方法等等，任意输入两个字母就自动打开补全列表，
+`<tab>`与`<s-tab>`上下选择，`<cr>`完成选择。
+
 &emsp;刚引入的头文件还需待后台服务进行解析，
-故其中的符号可能不会立刻出现在补全列表中，稍等即可。  
+故其中的符号可能不会立刻出现在补全列表中，稍等即可。
+
 ![autocomplete](custom/autocomplete.png)
- **注意** ：该插件需要手动安装
+
+ **注意：该插件需要手动安装**
  ```sh
  # 插件安装完成后进入YouCompleteMe目录
 cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 
- # 构建补全引擎，除了C++外还 支持其它语言，参数详见`--help`
+ # 构建补全引擎，除了C++外还支持其它语言，如go、python等等，参数详见`--help`
 ./install.py --clangd-completer
 
-# 注意：将~/.SpaceVim.d/.ycm_extra_conf.py复制到源文件项目目录下即可启用YCM
-# 其中的编译器参数自己看着改
+# 对于C++，还需要将~/.SpaceVim/mode/.ycm_extra_conf.py复制到源码目录下，文件中的编译参数可自行修改
  ```
 
 &emsp;除了语义补全，还有代码片段补全，插件为[UltiSnips](https://github.com/SirVer/ultisnips)。
@@ -225,8 +232,8 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 然后一路`<M-/>`修改锚点  
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
 
-# 语法检测checker
-&emsp;语法检测使用[ALE](https://github.com/dense-analysis/ale)，
+# 语法检测
+&emsp;语法检测主要是利用YCM进行的，[ALE](https://github.com/dense-analysis/ale)做辅助，
 该插件通过shell来调用使用静态分析器来进行语法检测。
 在底部命令行的位置显示报错与警告，并在边栏显示错误或警告图标，
 在错误代码的位置下显示波浪线（若终端不支持undercurl则回滚为underline下划线）
@@ -235,7 +242,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
     默认只有文件有改动就会触发
 
 
-# runner
+# 代码运行
 在`~/.SpaceVim.d/init.toml`中的`[option]`下设置`enable_terminal_runner = true`
 即可启用QuickRun替代原版中的Runner来运行程序，QuickRun与后者区别在于：
 * 使用neovim的内建终端
@@ -295,19 +302,17 @@ let g:quickrun_default_flags = {
 | `<space>lr` | 运行程序（若时间戳较未变则不编译）     |
 | `<space>lR` | 强制编译并运行程序                     |
 | `<space>li` | 快速打开输入窗口                       |
-| `<F9>`      | 开启或关闭程序运行窗口（如果存在的话） |
 | `<space>ld` | 启动调试程序                           |
-| `<space>ls` | SpaceVim的REPL                         |
+| `<F9>`      | 开启或关闭程序运行窗口（如果存在的话） |
 
-&emsp;注意：`<space>li`快速打开窗口，会自动使用 QuickrunRedirect命令将当前buffer将要运行的程序重定向到该输入窗口。
+**注意**：`<space>li`快速打开窗口，会自动使用 QuickrunRedirect命令将当前buffer将要运行的程序重定向到该输入窗口。
 离开输入窗口时会自动写回硬盘。
 
-# lang#c
-补全引擎YCM、语法检测引擎ALE、快速运行程序Runner所需要的默认C++标准都由
-YCM读取的`.ycm_extra_conf.py`中设置的标准确定。
+**注意**：对于C++，补全引擎YCM、语法检测引擎ALE、快速运行程序Runner所需要的默认C++标准都由
+YCM读取的`.ycm_extra_conf.py`中设置的标准确定，若无此文件则默认C++20
 
-映射：
-* `<space>ll`：手动启动所有linter进行静态语法解析，包括clang-tidy（这家伙启动所有checker后太慢了）
+**注意**：对于C++，`<space>ll`手动启动所有linter进行静态语法解析，包括clang-tidy（这家伙启动所有checker后太慢了）
+
 # lang#markdown
 &emsp;[*UltiSnips目录*](UltiSnips)提供了一些markdown的代码补全片段。  
 此外，还对markdown的语法高亮进行了调整；  
@@ -319,53 +324,45 @@ YCM读取的`.ycm_extra_conf.py`中设置的标准确定。
 | `<space>lg` | 添加或删除GFM目录               |
 | `<space>lk` | 利用系统剪切板的URL插入链接元素 |
 
-# chinese
-提供了vim的中文文档，以及联网翻译器：
-![trans](custom/translator.png)
-
-# 自定义
-大部分可能需要修改的配置都位于`~/.SpaceVim.d/init.toml`、`~/.SpaceVim/autoload/myspacevim.vim`与`~/.SpaceVim/init.vim`
 # 安装
 
 相比原生的SpaceVim需要自己配置，本魔改版本基本上算是开箱即用的，无需自己配置，
 你需要做到就是好好阅读[**快捷键文档**](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)即可
 
-接下来讲讲咋安装
-
-## 依赖
-首先，该配置有不少**依赖**需要装：
-
-| 依赖包                    | 作用                              |
-|---------------------------|-----------------------------------|
-| neovim                    | 本配置仅适用于neovim而非vim       |
-| xsel                      | neovim与系统剪切板交互            |
-| python-pynvim             | neovim的python支持                |
-| cmake                     | build YCM时需要                   |
-| ripgrep                   | 模糊搜索模块的后端工具            |
-| global与ctags             | 模糊搜索模块的符号索引            |
-| npm或php                  | build markdown即时预览插件        |
-| gcc、cppcheck、clang-tidy | 语法检测模块（gcc需要支持C++17）  |
-| cppman                    | 联网查询C++手册                   |
-
-此外，想要更好的体验，需要将neovim运行在tmux中，你可以设置你喜欢的终端，使它启动时自动连接tmux。
-[tmux的配置可以用这个](https://github.com/mrbeardad/DotFiles/blob/master/tmux/tmux.conf)，
-此配置解决了tmux中的true-color、undercrul和vim映射冲突等问题，不然你在tmux例运行neovim体验可是不太好。
-
-## 安装指导
 **Only for Linux**
 
-注意：执行前需要保证没有`~/.SpaceVim`目录，否则不会下载而直接进行其它步骤
 ```sh
 git clone --depth=1 https://github.com/mrbeardad/SpaceVim ~/.SpaceVim
 ln -svf ~/.SpaceVim ~/.config/nvim
 ln -svf ~/.SpaceVim/mode ~/.SpaceVim.d
 g++ -O3 -std=c++17 -o ~/.local/bin/quickrun_time ~/.SpaceVim/custom/quickrun_time.cpp
-# 安装插件，启动neovim后执行 :SPInstall
+# 启动neovim后执行 :SPInstall  安装插件
 nvim
 # 构建YCM代码补全引擎，如果需要其他语言的语义补全，见 ./install.py --help
-cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/ && ./install.py --clangd-completer
+cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
+./install.py --clangd-completer --go-completer
 # 修改ALE语法检测引擎
 cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/clangtidy.vim
 ```
 
+
+
+## 依赖
+| 依赖包                    | 作用                          |
+|---------------------------|-------------------------------|
+| neovim                    | 本配置仅适用于neovim而非vim   |
+| xsel                      | neovim与X系统剪切板交互       |
+| python-pynvim             | neovim的python支持            |
+| ripgrep                   | 模糊搜索模块的后端工具        |
+| global与ctags             | 模糊搜索模块的符号索引        |
+| npm或php                  | 构建markdown-preview.nvim需要 |
+| cmake                     | 构建YCM时需要                 |
+| gcc、cppcheck、clang-tidy | C模块                         |
+| go                        | Go模块                        |
+| python、pylint、bandit    | Python模块                    |
+| vint、[vimscript-language-server](https://github.com/google/vimscript-language-server) | Vim模块                       |
+
+&emsp;此外，想要更好的体验，可以将neovim运行在tmux中，你可以设置你喜欢的终端，使它启动时自动连接tmux。
+[tmux的配置可以用这个](https://github.com/mrbeardad/DotFiles/blob/master/tmux/tmux.conf)，
+此配置解决了tmux中的true-color、undercrul和vim映射冲突等问题，不然你在tmux例运行neovim体验可是不太好。
 
