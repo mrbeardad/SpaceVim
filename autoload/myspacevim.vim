@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 07.06.2021
+" Last Modified Date: 09.06.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -71,6 +71,9 @@ function! s:runner_before()
         \ 'python': {
             \ 'cmd': 'python ${file}',
             \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
+        \},
+        \ 'sh': {
+            \ 'cmd': 'bash ${file}',
         \},
         \ 'go': {
             \ 'compiler': 'go',
@@ -448,6 +451,7 @@ function! s:close_window(range)
   else
     exe substitute(a:range, '.*\(\d\)', '\1', 'g')+1.'close'
   endif
+  let &l:statusline = SpaceVim#layers#core#statusline#get(1)
 endfunction
 
 function! s:colorscheme_before()

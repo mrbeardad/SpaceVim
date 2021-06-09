@@ -8,6 +8,7 @@
 
 let s:TermBufnr = {}
 let s:InputBufnr = {}
+let s:IsTermOpend = {}
 
 function! s:close_term_and_input() abort
   let terms = values(s:TermBufnr)
@@ -22,6 +23,7 @@ function! s:close_term_and_input() abort
       let anyClosed = 1
     endif
   endfor
+  let &l:statusline = SpaceVim#layers#core#statusline#get(1)  " close命令导致状态栏失焦
   return anyClosed
 endfunction
 
@@ -32,7 +34,7 @@ function! s:open_termwin_quickrun() abort
   let curInputBufnr = get(s:InputBufnr, bufnr(), -1)
   let origBufnr = bufnr()
 
-  " 删除之前term窗口
+  " 销毁之前term窗口
   if curTermBufnr != -1 && bufexists(curTermBufnr)
     execute 'bw! ' . curTermBufnr
   endif
@@ -46,6 +48,7 @@ function! s:open_termwin_quickrun() abort
         \ nospell
         \ winfixheight
   let s:TermBufnr[origBufnr] = bufnr()
+  let s:IsTermOpend[origBufnr] = 1
 
   " 开启input窗口并跳回term窗口
   if curInputBufnr != -1 && bufexists(curInputBufnr)
@@ -77,10 +80,12 @@ function! s:toggle_termwin_manually() abort
   let isOpend = s:close_term_and_input()
 
   if isOpend
+    let s:IsTermOpend[bufnr()] = 0
     return
   endif
 
   call s:try_open_term_with_input()
+  let s:IsTermOpend[bufnr()] = 1
 endfunction
 
 
@@ -90,7 +95,9 @@ function! s:toggle_termwin_automatically()
   endif
 
   call s:close_term_and_input()
-  call s:try_open_term_with_input()
+  if get(s:IsTermOpend, bufnr(), 0) == 1
+    call s:try_open_term_with_input()
+  endif
 endfunction
 
 
@@ -165,70 +172,31 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   if &modified == 1 | write | endif
   let src_file_path = fnamemodify(expand('%:p'), ':.')
   let exe_file_path = './'.fnamemodify(expand('%:p'), ':.').'.exe'
-  let qr_cl = s:parse_flags(b:QuickrunCompiler, src_file_path, exe_file_path)
-  let qr_cf = s:parse_flags(b:QuickrunCompileFlag .' '. s:extend_compile_flags(), src_file_path, exe_file_path)
-  let qr_cmd = s:parse_flags(b:QuickrunCmd, src_file_path, exe_file_path)
-  let qr_args = s:parse_flags(b:QuickrunCmdArgs, src_file_path, exe_file_path)
-  let qr_rd = s:parse_flags(b:QuickrunCmdRedir, src_file_path, exe_file_path)
-
-  " neovim would close terminal automatically
-  if has('nvim')
-    let qr_end = "echo -e '\n\e[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ...'; exit;"
-  else
-    let qr_end = ''
-  endif
-  let qr_begin = 'set -e; trap "'.qr_end.'" 2;'
-
-  " if need to compile
-  if qr_cl !=# ''
-    let qr_compile = 'echo -e "\e[1;32m[Compile] \e[34m' . qr_cl . '\e[0m ' . qr_cf . '";'
-          \ . qr_cl .' '. qr_cf .';'
-  else
-    let qr_compile = ''
-  endif
-
-  " limit memory using by CGroups
-  if (has('unix') || has('wsl'))
-    if !isdirectory('/sys/fs/cgroup/memory/quickrun')
-      call jobstart('sudo mkdir /sys/fs/cgroup/memory/quickrun')
-    endif
-    let qr_prepare = 'echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;'
-          \ .'echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;'
-          \ .'echo 500M | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;'
-  else
-    let qr_prepare = ''
-  endif
-
-  let qr_running = 'echo "\e[1;32m[Running] \e[34m' . qr_cmd . '\e[0m ' . qr_args .' '. qr_rd .'";'
-        \ .'echo -e "\n\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[m";'
-        \ .'quickrun_time ' . qr_cmd .' '. qr_args .' '. qr_rd .';'
-        \ .qr_end
+  let qr_compile = s:parse_flags(b:QuickrunCompiler, src_file_path, exe_file_path)
+  let qr_compile .= ' ' . s:parse_flags(b:QuickrunCompileFlag .' '. s:extend_compile_flags(), src_file_path, exe_file_path)
+  let qr_cmdrun = s:parse_flags(b:QuickrunCmd, src_file_path, exe_file_path)
+  let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdArgs, src_file_path, exe_file_path)
+  let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdRedir, src_file_path, exe_file_path)
   let qr_debug = s:parse_flags(b:QuickrunDebugCmd, src_file_path, exe_file_path)
 
   let debug_mode = get(a:, '1', 0) > 1 " 2 or 3
   let force_compile = get(a:, '1', 0) % 2 == 1 " 1 or 3
-  " need compilation
-  if force_compile == 1 || &modified == 1 || !filereadable(exe_file_path)
-        \ || s:get_timestamp(expand('%:p').'.exe') < s:get_timestamp(expand('%:p'))
-    let qr_prepare = qr_begin . qr_compile . qr_prepare
-  else  " run directly
-    let qr_prepare = qr_begin . qr_prepare . 'echo -e "\e[1;33m[Note]: Neither the buffer nor the file timestamp has changed. Rerunning last compiled program!\e[m";'
+  " compilation is not necessary
+  if filereadable(exe_file_path) && s:get_timestamp(expand('%:p').'.exe') >= s:get_timestamp(expand('%:p'))
+        \ && !force_compile && &modified == 0
+    let qr_compile = qr_compile ==# '' ? '' : '-'
   endif
 
   let win = win_getid()
   call s:open_termwin_quickrun()
   if debug_mode
     if qr_debug =~# '^!'  " backgroud mode
-      call termopen(qr_prepare
-            \ .'echo -e "\e[1;33m[Debugging]\e[m";'.qr_end)
       call jobstart(substitute(qr_debug, '^!', '', ''))
     else  " terminal mode
-      call termopen(qr_prepare
-            \ .'echo -e "\e[1;33m[Debugging]\e[m";'.qr_end
-            \ .qr_debug.'}')
+      call termopen(qr_debug)
     endif
   else
-    call termopen(qr_prepare . qr_running)
+    call termopen(g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"')
   endif
   call win_gotoid(win)
 endfunction
