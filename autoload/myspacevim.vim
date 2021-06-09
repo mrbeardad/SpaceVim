@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 05.06.2021
+" Last Modified Date: 07.06.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()

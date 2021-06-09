@@ -45,6 +45,7 @@ function! SpaceVim#layers#lang#go#plugins() abort
   if has('nvim') && g:spacevim_autocomplete_method ==# 'deoplete'
     call add(plugins, ['zchee/deoplete-go', {'on_ft' : 'go', 'build': 'make'}])
   endif
+    call add(plugins, ['chengzeyi/go-highlight.vim', {'on_ft' : 'go'}])
   return plugins
 endfunction
 

@@ -117,10 +117,6 @@
     repo = "Chiel92/vim-autoformat"
     merged = false
 
-[[custom_plugins]]
-    repo = "valsorym/vim-highlighting"
-    merged = false
-
 ########################### Layers ###########################
 [[layers]]
     name = "core#banner"
