@@ -17,26 +17,22 @@
 # 目录
 <!-- vim-markdown-toc GFM -->
 
-- [颜色主题colorscheme](#颜色主题colorscheme)
+- [颜色主题](#颜色主题)
 - [启动界面字符画core#banner](#启动界面字符画corebanner)
-- [状态栏与标签栏core#statusline,core#tabline](#状态栏与标签栏corestatuslinecoretabline)
+- [状态栏与标签栏](#状态栏与标签栏)
 - [符号表、文件树、撤销树](#符号表文件树撤销树)
-- [编辑模块edit](#编辑模块edit)
-- [模糊搜索leaderf](#模糊搜索leaderf)
-- [文本搜索flygrep](#文本搜索flygrep)
-- [版本管理VersionControl](#版本管理versioncontrol)
-- [代码补全autocomplete](#代码补全autocomplete)
-- [注意：将~/.SpaceVim.d/.ycm_extra_conf.py复制到源文件项目目录下即可启用YCM](#注意将spacevimdycm_extra_confpy复制到源文件项目目录下即可启用ycm)
-- [其中的编译器参数自己看着改](#其中的编译器参数自己看着改)
-- [语法检测checker](#语法检测checker)
-- [runner](#runner)
-- [lang#c](#langc)
-- [lang#markdown](#langmarkdown)
+- [高效编辑](#高效编辑)
+- [模糊搜索](#模糊搜索)
+- [文本搜索](#文本搜索)
+- [版本管理](#版本管理)
 - [chinese](#chinese)
-- [自定义](#自定义)
+- [代码补全](#代码补全)
+- [对于C++，还需要将~/.SpaceVim/mode/.ycm_extra_conf.py复制到源码目录下，文件中的编译参数可自行修改](#对于c还需要将spacevimmodeycm_extra_confpy复制到源码目录下文件中的编译参数可自行修改)
+- [语法检测](#语法检测)
+- [代码运行](#代码运行)
+- [lang#markdown](#langmarkdown)
 - [安装](#安装)
   - [依赖](#依赖)
-  - [安装指导](#安装指导)
 
 <!-- vim-markdown-toc -->
 # 颜色主题
@@ -348,19 +344,20 @@ cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense
 
 
 ## 依赖
-| 依赖包                    | 作用                          |
-|---------------------------|-------------------------------|
-| neovim                    | 本配置仅适用于neovim而非vim   |
-| xsel                      | neovim与X系统剪切板交互       |
-| python-pynvim             | neovim的python支持            |
-| ripgrep                   | 模糊搜索模块的后端工具        |
-| global与ctags             | 模糊搜索模块的符号索引        |
-| npm或php                  | 构建markdown-preview.nvim需要 |
-| cmake                     | 构建YCM时需要                 |
-| gcc、cppcheck、clang-tidy | C模块                         |
-| go                        | Go模块                        |
-| python、pylint、bandit    | Python模块                    |
-| vint、[vimscript-language-server](https://github.com/google/vimscript-language-server) | Vim模块                       |
+| 依赖包                           | 作用                          |
+|----------------------------------|-------------------------------|
+| neovim                           | 本配置仅适用于neovim而非vim   |
+| xsel                             | neovim与X系统剪切板交互       |
+| python-pynvim                    | neovim的python支持            |
+| ripgrep                          | 模糊搜索模块的后端工具        |
+| global、ctags                    | 符号索引                      |
+| npm                              | 构建markdown-preview.nvim需要 |
+| cmake                            | 构建YCM时需要                 |
+| gcc、cppcheck、clang-tidy        | C模块                         |
+| go                               | Go模块                        |
+| python、pylint、bandit           | Python模块                    |
+| shellcheck、bash-language-server | Sh模块                        |
+| vint、vim-language-server        | Vim模块                       |
 
 &emsp;此外，想要更好的体验，可以将neovim运行在tmux中，你可以设置你喜欢的终端，使它启动时自动连接tmux。
 [tmux的配置可以用这个](https://github.com/mrbeardad/DotFiles/blob/master/tmux/tmux.conf)，
