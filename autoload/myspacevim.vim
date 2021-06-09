@@ -90,19 +90,20 @@ function! s:autocomplete_before()
     let g:ycm_filetype_whitelist = {
             \ 'c':1,
             \ 'cpp':1,
+            \ 'cmake':1,
             \ 'go':1,
             \ 'python':1,
             \ 'sh':1,
             \ 'vim':1,
-            \ 'cmake':1
             \ }
     let g:ycm_semantic_triggers = {
             \ 'c':['re!\w\w'],
             \ 'cpp':['re!\w\w'],
+            \ 'cmake':['re!\w\w'],
             \ 'go':['re!\w\w'],
             \ 'python':['re!\w\w'],
             \ 'sh':['re![\w-]{2}', '/', '-'],
-            \ 'vim':['re!\w\w'],
+            \ 'vim':['re![_a-zA-Z]+[_\w]*\.'],
             \ }
     let g:ycm_language_server = 
       \ [ 
@@ -115,7 +116,13 @@ function! s:autocomplete_before()
       \     'name': 'bash',
       \     'cmdline': [ 'bash-language-server', 'start' ],
       \     'filetypes': [ 'sh' ],
-      \    }
+      \    },
+      \   {
+      \     'name': 'cmake',
+      \     'cmdline': [ 'cmake-language-server'],
+      \     'filetypes': [ 'cmake' ],
+      \     'project_root_files': [ 'build' ]
+      \    },
       \ ]
     let g:ycm_clangd_args = [ '--header-insertion=never' ]
     augroup MySpaceVimAutocomplete
@@ -151,6 +158,8 @@ endfunction
 
 function! s:checker_before()
   if g:spacevim_lint_engine ==# 'ale'
+    let g:ale_set_quickfix = 1
+    let g:ale_set_loclist = 0
     let g:ale_disable_lsp = 1
     let g:ale_completion_enabled = 0
     let g:ale_set_highlights = 1
@@ -207,7 +216,6 @@ function! s:checker_after()
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'call myspacevim#show_detailed_diagnostic()', 'Detail error information', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'L'], 'YcmDiags', 'Show YcmDiags list', 1)
   endif
 endfunction
 

@@ -147,8 +147,11 @@ function! s:neomake_cursor_move_delay() abort
 endfunction
 
 function! s:toggle_show_error(...) abort
+  silent! YcmDiags
+  lclose
   let llist = getloclist(0, {'size' : 1, 'winid' : 1})
   let qlist = getqflist({'size' : 1, 'winid' : 1})
+  call setloclist(0, getqflist(), 'a')
   if llist.size == 0 && qlist.size == 0
     echohl WarningMsg
     echon 'There is no errors!'
