@@ -36,7 +36,7 @@ let s:git_plugin = 'git'
 function! SpaceVim#layers#git#plugins() abort
   let plugins = [
         \ ]
-  call add(plugins, ['airblade/vim-gitgutter',   { 'merged' : 0}])
+  call add(plugins, ['airblade/vim-gitgutter',   { 'on_cmd': 'GitGutterToggle', 'merged' : 0}])
   if s:git_plugin ==# 'gina'
     call add(plugins, ['lambdalisue/gina.vim', { 'on_cmd' : 'Gina'}])
   elseif s:git_plugin ==# 'fugitive'

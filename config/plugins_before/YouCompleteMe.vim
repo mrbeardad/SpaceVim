@@ -5,9 +5,9 @@ let g:ycm_collect_identifiers_from_tags_files =
 let g:ycm_collect_identifiers_from_comments_and_strings = 
       \ get(g:, 'ycm_collect_identifiers_from_comments_and_strings', 1)
 let g:ycm_key_list_select_completion =
-      \ get(g:, 'ycm_key_list_select_completion', ['<C-TAB>', '<Down>'])
+      \ get(g:, 'ycm_key_list_select_completion', ['<TAB>', '<Down>'])
 let g:ycm_key_list_previous_completion =
-      \ get(g:, 'ycm_key_list_previous_completion', ['<C-S-TAB>','<Up>'])
+      \ get(g:, 'ycm_key_list_previous_completion', ['<S-TAB>','<Up>'])
 let g:ycm_seed_identifiers_with_syntax =
       \ get(g:, 'ycm_seed_identifiers_with_syntax', 1)
 let g:ycm_key_invoke_completion =

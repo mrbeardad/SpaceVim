@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 09.06.2021
+" Last Modified Date: 11.06.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -87,44 +87,53 @@ endfunction
 
 function! s:autocomplete_before()
   if g:spacevim_autocomplete_method ==# 'ycm'
-    let g:ycm_filetype_whitelist = {
-            \ 'c':1,
-            \ 'cpp':1,
-            \ 'cmake':1,
-            \ 'go':1,
-            \ 'python':1,
-            \ 'sh':1,
-            \ 'vim':1,
-            \ }
-    let g:ycm_semantic_triggers = {
-            \ 'c':['re!\w\w'],
-            \ 'cpp':['re!\w\w'],
-            \ 'cmake':['re!\w\w'],
-            \ 'go':['re!\w\w'],
-            \ 'python':['re!\w\w'],
-            \ 'sh':['re![\w-]{2}', '/', '-'],
-            \ 'vim':['re![_a-zA-Z]+[_\w]*\.'],
-            \ }
-    let g:ycm_language_server = 
-      \ [ 
-      \   {
-      \     'name': 'vim',
-      \     'cmdline': [ 'vim-language-server', '--stdio' ],
-      \     'filetypes': [ 'vim' ],
-      \    },
-      \   {
-      \     'name': 'bash',
-      \     'cmdline': [ 'bash-language-server', 'start' ],
-      \     'filetypes': [ 'sh' ],
-      \    },
-      \   {
-      \     'name': 'cmake',
-      \     'cmdline': [ 'cmake-language-server'],
-      \     'filetypes': [ 'cmake' ],
-      \     'project_root_files': [ 'build' ]
-      \    },
-      \ ]
+    let g:ycm_auto_hover = ''
+    let g:ycm_confirm_extra_conf = 0
+    let g:ycm_cache_omnifunc = 1            " 是否缓存omifunc
+    let g:ycm_clangd_uses_ycmd_caching = 1  " 使用哪个排序缓存
     let g:ycm_clangd_args = [ '--header-insertion=never' ]
+    let g:ycm_gopls_args = []
+    let g:ycm_key_invoke_completion = '<C-Z>'
+    let g:ycm_seed_identifiers_with_syntax = 1
+    let g:ycm_collect_identifiers_from_comments_and_strings = 1
+
+    let g:ycm_filetype_whitelist = {
+          \ 'c':1,
+          \ 'cpp':1,
+          \ 'cmake':1,
+          \ 'go':1,
+          \ 'python':1,
+          \ 'sh':1,
+          \ 'vim':1,
+          \ }
+    let g:ycm_semantic_triggers = {
+          \ 'c':['re!\w\w', '.', '->'],
+          \ 'cpp':['re!\w\w', '.', '->'],
+          \ 'cmake':['re!\w\w'],
+          \ 'go':['re!\w\w', '.'],
+          \ 'python':['re!\w\w', '.'],
+          \ 'sh':['re![\w-][\w-]', '/', '-'],
+          \ 'vim':['re![_a-zA-Z]+[_\w]*\.'],
+          \ }
+    let g:ycm_language_server = 
+          \ [ 
+          \   {
+          \     'name': 'vim',
+          \     'cmdline': [ 'vim-language-server', '--stdio' ],
+          \     'filetypes': [ 'vim' ],
+          \    },
+          \   {
+          \     'name': 'bash',
+          \     'cmdline': [ 'bash-language-server', 'start' ],
+          \     'filetypes': [ 'sh' ],
+          \    },
+          \   {
+          \     'name': 'cmake',
+          \     'cmdline': [ 'cmake-language-server'],
+          \     'filetypes': [ 'cmake' ],
+          \     'project_root_files': [ 'build' ]
+          \    },
+          \ ]
     augroup MySpaceVimAutocomplete
       for ft in keys(g:ycm_semantic_triggers)
         exe 'autocmd FileType '.ft.' nnoremap <silent> gd :YcmCompleter GoTo<CR>'
@@ -139,19 +148,6 @@ endfunction
 
 function! s:autocomplete_after()
   if g:spacevim_autocomplete_method ==# 'ycm'
-    let g:ycm_global_ycm_extra_conf = $HOME.'.SpaceVim.d/.ycm_extra_conf.py'
-    let g:ycm_clangd_uses_ycmd_caching = 0
-    let g:ycm_cache_omnifunc = 0
-    let g:ycm_confirm_extra_conf = 0
-    let g:ycm_max_num_candidates = 50
-    let g:ycm_max_num_identifier_candidates = 20
-    let g:ycm_key_invoke_completion = '<C-Z>'
-    let g:ycm_key_list_select_completion = ['<TAB>']
-    let g:ycm_key_list_previous_completion = ['<S-TAB>']
-    let g:ycm_seed_identifiers_with_syntax = 1
-    let g:ycm_collect_identifiers_from_tags_files = 0
-    let g:ycm_collect_identifiers_from_comments_and_strings = 1
-
   endif
 endfunction
 
@@ -209,7 +205,6 @@ function! s:checker_after()
       \ '-*llvmlibc*',
       \ ]
     let g:ale_python_pylint_options = '-d C0103,C0301,C0112,C0115,C0116,C0114'
-    let g:ycm_show_diagnostics_ui = 1
     let g:ycm_error_symbol = g:spacevim_error_symbol
     let g:ycm_warning_symbol = g:spacevim_warning_symbol
 
@@ -629,10 +624,10 @@ function! s:set_neovim_after() abort
   endif
 
   " z mapping
-  let g:_spacevim_mappings_z['<Left>'] = ['call feedkeys("zH", "n")', 'scroll half a screenwidth to the left']
-  nnoremap z<Left> zH
-  let g:_spacevim_mappings_z['<Right>'] = ['call feedkeys("zL", "n")', 'scroll half a screenwidth to the Right']
-  nnoremap z<Right> zL
+  let g:_spacevim_mappings_z['<Left>'] = ['call feedkeys("zL", "n")', 'scroll half a screenwidth to the left']
+  nnoremap z<Left> zL
+  let g:_spacevim_mappings_z['<Right>'] = ['call feedkeys("zH", "n")', 'scroll half a screenwidth to the Right']
+  nnoremap z<Right> zH
   let g:_spacevim_mappings_z['<Up>'] = ['normal 3<c-y>', 'scroll up one line']
   nnoremap z<up> 3<c-e>
   let g:_spacevim_mappings_z['<Down>'] = ['normal 3<c-e>', 'scroll down one line']
@@ -711,8 +706,6 @@ function! s:custom_plugins_before()
     nunmap <buffer> \\A
     nunmap <buffer> s
   endfunction
-  "=============== vim-autoformat ================="
-  nnoremap <silent>g= :AutoformatLine<cr>
 endfunction
 
 function! s:custom_plugins_after()

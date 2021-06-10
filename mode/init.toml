@@ -97,7 +97,7 @@
         "fcitx5.vim",
         "jedi-vim",
         "deoplete-jedi",
-        "vim-go"
+        "vim-go",
     ]
 
 ########################### Plugins ###########################
@@ -111,10 +111,6 @@
 
 [[custom_plugins]]
     repo = "mg979/vim-visual-multi"
-    merged = false
-
-[[custom_plugins]]
-    repo = "Chiel92/vim-autoformat"
     merged = false
 
 ########################### Layers ###########################
