@@ -353,6 +353,7 @@ cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense
 | global、ctags                    | 符号索引                      |
 | npm                              | 构建markdown-preview.nvim需要 |
 | cmake                            | 构建YCM时需要                 |
+| cmake-language-server            | CMake语法补全                 |
 | gcc、cppcheck、clang-tidy        | C模块                         |
 | go                               | Go模块                        |
 | python、pylint、bandit           | Python模块                    |
