@@ -18,7 +18,7 @@
 <!-- vim-markdown-toc GFM -->
 
 - [颜色主题](#颜色主题)
-- [启动界面字符画core#banner](#启动界面字符画corebanner)
+- [启动界面字符画](#启动界面字符画)
 - [状态栏与标签栏](#状态栏与标签栏)
 - [符号表、文件树、撤销树](#符号表文件树撤销树)
 - [高效编辑](#高效编辑)
@@ -27,12 +27,11 @@
 - [版本管理](#版本管理)
 - [chinese](#chinese)
 - [代码补全](#代码补全)
-- [对于C++，还需要将~/.SpaceVim/mode/.ycm_extra_conf.py复制到源码目录下，文件中的编译参数可自行修改](#对于c还需要将spacevimmodeycm_extra_confpy复制到源码目录下文件中的编译参数可自行修改)
 - [语法检测](#语法检测)
 - [代码运行](#代码运行)
 - [lang#markdown](#langmarkdown)
 - [安装](#安装)
-  - [依赖](#依赖)
+- [依赖](#依赖)
 
 <!-- vim-markdown-toc -->
 # 颜色主题
@@ -40,16 +39,13 @@
 我将语法高亮与颜色主题都针对C++源码进行了微调。
 
 &emsp;只需要在启动nvim时设置环境变量`DARKBG=1`即可随机启用那些花里胡哨的主题中的一个，
-或者设置`DARKBG=gruvbox`可指定使用gruvbox主题。
+或者类似设置`DARKBG=gruvbox`可指定使用gruvbox主题。
 我一般设置命令别名`alias vi='DARKBG=1 nvim'`
 
 &emsp;演示使用[NerdCodePro字体](https://github.com/mrbeardad/DotFiles/tree/master/fonts)，
 该字体集成了3种字体于一身，使得regular、bold、italic三种style使用三种不同的字体，
 看起来赏心悦目超nice。
 > PS：要是所有终端都像alacritty一样支持不同style不同字体，我至于这么折腾自己吗(*￣︿￣)
-
-**default-reduce**（该主题关闭了nvim的终端真色支持，从而使用终端的配色方案，而且不会影响切换其他主题）  
-![default-reduce](custom/default-reduce.png)
 
 **SpaceVim**  
 ![SpaceVim](custom/SpaceVim.png)  
@@ -66,7 +62,7 @@
 **material**
 ![material](custom/material.png)  
 
-# 启动界面字符画core#banner
+# 启动界面字符画
 这个模块提供了许多`SpaceVim`启动界面的字符画，拉风的很。而且有惊喜哦>_<
 
 ![banner](custom/banner.png "俺画的独角兽")
@@ -211,16 +207,6 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 
 ![autocomplete](custom/autocomplete.png)
 
- **注意：该插件需要手动安装**
- ```sh
- # 插件安装完成后进入YouCompleteMe目录
-cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
-
- # 构建补全引擎，除了C++外还支持其它语言，如go、python等等，参数详见`--help`
-./install.py --clangd-completer
-
-# 对于C++，还需要将~/.SpaceVim/mode/.ycm_extra_conf.py复制到源码目录下，文件中的编译参数可自行修改
- ```
 
 &emsp;除了语义补全，还有代码片段补全，插件为[UltiSnips](https://github.com/SirVer/ultisnips)。
 即按一定的语法编辑snippet配置文件后，再在代码中输入关键字，
@@ -229,8 +215,8 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
 
 # 语法检测
-&emsp;语法检测主要是利用YCM进行的，[ALE](https://github.com/dense-analysis/ale)做辅助，
-该插件通过shell来调用使用静态分析器来进行语法检测。
+&emsp;语法检测主要是利用YCM搭配[ALE](https://github.com/dense-analysis/ale)，
+后者通过shell来调用使用静态分析器来进行语法检测。
 在底部命令行的位置显示报错与警告，并在边栏显示错误或警告图标，
 在错误代码的位置下显示波浪线（若终端不支持undercurl则回滚为underline下划线）
 ![checker](custom/checker.png)
@@ -248,8 +234,10 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 ![runner](custom/runner.png)
 
 &emsp;**命令：**  
-* 命令以`Quickrun`开头，如`QuickrunCompileFlag`表示修改编译参数，默认编译参数见下述选项
-* 命令带`!`后缀表示修改参数
+* 命令以Quickrun开头，如QuickrunCompileFlag表示修改编译参数，默认编译参数见下述选项
+* 命令带`!`后缀表示修改参数，如`QuickrunCompileFlag!`即相当于
+    按键`:QuickrunComoileFlag -lpthread`于是你可在命令行修改之前的参数`-lpthread`
+* 命令不带后缀就接受参数直接覆盖，如`QuickrunCompileFlag -Wall` 将编译器参数直接替换为`-Wall` 
 
 ```vim
 " 例：
@@ -305,7 +293,7 @@ let g:quickrun_default_flags = {
 离开输入窗口时会自动写回硬盘。
 
 **注意**：对于C++，补全引擎YCM、语法检测引擎ALE、快速运行程序Runner所需要的默认C++标准都由
-YCM读取的`.ycm_extra_conf.py`中设置的标准确定，若无此文件则默认C++20
+YCM读取的`.ycm_extra_conf.py`中设置的标准确定，该文件从源文件目录开始向上搜索，若无此文件则默认C++20
 
 **注意**：对于C++，`<space>ll`手动启动所有linter进行静态语法解析，包括clang-tidy（这家伙启动所有checker后太慢了）
 
@@ -321,9 +309,7 @@ YCM读取的`.ycm_extra_conf.py`中设置的标准确定，若无此文件则默
 | `<space>lk` | 利用系统剪切板的URL插入链接元素 |
 
 # 安装
-
-相比原生的SpaceVim需要自己配置，本魔改版本基本上算是开箱即用的，无需自己配置，
-你需要做到就是好好阅读[**快捷键文档**](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)即可
+以上仅列出部分功能，其他功能需要好好阅读[**快捷键文档**](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)即可
 
 **Only for Linux**
 
@@ -331,7 +317,7 @@ YCM读取的`.ycm_extra_conf.py`中设置的标准确定，若无此文件则默
 git clone --depth=1 https://github.com/mrbeardad/SpaceVim ~/.SpaceVim
 ln -svf ~/.SpaceVim ~/.config/nvim
 ln -svf ~/.SpaceVim/mode ~/.SpaceVim.d
-g++ -O3 -std=c++17 -o ~/.local/bin/quickrun_time ~/.SpaceVim/custom/quickrun_time.cpp
+g++ -O3 -std=c++11 -o ~/.local/bin/quickrun_time ~/.SpaceVim/custom/quickrun_time.cpp
 # 启动neovim后执行 :SPInstall  安装插件
 nvim
 # 构建YCM代码补全引擎，如果需要其他语言的语义补全，见 ./install.py --help
@@ -343,7 +329,7 @@ cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense
 
 
 
-## 依赖
+# 依赖
 | 依赖包                           | 作用                          |
 |----------------------------------|-------------------------------|
 | neovim                           | 本配置仅适用于neovim而非vim   |
