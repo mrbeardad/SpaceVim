@@ -112,8 +112,8 @@ function! s:autocomplete_before()
           \ 'cmake':['re!\w\w'],
           \ 'go':['re!\w\w', '.'],
           \ 'python':['re!\w\w', '.'],
-          \ 'sh':['re![\w-][\w-]', '/', '-'],
-          \ 'vim':['re![_a-zA-Z]+[_\w]*\.'],
+          \ 'sh':['re!\w\w', '-'],
+          \ 'vim':['re!\w\w', ':'],
           \ }
     let g:ycm_language_server = 
           \ [ 

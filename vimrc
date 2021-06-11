@@ -25,3 +25,20 @@ if 1
     execute 'source' fnamemodify(expand('<sfile>'), ':h').'/main.vim'
 endif
 " vim:set et sw=2
+let &t_SI.="\e[5 q" "SI = INSERT mode
+let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
+let colorschemes = [
+      \ 'SpaceVim',
+      \ 'gruvbox',
+      \ 'NeoSolarized',
+      \ 'palenight',
+      \ 'material',
+      \]
+set termguicolors
+if index(colorschemes, $DARKBG) > 0
+  exe 'colorscheme '. $DARKBG
+else
+  let colorNr = localtime() % 5
+  " let colorNr = 4
+  exe 'colorscheme '. colorschemes[colorNr]
+endif
