@@ -174,6 +174,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   let exe_file_path = './'.fnamemodify(expand('%:p'), ':.').'.exe'
   let qr_compile = s:parse_flags(b:QuickrunCompiler, src_file_path, exe_file_path)
   let qr_compile .= ' ' . s:parse_flags(b:QuickrunCompileFlag .' '. s:extend_compile_flags(), src_file_path, exe_file_path)
+  let qr_compile = qr_compile =~# '^ *$' ? '' : qr_compile
   let qr_cmdrun = s:parse_flags(b:QuickrunCmd, src_file_path, exe_file_path)
   let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdArgs, src_file_path, exe_file_path)
   let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdRedir, src_file_path, exe_file_path)
@@ -184,7 +185,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   " compilation is not necessary
   if filereadable(exe_file_path) && s:get_timestamp(expand('%:p').'.exe') >= s:get_timestamp(expand('%:p'))
         \ && !force_compile && &modified == 0
-    let qr_compile = qr_compile ==# '' ? '' : '-'
+    let qr_compile = '-'
   endif
 
   let win = win_getid()
