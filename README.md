@@ -29,6 +29,7 @@
 - [代码补全](#代码补全)
 - [语法检测](#语法检测)
 - [代码运行](#代码运行)
+- [调试](#调试)
 - [lang#markdown](#langmarkdown)
 - [安装](#安装)
 - [依赖](#依赖)
@@ -202,6 +203,14 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 可以帮你补全命名变量、函数、类、方法等等，任意输入两个字母就自动打开补全列表，
 `<tab>`与`<s-tab>`上下选择，`<cr>`完成选择。
 
+&emsp;目前以集成：
+* C/C++
+* Go
+* Python
+* Vim
+* Bash
+* CMake
+
 &emsp;刚引入的头文件还需待后台服务进行解析，
 故其中的符号可能不会立刻出现在补全列表中，稍等即可。
 
@@ -234,60 +243,73 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 ![runner](custom/runner.png)
 
 &emsp;**命令：**  
-* 命令以Quickrun开头，如QuickrunCompileFlag表示修改编译参数，默认编译参数见下述选项
-* 命令带`!`后缀表示修改参数，如`QuickrunCompileFlag!`即相当于
-    按键`:QuickrunComoileFlag -lpthread`于是你可在命令行修改之前的参数`-lpthread`
-* 命令不带后缀就接受参数直接覆盖，如`QuickrunCompileFlag -Wall` 将编译器参数直接替换为`-Wall` 
+* 命令以Quickrun开头，如`QuickrunCompileCmd gcc ${file}`表示修改编译命令为`gcc ${file}`，
+    `${file}`会被替换为当前文件，其他替换见下
+* 命令带`!`后缀表示修改参数
 
 ```vim
 " 例：
-:QuickrunCompileFlag -std=c++17 -lpthread " 设置编译参数（覆盖）为`-std=c++ -lpthread`
-
-" 以下三个命令设置命令行参数为`cmd -opt arg < file`
-:QuickrunCmd cmd            " cmd
-:QuickrunCmdArgs -opt arg   " cmd -opt arg
-:QuickrunCmdRedir < file    " cmd -opt arg < file
-:QuickrunCmdRedir | file    " cmd -opt arg | file
+:QuickrunCompileCmd         " 查看当前编译命令
+:QuickrunRunCmd!            " 修改运行命令（交互）
+:QuickrunRedir < file       " 重定向stdin到file
 ```
 
 &emsp;**选项：**  
 ```vim
 let g:quickrun_default_flags = {
     \ 'cpp': {
-        \ 'compiler': 'g\++',   " 设置编译器为g++（注意可能出现的vim特殊字符），可以为空
-        \ 'compileFlags': '-std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${file}', " 设置编译器参数
-        \ 'debugCompileFlags': '-Og -g3 -fno-inline -std=c++17 -I. -I${workspaceFolder}include -o ${exeFile} ${file}', " 设置调试时的编译器参数
-        \ 'extRegex': [         " 若文件内容匹配到其中的pattern，则添加extFlags中对应参数
-            \ '^\#include\s*<future>',
-            \ '^\#include\s*<mysql++\/mysql++.h>'
+        \ 'compileCmd': "g++ -g3 -ggdb3 -D_GLIBCXX_DEBUG -I${fileDirname} -I${workspaceFolder}include -o ${execPath} ${file}",
+        \ 'extRegex': [
+            \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
+            \ '^#\s*include\s*[<"]dlfcn.h[>"]',
+            \ '^#\s*include\s*[<"]pty.h[>"]',
+            \ '^#\s*include\s*[<"]boost/locale\.hpp[>"]',
+            \ '^#\s*include\s*[<"]*asio/ssl\.hpp[>"]',
+            \ '^#\s*include\s*[<"](*asio/co_spawn\.hpp\|coroutine)[>"]',
+            \ '^#\s*include\s*[<"]glog/.*[>"]',
+            \ '^#\s*include\s*[<"]gtest/.*[>"]',
+            \ '^#\s*include\s*[<"]gmock/.*[>"]',
+            \ '^#\s*include\s*[<"]mysql++/.*[>"]',
+            \ '^#\s*include\s*[<"]srchilite/.*[>"]',
+            \ '^#\s*include\s*[<"]fmt/.*[>"]',
         \ ],
         \ 'extFlags': [
             \ '-lpthread',
-            \ '-I/usr/include/mysql -lmysqlpp'
+            \ '-ldl',
+            \ '-lutil',
+            \ '-lboost_locale',
+            \ '-lssl -lcrypto',
+            \ '-fcoroutines',
+            \ '-lglog',
+            \ '-lgtest -lgtest_main',
+            \ '-lgmock',
+            \ '-I/usr/include/mysql -lmysqlpp',
+            \ '-lsource-highlight',
+            \ '-lfmt',
         \ ],
-        \ 'cmd': '${exeFile}',  " 运行程序的命令
-        \ 'cmdArgs': '',        " 运行程序的参数
-        \ 'cmdRedir': '',       " 运行程序的IO重定向
-        \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"' "设置调试器命令，头部'!'表示不打开终端
+        \ 'runCmd': '${execPath}'
+    \ },
+    \ 'c': {
+        \ 'compileCmd': 'gcc -std=c11 -I${fileDirname} -I${workspaceFolder}include -o ${execPath} ${file}',
+        \ 'runCmd': '${execPath}'
     \ },
     \ 'python': {
-        \ 'cmd': '/bin/python ${file}',
-        \ 'debugCmd': '!tmux new-window "pudb3 ${exeFile}"'
-        \}
+        \ 'runCmd': 'python ${file}'
+    \},
+    \ 'go': {
+        \ 'compileCmd': 'go build -o ${execPath} ${file}',
+        \ 'runCmd': '${execPath}'
+        \ }
 \ }
-" 特殊变量：
-" ${file}           当前文件名
-" ${exeFile}            QuickRun自动选择的编译后的可执行文件位置，脚本无需编译则应该用${file}
-" ${workspaceFolder}    项目根目录
 ```
+[特殊变量替换如`{file}`同SpaceVim-task](https://spacevim.org/documentation/#tasks)
 
 | 按键        | 作用                                   |
 |-------------|----------------------------------------|
 | `<space>lr` | 运行程序（若时间戳较未变则不编译）     |
 | `<space>lR` | 强制编译并运行程序                     |
 | `<space>li` | 快速打开输入窗口                       |
-| `<space>ld` | 启动调试程序                           |
-| `<F9>`      | 开启或关闭程序运行窗口（如果存在的话） |
+| `<F7>`      | 开启或关闭程序运行窗口（如果存在的话） |
 
 **注意**：`<space>li`快速打开窗口，会自动使用 QuickrunRedirect命令将当前buffer将要运行的程序重定向到该输入窗口。
 离开输入窗口时会自动写回硬盘。
@@ -296,6 +318,27 @@ let g:quickrun_default_flags = {
 YCM读取的`.ycm_extra_conf.py`中设置的标准确定，该文件从源文件目录开始向上搜索，若无此文件则默认C++20
 
 **注意**：对于C++，`<space>ll`手动启动所有linter进行静态语法解析，包括clang-tidy（这家伙启动所有checker后太慢了）
+
+# 调试
+调试模块基于[vimspector](https://github.com/puremourning/vimspector)
+
+![debug](custom/vimspector.png)
+
+使用前需要将[mode/.vimspector.json](mode/.vimspector.json)文件移到项目目录中，
+该插件的依赖由它自己管理下载安装，`:VimspectorInstall --all`
+
+| 按键    | 作用              |
+|---------|-------------------|
+| `<F8>`  | 继续/启动         |
+| `<F9>`  | 重启/启动         |
+| `<F10>` | 停止              |
+| `<M-1>` | step over / next  |
+| `<M-2>` | step into / step  |
+| `<M-3>` | step out / finish |
+| `<M-!>` | 行断点            |
+| `<M-@>` | 条件断点          |
+| `<M-#>` | 函数断点          |
+| `<M-$>` | 清除断点          |
 
 # lang#markdown
 &emsp;[*UltiSnips目录*](UltiSnips)提供了一些markdown的代码补全片段。  
@@ -341,7 +384,7 @@ cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense
 | cmake                            | 构建YCM时需要                 |
 | cmake-language-server            | CMake语法补全                 |
 | gcc、cppcheck、clang-tidy        | C模块                         |
-| go                               | Go模块                        |
+| go、delve                        | Go模块                        |
 | python、pylint、bandit           | Python模块                    |
 | shellcheck、bash-language-server | Sh模块                        |
 | vint、vim-language-server        | Vim模块                       |
