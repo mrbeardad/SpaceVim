@@ -49,7 +49,7 @@ function! SpaceVim#layers#lang#sh#config() abort
         \ ])
   augroup spacevim_layer_lang_sh
     autocmd!
-    autocmd FileType sh setlocal omnifunc=SpaceVim#plugins#bashcomplete#omnicomplete
+    " autocmd FileType sh setlocal omnifunc=SpaceVim#plugins#bashcomplete#omnicomplete
   augroup END
   call SpaceVim#mapping#gd#add('sh', function('s:go_to_def'))
   call SpaceVim#mapping#gd#add('zsh', function('s:go_to_def'))

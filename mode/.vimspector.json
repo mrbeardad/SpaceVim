@@ -1,0 +1,48 @@
+{
+    "$schema": "https://puremourning.github.io/vimspector/schema/vimspector.schema.json",
+    "configurations": {
+        "debug C++": {
+            "adapter": "vscode-cpptools",
+            "configuration": {
+                "request": "launch",
+                "program": "${file}.exe",
+                "externalConsole": false,
+                "stopAtEntry": true,
+                "stopOnEntry": true,
+                "setupCommands": [ { "text": "-enable-pretty-printing" } ],
+                "MImode": "gdb"
+            }
+        },
+        "debug Go": {
+            "adapter": "vscode-go",
+            "configuration": {
+                "request": "launch",
+                "program": "${file}",
+                "mode": "debug",
+                "dlvToolPath": "/bin/dlv",
+                "trace": true,
+                "stopAtEntry": true,
+                "stopOnEntry": true,
+                "env": { "GO111MODULE": "off" }
+            }
+        },
+        "debug Python": {
+            "adapter": "debugpy",
+            "configuration": {
+                "request": "launch",
+                "type": "python",
+                "program": "${file}",
+                "stopOnEntry": true,
+                "console": "integratedTerminal"
+            },
+            "breakpoints": {
+                "exception": {
+                    "raised": "N",
+                    "uncaught": "",
+                    "userUnhandled": ""
+                }
+            }
+        }
+    }
+}
+

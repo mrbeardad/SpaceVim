@@ -12,6 +12,8 @@ let g:ycm_seed_identifiers_with_syntax =
       \ get(g:, 'ycm_seed_identifiers_with_syntax', 1)
 let g:ycm_key_invoke_completion =
       \ get(g:, 'ycm_key_invoke_completion', '<leader><tab>')
+let g:ycm_error_symbol = g:spacevim_error_symbol
+let g:ycm_warning_symbol = g:spacevim_warning_symbol
 
 let g:ycm_semantic_triggers = get(g:, 'ycm_semantic_triggers', {})
 

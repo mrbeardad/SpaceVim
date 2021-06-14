@@ -268,11 +268,11 @@ function! SpaceVim#default#keyBindings() abort
   endfunction
 
   "irssi like hot key
-  nnoremap <silent><M-1> :<C-u>call <SID>tobur(1)<CR>
-  nnoremap <silent><M-2> :<C-u>call <SID>tobur(2)<CR>
-  nnoremap <silent><M-3> :<C-u>call <SID>tobur(3)<CR>
-  nnoremap <silent><M-4> :<C-u>call <SID>tobur(4)<CR>
-  nnoremap <silent><M-5> :<C-u>call <SID>tobur(5)<CR>
+  " nnoremap <silent><M-1> :<C-u>call <SID>tobur(1)<CR>
+  " nnoremap <silent><M-2> :<C-u>call <SID>tobur(2)<CR>
+  " nnoremap <silent><M-3> :<C-u>call <SID>tobur(3)<CR>
+  " nnoremap <silent><M-4> :<C-u>call <SID>tobur(4)<CR>
+  " nnoremap <silent><M-5> :<C-u>call <SID>tobur(5)<CR>
   nnoremap <silent><M-Right> :<C-U>call <SID>tobur("next")<CR>
   nnoremap <silent><M-Left> :<C-U>call <SID>tobur("prev")<CR>
 

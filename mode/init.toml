@@ -102,7 +102,7 @@
 
 ########################### Plugins ###########################
 [[custom_plugins]]
-    repo = "yangyangxcf/vim-nerd-font-cheatsheets"
+    repo = "cespare/vim-toml"
     merged = false
 
 [[custom_plugins]]
@@ -111,6 +111,10 @@
 
 [[custom_plugins]]
     repo = "mg979/vim-visual-multi"
+    merged = false
+
+[[custom_plugins]]
+    repo = "puremourning/vimspector"
     merged = false
 
 ########################### Layers ###########################
@@ -146,24 +150,18 @@
 
 [[layers]]
     name = "git"
-    git-plugin = "fugitive"
 
 [[layers]]
   name = "VersionControl"
 
 [[layers]]
-    name = "checker"
-#
-[[layers]]
-    name = "autocomplete"
-    auto_completion_return_key_behavior = "nil"
-    auto_completion_tab_key_behavior = "nil"
-    auto_completion_complete_with_key_sequence = "nil"
-    auto_completion_enable_snippets_in_popup = true
+    name = "format"
 
 [[layers]]
-    name = "format"
-    enable = false
+    name = "checker"
+
+[[layers]]
+    name = "autocomplete"
 
 [[layers]]
     name = "chinese"
@@ -177,11 +175,11 @@
 [[layers]]
     name = "lang#python"
 
-# [[layers]]
-#     name ="lang#sh"
+[[layers]]
+    name ="lang#sh"
 
-# [[layers]]
-#     name ="lang#vim"
+[[layers]]
+    name ="lang#vim"
 
 [[layers]]
     name = "lang#markdown"

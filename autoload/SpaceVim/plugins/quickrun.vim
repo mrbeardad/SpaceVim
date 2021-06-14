@@ -167,7 +167,7 @@ function! s:parse_flags(str, srcfile, exefile)
   return tmp
 endfunction
 
-" a:1 == 1 表示强制重新编译，a:1 == 2 表示启动调试进程，a:1 == 3 表示两者都
+" a:1 == 1 表示强制重新编译
 function! SpaceVim#plugins#quickrun#QuickRun(...)
   if &modified == 1 | write | endif
   let src_file_path = fnamemodify(expand('%:p'), ':.')
@@ -178,10 +178,8 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   let qr_cmdrun = s:parse_flags(b:QuickrunCmd, src_file_path, exe_file_path)
   let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdArgs, src_file_path, exe_file_path)
   let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdRedir, src_file_path, exe_file_path)
-  let qr_debug = s:parse_flags(b:QuickrunDebugCmd, src_file_path, exe_file_path)
 
-  let debug_mode = get(a:, '1', 0) > 1 " 2 or 3
-  let force_compile = get(a:, '1', 0) % 2 == 1 " 1 or 3
+  let force_compile = exists('a:1')
   " compilation is not necessary
   if filereadable(exe_file_path) && s:get_timestamp(expand('%:p').'.exe') >= s:get_timestamp(expand('%:p'))
         \ && !force_compile && &modified == 0
@@ -190,39 +188,16 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
 
   let win = win_getid()
   call s:open_termwin_quickrun()
-  if debug_mode
-    if qr_debug =~# '^!'  " backgroud mode
-      call jobstart(substitute(qr_debug, '^!', '', ''))
-    else  " terminal mode
-      call termopen(qr_debug)
-    endif
-  else
-    call termopen(g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"')
-  endif
+  call termopen(g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"')
   call win_gotoid(win)
 endfunction
 
 function! SpaceVim#plugins#quickrun#run_task(cmd, opts, isBackground) abort
   call s:open_termwin_quickrun()
-  let cmd = split(a:cmd)[0]
-  let args = substitute(a:cmd, '^\w*\s*', '', 'g')
-  let env = ''
-  if has_key(a:opts, 'cwd')
-    let env = 'PWD='.a:opts.cwd
-  endif
+  let cmdline = split(a:cmd)
+  let cmd = cmdline[0]
+  let args = join(cmdline[1:])
 
-  if has('nvim')
-    let qr_end = "echo -e '\n\e[38;5;242mPress any keys to close terminal or press <ESC> to avoid close it ...'; exit;"
-  else
-    let qr_end = ''
-  endif
-  let qr_begin = 'set -e; trap "'.qr_end.'" 2;'
-
-  call termopen(qr_begin
-        \ .'echo "\e[1;32m[Running] \e[34m' . cmd . '\e[0m ' . args. '";'
-        \ .'echo -e "\n\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[35m--\e[34m--\e[31m--\e[34m--\e[35m--\e[33m--\e[32m--\e[36m--\e[37m--\e[36m--\e[32m--\e[33m--\e[m";'
-        \ .'env '.env.' quickrun_time '. cmd .' '.args .';'
-        \ .qr_end)
   wincmd p
 endfunction
 
@@ -244,13 +219,11 @@ endfunction
 function! s:init_buffer(ft)
   let b:QuickrunCompiler = has_key(g:quickrun_default_flags[a:ft], 'compiler') ? g:quickrun_default_flags[a:ft].compiler : ''
   let b:QuickrunCompileFlag = has_key(g:quickrun_default_flags[a:ft], 'compileFlags') ? g:quickrun_default_flags[a:ft].compileFlags : ''
-  let b:QuickrunDebugCmd = has_key(g:quickrun_default_flags[a:ft], 'debugCmd') ? g:quickrun_default_flags[a:ft].debugCmd : ''
   let b:QuickrunCmd = has_key(g:quickrun_default_flags[a:ft], 'cmd') ? g:quickrun_default_flags[a:ft].cmd : ''
   let b:QuickrunCmdArgs = has_key(g:quickrun_default_flags[a:ft], 'cmdArgs') ? g:quickrun_default_flags[a:ft].cmdArgs : ''
   let b:QuickrunCmdRedir = has_key(g:quickrun_default_flags[a:ft], 'cmdRedir') ? g:quickrun_default_flags[a:ft].cmdRedir : ''
   command! -buffer -bang -nargs=? -complete=file QuickrunCompiler    call s:key_binding('QuickrunCompiler', <q-args>, "<bang>")
   command! -buffer -bang -nargs=? -complete=file QuickrunCompileFlag call s:key_binding('QuickrunCompileFlag', <q-args>, "<bang>")
-  command! -buffer -bang -nargs=? -complete=file QuickrunDebugCmd    call s:key_binding('QuickrunDebugCmd', <q-args>, "<bang>")
   command! -buffer -bang -nargs=? -complete=file QuickrunCmd         call s:key_binding('QuickrunCmd', <q-args>, "<bang>")
   command! -buffer -bang -nargs=? -complete=file QuickrunCmdArgs     call s:key_binding('QuickrunCmdArgs', <q-args>, "<bang>")
   command! -buffer -bang -nargs=? -complete=file QuickrunCmdRedir    call s:key_binding('QuickrunCmdRedir', <q-args>, "<bang>")
@@ -289,7 +262,7 @@ function! SpaceVim#plugins#quickrun#prepare()
     endfor
 
     autocmd BufEnter * call s:toggle_termwin_automatically()
-    nnoremap <silent> <F9> :call <SID>toggle_termwin_manually()<cr>
+    nnoremap <silent> <F7> :call <SID>toggle_termwin_manually()<cr>
 
     if has('nvim')
       " au WinEnter * call s:term_enter()
@@ -298,7 +271,7 @@ function! SpaceVim#plugins#quickrun#prepare()
     endif
 
     au BufLeave *.input if &modified == 1 | w | endif
-    au TermEnter * setlocal list norelativenumber
+    au TermEnter * setlocal list
   augroup END
 endfunction
 

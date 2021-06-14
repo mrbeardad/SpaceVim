@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 11.06.2021
+" Last Modified Date: 14.06.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -28,7 +28,7 @@ function! s:runner_before()
     let g:quickrun_default_flags = {
         \ 'cpp': {
             \ 'compiler': 'g++',
-            \ 'compileFlags': '-g3 -ggdb3 -D_GLIBCXX_DEBUG -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
+            \ 'compileFlags': '-g3 -ggdb3 -D_GLIBCXX_DEBUG -I. -I${workspaceFolder}/include -o ${file}.exe ${file}',
             \ 'extRegex': [
                 \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
                 \ '^#\s*include\s*[<"]dlfcn.h[>"]',
@@ -57,28 +57,25 @@ function! s:runner_before()
                 \ '-lsource-highlight',
                 \ '-lfmt',
             \ ],
-            \ 'cmd': '${exeFile}',
+            \ 'cmd': '${file}.exe',
             \ 'cmdArgs': '',
             \ 'cmdRedir': '',
-            \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+            \ 'debugCmd': '!tmux new-window "cgdb ${file}.exe"'
         \ },
         \ 'c': {
             \ 'compiler': 'gcc',
-            \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}/include -o ${exeFile} ${file}',
-            \ 'cmd': '${exeFile}',
-            \ 'debugCmd': '!tmux new-window "cgdb ${exeFile}"'
+            \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}/include -o ${file}.exe ${file}',
+            \ 'cmd': '${file}.exe',
+            \ 'debugCmd': '!tmux new-window "cgdb ${file}.exe"'
         \ },
         \ 'python': {
             \ 'cmd': 'python ${file}',
             \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
         \},
-        \ 'sh': {
-            \ 'cmd': 'bash ${file}',
-        \},
         \ 'go': {
             \ 'compiler': 'go',
-            \ 'compileFlags': 'build -o ${exeFile} ${file}',
-            \ 'cmd': '${exeFile}'
+            \ 'compileFlags': 'build -o ${file}.exe ${file}',
+            \ 'cmd': '${file}.exe'
             \ }
     \ }
   endif
@@ -114,6 +111,7 @@ function! s:autocomplete_before()
           \ 'python':['re!\w\w', '.'],
           \ 'sh':['re!\w\w', '-'],
           \ 'vim':['re!\w\w', ':'],
+          \ 'VimspectorPrompt': [ '.', '->', ':', '<' ]
           \ }
     let g:ycm_language_server = 
           \ [ 
@@ -142,12 +140,6 @@ function! s:autocomplete_before()
         exe 'autocmd FileType '.ft." nnoremap <silent> <m-r> :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
       endfor
     augroup END
-  endif
-endfunction
-
-
-function! s:autocomplete_after()
-  if g:spacevim_autocomplete_method ==# 'ycm'
   endif
 endfunction
 
@@ -205,8 +197,6 @@ function! s:checker_after()
       \ '-*llvmlibc*',
       \ ]
     let g:ale_python_pylint_options = '-d C0103,C0301,C0112,C0115,C0116,C0114'
-    let g:ycm_error_symbol = g:spacevim_error_symbol
-    let g:ycm_warning_symbol = g:spacevim_warning_symbol
 
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
@@ -257,13 +247,6 @@ function! myspacevim#show_detailed_diagnostic() abort
   syntax keyword Include note
 
   winc p
-endfunction
-
-
-function! s:lang_go_before()
-  let g:go_highlight_operators = 1
-  let g:go_highlight_functions = 1
-  let g:go_highlight_methods = 1
 endfunction
 
 
@@ -361,14 +344,6 @@ function! s:edit_after()
           \)
   endif
   call SpaceVim#mapping#space#def('vmap', ['x', 'c'], '<Plug>CountSelectionRegion', 'count in the selection region', 0, 1)
-  " call SpaceVim#mapping#space#def('nnoremap', ['s', 'e'],
-  "       \ ':set noignorecase | call SpaceVim#plugins#iedit#start() | set ignorecase<cr>',
-  "       \ 'start-iedit-mode', 0
-  "       \)
-  " call SpaceVim#mapping#space#def('vnoremap', ['s', 'e'],
-  "       \ ':set noignorecase | call SpaceVim#plugins#iedit#start(1) | set ignorecase<cr>',
-  "       \ 'start-iedit-mode', 0
-  "       \)
 endfunction
 
 function! s:lang_markdown_before()
@@ -382,7 +357,7 @@ function! s:lang_markdown_after()
   let g:vim_markdown_folding_style_pythonic = 1
   let g:vim_markdown_emphasis_multiline = 0
   let g:vim_markdown_math = 1
-  let g:tex_conceal = "abdmg"
+  let g:tex_conceal = 'abdmg'
   let g:vim_markdown_strikethrough = 1
   let g:vim_markdown_conceal_code_blocks = 1
   let g:vmt_auto_update_on_save = 1
@@ -455,7 +430,7 @@ endfunction
 
 function! s:ui_after()
   let g:indentLine_char =  '¦'
-  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx', 'json']
+  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx']
   nnoremap <silent> <F1> :TagbarToggle<CR>
   nnoremap <silent> <F3> :Defx -direction=botright -no-focus<cr>
   nnoremap <silent> <F7> :call SpaceVim#plugins#tabmanager#open()<cr>
@@ -579,7 +554,7 @@ function! s:set_neovim_after() abort
   nnoremap <silent> <c-g> :echo '"'.expand('%:p').'" -- '.<SID>filesize()<cr>
 
   nnoremap <silent> <leader>m  :<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>:<c-u><c-r><c-r>='let @'. v:register .' = '. string(getreg(v:register))<cr><c-f><left>
-  let g:_spacevim_mappings.m = ['try again...', "quickly modify your macros"]
+  let g:_spacevim_mappings.m = ['try again...', 'quickly modify your macros']
 
   " visual mode
   vnoremap <c-a> 0
@@ -661,7 +636,7 @@ function! s:git_after()
 endfunction
 
 function! s:colorscheme_after()
-  if $WSL_DISTRO_NAME != ''
+  if $WSL_DISTRO_NAME !=# ''
     hi! SpellBad gui=underline guisp=Red
     hi! SpellCap gui=underline guisp=Yellow
     hi! SpellRare gui=underline guisp=Cyan
@@ -677,7 +652,7 @@ function! s:custom_plugins_before()
   let g:header_field_author = 'Heachen Bear'
   let g:header_field_author_email = 'mrbeardad@qq.com'
   let g:header_field_license_id = 'GPLv3'
-  let g:header_field_copyright = 'Copyright (c) 2020-'.strftime("%Y").' Heachen Bear & Contributors'
+  let g:header_field_copyright = 'Copyright (c) 2020-'.strftime('%Y').' Heachen Bear & Contributors'
   let g:header_max_size = 9
   let g:header_alignment = 0
   let g:header_auto_add_header = 0
@@ -706,6 +681,20 @@ function! s:custom_plugins_before()
     nunmap <buffer> \\A
     nunmap <buffer> s
   endfunction
+  "=============== vimsepctor =================
+  let g:vimspector_terminal_maxwidth = 35
+  let g:vimspector_sidebar_width = 45
+  let g:vimspector_bottombar_height = 15
+  nmap <m-1> <Plug>VimspectorStepOver
+  nmap <m-2> <Plug>VimspectorStepInto
+  nmap <m-3> <Plug>VimspectorStepOut
+  nmap <m-!> <Plug>VimspectorContinue
+  nmap <m-@> <Plug>VimspectorRunToCursor
+  nmap <m-#> <Plug>VimspectorToggleBreakpoint
+  nmap <m-$> <Plug>VimspectorToggleConditionalBreakpoint
+  nmap <f9> <Plug>VimspectorRestart
+  nmap <f10> <Plug>VimspectorStop
+  nmap <space>di <Plug>VimspectorBalloonEval
 endfunction
 
 function! s:custom_plugins_after()
@@ -733,7 +722,6 @@ function! myspacevim#before() abort
   call s:checker_before()
   call s:edit_before()
   call s:lang_c_before()
-  call s:lang_go_before()
   call s:leaderf_before()
   call s:lang_markdown_before()
   call s:tools_before()
@@ -747,7 +735,6 @@ endfunction
 function! myspacevim#after() abort
   call s:custom_plugins_after()
   call s:set_neovim_after()
-  call s:autocomplete_after()
   call s:checker_after()
   call s:core_after()
   call s:edit_after()

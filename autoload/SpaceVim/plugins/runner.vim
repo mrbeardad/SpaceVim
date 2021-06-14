@@ -393,10 +393,6 @@ function! SpaceVim#plugins#runner#run_task(task) abort
       call extend(opt, {'env' : opts.env})
     endif
     let problemMatcher = get(a:task, 'problemMatcher', {})
-    if has('nvim') && get(g:, 'spacevim_terminal_runner', 0) && 0
-      call SpaceVim#plugins#quickrun#run_task(cmd, opt, isBackground)
-      return
-    endif
     if isBackground
       call s:run_backgroud(cmd, opt, problemMatcher)
     else

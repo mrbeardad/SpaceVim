@@ -30,8 +30,8 @@
 if exists('s:return_key_behavior')
   finish
 else
-  let s:return_key_behavior = 'smart'
-  let s:tab_key_behavior = 'smart'
+  let s:return_key_behavior = 'nil'
+  let s:tab_key_behavior = 'nil'
   let g:_spacevim_key_sequence = 'nil'
   let s:key_sequence_delay = 1
   let g:_spacevim_autocomplete_delay = 50
