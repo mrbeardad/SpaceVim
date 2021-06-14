@@ -192,9 +192,7 @@ function! SpaceVim#plugins#projectmanager#current_root() abort
     endif
     call setbufvar('%', 'rootDir', rootdir)
   endif
-  if &autochdir == 0
-    call s:change_dir(rootdir)
-  endif
+  call s:change_dir(rootdir)
   call SpaceVim#plugins#projectmanager#RootchandgeCallback()
   return rootdir
 endfunction

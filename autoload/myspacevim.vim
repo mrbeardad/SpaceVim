@@ -27,8 +27,7 @@ function! s:runner_before()
   if g:spacevim_terminal_runner
     let g:quickrun_default_flags = {
         \ 'cpp': {
-            \ 'compiler': 'g++',
-            \ 'compileFlags': '-g3 -ggdb3 -D_GLIBCXX_DEBUG -I. -I${workspaceFolder}/include -o ${file}.exe ${file}',
+            \ 'compileCmd': "g++ -g3 -ggdb3 -D_GLIBCXX_DEBUG -I${fileDirname} -I${workspaceFolder}include -o ${execPath} ${file}",
             \ 'extRegex': [
                 \ '\v^#\s*include\s*[<"](pthread\.h|future|thread|.*asio\.hpp|.*gtest\.h)[>"]',
                 \ '^#\s*include\s*[<"]dlfcn.h[>"]',
@@ -57,25 +56,18 @@ function! s:runner_before()
                 \ '-lsource-highlight',
                 \ '-lfmt',
             \ ],
-            \ 'cmd': '${file}.exe',
-            \ 'cmdArgs': '',
-            \ 'cmdRedir': '',
-            \ 'debugCmd': '!tmux new-window "cgdb ${file}.exe"'
+            \ 'runCmd': '${execPath}'
         \ },
         \ 'c': {
-            \ 'compiler': 'gcc',
-            \ 'compileFlags': '-std=c11 -I. -I${workspaceFolder}/include -o ${file}.exe ${file}',
-            \ 'cmd': '${file}.exe',
-            \ 'debugCmd': '!tmux new-window "cgdb ${file}.exe"'
+            \ 'compileCmd': 'gcc -std=c11 -I${fileDirname} -I${workspaceFolder}include -o ${execPath} ${file}',
+            \ 'runCmd': '${execPath}'
         \ },
         \ 'python': {
-            \ 'cmd': 'python ${file}',
-            \ 'debugCmd': '!tmux new-window "pudb3 ${file}"'
+            \ 'runCmd': 'python ${file}'
         \},
         \ 'go': {
-            \ 'compiler': 'go',
-            \ 'compileFlags': 'build -o ${file}.exe ${file}',
-            \ 'cmd': '${file}.exe'
+            \ 'compileCmd': 'go build -o ${execPath} ${file}',
+            \ 'runCmd': '${execPath}'
             \ }
     \ }
   endif
@@ -433,7 +425,6 @@ function! s:ui_after()
   let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx']
   nnoremap <silent> <F1> :TagbarToggle<CR>
   nnoremap <silent> <F3> :Defx -direction=botright -no-focus<cr>
-  nnoremap <silent> <F7> :call SpaceVim#plugins#tabmanager#open()<cr>
 endfunction
 
 function! s:close_window(range)
@@ -465,7 +456,7 @@ function! s:set_neovim_after() abort
   set nowrapscan
   set scrolloff=2
   set noautoread
-  set autochdir
+  set noautochdir
   set belloff=
   set swapfile
   set nobackup
@@ -681,20 +672,22 @@ function! s:custom_plugins_before()
     nunmap <buffer> \\A
     nunmap <buffer> s
   endfunction
-  "=============== vimsepctor =================
+  "=============== vimspector =================
   let g:vimspector_terminal_maxwidth = 35
   let g:vimspector_sidebar_width = 45
   let g:vimspector_bottombar_height = 15
-  nmap <m-1> <Plug>VimspectorStepOver
-  nmap <m-2> <Plug>VimspectorStepInto
-  nmap <m-3> <Plug>VimspectorStepOut
-  nmap <m-!> <Plug>VimspectorContinue
-  nmap <m-@> <Plug>VimspectorRunToCursor
-  nmap <m-#> <Plug>VimspectorToggleBreakpoint
-  nmap <m-$> <Plug>VimspectorToggleConditionalBreakpoint
-  nmap <f9> <Plug>VimspectorRestart
-  nmap <f10> <Plug>VimspectorStop
-  nmap <space>di <Plug>VimspectorBalloonEval
+  nmap <M-1> <Plug>VimspectorStepOver
+  nmap <M-2> <Plug>VimspectorStepInto
+  nmap <M-3> <Plug>VimspectorStepOut
+  nmap <M-4> <Plug>VimspectorRunToCursor
+  nmap <M-!> <Plug>VimspectorToggleBreakpoint
+  nmap <M-@> <Plug>VimspectorToggleConditionalBreakpoint
+  nmap <M-#> <Plug>VimspectorAddFunctionBreakpoint
+  nmap <silent>><M-$> :call vimspector#ClearBreakpoints()<cr>
+  nmap <F8>  <Plug>VimspectorContinue
+  nmap <F9>  <Plug>VimspectorRestart
+  nmap <F10> <Plug>VimspectorPause
+  nmap <Space>di <Plug>VimspectorBalloonEval
 endfunction
 
 function! s:custom_plugins_after()

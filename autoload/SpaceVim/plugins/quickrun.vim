@@ -116,7 +116,7 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
 
   if curInputBufnr == -1
     let inputfile = expand('%:t') . '.input'
-    let b:QuickrunCmdRedir = '< '.inputfile
+    let b:QuickrunRedir = '< '.inputfile
     execute 'silent belowright 11 split ' . inputfile
     let s:InputBufnr[origBufnr] = bufnr()
     setlocal ft=Input
@@ -142,7 +142,7 @@ endfunction
 
 
 function! s:get_timestamp(file)
-  return py3eval('time.strftime("%y%m%d%H%M%S", time.localtime(os.path.getmtime("'.a:file.'")))')
+  return py3eval('os.path.getmtime("'.a:file.'")')
 endfunction
 
 " add extended compile flags
@@ -160,29 +160,42 @@ function! s:extend_compile_flags()
   return ret
 endfunction
 
-function! s:parse_flags(str, srcfile, exefile)
-  let tmp = substitute(a:str, '\\\@<!\${file}', a:srcfile, 'g')
-  let tmp = substitute(tmp, '\\\@<!\${exeFile}', a:exefile, 'g')
-  let tmp = substitute(tmp, '\\\@<!\${workspaceFolder}', fnamemodify(SpaceVim#plugins#projectmanager#current_root(), ':p:h'), 'g')
-  return tmp
+let s:FILE = SpaceVim#api#import('file')
+let s:variables = {}
+function! s:init_variables() abort
+  let s:variables.workspaceFolder = s:FILE.unify_path(SpaceVim#plugins#projectmanager#current_root())
+  let s:variables.workspaceFolderBasename = fnamemodify(s:variables.workspaceFolder, ':t')
+  let s:variables.file = s:FILE.unify_path(expand('%:p'))
+  let s:variables.relativeFile = s:FILE.unify_path(expand('%'), ':.')
+  let s:variables.relativeFileDirname = s:FILE.unify_path(expand('%'), ':h')
+  let s:variables.fileBasename = expand('%:t')
+  let s:variables.fileBasenameNoExtension = expand('%:t:r')
+  let s:variables.fileDirname = s:FILE.unify_path(expand('%:p:h'))
+  let s:variables.fileExtname = expand('%:e')
+  let s:variables.lineNumber = line('.')
+  let s:variables.selectedText = ''
+  let s:variables.execPath = s:variables.file.'.exe'
+endfunction
+
+function! s:parse_flags(str)
+  let str = a:str
+  for key in keys(s:variables)
+    let str = substitute(str, '\\\@<!\${' . key . '}', s:variables[key], 'g')
+  endfor
+  return str
 endfunction
 
 " a:1 == 1 表示强制重新编译
 function! SpaceVim#plugins#quickrun#QuickRun(...)
   if &modified == 1 | write | endif
-  let src_file_path = fnamemodify(expand('%:p'), ':.')
-  let exe_file_path = './'.fnamemodify(expand('%:p'), ':.').'.exe'
-  let qr_compile = s:parse_flags(b:QuickrunCompiler, src_file_path, exe_file_path)
-  let qr_compile .= ' ' . s:parse_flags(b:QuickrunCompileFlag .' '. s:extend_compile_flags(), src_file_path, exe_file_path)
+  call s:init_variables()
+  let qr_compile = s:parse_flags(b:QuickrunCompileCmd) . ' ' . s:extend_compile_flags()
   let qr_compile = qr_compile =~# '^ *$' ? '' : qr_compile
-  let qr_cmdrun = s:parse_flags(b:QuickrunCmd, src_file_path, exe_file_path)
-  let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdArgs, src_file_path, exe_file_path)
-  let qr_cmdrun .= ' ' . s:parse_flags(b:QuickrunCmdRedir, src_file_path, exe_file_path)
+  let qr_cmdrun = s:parse_flags(b:QuickrunRunCmd) . ' ' . s:parse_flags(b:QuickrunRedir)
 
-  let force_compile = exists('a:1')
   " compilation is not necessary
-  if filereadable(exe_file_path) && s:get_timestamp(expand('%:p').'.exe') >= s:get_timestamp(expand('%:p'))
-        \ && !force_compile && &modified == 0
+  if filereadable(s:variables.execPath) && s:get_timestamp(s:variables.execPath) >= s:get_timestamp(s:variables.file)
+        \ && !exists('a:1') && &modified == 0
     let qr_compile = '-'
   endif
 
@@ -192,22 +205,13 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   call win_gotoid(win)
 endfunction
 
-function! SpaceVim#plugins#quickrun#run_task(cmd, opts, isBackground) abort
-  call s:open_termwin_quickrun()
-  let cmdline = split(a:cmd)
-  let cmd = cmdline[0]
-  let args = join(cmdline[1:])
-
-  wincmd p
-endfunction
-
 "==================================================================================================
 
 " provide commands to change quickrun variables
 function! s:key_binding(var, str, ...) abort
   " `cmd!` means modify it
   if exists('a:1') && a:1 ==# '!'
-    call feedkeys(":".a:var.' '.eval('b:'.a:var))
+    call feedkeys(':'.a:var.' '.eval('b:'.a:var))
   elseif a:str ==# ''
     exe 'let b:'. a:var
   else
@@ -217,16 +221,12 @@ endfunction
 
 " initialize buffer variables
 function! s:init_buffer(ft)
-  let b:QuickrunCompiler = has_key(g:quickrun_default_flags[a:ft], 'compiler') ? g:quickrun_default_flags[a:ft].compiler : ''
-  let b:QuickrunCompileFlag = has_key(g:quickrun_default_flags[a:ft], 'compileFlags') ? g:quickrun_default_flags[a:ft].compileFlags : ''
-  let b:QuickrunCmd = has_key(g:quickrun_default_flags[a:ft], 'cmd') ? g:quickrun_default_flags[a:ft].cmd : ''
-  let b:QuickrunCmdArgs = has_key(g:quickrun_default_flags[a:ft], 'cmdArgs') ? g:quickrun_default_flags[a:ft].cmdArgs : ''
-  let b:QuickrunCmdRedir = has_key(g:quickrun_default_flags[a:ft], 'cmdRedir') ? g:quickrun_default_flags[a:ft].cmdRedir : ''
-  command! -buffer -bang -nargs=? -complete=file QuickrunCompiler    call s:key_binding('QuickrunCompiler', <q-args>, "<bang>")
-  command! -buffer -bang -nargs=? -complete=file QuickrunCompileFlag call s:key_binding('QuickrunCompileFlag', <q-args>, "<bang>")
-  command! -buffer -bang -nargs=? -complete=file QuickrunCmd         call s:key_binding('QuickrunCmd', <q-args>, "<bang>")
-  command! -buffer -bang -nargs=? -complete=file QuickrunCmdArgs     call s:key_binding('QuickrunCmdArgs', <q-args>, "<bang>")
-  command! -buffer -bang -nargs=? -complete=file QuickrunCmdRedir    call s:key_binding('QuickrunCmdRedir', <q-args>, "<bang>")
+  let b:QuickrunCompileCmd = get(g:quickrun_default_flags[a:ft], 'compileCmd', '')
+  let b:QuickrunRunCmd = get(g:quickrun_default_flags[a:ft], 'runCmd', '')
+  let b:QuickrunRedir = get(g:quickrun_default_flags[a:ft], 'redir', '')
+  command! -buffer -bang -nargs=? -complete=file QuickrunCompileCmd  call s:key_binding('QuickrunCompileCmd', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunRunCmd      call s:key_binding('QuickrunRunCmd', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunRedir       call s:key_binding('QuickrunRedir', <q-args>, "<bang>")
 endfunction
 
 function! s:term_enter()
