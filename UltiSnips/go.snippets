@@ -1,0 +1,31 @@
+snippet acm
+package main
+
+func main() {
+	$1
+}
+endsnippet
+
+snippet core
+package main
+
+import (
+	"testing"
+	. "github.com/smartystreets/goconvey/convey"
+)
+
+func ${1:Test}(test *testing.T) {
+	SetDefaultFailureMode(FailureContinues)
+	defer SetDefaultFailureMode(FailureHalts)
+
+	Convey("", test, func() {
+		
+	})
+}
+endsnippet
+
+snippet conv
+Convey("$1", ${2:test, }func() {
+	$3
+})
+endsnippet

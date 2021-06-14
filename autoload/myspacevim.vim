@@ -294,7 +294,8 @@ endfunction
 
 function s:lang_go_after()
   augroup GoTestOrBuild
-    autocmd BufRead *_test.go let b:QuickrunCompileCmd = 'go test -c -o ${execPath} ${file}'
+    autocmd BufReadPost *_test.go let b:QuickrunCompileCmd = 'go test -c -o ${execPath} ${file}'
+          \ | let b:QuickrunRunCmd = '${execPath} -test.v -convey-story=0'
   augroup END
 endfunction
 
