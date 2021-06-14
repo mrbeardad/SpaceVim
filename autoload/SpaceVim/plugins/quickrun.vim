@@ -192,6 +192,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   let qr_compile = s:parse_flags(b:QuickrunCompileCmd) . ' ' . s:extend_compile_flags()
   let qr_compile = qr_compile =~# '^ *$' ? '' : qr_compile
   let qr_cmdrun = s:parse_flags(b:QuickrunRunCmd) . ' ' . s:parse_flags(b:QuickrunRedir)
+  let qr_cwd = b:QuickrunCwd !=# '' ? s:parse_flags(b:QuickrunCwd) : s:parse_flags('${workspaceFolder}')
 
   " compilation is not necessary
   if filereadable(s:variables.execPath) && s:get_timestamp(s:variables.execPath) >= s:get_timestamp(s:variables.file)
@@ -201,6 +202,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
 
   let win = win_getid()
   call s:open_termwin_quickrun()
+  exe 'chdir '.qr_cwd
   call termopen(g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"')
   call win_gotoid(win)
 endfunction
@@ -224,9 +226,11 @@ function! s:init_buffer(ft)
   let b:QuickrunCompileCmd = get(g:quickrun_default_flags[a:ft], 'compileCmd', '')
   let b:QuickrunRunCmd = get(g:quickrun_default_flags[a:ft], 'runCmd', '')
   let b:QuickrunRedir = get(g:quickrun_default_flags[a:ft], 'redir', '')
-  command! -buffer -bang -nargs=? -complete=file QuickrunCompileCmd  call s:key_binding('QuickrunCompileCmd', <q-args>, "<bang>")
-  command! -buffer -bang -nargs=? -complete=file QuickrunRunCmd      call s:key_binding('QuickrunRunCmd', <q-args>, "<bang>")
-  command! -buffer -bang -nargs=? -complete=file QuickrunRedir       call s:key_binding('QuickrunRedir', <q-args>, "<bang>")
+  let b:QuickrunCwd = get(g:quickrun_default_flags[a:ft], 'cwd', '')
+  command! -buffer -bang -nargs=? -complete=file QuickrunCompileCmd call s:key_binding('QuickrunCompileCmd', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunRunCmd     call s:key_binding('QuickrunRunCmd', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunRedir      call s:key_binding('QuickrunRedir', <q-args>, "<bang>")
+  command! -buffer -bang -nargs=? -complete=file QuickrunCwd        call s:key_binding('QuickrunCwd', <q-args>, "<bang>")
 endfunction
 
 function! s:term_enter()

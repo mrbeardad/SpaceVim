@@ -68,9 +68,7 @@ function! s:runner_before()
         \ 'go': {
             \ 'compileCmd': 'go build -o ${execPath} ${file}',
             \ 'runCmd': '${execPath}',
-            \ 'env': {
-              \ 'cwd': '${fileDirname}'
-            \ }
+            \ 'cwd': '${fileDirname}'
         \ }
     \ }
   endif
@@ -288,11 +286,17 @@ function! s:lang_c_after()
     let b:QuickrunCompileCmd = substitute(b:QuickrunCompileCmd, '^\(\S*\)', '\1 '.b:lang_cpp_std, '')
   endfunction
 
+
   augroup MySpaceVimLangC
     autocmd FileType cpp call s:set_lang_cpp_std()
   augroup END
 endfunction
 
+function s:lang_go_after()
+  augroup GoTestOrBuild
+    autocmd BufRead *_test.go let b:QuickrunCompileCmd = 'go test -c -o ${execPath} ${file}'
+  augroup END
+endfunction
 
 function! s:core_after()
   let g:matchup_matchparen_stopline = 45
@@ -736,6 +740,7 @@ function! myspacevim#after() abort
   call s:edit_after()
   call s:lang_markdown_after()
   call s:lang_c_after()
+  call s:lang_go_after()
   call s:ui_after()
   call s:incsearch_after()
   call s:git_after()
