@@ -281,8 +281,7 @@ snippet acm  "description" w
 #include <limits>
 #include <numeric>
 
-int main()
-{
+int main() {
     $1
 
     return 0;
@@ -299,8 +298,7 @@ snippet core  "description" w
 
 #include "gtest/gtest.h"
 
-TEST(TestSuit, TestCase)
-{
+TEST(TestSuit, TestCase) {
 
 }
 endsnippet
@@ -310,8 +308,7 @@ snippet init  "description" w
 
 #include "mine.hpp"
 
-int main()
-{
+int main() {
     $1
 
     return 0;
@@ -329,8 +326,7 @@ int main()
 endsnippet
 
 snippet maina  "description" w
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 
     $1
 
@@ -343,8 +339,7 @@ int argc, char* argv[]
 endsnippet
 
 snippet na "description" w
-namespace${1:}
-{
+namespace${1:} {
 	$2
 } // namespace$1
 endsnippet

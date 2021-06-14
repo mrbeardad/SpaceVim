@@ -115,7 +115,7 @@ function! SpaceVim#plugins#quickrun#OpenInputWin()
   call s:close_term_and_input()
 
   if curInputBufnr == -1
-    let inputfile = expand('%:t') . '.input'
+    let inputfile = expand('%:p') . '.input'
     let b:QuickrunRedir = '< '.inputfile
     execute 'silent belowright 11 split ' . inputfile
     let s:InputBufnr[origBufnr] = bufnr()

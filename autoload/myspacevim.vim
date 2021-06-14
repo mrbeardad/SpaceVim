@@ -67,8 +67,11 @@ function! s:runner_before()
         \},
         \ 'go': {
             \ 'compileCmd': 'go build -o ${execPath} ${file}',
-            \ 'runCmd': '${execPath}'
+            \ 'runCmd': '${execPath}',
+            \ 'env': {
+              \ 'cwd': '${fileDirname}'
             \ }
+        \ }
     \ }
   endif
 endfunction
@@ -282,7 +285,7 @@ function! s:lang_c_after()
     let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.b:lang_cpp_std
     let g:ale_cpp_clangtidy_options = ' -I. ' . b:lang_cpp_std
 
-    let b:QuickrunCompileFlag = b:lang_cpp_std.' '.b:QuickrunCompileFlag
+    let b:QuickrunCompileCmd = substitute(b:QuickrunCompileCmd, '^\(\S*\)', '\1 '.b:lang_cpp_std, '')
   endfunction
 
   augroup MySpaceVimLangC
