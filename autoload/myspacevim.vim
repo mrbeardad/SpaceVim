@@ -692,7 +692,7 @@ function! s:custom_plugins_before()
   nmap <M-!> <Plug>VimspectorToggleBreakpoint
   nmap <M-@> <Plug>VimspectorToggleConditionalBreakpoint
   nmap <M-#> <Plug>VimspectorAddFunctionBreakpoint
-  nmap <silent>><M-$> :call vimspector#ClearBreakpoints()<cr>
+  nmap <silent><M-$> :call vimspector#ClearBreakpoints()<cr>
   nmap <F8>  <Plug>VimspectorContinue
   nmap <F9>  <Plug>VimspectorRestart
   nmap <F10> <Plug>VimspectorPause
