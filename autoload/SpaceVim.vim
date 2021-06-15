@@ -1591,8 +1591,7 @@ function! SpaceVim#welcome() abort
       VimFiler
       wincmd p
     elseif exists(':Defx') == 2
-      Defx
-      wincmd p
+      Defx -direction=botright -no-focus -show-ignored-files
     elseif exists(':NERDTree') == 2
       NERDTree
       wincmd p

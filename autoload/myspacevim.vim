@@ -433,7 +433,7 @@ function! s:ui_after()
   let g:indentLine_char =  '¦'
   let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx']
   nnoremap <silent> <F1> :TagbarToggle<CR>
-  nnoremap <silent> <F3> :Defx -direction=botright -no-focus<cr>
+  nnoremap <silent> <F3> :Defx -direction=botright -no-focus -show-ignored-files<cr>
 endfunction
 
 function! s:close_window(range)
