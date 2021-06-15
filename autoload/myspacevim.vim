@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 14.06.2021
+" Last Modified Date: 15.06.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -290,6 +290,10 @@ function! s:lang_c_after()
   augroup MySpaceVimLangC
     autocmd FileType cpp call s:set_lang_cpp_std()
   augroup END
+endfunction
+
+function s:lang_go_before()
+  let g:go_highlight_funciton_calls = 0
 endfunction
 
 function s:lang_go_after()
@@ -723,6 +727,7 @@ function! myspacevim#before() abort
   call s:checker_before()
   call s:edit_before()
   call s:lang_c_before()
+  call s:lang_go_before()
   call s:leaderf_before()
   call s:lang_markdown_before()
   call s:tools_before()
