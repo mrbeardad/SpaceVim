@@ -189,7 +189,7 @@ endfunction
 function! SpaceVim#plugins#quickrun#QuickRun(...)
   if &modified == 1 | write | endif
   call s:init_variables()
-  let qr_compile = s:parse_flags(b:QuickrunCompileCmd) . ' ' . s:extend_compile_flags()
+  let qr_compile = s:parse_flags(b:QuickrunCompileCmd . ' ' . s:extend_compile_flags())
   let qr_compile = qr_compile =~# '^ *$' ? '' : qr_compile
   let qr_cmdrun = s:parse_flags(b:QuickrunRunCmd) . ' ' . s:parse_flags(b:QuickrunRedir)
   let qr_cwd = b:QuickrunCwd !=# '' ? s:parse_flags(b:QuickrunCwd) : s:parse_flags('${workspaceFolder}')

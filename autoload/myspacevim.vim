@@ -66,7 +66,15 @@ function! s:runner_before()
             \ 'runCmd': 'python ${file}'
         \},
         \ 'go': {
-            \ 'compileCmd': 'go build -o ${execPath} ${file}',
+            \ 'compileCmd': 'go',
+            \ 'extRegex': [
+              \ '^func\s*main()\s*{',
+              \ '^\s*"testing"'
+            \],
+            \ 'extFlags': [
+              \ 'build -o ${execPath} ${file}',
+              \ 'test -c -o ${execPath} ${file}'
+            \],
             \ 'runCmd': '${execPath}',
             \ 'cwd': '${fileDirname}'
         \ }
@@ -289,17 +297,6 @@ function! s:lang_c_after()
 
   augroup MySpaceVimLangC
     autocmd FileType cpp call s:set_lang_cpp_std()
-  augroup END
-endfunction
-
-function s:lang_go_before()
-  let g:go_highlight_funciton_calls = 0
-endfunction
-
-function s:lang_go_after()
-  augroup GoTestOrBuild
-    autocmd BufReadPost *_test.go let b:QuickrunCompileCmd = 'go test -c -o ${execPath} ${file}'
-          \ | let b:QuickrunRunCmd = '${execPath} -test.v -convey-story=0'
   augroup END
 endfunction
 
@@ -727,7 +724,6 @@ function! myspacevim#before() abort
   call s:checker_before()
   call s:edit_before()
   call s:lang_c_before()
-  call s:lang_go_before()
   call s:leaderf_before()
   call s:lang_markdown_before()
   call s:tools_before()
@@ -746,7 +742,6 @@ function! myspacevim#after() abort
   call s:edit_after()
   call s:lang_markdown_after()
   call s:lang_c_after()
-  call s:lang_go_after()
   call s:ui_after()
   call s:incsearch_after()
   call s:git_after()
