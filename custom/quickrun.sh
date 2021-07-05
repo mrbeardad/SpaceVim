@@ -22,12 +22,13 @@ if [[ -n "$3" ]] ;then
 else
     memlimit=500M
 fi
-if [[ ! -d /sys/fs/cgroup/memory/quickrun ]] ;then
-    sudo mkdir /sys/fs/cgroup/memory/quickrun
-fi
-echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;
-echo "$memlimit" | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;
-echo "$memlimit" | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;
+ulimit -v $((1024 * 1000))
+# if [[ ! -d /sys/fs/cgroup/memory/quickrun ]] ;then
+#     sudo mkdir /sys/fs/cgroup/memory/quickrun
+# fi
+# echo $$ | sudo tee /sys/fs/cgroup/memory/quickrun/cgroup.procs > /dev/null;
+# echo "$memlimit" | sudo tee /sys/fs/cgroup/memory/quickrun/memory.limit_in_bytes > /dev/null;
+# echo "$memlimit" | sudo tee /sys/fs/cgroup/memory/quickrun/memory.memsw.limit_in_bytes > /dev/null;
 
 # 运行
 if [[ -n "$2" ]] ;then
