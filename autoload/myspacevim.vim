@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 15.06.2021
+" Last Modified Date: 13.07.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
 
 function! s:file_icons()
@@ -137,8 +137,9 @@ function! s:autocomplete_before()
       for ft in keys(g:ycm_semantic_triggers)
         exe 'autocmd FileType '.ft.' nnoremap <silent> gd :YcmCompleter GoTo<CR>'
         exe 'autocmd FileType '.ft.' nnoremap <silent> gr :YcmCompleter GoToReferences<CR>'
+        exe 'autocmd FileType '.ft.' nnoremap <silent> gD :YcmCompleter GetDoc<CR>'
+        exe 'autocmd FileType '.ft." nnoremap <silent> gR :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
         exe 'autocmd FileType '.ft.' nnoremap <silent> gt :YcmCompleter GetType<CR>'
-        exe 'autocmd FileType '.ft." nnoremap <silent> <m-r> :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
       endfor
     augroup END
   endif
@@ -469,6 +470,7 @@ function! s:set_neovim_after() abort
   set belloff=
   set swapfile
   set nobackup
+  set cmdheight=2
 
   augroup MySpaceVim
       autocmd InsertEnter *.py setlocal foldmethod=marker

@@ -665,12 +665,12 @@ function! s:defind_fuzzy_finder() abort
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
-let g:_spacevim_mappings_g['D'] = ['call feedkeys("gD", "n")', 'go to definition by gtags']
-nnoremap <silent> gD :Leaderf! gtags -d  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
-let g:_spacevim_mappings_g['R'] = ['call feedkeys("gR", "n")', 'go to reference by gtags']
-nnoremap <silent> gR :Leaderf! gtags -r  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
-let g:_spacevim_mappings_g['S'] = ['call feedkeys("gS", "n")', 'go to symbols by gtags']
-nnoremap <silent> gS :Leaderf! gtags -s  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
+" let g:_spacevim_mappings_g['D'] = ['call feedkeys("gD", "n")', 'go to definition by gtags']
+" nnoremap <silent> gD :Leaderf! gtags -d  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
+" let g:_spacevim_mappings_g['R'] = ['call feedkeys("gR", "n")', 'go to reference by gtags']
+" nnoremap <silent> gR :Leaderf! gtags -r  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
+" let g:_spacevim_mappings_g['S'] = ['call feedkeys("gS", "n")', 'go to symbols by gtags']
+" nnoremap <silent> gS :Leaderf! gtags -s  <c-r>=expand('<cword>')<cr> --auto-jump --result ctags-mod<cr>
 
 endfunction
 

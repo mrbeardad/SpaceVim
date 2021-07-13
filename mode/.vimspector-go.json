@@ -1,0 +1,56 @@
+{
+    "adapters": {
+        "dlv-dap": {
+            "variables": {
+                "port": "${unusedLocalPort}"
+            },
+            "command": [
+                "$HOME/go/bin/dlv",
+                "dap",
+                "--listen",
+                "127.0.0.1:${port}"
+            ],
+            "port": "${port}"
+        }
+    },
+    "configurations": {
+        "run": {
+            "adapter": "vscode-go",
+            "configuration": {
+                "request": "launch",
+                "mode": "debug",
+                "program": "${file}",
+                "dlvToolPath": "/bin/dlv",
+                "trace": true,
+                "env": { "GO111MODULE": "off" },
+                "showGlobalVariables": true
+            }
+        },
+        "run-dap": {
+            "adapter": "dlv-dap",
+            "configuration": {
+                "request": "launch",
+                "mode": "debug",
+                "program": "${file}",
+                "dlvToolPath": "/bin/dlv",
+                "trace": true,
+                "env": { "GO111MODULE": "off" },
+                "showGlobalVariables": true
+            }
+        },
+        "run-exec": {
+            // NOTE: To use this you _must_ disable optimistaion:
+            // go build -o hello_world -gcflags="all=-N -l"
+            "adapter": "vscode-go",
+            "configuration": {
+                "request": "launch",
+                "mode": "exec",
+                "program": "${file}.exe",
+                "dlvToolPath": "/bin/dlv",
+                "trace": true,
+                "env": { "GO111MODULE": "off" },
+                "showGlobalVariables": true
+            }
+        }
+    }
+}

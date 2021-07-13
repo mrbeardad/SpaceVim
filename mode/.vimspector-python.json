@@ -1,0 +1,202 @@
+{
+  "adapters": {
+    "run_with_debugpy": {
+      "command": [ "${workspaceRoot}/run_with_debugpy" ],
+      "port": 9876,
+      "env": {
+        "DEBUG_PORT": "9876"
+      }
+    },
+    "python-remote-docker": {
+      "variables": {
+        "port": "8765"
+      },
+      "port": "${port}",
+      "launch": {
+        "remote": {
+          "container": "${ContainerID}",
+          "runCommand": [
+            "python3", "-m", "debugpy", "--listen", "0.0.0.0:${port}",
+                                        "--wait-for-client",
+                                        "%CMD%"
+          ]
+        },
+        "delay": "5000m"
+      }
+    },
+    "python-remote-ssh": {
+      "variables": {
+        "port": "8765"
+      },
+      "port": "${port}",
+      "host": "${host}",
+      "launch": {
+        "remote": {
+          "host": "${host}",
+          "account": "${account}",
+          "runCommand": [
+            "python3", "-m", "debugpy", "--listen", "0.0.0.0:${port}",
+                                        "--wait-for-client",
+                                        "%CMD%"
+          ]
+        }
+      }
+    }
+  },
+  "configurations": {
+    "Use custom gadget": {
+      "adapter": "test_custom",
+      "configuration": {
+        "request": "launch"
+      }
+    },
+    "run legacy vscode-python": {
+      "adapter": "vscode-python",
+      "configuration": {
+        "request": "launch",
+        "type": "python",
+        "cwd": "${workspaceRoot}",
+        "program": "${file}",
+        "stopOnEntry": true,
+        "console": "integratedTerminal"
+      },
+      "breakpoints": {
+        "exception": {
+          "raised": "N",
+          "uncaught": "",
+          "userUnhandled": ""
+        }
+      }
+    },
+    "attach": {
+      "adapter": "multi-session",
+      "configuration": {
+        "request": "attach"
+      },
+      "breakpoints": {
+        "exception": {
+          "raised": "N",
+          "uncaught": "",
+          "userUnhandled": ""
+        }
+      }
+    },
+    "attach-run": {
+      "adapter": "run_with_debugpy",
+      "configuration": {
+        "request": "attach"
+      },
+      "breakpoints": {
+        "exception": {
+          "raised": "N",
+          "uncaught": "",
+          "userUnhandled": ""
+        }
+      }
+    },
+    "docker-attach": {
+      "adapter": "python-remote-docker",
+      "remote-cmdLine": [ "/root/main.py" ],
+      "remote-request": "launch",
+      "configuration": {
+        "request": "attach",
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceRoot}",
+            "remoteRoot": "/root"
+          }
+        ]
+      }
+    },
+    "run": {
+      "adapter": "debugpy",
+      "configuration": {
+        "request": "launch",
+        "type": "python",
+        "cwd": "${workspaceRoot}",
+        "program": "${file}",
+        "stopOnEntry": false,
+        "console": "integratedTerminal"
+      },
+      "breakpoints": {
+        "exception": {
+          "raised": "N",
+          "uncaught": "",
+          "userUnhandled": ""
+        }
+      }
+    },
+    "run - default": {
+      "adapter": "debugpy",
+      "variables": {
+        "MAKE_ENV_OUTPUT": {
+          "shell": "${workspaceRoot}/make_env.sh"
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "type": "python",
+        "cwd": "${workspaceRoot}",
+        "program": "${program:${file\\}}",
+        "stopOnEntry#json": "${StopOnEntry:true}",
+        "console": "integratedTerminal",
+        "args#json": "${args:[]}",
+        "igored#json#s": "string not json",
+        "env#json": "${MAKE_ENV_OUTPUT}"
+      },
+      "breakpoints": {
+        "exception": {
+          "raised": "N",
+          "uncaught": "",
+          "userUnhandled": ""
+        }
+      }
+    },
+    "run - main.py": {
+      "adapter": "debugpy",
+      "configuration": {
+        "request": "launch",
+        "type": "python",
+        "cwd": "${workspaceRoot}",
+        "program": "${workspaceRoot}/main.py",
+        "stopOnEntry": false,
+        "console": "integratedTerminal"
+      },
+      "breakpoints": {
+        "exception": {
+          "raised": "N",
+          "uncaught": "",
+          "userUnhandled": ""
+        }
+      }
+    },
+    "run - exception question": {
+      "adapter": "debugpy",
+      "configuration": {
+        "request": "launch",
+        "type": "python",
+        "cwd": "${workspaceRoot}",
+        "program": "${file}",
+        "stopOnEntry": false,
+        "console": "integratedTerminal"
+      }
+    },
+    "run - remote host": {
+      "adapter": "python-remote-ssh",
+      "remote-cmdLine": [
+        "${remoteRoot}/main.py"
+      ],
+      "remote-request": "launch",
+      "configuration": {
+        "request": "attach",
+        "redirectOutput": true,
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceRoot}",
+            "remoteRoot": "${remoteRoot}"
+          }
+        ]
+      }
+    }
+  }
+}

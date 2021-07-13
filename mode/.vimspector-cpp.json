@@ -1,0 +1,131 @@
+{
+  "configurations": {
+    "run-to-entry": {
+      "adapter": "vscode-cpptools",
+      "default": true,
+      "configuration": {
+        "request": "launch",
+        "program": "${file}.exe",
+        "externalConsole": false,
+        "stopAtEntry": true,
+        "stopOnEntry": true,
+        "MImode": "gdb"
+      },
+      "breakpoints": {
+        "exception": {
+          "cpp_catch": "",
+          "cpp_throw": "",
+          "objc_catch": "",
+          "objc_throw": "",
+          "swift_catch": "",
+          "swift_throw": ""
+        }
+      }
+    },
+    "run-to-breakpoint": {
+      "adapter": "vscode-cpptools",
+      "configuration": {
+        "request": "launch",
+        "program": "${file}.exe",
+        "externalConsole": false,
+        "stopAtEntry": false,
+        "stopOnEntry": false,
+        "MImode": "gdb"
+      },
+      "breakpoints": {
+        "exception": {
+          "cpp_catch": "",
+          "cpp_throw": "",
+          "objc_catch": "",
+          "objc_throw": "",
+          "swift_catch": "",
+          "swift_throw": ""
+        }
+      }
+    },
+    "run-to-breakpoint-specify-file": {
+      "adapter": "vscode-cpptools",
+      "configuration": {
+        "request": "launch",
+        "program": "${workspaceRoot}/${prog}",
+        "cwd": "${workspaceRoot}",
+        "externalConsole": false,
+        "stopAtEntry": false,
+        "stopOnEntry": false,
+        "MImode": "gdb"
+      },
+      "breakpoints": {
+        "exception": {
+          "cpp_catch": "",
+          "cpp_throw": "",
+          "objc_catch": "",
+          "objc_throw": "",
+          "swift_catch": "",
+          "swift_throw": ""
+        }
+      }
+    },
+    "calculate-some-variable": {
+      "adapter": "vscode-cpptools",
+      "variables": {
+        "SIMPLE": "This is some text containing: $HOME",
+        "CALCULATED_LIST": {
+          "shell": [ "uuidgen" ]
+        },
+        "CALCULATED_STR": {
+          "shell": [ "uuidgen" ]
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "program": "${file}.exe",
+        "MImode": "gdb",
+        "externalConsole": false,
+        "args": [
+          "CALCULATED_LIST", "${CALCULATED_LIST}",
+          "SIMPLE", "${SIMPLE}",
+          "CALCULATED_STR", "${CALCULATED_STR}"
+        ]
+      }
+    },
+    "lldb-vscode": {
+      "adapter": "lldb-vscode",
+      "configuration": {
+        "request": "launch",
+        "program": "${file}.exe",
+        "cwd": "${workspaceRoot}",
+        "externalConsole": false,
+        "MIMode": "lldb"
+      }
+    },
+    "CodeLLDB": {
+      "adapter": "CodeLLDB",
+      "configuration": {
+        "request": "launch",
+        "program": "${file}.exe",
+        "cwd": "${workspaceRoot}",
+        "expressions": "native"
+      }
+    }
+  },
+  "adapters": {
+    "lldb-vscode": {
+      "variables": {
+        "LLVM": {
+          "shell": "brew --prefix llvm"
+        }
+      },
+      "attach": {
+        "pidProperty": "pid",
+        "pidSelect": "ask"
+      },
+      "command": [
+        "${LLVM}/bin/lldb-vscode"
+      ],
+      "env": {
+        "LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY": "YES"
+      },
+      "name": "lldb"
+    }
+  }
+}
