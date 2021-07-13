@@ -279,8 +279,7 @@ function! SpaceVim#layers#core#config() abort
   let g:_spacevim_mappings_space.p.t = {'name' : '+Tasks'}
   call SpaceVim#mapping#space#def('nnoremap', ['p', 'e'], 'call SpaceVim#plugins#tasks#edit()', 'edit-project-task', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['p', 'l'], 'call SpaceVim#plugins#tasks#list()', 'list-tasks', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['p', 'r'],
-        \ 'call SpaceVim#plugins#runner#run_task(SpaceVim#plugins#tasks#get())', 'pick-task-to-run', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['p', 'r'], 'call SpaceVim#plugins#runner#run_task(SpaceVim#plugins#tasks#get())', 'pick-task-to-run', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['p', 't', 'e'], 'call SpaceVim#plugins#tasks#edit()', 'edit-project-task', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['p', 't', 'l'], 'call SpaceVim#plugins#tasks#list()', 'list-tasks', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['p', 't', 'c'], 'call SpaceVim#plugins#runner#clear_tasks()', 'clear-tasks', 1)

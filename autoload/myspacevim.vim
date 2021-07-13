@@ -23,7 +23,7 @@ function! s:file_icons()
 endfunction
 
 
-function! s:runner_before()
+function! s:code_runner()
   if g:spacevim_terminal_runner
     let g:quickrun_default_flags = {
         \ 'cpp': {
@@ -135,11 +135,11 @@ function! s:autocomplete_before()
           \ ]
     augroup MySpaceVimAutocomplete
       for ft in keys(g:ycm_semantic_triggers)
-        exe 'autocmd FileType '.ft.' nnoremap <silent> gd :YcmCompleter GoTo<CR>'
-        exe 'autocmd FileType '.ft.' nnoremap <silent> gr :YcmCompleter GoToReferences<CR>'
-        exe 'autocmd FileType '.ft.' nnoremap <silent> gD :YcmCompleter GetDoc<CR>'
-        exe 'autocmd FileType '.ft." nnoremap <silent> gR :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
-        exe 'autocmd FileType '.ft.' nnoremap <silent> gt :YcmCompleter GetType<CR>'
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gd :YcmCompleter GoTo<CR>'
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gr :YcmCompleter GoToReferences<CR>'
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gD :YcmCompleter GetDoc<CR>'
+        exe 'autocmd FileType '.ft." nnoremap <silent><buffer> gR :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gt :YcmCompleter GetType<CR>'
       endfor
     augroup END
   endif
@@ -205,7 +205,7 @@ function! s:checker_after()
     call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'call myspacevim#show_detailed_diagnostic()', 'Detail error information', 1)
   endif
 endfunction
-
+" called by checker
 function! myspacevim#show_detailed_diagnostic() abort
   let bufnr = bufnr('YcmShowDetailedDiagnostic')
   let winid = bufwinid(bufnr)
@@ -274,32 +274,32 @@ endfunction
 
 
 function! s:lang_c_after()
-  function! s:set_lang_cpp_std()
-    let file = findfile('.ycm_extra_conf.py', '.;'.$HOME)
-    if file !=# ''
-      exe 'py3file '. file
-      for thisFlag in py3eval('Settings()').flags
-        if thisFlag =~# '-std='
-          let b:lang_cpp_std = thisFlag
-        endif
-      endfor
-    endif
-    if get(b:, 'lang_cpp_std', '') ==# ''
-      let b:lang_cpp_std = '-std=c++20'
-    endif
-
-    let g:ale_cpp_cc_options = b:lang_cpp_std . ' -O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion '
-    let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.b:lang_cpp_std
-    let g:ale_cpp_clangtidy_options = ' -I. ' . b:lang_cpp_std
-
-    let b:QuickrunCompileCmd = substitute(b:QuickrunCompileCmd, '^\(\S*\)', '\1 '.b:lang_cpp_std, '')
-  endfunction
-
-
   augroup MySpaceVimLangC
     autocmd FileType cpp call s:set_lang_cpp_std()
   augroup END
 endfunction
+" called by lang_c
+function! s:set_lang_cpp_std()
+  let file = findfile('.ycm_extra_conf.py', '.;'.$HOME)
+  if file !=# ''
+    exe 'py3file '. file
+    for thisFlag in py3eval('Settings()').flags
+      if thisFlag =~# '-std='
+        let b:lang_cpp_std = thisFlag
+      endif
+    endfor
+  endif
+  if get(b:, 'lang_cpp_std', '') ==# ''
+    let b:lang_cpp_std = '-std=c++20'
+  endif
+
+  let g:ale_cpp_cc_options = b:lang_cpp_std . ' -O2 -I. -fsyntax-only -fcoroutines -Wall -Wextra -Wshadow -Wfloat-equal -Wsign-conversion -Wlogical-op -Wnon-virtual-dtor -Woverloaded-virtual -Wduplicated-cond -Wduplicated-branches -Wnull-dereference -Wuseless-cast -Wdouble-promotion '
+  let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.b:lang_cpp_std
+  let g:ale_cpp_clangtidy_options = ' -I. ' . b:lang_cpp_std
+
+  let b:QuickrunCompileCmd = substitute(b:QuickrunCompileCmd, '^\(\S*\)', '\1 '.b:lang_cpp_std, '')
+endfunction
+
 
 function! s:core_after()
   let g:matchup_matchparen_stopline = 45
@@ -312,10 +312,12 @@ function! s:core_after()
   nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
 endfunction
 
+
 function! s:edit_before()
   let g:table_mode_auto_align = 0
   " let g:table_mode_disable_mappings = 1
 endfunction
+
 
 function! s:edit_after()
   let g:splitjoin_split_mapping = ''
@@ -348,12 +350,14 @@ function! s:edit_after()
   call SpaceVim#mapping#space#def('vmap', ['x', 'c'], '<Plug>CountSelectionRegion', 'count in the selection region', 0, 1)
 endfunction
 
+
 function! s:lang_markdown_before()
   let g:vim_markdown_no_default_key_mappings = 1
   nmap [[ <Plug>Markdown_MoveToPreviousHeader
   nmap ]] <Plug>Markdown_MoveToNextHeader
   nmap [] <Plug>Markdown_MoveToCurHeader
 endfunction
+
 
 function! s:lang_markdown_after()
   let g:vim_markdown_folding_style_pythonic = 1
@@ -381,6 +385,7 @@ function! s:lang_markdown_after()
   augroup END
 endfunction
 
+
 function! s:leaderf_before()
   let g:Lf_GtagsAutoGenerate = 1
   let g:Lf_GtagsAutoUpdate = 1
@@ -394,6 +399,7 @@ function! s:leaderf_before()
   let g:Lf_IndexTimeLimit = 30
   let g:Lf_UseCache = 0
 endfunction
+
 
 function! s:tools_before()
   let g:rainbow_active = 1
@@ -430,6 +436,7 @@ function! s:tools_before()
   \}
 endfunction
 
+
 function! s:ui_after()
   let g:indentLine_char =  '¦'
   let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx']
@@ -437,14 +444,6 @@ function! s:ui_after()
   nnoremap <silent> <F3> :Defx -direction=botright -no-focus -show-ignored-files<cr>
 endfunction
 
-function! s:close_window(range)
-  if a:range ==# ''
-    quit
-  else
-    exe substitute(a:range, '.*\(\d\)', '\1', 'g')+1.'close'
-  endif
-  let &l:statusline = SpaceVim#layers#core#statusline#get(1)
-endfunction
 
 function! s:colorscheme_before()
   let g:neosolarized_italic = 1
@@ -454,6 +453,7 @@ function! s:colorscheme_before()
   let g:gruvbox_italicize_strings = 1
   let g:palenight_terminal_italics = 1
 endfunction
+
 
 function! s:set_neovim_after() abort
   set nofoldenable
@@ -610,11 +610,22 @@ function! s:set_neovim_after() abort
   let g:_spacevim_mappings_z['<Down>'] = ['normal 3<c-e>', 'scroll down one line']
   nnoremap z<down> 3<c-y>
 endfunction
+" called by set_neovim
+function! s:close_window(range)
+  if a:range ==# ''
+    quit
+  else
+    exe substitute(a:range, '.*\(\d\)', '\1', 'g')+1.'close'
+  endif
+  let &l:statusline = SpaceVim#layers#core#statusline#get(1)
+endfunction
+
 
 function! s:set_neovim_before() abort
   set list  " 放在before防止覆盖Startify设置
   " set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶
 endfunction
+
 
 function! s:incsearch_after()
   let g:incsearch#auto_nohlsearch = 0
@@ -631,11 +642,13 @@ function! s:incsearch_after()
   nmap z/ <Plug>(incsearch-fuzzyword-/)
 endfunction
 
+
 function! s:git_after()
   let g:gitgutter_enabled = 0
   call SpaceVim#mapping#space#def('nnoremap', ['g', 'm'], 'Git branch', 'branch-manager', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['g', 'g'], 'GitGutterToggle', 'GitGutter Buffer Toggle', 1)
 endfunction
+
 
 function! s:colorscheme_after()
   if $WSL_DISTRO_NAME !=# ''
@@ -648,6 +661,7 @@ function! s:colorscheme_after()
     hi! SpellRare gui=undercurl guisp=Cyan
   endif
 endfunction
+
 
 function! s:custom_plugins_before()
   "=============== vim-header ================="
@@ -701,10 +715,12 @@ function! s:custom_plugins_before()
   nmap <Space>di <Plug>VimspectorBalloonEval
 endfunction
 
+
 function! s:custom_plugins_after()
   "=============== vim-header =================
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'h'], 'AddHeader', 'add file header', 1)
 endfunction
+
 
 function! s:spacevim_after()
   augroup MySpaceVim
@@ -717,11 +733,17 @@ function! s:spacevim_after()
   augroup END
 endfunction
 
+
+function! s:lang_chinese_before()
+  let g:translator_default_engines = ['bing', 'youdao']
+endfunction
+
+
 " ===================================================================================================
 function! myspacevim#before() abort
   call s:set_neovim_before()
   call s:file_icons()
-  call s:runner_before()
+  call s:code_runner()
   call s:autocomplete_before()
   call s:checker_before()
   call s:edit_before()
@@ -731,6 +753,7 @@ function! myspacevim#before() abort
   call s:tools_before()
   call s:colorscheme_before()
   call s:custom_plugins_before()
+  call s:lang_chinese_before()
 endfunction
 " ===================================================================================================
 

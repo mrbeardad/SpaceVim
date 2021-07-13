@@ -58,7 +58,11 @@ function! SpaceVim#layers#autocomplete#plugins() abort
           \ 'loadconf' : 1,
           \ 'on_cmd' : 'NeoSnippetEdit'}])
   elseif g:spacevim_snippet_engine ==# 'ultisnips'
-    call add(plugins, ['SirVer/ultisnips',{ 'on_ft': ['snippets'], 'on_func': 'UltiSnips#ExpandSnippetOrJump', 'loadconf_before' : 1,
+    call add(plugins, ['SirVer/ultisnips',{
+          \ 'on_ft': ['snippets'],
+          \ 'on_func': 'UltiSnips#ExpandSnippetOrJump',
+          \ 'on_cmd': 'UltiSnipsEdit',
+          \ 'loadconf_before' : 1,
           \ 'merged' : 0}])
   endif
   if g:spacevim_autocomplete_method ==# 'ycm'

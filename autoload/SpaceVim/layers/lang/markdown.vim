@@ -46,7 +46,7 @@ endfunction
 
 function! SpaceVim#layers#lang#markdown#plugins() abort
   let plugins = []
-  call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}]) "comment line 872 in ftplugin/markdown.vim
+  call add(plugins, ['plasticboy/vim-markdown',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['iamcco/mathjax-support-for-mkdp',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['lvht/tagbar-markdown',{'merged' : 0}])

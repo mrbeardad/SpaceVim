@@ -20,7 +20,6 @@ function! SpaceVim#layers#chinese#plugins() abort
 endfunction
 
 function! SpaceVim#layers#chinese#config() abort
-  let g:translator_default_engines = ['bing', 'youdao']
   let g:_spacevim_mappings.t = {'name' : '+Translate/TableMode'}
   call SpaceVim#mapping#def('nnoremap', '<Leader>tc', ':Translate<cr>', '', '', 'Translate in cmdline')
   call SpaceVim#mapping#def('vnoremap', '<Leader>tc', ':Translate<cr>', '', '', 'Translate in cmdline')
