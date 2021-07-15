@@ -10,26 +10,21 @@
 execute 'source' fnamemodify(expand('<sfile>'), ':h').'/main.vim'
 " ============================ After Load SpaceVim  ==========================
 
-if &diff == 1
-  set termguicolors
-  colorscheme gruvbox
-  finish
-endif
-
-let colorschemes = [
+" color schemes
+set termguicolors
+let s:colorschemes = [
       \ 'SpaceVim',
       \ 'gruvbox',
       \ 'NeoSolarized',
       \ 'palenight',
       \ 'material',
       \]
-if $DARKBG != ''
-  set termguicolors
-  if index(colorschemes, $DARKBG) > 0
+if &diff == 1
+  colorscheme gruvbox
+elseif $DARKBG !=# ''
+  if index(s:colorschemes, $DARKBG) > 0
     exe 'colorscheme '. $DARKBG
   else
-    let colorNr = localtime() % 5
-    " let colorNr = 4
-    exe 'colorscheme '. colorschemes[colorNr]
+    exe 'colorscheme '. s:colorschemes[localtime() % 5]
   endif
 endif

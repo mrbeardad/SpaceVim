@@ -72,6 +72,9 @@ function! SpaceVim#layers#checkers#config() abort
 
   elseif g:spacevim_lint_engine ==# 'ale'
     let g:ale_echo_delay = get(g:, 'ale_echo_delay', 300)
+    if g:spacevim_autocomplete_method ==# 'ycm'
+      call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'call myspacevim#show_detailed_diagnostic()', 'Detail error information', 1)
+    endif
   endif
 
   call SpaceVim#mapping#space#def('nnoremap', ['e', 'c'], 'call call('

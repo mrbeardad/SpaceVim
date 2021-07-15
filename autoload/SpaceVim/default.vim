@@ -138,6 +138,22 @@ function! SpaceVim#default#options() abort
 
   set foldtext=SpaceVim#default#Customfoldtext()
 
+  set list
+  set nofoldenable
+  set showcmd
+  set noruler
+  set noshowmode
+  set virtualedit=block,onemore
+  set ignorecase
+  set smartcase
+  set nowrapscan
+  set scrolloff=2
+  set noautoread
+  set autochdir
+  set belloff=
+  set swapfile
+  set nobackup
+  set cmdheight=2
 endfunction
 "}}}
 

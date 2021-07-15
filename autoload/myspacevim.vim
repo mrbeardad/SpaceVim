@@ -3,24 +3,8 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 13.07.2021
+" Last Modified Date: 15.07.2021
 " Last Modified By: Heachen Bear <mrbeardad@qq.com>
-
-function! s:file_icons()
-  let g:spacevim_filename_icons = {
-        \ '.gitconfig'    : '',
-        \ '.gitignore'    : '',
-        \ '.gitsubmodules': '',
-        \ '.gitkepp'      : '',
-        \ '.gdbinit'      : '',
-        \ '.zshrc'        : '',
-        \}
-  let g:spacevim_filetype_icons = {
-        \ 'zsh' : '',
-        \ 'hpp' : '',
-        \ 'toml': '',
-        \}
-endfunction
 
 
 function! s:code_runner()
@@ -83,12 +67,12 @@ function! s:code_runner()
 endfunction
 
 
-function! s:autocomplete_before()
+function! s:autocomplete()
   if g:spacevim_autocomplete_method ==# 'ycm'
     let g:ycm_auto_hover = ''
     let g:ycm_confirm_extra_conf = 0
-    let g:ycm_cache_omnifunc = 1            " 是否缓存omifunc
-    let g:ycm_clangd_uses_ycmd_caching = 1  " 使用哪个排序缓存
+    let g:ycm_cache_omnifunc = 1
+    let g:ycm_clangd_uses_ycmd_caching = 1
     let g:ycm_clangd_args = [ '--header-insertion=never' ]
     let g:ycm_gopls_args = []
     let g:ycm_key_invoke_completion = '<C-Z>'
@@ -146,7 +130,7 @@ function! s:autocomplete_before()
 endfunction
 
 
-function! s:checker_before()
+function! s:checker()
   if g:spacevim_lint_engine ==# 'ale'
     let g:ale_set_quickfix = 1
     let g:ale_set_loclist = 0
@@ -168,12 +152,6 @@ function! s:checker_before()
                 \ 'sh': ['shellcheck'],
                 \ 'vim': ['ale_custom_linting_rules', 'vint'],
                 \ }
-  endif
-endfunction
-
-
-function! s:checker_after()
-  if g:spacevim_lint_engine ==# 'ale'
     let g:ale_echo_msg_format = '[%linter%] %s  [%severity%]'
     let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability'
     let g:ale_cpp_cc_executable = 'gcc'
@@ -199,10 +177,6 @@ function! s:checker_after()
       \ '-*llvmlibc*',
       \ ]
     let g:ale_python_pylint_options = '-d C0103,C0301,C0112,C0115,C0116,C0114'
-
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'b'], 'ALEPrevious', 'Previous error/warnning', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'n'], 'ALENext', 'Next error/warnning', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['e', 'd'], 'call myspacevim#show_detailed_diagnostic()', 'Detail error information', 1)
   endif
 endfunction
 " called by checker
@@ -252,12 +226,13 @@ function! myspacevim#show_detailed_diagnostic() abort
 endfunction
 
 
-function! s:lang_c_before()
+function! s:lang_c()
   let g:cppman_open_mode = '<auto>'
   let g:cpp_nofunction_highlight = 1
   let g:cpp_simple_highlight = 0
   let g:c_no_posix_function = 1
   let g:cmake_ycm_symlinks = 1
+  let g:disable_protodef_mapping = 1
   call SpaceVim#custom#LangSPC('cpp', 'nnore', ['l'],
         \ 'let ale_cpp_clangtidy_executable = "clang-tidy" | ALELint',
         \ 'Lint with all linters', 1)
@@ -267,19 +242,15 @@ function! s:lang_c_before()
 
   augroup MySpaceVimLangC
     autocmd FileType cpp nnoremap <silent><buffer> K :exe "Cppman ". expand('<cword>')<cr>
+    autocmd FileType cpp call myspacevim#set_cpp_std_from_ycm_extra_conf()
     autocmd BufWritePre *.{c,cpp,h,hpp} SortInclude
     autocmd User ALELintPost let g:ale_cpp_clangtidy_executable = 'echo'
   augroup END
 endfunction
 
 
-function! s:lang_c_after()
-  augroup MySpaceVimLangC
-    autocmd FileType cpp call s:set_lang_cpp_std()
-  augroup END
-endfunction
 " called by lang_c
-function! s:set_lang_cpp_std()
+function! myspacevim#set_cpp_std_from_ycm_extra_conf()
   let file = findfile('.ycm_extra_conf.py', '.;'.$HOME)
   if file !=# ''
     exe 'py3file '. file
@@ -297,23 +268,11 @@ function! s:set_lang_cpp_std()
   let g:ale_cpp_cppcheck_options = '--enable=warning,style,performance,portability -'.b:lang_cpp_std
   let g:ale_cpp_clangtidy_options = ' -I. ' . b:lang_cpp_std
 
-  let b:QuickrunCompileCmd = substitute(b:QuickrunCompileCmd, '^\(\S*\)', '\1 '.b:lang_cpp_std, '')
+  let b:QuickrunCompileCmd = substitute(get(g:quickrun_default_flags.cpp, 'compileCmd', ''), '^\(\S*\)', '\1 '.b:lang_cpp_std, '')
 endfunction
 
 
-function! s:core_after()
-  let g:matchup_matchparen_stopline = 45
-  let g:matchup_delim_stopline = 45
-  let g:clever_f_smart_case = 1
-  let g:clever_f_fix_key_direction = 1
-  nmap + [SPC]n+
-  nmap - [SPC]n-
-  nmap ; <Plug>(easymotion-overwin-f2)
-  nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
-endfunction
-
-
-function! s:edit_before()
+function! s:edit()
   let g:table_mode_auto_align = 0
   " let g:table_mode_disable_mappings = 1
 endfunction
@@ -351,7 +310,7 @@ function! s:edit_after()
 endfunction
 
 
-function! s:lang_markdown_before()
+function! s:lang_markdown()
   let g:vim_markdown_no_default_key_mappings = 1
   nmap [[ <Plug>Markdown_MoveToPreviousHeader
   nmap ]] <Plug>Markdown_MoveToNextHeader
@@ -386,7 +345,7 @@ function! s:lang_markdown_after()
 endfunction
 
 
-function! s:leaderf_before()
+function! s:leaderf()
   let g:Lf_GtagsAutoGenerate = 1
   let g:Lf_GtagsAutoUpdate = 1
   let g:Lf_WindowHeight = 0.3
@@ -401,51 +360,7 @@ function! s:leaderf_before()
 endfunction
 
 
-function! s:tools_before()
-  let g:rainbow_active = 1
-  let g:rainbow_conf = {
-  \ 'guifgs':  ['#ff0000', '#95bcad', '#ff7300', '#d7cfff', '#00dfd7', '#ffd700', '#00ff00'],
-  \ 'guis': ['none'],
-  \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-  \ 'cterms': ['none', 'italic'],
-  \ 'operators': '_,_',
-  \ 'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-  \ 'separately': {
-  \     '*': {},
-  \     'markdown': {
-  \       'parentheses_options': 'containedin=markdownCode contained',
-  \     },
-  \     'lisp': {
-  \       'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
-  \     },
-  \     'haskell': {
-  \       'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/\v\{\ze[^-]/ end=/}/ fold'],
-  \     },
-  \     'vim': {
-  \       'parentheses_options': 'containedin=vimFuncBody',
-  \     },
-  \     'perl': {
-  \       'syn_name_prefix': 'perlBlockFoldRainbow',
-  \     },
-  \     'stylus': {
-  \       'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
-  \     },
-  \     'css': 0,
-  \     'cmake':0
-  \ }
-  \}
-endfunction
-
-
-function! s:ui_after()
-  let g:indentLine_char =  '¦'
-  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx']
-  nnoremap <silent> <F1> :TagbarToggle<CR>
-  nnoremap <silent> <F3> :Defx -direction=botright -no-focus -show-ignored-files<cr>
-endfunction
-
-
-function! s:colorscheme_before()
+function! s:colorscheme()
   let g:neosolarized_italic = 1
   let g:gruvbox_contrast_dark = 'hard'
   let g:gruvbox_italic = 1
@@ -456,27 +371,6 @@ endfunction
 
 
 function! s:set_neovim_after() abort
-  set nofoldenable
-  set showcmd
-  set noruler
-  set noshowmode
-  set virtualedit=block,onemore
-  set ignorecase
-  set smartcase
-  set nowrapscan
-  set scrolloff=2
-  set noautoread
-  set noautochdir
-  set belloff=
-  set swapfile
-  set nobackup
-  set cmdheight=2
-
-  augroup MySpaceVim
-      autocmd InsertEnter *.py setlocal foldmethod=marker
-      autocmd InsertLeave *.py setlocal foldmethod=expr
-  augroup END
-
   " buffer and window operator
   " 若只设置guide则快捷键输入时会打开导航
   " 若只设置map则打开导航时输入的快捷键无效
@@ -575,7 +469,7 @@ function! s:set_neovim_after() abort
   nnoremap =P "0P
   nnoremap <silent>=o :set paste<cr>o<c-r>0<c-c>:set nopaste<cr>
   nnoremap <silent>=O :set paste<cr>O<c-r>0<c-c>:set nopaste<cr>
-  if has('unnamedplus')
+  if has('unnamedplus') && !has('windows')
     xnoremap <Leader>y "+y
     nnoremap <leader>y "+y
     nnoremap <leader>Y "+y$
@@ -594,11 +488,7 @@ function! s:set_neovim_after() abort
   let g:_spacevim_mappings_g['%'] = ['MatchupWhereAmI', 'show matchup']
   nnoremap <silent>g% :MatchupWhereAmI<cr>
   let g:_spacevim_mappings_g['F'] = ['call jobstart("xdg-open ". expand("<cfile>"))', 'edit file under cursor with GUI']
-  if has('unix') || has('wsl')
-    nnoremap <silent> gF :call jobstart('xdg-open '. expand('<cfile>'))<cr>
-  elseif has ('win32')
-    nnoremap <silent> gF :call jobstart('explorer '. expand('<cfile>'))<cr>
-  endif
+  nnoremap <silent> gF :exe "AsyncRun xdg-open ".expand('<cfile>')<cr>
 
   " z mapping
   let g:_spacevim_mappings_z['<Left>'] = ['call feedkeys("zL", "n")', 'scroll half a screenwidth to the left']
@@ -618,12 +508,6 @@ function! s:close_window(range)
     exe substitute(a:range, '.*\(\d\)', '\1', 'g')+1.'close'
   endif
   let &l:statusline = SpaceVim#layers#core#statusline#get(1)
-endfunction
-
-
-function! s:set_neovim_before() abort
-  set list  " 放在before防止覆盖Startify设置
-  " set listchars=tab:▸\ ,eol:↵,trail:·,extends:↷,precedes:↶
 endfunction
 
 
@@ -663,7 +547,7 @@ function! s:colorscheme_after()
 endfunction
 
 
-function! s:custom_plugins_before()
+function! s:custom_plugins()
   "=============== vim-header ================="
   let g:header_field_author = 'Heachen Bear'
   let g:header_field_author_email = 'mrbeardad@qq.com'
@@ -734,26 +618,23 @@ function! s:spacevim_after()
 endfunction
 
 
-function! s:lang_chinese_before()
+function! s:lang_chinese()
   let g:translator_default_engines = ['bing', 'youdao']
 endfunction
 
 
 " ===================================================================================================
 function! myspacevim#before() abort
-  call s:set_neovim_before()
-  call s:file_icons()
   call s:code_runner()
-  call s:autocomplete_before()
-  call s:checker_before()
-  call s:edit_before()
-  call s:lang_c_before()
-  call s:leaderf_before()
-  call s:lang_markdown_before()
-  call s:tools_before()
-  call s:colorscheme_before()
-  call s:custom_plugins_before()
-  call s:lang_chinese_before()
+  call s:autocomplete()
+  call s:checker()
+  call s:edit()
+  call s:lang_c()
+  call s:leaderf()
+  call s:lang_markdown()
+  call s:colorscheme()
+  call s:custom_plugins()
+  call s:lang_chinese()
 endfunction
 " ===================================================================================================
 
@@ -762,12 +643,8 @@ endfunction
 function! myspacevim#after() abort
   call s:custom_plugins_after()
   call s:set_neovim_after()
-  call s:checker_after()
-  call s:core_after()
   call s:edit_after()
   call s:lang_markdown_after()
-  call s:lang_c_after()
-  call s:ui_after()
   call s:incsearch_after()
   call s:git_after()
   call s:spacevim_after()

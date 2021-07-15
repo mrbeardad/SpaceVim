@@ -1,13 +1,15 @@
 ########################### Options ###########################
 [options]
     # colorscheme
-    colorscheme_default = "default-reduce"
-    colorscheme = "default-reduce"
-    colorscheme_bg = "dark"
     enable_guicolors = true
+    colorscheme_bg = "dark"
+    colorscheme = "default-reduce"
+    colorscheme_default = "default-reduce"
     custom_color_palette = []
 
     # statusline & tabline
+    buffer_index_type = 4
+    windows_index_type = 3
     enable_statusline_tag = true
     enable_statusline_mode = true
     enable_statusline_bfpath = true
@@ -15,8 +17,6 @@
     enable_tabline_ft_icon = true
     enable_statusline_ft_icon = true
     enable_os_fileformat_icon = true
-    buffer_index_type = 4
-    windows_index_type = 3
     statusline_unicode_symbols = true
     statusline_separator = "arrow"
     statusline_iseparator = "arrow"
@@ -25,16 +25,16 @@
 
     # filemanager
     filemanager = "defx"
-    enable_vimfiler_filetypeicon = true
-    enable_vimfiler_gitstatus = true
-    enable_vimfiler_welcome = true
     filetree_direction = "right"
     sidebar_width = 25
+    enable_vimfiler_welcome = true
+    enable_vimfiler_gitstatus = true
+    enable_vimfiler_filetypeicon = true
 
     # development
-    lint_engine = "ale"
     autocomplete_method = "ycm"
     snippet_engine = "ultisnips"
+    lint_engine = "ale"
     lint_on_save = false
     lint_on_the_fly = true
     error_symbol = " "
@@ -87,11 +87,6 @@
     update_retry_cnt = 2
     plugin_manager_processes = 16
     disabled_plugins = [ 
-        "neco-syntax",
-        "neoinclude.vim",
-        "neosnippet-snippets",
-        "neopairs.vim",
-        "deoplete-dictionary",
         "CompleteParameter.vim",
         "fcitx.vim",
         "fcitx5.vim",
@@ -115,6 +110,10 @@
 
 [[custom_plugins]]
     repo = "puremourning/vimspector"
+    merged = false
+
+[[custom_plugins]]
+    repo = "skywind3000/asyncrun.vim"
     merged = false
 
 ########################### Layers ###########################

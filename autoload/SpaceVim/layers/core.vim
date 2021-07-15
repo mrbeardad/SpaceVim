@@ -22,6 +22,7 @@ function! SpaceVim#layers#core#plugins() abort
   if !has('nvim')
     call add(plugins, [g:_spacevim_root_dir . 'bundle/nvim-yarp',  {'merged': 0}])
     call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-hug-neovim-rpc',  {'merged': 0}])
+    call add(plugins, ['vim-utils/vim-alt-mappings',  {'merged': 0}])
   endif
   if g:spacevim_filemanager ==# 'nerdtree'
     call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdtree', { 'merged' : 0,
@@ -68,6 +69,14 @@ function! SpaceVim#layers#core#config() abort
     noremap <silent> <F3> :NERDTreeToggle<CR>
   endif
   let g:matchup_matchparen_status_offscreen = 0
+  let g:matchup_matchparen_stopline = 45
+  let g:matchup_delim_stopline = 45
+  let g:clever_f_smart_case = 1
+  let g:clever_f_fix_key_direction = 1
+  nmap + [SPC]n+
+  nmap - [SPC]n-
+  nmap ; <Plug>(easymotion-overwin-f2)
+  nnoremap <silent><c-w>X :call SpaceVim#mapping#clear_saved_buffers()<cr>
   " Unimpaired bindings
   " Quickly add empty lines
   nnoremap <silent> [<Space>  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>

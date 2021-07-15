@@ -73,6 +73,38 @@ function! SpaceVim#layers#tools#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['a', 'R'],
         \ 'Goyo', 'read-mode', 1)
   nnoremap <silent> <F5> :UndotreeToggle<CR>
+  let g:rainbow_active = 1
+  let g:rainbow_conf = {
+  \ 'guifgs':  ['#ff0000', '#95bcad', '#ff7300', '#d7cfff', '#00dfd7', '#ffd700', '#00ff00'],
+  \ 'guis': ['none'],
+  \ 'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+  \ 'cterms': ['none'],
+  \ 'operators': '_,_',
+  \ 'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+  \ 'separately': {
+  \     '*': {},
+  \     'markdown': {
+  \       'parentheses_options': 'containedin=markdownCode contained',
+  \     },
+  \     'lisp': {
+  \       'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+  \     },
+  \     'haskell': {
+  \       'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/\v\{\ze[^-]/ end=/}/ fold'],
+  \     },
+  \     'vim': {
+  \       'parentheses_options': 'containedin=vimFuncBody',
+  \     },
+  \     'perl': {
+  \       'syn_name_prefix': 'perlBlockFoldRainbow',
+  \     },
+  \     'stylus': {
+  \       'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
+  \     },
+  \     'css': 0,
+  \     'cmake':0
+  \ }
+  \}
   if maparg('<C-_>', 'v') ==# ''
     vnoremap <silent> <C-_> <Esc>:Ydv<CR>
   endif

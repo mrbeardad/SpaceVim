@@ -6,6 +6,7 @@
 " License: GPLv3
 "=============================================================================
 
+" ============================ Before Load SpaceVim ==========================
 " Note: Skip initialization for vim-tiny or vim-small.
 if 1
     let g:_spacevim_if_lua = 0
@@ -24,21 +25,44 @@ if 1
     endif
     execute 'source' fnamemodify(expand('<sfile>'), ':h').'/main.vim'
 endif
-" vim:set et sw=2
-let &t_SI.="\e[5 q" "SI = INSERT mode
-let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
-let colorschemes = [
+" ============================ After Load SpaceVim  ==========================
+
+" WSL clipboard
+if has('windows')
+    let s:clip = 'win32yank.exe -i --crlf'
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname ==# 'x' | call system(s:clip, @x) | endif
+        autocmd TextYankPost * let g:fuck = deepcopy(v:event)
+    augroup END
+    xnoremap <Leader>y "xy
+    nnoremap <leader>y "xy
+    nnoremap <leader>Y "xy$
+    nnoremap <leader>, "xyl
+    xnoremap <silent><leader>p :r !win32yank.exe -o --lf<cr>
+    nnoremap <silent><leader>p :let @x = system('win32yank.exe -o --lf')<cr>"xp
+    nnoremap <silent><leader>o :r !win32yank.exe -o --lf<cr>
+endif
+
+" cursor shape
+let &t_SI.="\e[5 q"
+let &t_EI.="\e[1 q"
+
+" color schemes
+set termguicolors
+let s:colorschemes = [
       \ 'SpaceVim',
       \ 'gruvbox',
       \ 'NeoSolarized',
       \ 'palenight',
       \ 'material',
       \]
-set termguicolors
-if index(colorschemes, $DARKBG) > 0
-  exe 'colorscheme '. $DARKBG
-else
-  let colorNr = localtime() % 5
-  " let colorNr = 4
-  exe 'colorscheme '. colorschemes[colorNr]
+if &diff == 1
+  colorscheme gruvbox
+elseif $DARKBG !=# ''
+  if index(s:colorschemes, $DARKBG) > 0
+    exe 'colorscheme '. $DARKBG
+  else
+    exe 'colorscheme '. s:colorschemes[localtime() % 5]
+  endif
 endif

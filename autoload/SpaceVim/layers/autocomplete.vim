@@ -120,7 +120,7 @@ function! SpaceVim#layers#autocomplete#plugins() abort
     " v:completed_item
     call add(plugins, ['Shougo/echodoc.vim', {
           \ 'on_cmd' : ['EchoDocEnable', 'EchoDocDisable'],
-          \ 'on_event' : 'CompleteDone',
+          \ 'on_event' : 'InsertEnter',
           \ 'loadconf_before' : 1,
           \ }])
     call add(plugins, [g:_spacevim_root_dir . 'bundle/CompleteParameter.vim',
