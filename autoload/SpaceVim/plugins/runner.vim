@@ -217,7 +217,7 @@ function! s:update_statusline() abort
 endfunction
 
 function! SpaceVim#plugins#runner#reg_runner(ft, runner) abort
-  if has('nvim') && get(g:, 'spacevim_terminal_runner', 0)
+  if get(g:, 'spacevim_terminal_runner', 0)
     call SpaceVim#plugins#quickrun#prepare()
     return
   endif

@@ -97,7 +97,7 @@ function! SpaceVim#layers#ui#config() abort
   let g:indentLine_conceallevel = 2
   let g:indentLine_enabled = s:enable_indentline
   let g:indentLine_fileTypeExclude = get(g:, 'indentLine_fileTypeExclude', [])
-  let g:indentLine_fileTypeExclude += ['help', 'man', 'startify', 'vimfiler', 'json']
+  let g:indentLine_fileTypeExclude += ['help', 'man', 'startify', 'vimfiler', 'json', 'defx']
   let g:better_whitespace_filetypes_blacklist = ['diff', 'gitcommit', 'unite',
         \ 'qf', 'help', 'markdown', 'leaderGuide',
         \ 'startify'
@@ -105,8 +105,6 @@ function! SpaceVim#layers#ui#config() abort
   let g:signify_disable_by_default = 0
   let g:signify_line_highlight = 0
 
-  let g:indentLine_char =  '¦'
-  let g:indentLine_fileTypeExclude = ['help', 'man', 'startify', 'vimfiler', 'defx']
   if s:enable_sidebar
     noremap <silent> <F1> :call SpaceVim#plugins#sidebar#toggle()<CR>
   else

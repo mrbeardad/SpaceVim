@@ -3,8 +3,8 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 15.07.2021
-" Last Modified By: Heachen Bear <mrbeardad@qq.com>
+" Last Modified Date: 16.07.2021
+" Last Modified By: Heache Bear <mrbeardad@qq.com>
 
 
 function! s:code_runner()
@@ -73,7 +73,7 @@ function! s:autocomplete()
     let g:ycm_confirm_extra_conf = 0
     let g:ycm_cache_omnifunc = 1
     let g:ycm_clangd_uses_ycmd_caching = 1
-    let g:ycm_clangd_args = [ '--header-insertion=never' ]
+    let g:ycm_clangd_args = []
     let g:ycm_gopls_args = []
     let g:ycm_key_invoke_completion = '<C-Z>'
     let g:ycm_seed_identifiers_with_syntax = 1
@@ -119,11 +119,11 @@ function! s:autocomplete()
           \ ]
     augroup MySpaceVimAutocomplete
       for ft in keys(g:ycm_semantic_triggers)
-        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gd :YcmCompleter GoTo<CR>'
-        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gr :YcmCompleter GoToReferences<CR>'
-        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gD :YcmCompleter GetDoc<CR>'
-        exe 'autocmd FileType '.ft." nnoremap <silent><buffer> gR :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
-        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gt :YcmCompleter GetType<CR>'
+        exe 'autocmd File: myspacevim.vim
+        exe 'autocmd File: myspacevim.vim
+        exe 'autocmd File: myspacevim.vim
+        exe 'autocmd File: myspacevim.vim
+        exe 'autocmd File: myspacevim.vim
       endfor
     augroup END
   endif
@@ -223,6 +223,11 @@ function! myspacevim#show_detailed_diagnostic() abort
   syntax keyword Include note
 
   winc p
+endfunction
+
+
+function! s:lang_go()
+  let g:go_gopls_enabled = 0
 endfunction
 
 
@@ -348,6 +353,7 @@ endfunction
 function! s:leaderf()
   let g:Lf_GtagsAutoGenerate = 1
   let g:Lf_GtagsAutoUpdate = 1
+  let g:Lf_GtagsSkipUnreadable = 1
   let g:Lf_WindowHeight = 0.3
   let g:Lf_CacheDirectory = g:spacevim_data_dir.'SpaceVim/'
   let g:Lf_RootMarkers = ['.git', '_darcs', '.hg', '.bzr', '.svn', '.SpaceVim.d']
@@ -487,8 +493,8 @@ function! s:set_neovim_after() abort
   nnoremap g8 g8
   let g:_spacevim_mappings_g['%'] = ['MatchupWhereAmI', 'show matchup']
   nnoremap <silent>g% :MatchupWhereAmI<cr>
-  let g:_spacevim_mappings_g['F'] = ['call jobstart("xdg-open ". expand("<cfile>"))', 'edit file under cursor with GUI']
-  nnoremap <silent> gF :exe "AsyncRun xdg-open ".expand('<cfile>')<cr>
+  let g:_spacevim_mappings_g['F'] = ['call SpaceVim#api#import("job").start("xdg-open ".expand("<cfile>"))', 'edit file under cursor with GUI']
+  nnoremap <silent> gF :call SpaceVim#api#import('job').start("xdg-open ".expand('<cfile>'))<cr>
 
   " z mapping
   let g:_spacevim_mappings_z['<Left>'] = ['call feedkeys("zL", "n")', 'scroll half a screenwidth to the left']
@@ -549,10 +555,10 @@ endfunction
 
 function! s:custom_plugins()
   "=============== vim-header ================="
-  let g:header_field_author = 'Heachen Bear'
+  let g:header_field_author = 'Heache Bear'
   let g:header_field_author_email = 'mrbeardad@qq.com'
   let g:header_field_license_id = 'GPLv3'
-  let g:header_field_copyright = 'Copyright (c) 2020-'.strftime('%Y').' Heachen Bear & Contributors'
+  let g:header_field_copyright = 'Copyright (c) 2020-'.strftime('%Y').' Heache Bear & Contributors'
   let g:header_max_size = 9
   let g:header_alignment = 0
   let g:header_auto_add_header = 0
@@ -585,18 +591,32 @@ function! s:custom_plugins()
   let g:vimspector_terminal_maxwidth = 35
   let g:vimspector_sidebar_width = 45
   let g:vimspector_bottombar_height = 15
-  nmap <M-1> <Plug>VimspectorStepOver
-  nmap <M-2> <Plug>VimspectorStepInto
-  nmap <M-3> <Plug>VimspectorStepOut
-  nmap <M-4> <Plug>VimspectorRunToCursor
-  nmap <M-!> <Plug>VimspectorToggleBreakpoint
-  nmap <M-@> <Plug>VimspectorToggleConditionalBreakpoint
-  nmap <M-#> <Plug>VimspectorAddFunctionBreakpoint
-  nmap <silent><M-$> :call vimspector#ClearBreakpoints()<cr>
-  nmap <F8>  <Plug>VimspectorContinue
-  nmap <F9>  <Plug>VimspectorRestart
-  nmap <F10> <Plug>VimspectorPause
-  nmap <Space>di <Plug>VimspectorBalloonEval
+  " let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
+  if has('nvim')
+    nmap <F5>   <Plug>VimspectorContinue
+    nmap <F17>  <Plug>VimspectorPause
+    nmap <F6>   <Plug>VimspectorRestart
+    nmap <F18>  <plug>VimspectorStop
+    nmap <F7>   <Plug>VimspectorStepOver
+    nmap <F19>  <Plug>VimspectorRunToCursor
+    nmap <F8>   <Plug>VimspectorStepInto
+    nmap <F20>  <Plug>VimspectorStepOut
+    nmap <F9>   <Plug>VimspectorToggleBreakpoint
+    nmap <F21>  <Plug>VimspectorAddFunctionBreakpoint
+    nmap <F33>  <Plug>VimspectorToggleConditionalBreakpoint
+  else
+    nmap <F5>   <Plug>VimspectorContinue
+    nmap <S-F5> <Plug>VimspectorPause
+    nmap <F6>   <Plug>VimspectorRestart
+    nmap <S-F6> <plug>VimspectorStop
+    nmap <F7>   <Plug>VimspectorStepOver
+    nmap <S-F7> <Plug>VimspectorRunToCursor
+    nmap <F8>   <Plug>VimspectorStepInto
+    nmap <S-F8>  <Plug>VimspectorStepOut
+    nmap <F9>   <Plug>VimspectorToggleBreakpoint
+    nmap <S-F9> <Plug>VimspectorAddFunctionBreakpoint
+    nmap <C-F9> <Plug>VimspectorToggleConditionalBreakpoint
+  endif
 endfunction
 
 
@@ -607,6 +627,7 @@ endfunction
 
 
 function! s:spacevim_after()
+  nnoremap <silent><F3> :call SpaceVim#plugins#tabmanager#open()<cr>
   augroup MySpaceVim
     autocmd FileType SpaceVimFlyGrep map <buffer> <c-c> <esc>
     autocmd FileType leaderGuide map <buffer> <c-c> <esc>
@@ -630,6 +651,7 @@ function! myspacevim#before() abort
   call s:checker()
   call s:edit()
   call s:lang_c()
+  call s:lang_go()
   call s:leaderf()
   call s:lang_markdown()
   call s:colorscheme()

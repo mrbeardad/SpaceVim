@@ -1,2 +1,2 @@
-nnoremap <silent> <F3> :Defx -direction=botright -no-focus -show-ignored-files<cr>
+nnoremap <silent> <F2> :Defx -direction=botright -no-focus -show-ignored-files<cr>
 

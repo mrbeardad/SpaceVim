@@ -39,7 +39,7 @@ if has('windows')
     nnoremap <leader>y "xy
     nnoremap <leader>Y "xy$
     nnoremap <leader>, "xyl
-    xnoremap <silent><leader>p :r !win32yank.exe -o --lf<cr>
+    xnoremap <silent><leader>p x:let @x = system('win32yank.exe -o --lf')<cr>"xp
     nnoremap <silent><leader>p :let @x = system('win32yank.exe -o --lf')<cr>"xp
     nnoremap <silent><leader>o :r !win32yank.exe -o --lf<cr>
 endif

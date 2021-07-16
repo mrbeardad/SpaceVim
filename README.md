@@ -25,12 +25,12 @@
 - [模糊搜索](#模糊搜索)
 - [文本搜索](#文本搜索)
 - [版本管理](#版本管理)
-- [chinese](#chinese)
+- [在线翻译](#在线翻译)
 - [代码补全](#代码补全)
 - [语法检测](#语法检测)
 - [代码运行](#代码运行)
 - [调试](#调试)
-- [lang#markdown](#langmarkdown)
+- [Markdown渲染预览](#markdown渲染预览)
 - [安装](#安装)
 - [依赖](#依赖)
 
@@ -99,8 +99,8 @@
 
 # 符号表、文件树、撤销树
 &emsp;符号表插件使用的是[tagbar](https://github.com/wsdjep/tagbar)，按`<F1>`开启  
-&emsp;文件树插件使用的是[defx](https://github.com/Shougo/defx.nvim)，按`<F3>`开启  
-&emsp;撤销树插件使用的是[undotree](https://github.com/mbbill/undotree)，按`<F5>`开启  
+&emsp;文件树插件使用的是[defx](https://github.com/Shougo/defx.nvim)，按`<F2>`开启  
+&emsp;撤销树插件使用的是[undotree](https://github.com/mbbill/undotree)，按`<F4>`开启  
 <!-- <img align="left" height=700 src="custom/tagbar.png"></img> -->
 <!-- <img align="left" height=700 src="custom/defx.png"></img> -->
 <!-- <img align="center" height=700 src="custom/undo.png"></img> -->
@@ -193,7 +193,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 | `<space>ghr` | 撤销diff修改 （需要开启上述gitgutter） |
 
 
-# chinese
+# 在线翻译
 提供了vim的中文文档，以及联网翻译器：
 ![trans](custom/translator.png)
 
@@ -236,7 +236,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 # 代码运行
 在`~/.SpaceVim.d/init.toml`中的`[option]`下设置`enable_terminal_runner = true`
 即可启用QuickRun替代原版中的Runner来运行程序，QuickRun与后者区别在于：
-* 使用neovim的内建终端
+* 使用内建终端
 * 程序运行计时器更加准确
 * 设置参数比较方便
 
@@ -309,7 +309,7 @@ let g:quickrun_default_flags = {
 | `<space>lr` | 运行程序（若时间戳较未变则不编译）     |
 | `<space>lR` | 强制编译并运行程序                     |
 | `<space>li` | 快速打开输入窗口                       |
-| `<F7>`      | 开启或关闭程序运行窗口（如果存在的话） |
+| `<F10>`     | 开启或关闭程序运行窗口（如果存在的话） |
 
 **注意**：`<space>li`快速打开窗口，会自动使用 QuickrunRedirect命令将当前buffer将要运行的程序重定向到该输入窗口。
 离开输入窗口时会自动写回硬盘。
@@ -327,20 +327,21 @@ YCM读取的`.ycm_extra_conf.py`中设置的标准确定，该文件从源文件
 使用前需要将[mode/.vimspector.json](mode/.vimspector.json)文件移到项目目录中，
 该插件的依赖由它自己管理下载安装，`:VimspectorInstall --all`
 
-| 按键    | 作用              |
-|---------|-------------------|
-| `<F8>`  | 继续/启动         |
-| `<F9>`  | 重启/启动         |
-| `<F10>` | 停止              |
-| `<M-1>` | step over / next  |
-| `<M-2>` | step into / step  |
-| `<M-3>` | step out / finish |
-| `<M-!>` | 行断点            |
-| `<M-@>` | 条件断点          |
-| `<M-#>` | 函数断点          |
-| `<M-$>` | 清除断点          |
+| 按键     | 作用              |
+|----------|-------------------|
+| `<F5>`   | 继续              |
+| `<S-F5>` | 暂停              |
+| `<F6>`   | 重启              |
+| `<S-F6>` | 停止              |
+| `<F7>`   | Step Over         |
+| `<S-F7>` | Step to Cursor    |
+| `<F8>`   | Step Into         |
+| `<S-F8>` | Step Out          |
+| `<F9>`   | 设置断点          |
+| `<S-F9>` | 设置函数断点      |
+| `<C-F9>` | 设置条件断点      |
 
-# lang#markdown
+# Markdown渲染预览
 &emsp;[*UltiSnips目录*](UltiSnips)提供了一些markdown的代码补全片段。  
 此外，还对markdown的语法高亮进行了调整；  
 同时，提供了一些快捷键：
@@ -369,7 +370,6 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 # 修改ALE语法检测引擎
 cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/clangtidy.vim
 ```
-
 
 
 # 依赖

@@ -192,7 +192,7 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
   let qr_compile = s:parse_flags(b:QuickrunCompileCmd . ' ' . s:extend_compile_flags())
   let qr_compile = qr_compile =~# '^ *$' ? '' : qr_compile
   let qr_cmdrun = s:parse_flags(b:QuickrunRunCmd) . ' ' . s:parse_flags(b:QuickrunRedir)
-  let qr_cwd = b:QuickrunCwd !=# '' ? s:parse_flags(b:QuickrunCwd) : s:parse_flags('${workspaceFolder}')
+  let qr_cwd = b:QuickrunCwd !=# '' ? s:parse_flags(b:QuickrunCwd) : s:parse_flags('${fileDirname}')
 
   " compilation is not necessary
   if filereadable(s:variables.execPath) && s:get_timestamp(s:variables.execPath) >= s:get_timestamp(s:variables.file)
@@ -202,8 +202,17 @@ function! SpaceVim#plugins#quickrun#QuickRun(...)
 
   let win = win_getid()
   call s:open_termwin_quickrun()
-  exe 'chdir '.qr_cwd
-  call termopen(g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"')
+  if has('nvim')
+    exe 'chdir '.qr_cwd
+    call termopen(g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"')
+  else
+    " exe 'terminal ++curwin ++shell ++noclose '.g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"'
+    call term_start(g:_spacevim_root_dir.'custom/quickrun.sh "'.qr_compile.'" "'.qr_cmdrun.'"',
+          \ {'curwin': 1, 'cwd': qr_cwd})
+    setl nobuflisted
+    let s:TermBufnr[winbufnr(win)] = bufnr()
+    let s:IsTermOpend[winbufnr(win)] = 1
+  endif
   call win_gotoid(win)
 endfunction
 
@@ -265,17 +274,20 @@ function! SpaceVim#plugins#quickrun#prepare()
       exe 'autocmd FileType '.thisFT.' call s:init_buffer(&ft)'
     endfor
 
-    autocmd BufEnter * call s:toggle_termwin_automatically()
-    nnoremap <silent> <F7> :call <SID>toggle_termwin_manually()<cr>
+
+    nnoremap <silent> <F10> :call <SID>toggle_termwin_manually()<cr>
 
     if has('nvim')
       " au WinEnter * call s:term_enter()
       " au WinLeave * call s:term_leave()
+      autocmd BufEnter * call s:toggle_termwin_automatically()
       tnoremap <esc> <c-\><c-n>
+      au TermEnter * setlocal list
+    else
+      tnoremap <esc> <c-w>N
     endif
 
     au BufLeave *.input if &modified == 1 | w | endif
-    au TermEnter * setlocal list
   augroup END
 endfunction
 

@@ -729,7 +729,7 @@ function! SpaceVim#mapping#space#langSPC(m, keys, cmd, desc, is_cmd, ...) abort
   call SpaceVim#mapping#menu(a:desc, '[SPC]' . join(a:keys, ''), lcmd)
   call extend(g:_spacevim_mappings_prefixs['[SPC]'], get(g:, '_spacevim_mappings_space', {}))
   " CUSTOM: use quickrun instead of runner to running code
-  if has('nvim') && exists('g:spacevim_terminal_runner')
+  if exists('g:spacevim_terminal_runner')
         \ && g:spacevim_terminal_runner == 1
         \ && a:cmd ==# 'call SpaceVim#plugins#runner#open()'
         \ && execute('echo keys(g:quickrun_default_flags)') =~# "'".&ft."'"

@@ -63,9 +63,9 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
         \ { 'on_cmd' : 'MarkdownPreview',
         \ 'depends': 'open-browser.vim',
         \ 'build' : 'cd app & ' . s:node_pkgm . ' install' }])
-  if !has('nvim')
-    call add(plugins, ['neoclide/vim-node-rpc',  {'merged': 0, 'build' : s:node_pkgm . ' install'}])
-  endif
+  " if !has('nvim')
+  "   call add(plugins, ['neoclide/vim-node-rpc',  {'merged': 0, 'build' : s:node_pkgm . ' install'}])
+  " endif
   return plugins
 endfunction
 

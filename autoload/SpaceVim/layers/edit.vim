@@ -80,9 +80,9 @@ function! SpaceVim#layers#edit#config() abort
 
 
   if s:CMP.has('python3') || s:CMP.has('python')
-    nnoremap <silent> <F7> :MundoToggle<CR>
+    nnoremap <silent> <F4> :MundoToggle<CR>
   else
-    nnoremap <silent> <F7> :UndotreeToggle<CR>
+    nnoremap <silent> <F4> :UndotreeToggle<CR>
   endif
   let g:_spacevim_mappings_space.x = {'name' : '+Text'}
   let g:_spacevim_mappings_space.x.a = {'name' : '+align'}

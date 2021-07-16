@@ -92,7 +92,6 @@
         "fcitx5.vim",
         "jedi-vim",
         "deoplete-jedi",
-        "vim-go",
     ]
 
 ########################### Plugins ###########################
@@ -110,10 +109,6 @@
 
 [[custom_plugins]]
     repo = "puremourning/vimspector"
-    merged = false
-
-[[custom_plugins]]
-    repo = "skywind3000/asyncrun.vim"
     merged = false
 
 ########################### Layers ###########################
