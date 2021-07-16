@@ -1,8 +1,8 @@
 " Copyright (c) 2020-2021 Heachen Bear & Contributors
-" File: myspacevim.vim
+" File              : myspacevim.vim
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
-" Date: 09.02.2021
+" Date              : 09.02.2021
 " Last Modified Date: 16.07.2021
 " Last Modified By: Heache Bear <mrbeardad@qq.com>
 
@@ -119,11 +119,11 @@ function! s:autocomplete()
           \ ]
     augroup MySpaceVimAutocomplete
       for ft in keys(g:ycm_semantic_triggers)
-        exe 'autocmd File: myspacevim.vim
-        exe 'autocmd File: myspacevim.vim
-        exe 'autocmd File: myspacevim.vim
-        exe 'autocmd File: myspacevim.vim
-        exe 'autocmd File: myspacevim.vim
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gd :YcmCompleter GoTo<CR>'
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gr :YcmCompleter GoToReferences<CR>'
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gD :YcmCompleter GetDoc<CR>'
+        exe 'autocmd FileType '.ft." nnoremap <silent><buffer> gR :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<cr>"
+        exe 'autocmd FileType '.ft.' nnoremap <silent><buffer> gt :YcmCompleter GetType<CR>'
       endfor
     augroup END
   endif
