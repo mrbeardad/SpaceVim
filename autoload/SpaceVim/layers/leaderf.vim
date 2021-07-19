@@ -491,12 +491,12 @@ function! s:defind_fuzzy_finder() abort
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
-  nnoremap <silent> <Leader>ft :<C-u>Leaderf tag<CR>
+  nnoremap <silent> <Leader>fG :<C-u>Leaderf tag<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.t = ['Leaderf tag',
+  let g:_spacevim_mappings.f.G = ['Leaderf tag',
         \ 'fuzzy find tags',
         \ [
-        \ '[Leader f t] is to fuzzy find tags',
+        \ '[Leader f G] is to fuzzy find tags',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]

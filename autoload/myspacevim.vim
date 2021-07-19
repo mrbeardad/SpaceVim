@@ -1,9 +1,9 @@
 " Copyright (c) 2020-2021 Heachen Bear & Contributors
-" File              : myspacevim.vim
+" File: myspacevim.vim
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
-" Date              : 09.02.2021
-" Last Modified Date: 16.07.2021
+" Date: 09.02.2021
+" Last Modified Date: 19.07.2021
 " Last Modified By: Heache Bear <mrbeardad@qq.com>
 
 
@@ -228,6 +228,8 @@ endfunction
 
 function! s:lang_go()
   let g:go_gopls_enabled = 0
+  let g:go_def_mapping_enabled = 0
+  let g:ctrlp_map = ''
 endfunction
 
 
@@ -351,6 +353,7 @@ endfunction
 
 
 function! s:leaderf()
+  set tags=./.tags;,.tags
   let g:Lf_GtagsAutoGenerate = 1
   let g:Lf_GtagsAutoUpdate = 1
   let g:Lf_GtagsSkipUnreadable = 1
