@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 19.07.2021
+" Last Modified Date: 23.07.2021
 " Last Modified By: Heache Bear <mrbeardad@qq.com>
 
 
@@ -607,6 +607,7 @@ function! s:custom_plugins()
     nmap <F9>   <Plug>VimspectorToggleBreakpoint
     nmap <F21>  <Plug>VimspectorAddFunctionBreakpoint
     nmap <F33>  <Plug>VimspectorToggleConditionalBreakpoint
+    au BufCreate vimspector.Variables nnoremap <buffer><silent><leader><cr> :call vimspector#SetVariableValue()<cr>
   else
     nmap <F5>   <Plug>VimspectorContinue
     nmap <S-F5> <Plug>VimspectorPause

@@ -28,7 +28,7 @@ endif
 " ============================ After Load SpaceVim  ==========================
 
 " WSL clipboard
-if has('windows')
+if $WSL_DISTRO_NAME !=# ''
     let s:clip = 'win32yank.exe -i --crlf'
     augroup WSLYank
         autocmd!
