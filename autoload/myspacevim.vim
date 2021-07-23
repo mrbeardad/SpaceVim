@@ -478,7 +478,7 @@ function! s:set_neovim_after() abort
   nnoremap =P "0P
   nnoremap <silent>=o :set paste<cr>o<c-r>0<c-c>:set nopaste<cr>
   nnoremap <silent>=O :set paste<cr>O<c-r>0<c-c>:set nopaste<cr>
-  if has('unnamedplus') && !has('windows')
+  if has('unnamedplus') && $WSL_DISTRO_NAME ==# ''
     xnoremap <Leader>y "+y
     nnoremap <leader>y "+y
     nnoremap <leader>Y "+y$
