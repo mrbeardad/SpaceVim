@@ -3,7 +3,7 @@
 " License: GPLv3
 " Author: Heachen Bear <mrbeardad@qq.com>
 " Date: 09.02.2021
-" Last Modified Date: 23.07.2021
+" Last Modified Date: 25.07.2021
 " Last Modified By: Heache Bear <mrbeardad@qq.com>
 
 
@@ -78,6 +78,7 @@ function! s:autocomplete()
     let g:ycm_key_invoke_completion = '<C-Z>'
     let g:ycm_seed_identifiers_with_syntax = 1
     let g:ycm_collect_identifiers_from_comments_and_strings = 1
+    let g:ycm_update_diagnostics_in_insert_mode = 0
 
     let g:ycm_filetype_whitelist = {
           \ 'c':1,
