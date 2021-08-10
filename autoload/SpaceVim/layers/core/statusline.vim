@@ -342,7 +342,7 @@ endfunction
 " enable_statusline_bfpath true
 function! s:buffer_name() abort
   if get(b:, '_spacevim_statusline_showbfname', 0) == 1 || g:spacevim_enable_statusline_bfpath
-    let fp_name = substitute(expand('%:p'), SpaceVim#plugins#projectmanager#current_root(), ' ', 'g')
+    let fp_name = bufname('%')
     return  &readonly ? '%#SpaceVim_statusline_ro#  %#SpaceVim_statusline_z#' . fp_name : ' '.fp_name
   else
     return ''

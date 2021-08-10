@@ -48,3 +48,14 @@ if err != nil {
 	return
 }
 endsnippet
+
+snippet api
+// @Summary ${1:接口简述}
+// @Description ${2:接口详情}
+// @Tags ${3:标签列表}
+// @Accept ${4:json}
+// @Produce ${5:json}
+// @Param ${6:参数名} ${7:参数类型} ${8:数据类型} ${8:是否必须} "${9:注释}"
+// @Success ${10:200} {${11:string}} ${12:string} "${13:{"data":"..."}}"
+// @Router ${14:/path/to/resource} [${15:GET}]
+endsnippet
