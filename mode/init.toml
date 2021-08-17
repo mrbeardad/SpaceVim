@@ -86,7 +86,8 @@
     checkinstall = false
     update_retry_cnt = 2
     plugin_manager_processes = 16
-    disabled_plugins = [ 
+    disabled_plugins = [
+        "vnote",
         "CompleteParameter.vim",
         "fcitx.vim",
         "fcitx5.vim",
@@ -97,10 +98,6 @@
 ########################### Plugins ###########################
 [[custom_plugins]]
     repo = "cespare/vim-toml"
-    merged = false
-
-[[custom_plugins]]
-    repo = "mrbeardad/vim-header"
     merged = false
 
 [[custom_plugins]]
