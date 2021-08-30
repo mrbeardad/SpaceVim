@@ -7,7 +7,7 @@
 
 * * * * * * * * * *
 
-# 注意注意！敲黑板！[使用手册在此！](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)
+# 注意注意！敲黑板！[使用手册在此！](keysbindings.md)
 
 先look~look我改了哪些地方，然后再按一个个模块来讲解各种特性吧
 
@@ -17,6 +17,9 @@
 # 目录
 <!-- vim-markdown-toc GFM -->
 
+- [写在前面](#写在前面)
+- [注意注意！敲黑板！使用手册在此！](#注意注意敲黑板使用手册在此)
+- [目录](#目录)
 - [颜色主题](#颜色主题)
 - [启动界面字符画](#启动界面字符画)
 - [状态栏与标签栏](#状态栏与标签栏)
@@ -48,20 +51,20 @@
 看起来赏心悦目超nice。
 > PS：要是所有终端都像alacritty一样支持不同style不同字体，我至于这么折腾自己吗(*￣︿￣)
 
-**SpaceVim**  
-![SpaceVim](custom/SpaceVim.png)  
+**SpaceVim**
+![SpaceVim](custom/SpaceVim.png)
 
-**gruvbox**  
-![gruvbox](custom/gruvbox.png)  
+**gruvbox**
+![gruvbox](custom/gruvbox.png)
 
-**NeoSolarized**  
-![NeoSolarised](custom/Neosolarized.png)  
+**NeoSolarized**
+![NeoSolarised](custom/Neosolarized.png)
 
 **palenight**
-![palenight](custom/palenight.png)  
+![palenight](custom/palenight.png)
 
 **material**
-![material](custom/material.png)  
+![material](custom/material.png)
 
 # 启动界面字符画
 这个模块提供了许多`SpaceVim`启动界面的字符画，拉风的很。而且有惊喜哦>_<
@@ -98,9 +101,9 @@
 7. 屏幕显示的文本占比（接近文件内容边缘时会显示Bot或Top）
 
 # 符号表、文件树、撤销树
-&emsp;符号表插件使用的是[tagbar](https://github.com/wsdjep/tagbar)，按`<F1>`开启  
-&emsp;文件树插件使用的是[defx](https://github.com/Shougo/defx.nvim)，按`<F2>`开启  
-&emsp;撤销树插件使用的是[undotree](https://github.com/mbbill/undotree)，按`<F4>`开启  
+&emsp;符号表插件使用的是[tagbar](https://github.com/wsdjep/tagbar)，按`<F1>`开启
+&emsp;文件树插件使用的是[defx](https://github.com/Shougo/defx.nvim)，按`<F2>`开启
+&emsp;撤销树插件使用的是[undotree](https://github.com/mbbill/undotree)，按`<F4>`开启
 <!-- <img align="left" height=700 src="custom/tagbar.png"></img> -->
 <!-- <img align="left" height=700 src="custom/defx.png"></img> -->
 <!-- <img align="center" height=700 src="custom/undo.png"></img> -->
@@ -125,54 +128,54 @@
 这个模块即是围绕[LeaderF搜索插件](https://github.com/Yggdroot/LeaderF)打造的
 ![leaderf](https://github.com/Yggdroot/Images/raw/master/leaderf/leaderf_2.gif)
 SpaceVim集成该插件时做了一些定制，会与上述官方演示有些不一样，不过都是配置好了的，用就完事儿！
-| 按键               | 作用                    |
-|--------------------|-------------------------|
-| `<leader>fr`       | 重置上次搜索            |
-| `<leader>f<space>` | 搜索快捷键并执行        |
-| `<leader>fp`       | 搜索插件信息            |
-| `<leader>fh`       | 搜索vim帮助文档         |
-| `<leader>fq`       | 搜索quickfix            |
-| `<leader>fl`       | 搜索locationlist        |
-| `<leader>fm`       | 搜索vim的输出信息并复制 |
-| `<leader>fu`       | 搜索unicode并插入       |
-| `<leader>fj`       | 搜索跳转表并跳转        |
-| `<leader>fy`       | 搜索"寄存器历史并复制   |
-| `<leader>fe`       | 搜索所有寄存器并复制    |
-| `<leader>ff`       | 搜索当前buffer函数      |
-| `<leader>fF`       | 搜索所有buffer函数      |
-| `<leader>ft`       | 搜寻当前buffer符号      |
-| `<leader>fT`       | 搜寻所有buffer符号      |
-| `<leader>fg`       | 利用gtags搜寻标识符     |
-| `<leader>sr`       | 搜索最近打开文件        |
-| `<leader>sb`       | 搜索打开的缓冲区        |
-| `<leader>sd`       | 搜索当前目录文件        |
-| `<leader>sf`       | 搜索指定目录            |
-| `<leader>sp`       | 搜索当时工程目录文件    |
-
-在Leaderf窗口中的快捷键有：
-| 快捷键  | 功能                                |
-|---------|-------------------------------------|
-| `<c-e>` | 切换模糊搜索模式或正则表达式模式    |
-| `<c-c>` | 关闭leaderf                         |
+| 按键               | 作用                             |
+| ------------------ | -------------------------------- |
+| `<leader>fr`       | 重置上次搜索                     |
+| `<leader>f<space>` | 搜索快捷键并执行                 |
+| `<leader>fp`       | 搜索插件信息                     |
+| `<leader>fh`       | 搜索vim帮助文档                  |
+| `<leader>fq`       | 搜索quickfix                     |
+| `<leader>fl`       | 搜索locationlist                 |
+| `<leader>fm`       | 搜索vim的输出信息并复制          |
+| `<leader>fu`       | 搜索unicode并插入                |
+| `<leader>fj`       | 搜索跳转表并跳转                 |
+| `<leader>fy`       | 搜索"寄存器历史并复制            |
+| `<leader>fe`       | 搜索所有寄存器并复制             |
+| `<leader>ff`       | 搜索当前buffer函数               |
+| `<leader>fF`       | 搜索所有buffer函数               |
+| `<leader>ft`       | 搜寻当前buffer符号               |
+| `<leader>fT`       | 搜寻所有buffer符号               |
+| `<leader>fg`       | 利用gtags搜寻标识符              |
+| `<leader>sr`       | 搜索最近打开文件                 |
+| `<leader>sb`       | 搜索打开的缓冲区                 |
+| `<leader>sd`       | 搜索当前目录文件                 |
+| `<leader>sf`       | 搜索指定目录                     |
+| 快捷键             | 功能                             |
+| -------            | -------------------------------- |
+| `<c-e>`            | 切换模糊搜索模式或正则表达式模式 |
+| `<c-c>`            | 关闭leaderf                      |
+| -------            | -------------------------------- |
+| `<c-e>`            | 切换模糊搜索模式或正则表达式模式 |
+| `<c-c>`            | 关闭leaderf                      |
 
 # 文本搜索
 flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于LeaderF，
 后者用来搜索文件名、代码符号，flygrep用来搜索文件内容
+| 按键        | 作用           |
+| ----------- | -------------- |
+| `<space>ss` | 搜索当前缓冲区 |
+| `<space>sb` | 搜索所有缓冲区 |
+| `<space>sd` | 搜索当前目录   |
+| `<space>sf` | 搜索指定目录   |
+| `<space>sp` | 搜索工程目录   |
+| `<space>sd` | 搜索当前目录   |
+| `<space>sf` | 搜索指定目录   |
+| `<space>sp` | 搜索工程目录   |
 
-![flygrep](custom/flygrep.png)
-
-| 按键        | 作用                 |
-|-------------|----------------------|
-| `<space>ss` | 搜索当前缓冲区       |
-| `<space>sb` | 搜索所有缓冲区       |
-| `<space>sd` | 搜索当前目录         |
-| `<space>sf` | 搜索指定目录         |
-| `<space>sp` | 搜索工程目录         |
-
-在flygrep窗口中的快捷键
+| -------------- | -------------------------------- |
 
 | 按键           | 作用                             |
-|----------------|----------------------------------|
+| -------------- | -------------------------------- |
 | `<c-e>`        | 切换正则搜索模式或字符串锁搜模式 |
 | `<m-r>`        | 进入替换模式                     |
 | `<c-p>`        | 浮窗预览                         |
@@ -184,10 +187,10 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 # 版本管理
 这俩模块我一半就只用来给statusline加个分支提示，我tmux开个zsh来管理项目不香吗( ◔ ڼ ◔  )
 
-![gitgutter](custom/gitgutter.png)
+| ------------ | -------------------------------------- |
 
 | 快捷键       | 功能                                   |
-|--------------|----------------------------------------|
+| ------------ | -------------------------------------- |
 | `<space>gg`  | 侧栏显示diff（开启gitgutter）          |
 | `<space>ghv` | 浮窗显示diff（需要开启上述gitgutter）  |
 | `<space>ghr` | 撤销diff修改 （需要开启上述gitgutter） |
@@ -220,7 +223,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 &emsp;除了语义补全，还有代码片段补全，插件为[UltiSnips](https://github.com/SirVer/ultisnips)。
 即按一定的语法编辑snippet配置文件后，再在代码中输入关键字，
 然后按`<M-/>`（<kbd>Alt</kbd>+<kbd>/</kbd>）触发，就会将关键字替换为配置文件中的完整片段。
-然后一路`<M-/>`修改锚点  
+然后一路`<M-/>`修改锚点
 &emsp;提供的默认片段位于[*UltiSnips*](UltiSnips)文件夹下
 
 # 语法检测
@@ -242,7 +245,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 
 ![runner](custom/runner.png)
 
-&emsp;**命令：**  
+&emsp;**命令：**
 * 命令以Quickrun开头，如`QuickrunCompileCmd gcc ${file}`表示修改编译命令为`gcc ${file}`，
     `${file}`会被替换为当前文件，其他替换见下
 * 命令带`!`后缀表示修改参数
@@ -254,7 +257,7 @@ flygrep是个集成在SpaceVim里的默认插件，但其功能也不亚于Leade
 :QuickrunRedir < file       " 重定向stdin到file
 ```
 
-&emsp;**选项：**  
+&emsp;**选项：**
 ```vim
 let g:quickrun_default_flags = {
     \ 'cpp': {
@@ -302,10 +305,10 @@ let g:quickrun_default_flags = {
         \ }
 \ }
 ```
-[特殊变量替换如`{file}`同SpaceVim-task](https://spacevim.org/documentation/#tasks)
+| ----------- | -------------------------------------- |
 
 | 按键        | 作用                                   |
-|-------------|----------------------------------------|
+| ----------- | -------------------------------------- |
 | `<space>lr` | 运行程序（若时间戳较未变则不编译）     |
 | `<space>lR` | 强制编译并运行程序                     |
 | `<space>li` | 快速打开输入窗口                       |
@@ -324,36 +327,36 @@ YCM读取的`.ycm_extra_conf.py`中设置的标准确定，该文件从源文件
 
 ![debug](custom/vimspector.png)
 
-使用前需要将[mode/.vimspector.json](mode/.vimspector.json)文件移到项目目录中，
-该插件的依赖由它自己管理下载安装，`:VimspectorInstall --all`
-
-| 按键     | 作用              |
-|----------|-------------------|
-| `<F5>`   | 继续              |
-| `<S-F5>` | 暂停              |
-| `<F6>`   | 重启              |
-| `<S-F6>` | 停止              |
-| `<F7>`   | Step Over         |
-| `<S-F7>` | Step to Cursor    |
-| `<F8>`   | Step Into         |
-| `<S-F8>` | Step Out          |
-| `<F9>`   | 设置断点          |
-| `<S-F9>` | 设置函数断点      |
-| `<C-F9>` | 设置条件断点      |
+| 按键     | 作用           |
+| -------- | -------------- |
+| `<F5>`   | 继续           |
+| `<S-F5>` | 暂停           |
+| `<F6>`   | 重启           |
+| `<S-F6>` | 停止           |
+| `<F7>`   | Step Over      |
+| `<S-F7>` | Step to Cursor |
+| `<F8>`   | Step Into      |
+| `<S-F8>` | Step Out       |
+| `<F9>`   | 设置断点       |
+| `<S-F9>` | 设置函数断点   |
+| `<C-F9>` | 设置条件断点   |
+| `<F9>`   | 设置断点       |
+| `<S-F9>` | 设置函数断点   |
+| `<C-F9>` | 设置条件断点   |
 
 # Markdown渲染预览
-&emsp;[*UltiSnips目录*](UltiSnips)提供了一些markdown的代码补全片段。  
-此外，还对markdown的语法高亮进行了调整；  
-同时，提供了一些快捷键：
+&emsp;[*UltiSnips目录*](UltiSnips)提供了一些markdown的代码补全片段。
+此外，还对markdown的语法高亮进行了调整；
+| ----------- | ------------------------------- |
 
 | 按键        | 作用                            |
-|-------------|---------------------------------|
+| ----------- | ------------------------------- |
 | `<space>lp` | 开启markdown预览（需要浏览器）  |
 | `<space>lg` | 添加或删除GFM目录               |
 | `<space>lk` | 利用系统剪切板的URL插入链接元素 |
 
 # 安装
-以上仅列出部分功能，其他功能需要好好阅读[**快捷键文档**](https://github.com/mrbeardad/SeeCheatSheets/blob/master/vim.md)即可
+以上仅列出部分功能，其他功能需要好好阅读[**快捷键文档**](keysbindings.md)即可
 
 **Only for Linux**
 
@@ -371,10 +374,10 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe/
 cp -vf ~/.SpaceVim/custom/clangtidy.vim ~/.cache/vimfiles/repos/github.com/dense-analysis/ale/ale_linters/cpp/clangtidy.vim
 ```
 
-
+| -------------------------------- | ----------------------------- |
 # 依赖
 | 依赖包                           | 作用                          |
-|----------------------------------|-------------------------------|
+| -------------------------------- | ----------------------------- |
 | neovim                           | 本配置仅适用于neovim而非vim   |
 | xsel                             | neovim与X系统剪切板交互       |
 | python-pynvim                    | neovim的python支持            |
