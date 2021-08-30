@@ -574,7 +574,7 @@ h4,
 h5,
 h6 {
   color: #e8e8e8;
-  margin: 0 0 10px;
+  margin: 20px 0 20px;
   font-family: "OpenSansRegular", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: normal;
 }
@@ -643,19 +643,9 @@ a small {
 }
 
 ul {
-  list-style: none;
-  padding: 0;
+  list-style: circle;
 }
-li {
-  padding-left: 1.3em;
-}
-li:before {
-  content: "·"; /* FontAwesome Unicode */
-  // font-family: FontAwesome;
-  display: inline-block;
-  margin-left: -1.3em; /* same as padding-left set on li */
-  width: 1.3em; /* same as padding-left set on li */
-}
+// ul { list-style-image: url("../images/bullet.png"); }
 
 strong {
   font-family: "OpenSansBold", "Helvetica Neue", Helvetica, Arial, sans-serif !important;

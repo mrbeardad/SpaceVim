@@ -63,6 +63,9 @@ function! SpaceVim#layers#lang#typescript#config() abort
         \ 'opt': [],
         \ })
   let g:neomake_typescript_enabled_makers = ['eslint']
+  if index(g:spacevim_project_rooter_patterns, 'tsconfig.json') == -1
+    call add(g:spacevim_project_rooter_patterns, 'tsconfig.json')
+  endif
   " does eslint support tsx?
   let g:neoformat_typescriptreact_prettier = {
         \ 'exe': 'prettier',
@@ -177,4 +180,10 @@ function! s:go_to_typescriptreact_def() abort
   else
     call SpaceVim#lsp#go_to_def()
   endif
+endfunction
+
+function! SpaceVim#layers#lang#typescript#health() abort
+  call SpaceVim#layers#lang#typescript#plugins()
+  call SpaceVim#layers#lang#typescript#config()
+  return 1
 endfunction

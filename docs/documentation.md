@@ -3,7 +3,7 @@ title: "Documentation"
 description: "General documentation about how to use SpaceVim, including the quick start guide and FAQs."
 ---
 
-# [Home](../) >> Documentation
+# Documentation
 
 <!-- vim-markdown-toc GFM -->
 
@@ -330,11 +330,26 @@ with the following contents, for example:
 ```vim
 function! myspacevim#before() abort
     let g:neomake_c_enabled_makers = ['clang']
-    nnoremap jk <Esc>
+    " you can defined mappings in bootstrap function
+    " for example, use kj to exit insert mode.
+    inoremap kj <Esc>
 endfunction
 
 function! myspacevim#after() abort
-    iunmap jk
+    " you can remove key binding in bootstrap_after function
+    iunmap kj
+endfunction
+```
+
+Within the bootstrap function, you can also use `:lua` command. for example:
+
+```vim
+function! myspacevim#before() abort
+    lua << EOF
+    local opt = requires('spacevim.opt')
+    opt.enable_projects_cache = false
+    opt.enable_statusline_mode = true
+EOF
 endfunction
 ```
 
@@ -885,23 +900,25 @@ If only one file buffer is opened, a file is opened in the active window, otherw
 
 The following key bindings are the general key bindings for moving the cursor.
 
-| Key Bindings     | Descriptions                             |
-| ---------------- | ---------------------------------------- |
-| `h`              | move cursor left                         |
-| `j`              | move cursor down                         |
-| `k`              | move cursor up                           |
-| `l`              | move cursor right                        |
-| `<Up>`, `<Down>` | Smart up and down                        |
-| `H`              | move cursor to the top of the screen     |
-| `L`              | move cursor to the bottom of the screen  |
-| `<`              | Indent to left and re-select             |
-| `>`              | Indent to right and re-select            |
-| `}`              | paragraphs forward                       |
-| `{`              | paragraphs backward                      |
-| `Ctrl-f`         | Smart page forward (`Ctrl-f` / `Ctrl-d`) |
-| `Ctrl-b`         | Smart page backward (`C-b` / `C-u`)      |
-| `Ctrl-e`         | Smart scroll down (`3 Ctrl-e/j`)         |
-| `Ctrl-y`         | Smart scroll up (`3Ctrl-y/k`)            |
+| Key Bindings                           | Descriptions                            |
+| -------------------------------------- | --------------------------------------- |
+| `h`                                    | move cursor left                        |
+| `j`                                    | move cursor down                        |
+| `k`                                    | move cursor up                          |
+| `l`                                    | move cursor right                       |
+| `<Up>`, `<Down>`                       | Smart up and down                       |
+| `H`                                    | move cursor to the top of the screen    |
+| `L`                                    | move cursor to the bottom of the screen |
+| `<`                                    | Indent to left and re-select            |
+| `>`                                    | Indent to right and re-select           |
+| `}`                                    | paragraphs forward                      |
+| `{`                                    | paragraphs backward                     |
+| `Ctrl-f` / `Shift-Down` / `<PageDown>` | Smooth scrolling forwards               |
+| `Ctrl-b` / `Shift-Up` / `<PageUp>`     | Smooth scrolling backwards              |
+| `Ctrl-d`                               | Smooth scrolling downwards              |
+| `Ctrl-u`                               | Smooth scrolling upwards                |
+| `Ctrl-e`                               | Smart scroll down (`3 Ctrl-e/j`)        |
+| `Ctrl-y`                               | Smart scroll up (`3Ctrl-y/k`)           |
 
 ### Native functions
 
@@ -1713,14 +1730,15 @@ The `SPC j` prefix is for jumping, joining and splitting.
 
 | Key Bindings | Descriptions                                                                      |
 | ------------ | --------------------------------------------------------------------------------- |
-| `SPC j 0`    | go to the beginning of line (and set a mark at the previous location in the line) |
 | `SPC j $`    | go to the end of line (and set a mark at the previous location in the line)       |
+| `SPC j 0`    | go to the beginning of line (and set a mark at the previous location in the line) |
 | `SPC j b`    | jump backward                                                                     |
-| `SPC j f`    | jump forward                                                                      |
+| `SPC j c`    | jump to last change                                                               |
 | `SPC j d`    | jump to a listing of the current directory                                        |
 | `SPC j D`    | jump to a listing of the current directory (other window)                         |
-| `SPC j i`    | jump to a definition in buffer (denite outline)                                   |
+| `SPC j f`    | jump forward                                                                      |
 | `SPC j I`    | jump to a definition in any buffer (denite outline)                               |
+| `SPC j i`    | jump to a definition in buffer (denite outline)                                   |
 | `SPC j j`    | jump to a character in the buffer (easymotion)                                    |
 | `SPC j J`    | jump to a suite of two characters in the buffer (easymotion)                      |
 | `SPC j k`    | jump to next line and indent it using auto-indent rules                           |
