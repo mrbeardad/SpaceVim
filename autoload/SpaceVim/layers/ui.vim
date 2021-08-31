@@ -135,6 +135,7 @@ function! SpaceVim#layers#ui#config() abort
   let g:indentLine_enabled = s:enable_indentline
   let g:indentLine_fileTypeExclude = get(g:, 'indentLine_fileTypeExclude', [])
   let g:indentLine_fileTypeExclude += ['help', 'man', 'startify', 'vimfiler', 'json', 'defx']
+  let g:indent_blankline_show_first_indent_level=v:false
 
   " indent_blankline config
   let g:indent_blankline_enabled = s:enable_indentline
