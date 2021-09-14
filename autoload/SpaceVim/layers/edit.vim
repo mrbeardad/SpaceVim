@@ -312,7 +312,7 @@ function! s:transpose_with_next(type) abort
   let @" = l:save_register
 endfunction
 
-function! s:move_text_down_transient_state() abort   
+function! s:move_text_down_transient_state() abort
   if line('.') == line('$')
   else
     let l:save_register = @"
@@ -332,7 +332,7 @@ function! s:move_text_up_transient_state() abort
 endfunction
 
 function! s:text_transient_state() abort
-  let state = SpaceVim#api#import('transient_state') 
+  let state = SpaceVim#api#import('transient_state')
   call state.set_title('Move Text Transient State')
   call state.defind_keys(
         \ {
