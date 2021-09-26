@@ -66,7 +66,7 @@ else
   let s:enable_sidebar = 0
   let s:enable_scrollbar = 0
   let s:enable_indentline = 1
-  let s:indentline_char = '|'
+  let s:indentline_char = '┆'
   let s:indentline_exclude_filetyps = []
   let s:enable_cursorword = 0
   let s:conceallevel = 0
@@ -177,6 +177,8 @@ function! SpaceVim#layers#ui#config() abort
 
   " indent line configuration
   " indent_blankline for neovim, indentLine for vim and old neovim
+
+  let g:indent_blankline_show_first_indent_level = v:false
 
   " indent line character
   let g:indent_blankline_char = s:indentline_char

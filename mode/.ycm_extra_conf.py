@@ -4,3 +4,14 @@ def Settings( **kwargs ):
                        '-Wno-pedantic', '-Wno-missing-prototypes', '-Wno-padded', '-Wno-old-style-cast', \
                        '-Wno-exit-time-destructors', '-Wno-global-constructors',
                        '-I.', '-Iinclude', '-O2' ], }
+
+#  -Weverything
+#  -Wno-c++98-compat
+#  -Wno-c++98-compat-pedantic
+#  -Wno-pedantic
+#  -Wno-missing-prototypes
+#  -Wno-padded
+#  -Wno-old-style-cast
+#  -Wno-exit-time-destructors
+#  -Wno-global-constructors
+#  -O2
