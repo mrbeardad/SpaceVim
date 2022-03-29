@@ -33,7 +33,6 @@ if $WSL_DISTRO_NAME !=# ''
     augroup WSLYank
         autocmd!
         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname ==# 'x' | call system(s:clip, @x) | endif
-        autocmd TextYankPost * let g:fuck = deepcopy(v:event)
     augroup END
     xnoremap <Leader>y "xy
     nnoremap <leader>y "xy
