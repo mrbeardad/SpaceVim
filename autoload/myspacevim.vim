@@ -395,8 +395,8 @@ function! s:set_neovim_after() abort
   nnoremap <silent><s-tab> :winc W<cr>
   nnoremap <silent><s-Right> >>
   nnoremap <silent><s-Left>  <<
-  nnoremap <silent><s-Up>    :<C-u>wincmd k<CR>
-  nnoremap <silent><s-Down>  :<C-u>wincmd j<CR>
+  " nnoremap <silent><s-Up>    :<C-u>wincmd k<CR>
+  " nnoremap <silent><s-Down>  :<C-u>wincmd j<CR>
   nnoremap <m-s> %
 
   " insert mode
@@ -415,8 +415,8 @@ function! s:set_neovim_after() abort
   inoremap <c-o> <end><cr>
   inoremap <s-right> <c-t>
   inoremap <s-left> <c-d>
-  inoremap <silent><C-S-Down> <C-C>:m .+1<CR>==gi
-  inoremap <silent><C-S-Up> <C-C>:m .-2<CR>==gi
+  inoremap <silent><S-Down> <C-C>:m .+1<CR>==gi
+  inoremap <silent><S-Up> <C-C>:m .-2<CR>==gi
 
   " normal mode
   nnoremap <c-a> 0
@@ -428,6 +428,8 @@ function! s:set_neovim_after() abort
   nnoremap <c-y> <c-y>
   nnoremap <c-o> <c-o>
   nnoremap <c-p> <c-i>
+  nnoremap <silent><S-Down> :m .+1<CR>==
+  nnoremap <silent><S-Up> :m .-2<CR>==
   nnoremap <expr><c-d> winheight('.') / 5 * 2 ."\<c-d>"
   nnoremap <expr><c-b> winheight('.') / 5 * 2 ."\<c-u>"
   nnoremap <silent><c-down> :exe 'normal '. winheight('.') / 5 * 2 ."<bslash><lt>c-y>"<cr>
