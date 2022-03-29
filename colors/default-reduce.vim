@@ -15,7 +15,7 @@ endif
 if !(has('termguicolors') && &termguicolors) && !has('gui_running') && &t_Co != 256
   finish
 else
-  let g:colors_name='default-reduce'
+  let g:colors_name='default-plus'
 endif
 
 

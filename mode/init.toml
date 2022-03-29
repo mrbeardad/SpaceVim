@@ -3,8 +3,8 @@
     # colorscheme
     enable_guicolors = true
     colorscheme_bg = "dark"
-    colorscheme = "default-reduce"
-    colorscheme_default = "default-reduce"
+    colorscheme = "default-plus"
+    colorscheme_default = "default-plus"
     custom_color_palette = []
 
     # statusline & tabline
