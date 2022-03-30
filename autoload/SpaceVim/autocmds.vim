@@ -1,7 +1,7 @@
 "=============================================================================
 " autocmd.vim --- main autocmd group for spacevim
-" Copyright (c) 2016-2020 Wang Shidong & Contributors
-" Author: Shidong Wang < wsdjeg at 163.com >
+" Copyright (c) 2016-2022 Wang Shidong & Contributors
+" Author: Shidong Wang < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
@@ -12,6 +12,7 @@ let s:VIM = SpaceVim#api#import('vim')
 
 "autocmds
 function! SpaceVim#autocmds#init() abort
+  call SpaceVim#logger#debug('init SpaceVim_core autocmd group')
   augroup SpaceVim_core
     au!
     autocmd BufWinEnter quickfix nnoremap <silent> <buffer>
@@ -25,7 +26,6 @@ function! SpaceVim#autocmds#init() abort
       autocmd BufEnter,WinEnter * if &nu | set rnu   | endif
       autocmd BufLeave,WinLeave * if &nu | set nornu | endif
     endif
-    autocmd BufRead,BufNewFile *.pp setfiletype puppet
     if g:spacevim_enable_cursorline == 1
       autocmd BufEnter,WinEnter,InsertLeave * call s:enable_cursorline()
       autocmd BufLeave,WinLeave,InsertEnter * call s:disable_cursorline()
@@ -60,9 +60,10 @@ function! SpaceVim#autocmds#init() abort
       autocmd FocusLost * call system('synclient touchpadoff=0')
       autocmd FocusGained * call s:reload_touchpad_status()
     endif
+    " @fixme this autocmd should also support `:w foo/test.vim`
     autocmd BufWritePre * call SpaceVim#plugins#mkdir#CreateCurrent()
     autocmd ColorScheme * call SpaceVim#api#import('vim#highlight').hide_in_normal('EndOfBuffer')
-    autocmd ColorScheme gruvbox,jellybeans,nord,srcery,NeoSolarized call s:fix_colorschem_in_SpaceVim()
+    autocmd ColorScheme gruvbox,jellybeans,nord,srcery,NeoSolarized,one call s:fix_colorschem_in_SpaceVim()
     autocmd VimEnter * call SpaceVim#autocmds#VimEnter()
     autocmd BufEnter * let b:_spacevim_project_name = get(g:, '_spacevim_project_name', '')
     autocmd SessionLoadPost * let g:_spacevim_session_loaded = 1
@@ -120,6 +121,8 @@ function! s:fix_colorschem_in_SpaceVim() abort
   if &background ==# 'dark'
     if g:colors_name ==# 'gruvbox'
       hi VertSplit guibg=#282828 guifg=#181A1F
+    elseif g:colors_name ==# 'one'
+      hi VertSplit guibg=#282c34 guifg=#181A1F
     elseif g:colors_name ==# 'jellybeans'
       hi VertSplit guibg=#151515 guifg=#080808
     elseif g:colors_name ==# 'nord'
@@ -194,6 +197,12 @@ function! SpaceVim#autocmds#VimEnter() abort
     echohl Error
     echom 'bootstrap_after function failed to execute. Check `SPC h L` for errors.'
     echohl None
+  endif
+
+  if !filereadable('.SpaceVim.d/init.toml') && filereadable('.SpaceVim.d/init.vim')
+    call SpaceVim#logger#info('loading local conf: .SpaceVim.d/init.vim')
+    exe 'source .SpaceVim.d/init.vim'
+    call SpaceVim#logger#info('finished loading local conf')
   endif
 endfunction
 

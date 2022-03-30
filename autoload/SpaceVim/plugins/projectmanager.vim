@@ -1,14 +1,14 @@
 "=============================================================================
 " projectmanager.vim --- project manager for SpaceVim
-" Copyright (c) 2016-2020 Wang Shidong & Contributors
-" Author: Shidong Wang < wsdjeg at 163.com >
+" Copyright (c) 2016-2022 Wang Shidong & Contributors
+" Author: Shidong Wang < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
 
 
 
-if $SPACEVIM_LUA && has('nvim')
+if $SPACEVIM_LUA && has('nvim-0.5.0')
   function! SpaceVim#plugins#projectmanager#complete_project(ArgLead, CmdLine, CursorPos) abort
     return luaeval('require("spacevim.plugin.projectmanager").complete('
           \ .'require("spacevim").eval("a:ArgLead"),'
@@ -179,7 +179,7 @@ else
   endfunction
 
 
-  if g:spacevim_project_rooter_automatically
+  if g:spacevim_project_auto_root
     augroup spacevim_project_rooter
       autocmd!
       autocmd VimEnter,BufEnter * call SpaceVim#plugins#projectmanager#current_root()

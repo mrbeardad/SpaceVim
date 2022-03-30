@@ -6,11 +6,12 @@ if get(g:, 'spacevim_filetree_direction', 'right') ==# 'right'
 else
   let g:NERDTreeWinPos = 'left'
 endif
-let g:NERDTreeWinSize=get(g:,'NERDTreeWinSize',31)
+let g:NERDTreeWinSize=get(g:,'NERDTreeWinSize', get(g:, 'spacevim_sidebar_width', 35))
 let g:NERDTreeChDirMode=get(g:,'NERDTreeChDirMode',1)
 let g:NERDTreeShowHidden = get(g:, '_spacevim_filetree_show_hidden_files', 0)
-let g:NERDTreeDirArrowExpandable = '▶'
-let g:NERDTreeDirArrowCollapsible = '▼'
+let g:NERDTreeDirArrowExpandable = get(g:, 'NERDTreeDirArrowExpandable', get(g:, '_spacevim_filetree_closed_icon', ''))
+let g:NERDTreeDirArrowCollapsible = get(g:, 'NERDTreeDirArrowCollapsible', get(g:, '_spacevim_filetree_opened_icon', ''))
+let g:NERDTreeMinimalUI=1
 augroup nerdtree_zvim
   autocmd!
   autocmd bufenter *
@@ -26,7 +27,17 @@ function! s:nerdtreeinit() abort
   nnoremap <silent><buffer> yY  :<C-u>call <SID>copy_to_system_clipboard()<CR>
   nnoremap <silent><buffer> P  :<C-u>call <SID>paste_to_file_manager()<CR>
   nnoremap <silent><buffer> h  :<C-u>call <SID>nerdtree_h()<CR>
+  nnoremap <silent><buffer> d  :<C-u>call NERDTreeDeleteNode()<CR>
   nnoremap <silent><buffer> l  :<C-u>call <SID>nerdtree_l()<CR>
+  nnoremap <silent><buffer> <Left>  :<C-u>call <SID>nerdtree_h()<CR>
+  nnoremap <silent><buffer> <Right>  :<C-u>call <SID>nerdtree_l()<CR>
+  nnoremap <silent><buffer> N  :<C-u>call NERDTreeAddNode()<CR>
+  nnoremap <silent><buffer> . :<C-u>call <SID>nerdtree_dot()<CR>
+  nnoremap <silent><buffer> <C-Home> :<C-u>NERDTreeCWD<CR>
+  nnoremap <silent><buffer> <CR> :<C-u>call <SID>nerdtree_enter()<CR>
+  " nnoremap <silent><buffer> <CR> :<C-u>silent! exe 'NERDTree' g:NERDTreeFileNode.GetSelected().path.str()<CR>
+  nnoremap <silent><buffer> <Home> :call cursor(2, 1)<cr>
+  nnoremap <silent><buffer> <End>  :call cursor(line('$'), 1)<cr>
 endfunction
 
 function! s:paste_to_file_manager() abort
@@ -51,15 +62,13 @@ function! s:copy_to_system_clipboard() abort
 endfunction
 
 function! s:nerdtree_h() abort
-  " let path = g:NERDTreeFileNode.GetSelected().path.str()
-  " if isdirectory(path)
-    " let path = s:FILE.unify_path(path, ':p:h:h')
-  " else
-    " let path = s:FILE.unify_path(path, ':p:h')
-  " endif
-  " exe 'NERDTreeFind ' . path
-  call g:NERDTreeKeyMap.Invoke('p')
-  call g:NERDTreeKeyMap.Invoke('o')
+  if g:NERDTree.ForCurrentTab().getRoot().path.str()
+        \ ==# g:NERDTreeFileNode.GetSelected().path.getParent().str() 
+    silent! exe 'NERDTree' g:NERDTreeFileNode.GetSelected().path.getParent().getParent().str()
+  else
+    call g:NERDTreeKeyMap.Invoke('p')
+    call g:NERDTreeKeyMap.Invoke('o')
+  endif
 endfunction
 
 function! s:nerdtree_l() abort
@@ -71,6 +80,19 @@ function! s:nerdtree_l() abort
       call g:NERDTreeKeyMap.Invoke('o')
       normal! gj
     endif
+  else
+    call g:NERDTreeKeyMap.Invoke('o')
+  endif
+endfunction
+
+function! s:nerdtree_dot() abort
+  call g:NERDTreeKeyMap.Invoke('I')
+endfunction
+
+function! s:nerdtree_enter() abort
+  let path = g:NERDTreeFileNode.GetSelected().path.str()
+  if isdirectory(path)
+    silent! exe 'NERDTree' g:NERDTreeFileNode.GetSelected().path.str()
   else
     call g:NERDTreeKeyMap.Invoke('o')
   endif

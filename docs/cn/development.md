@@ -221,13 +221,13 @@ Vim 脚本的文件头，应该采用下面的格式：
 "=============================================================================
 " foo.vim --- foo Layer file for SpaceVim
 " Copyright (c) 2012-2016 Shidong Wang & Contributors
-" Author: Shidong Wang < wsdjeg at 163.com >
+" Author: Shidong Wang < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
 
 ""
-" @section foo, layer-foo
+" @section foo, layers-foo
 " @parentsection layers
 " This the doc for this layer:
 "

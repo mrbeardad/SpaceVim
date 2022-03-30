@@ -1,14 +1,14 @@
 "=============================================================================
 " ui.vim --- SpaceVim ui layer
-" Copyright (c) 2016-2020 Wang Shidong & Contributors
-" Author: Wang Shidong < wsdjeg at 163.com >
+" Copyright (c) 2016-2022 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
 scriptencoding utf-8
 
 ""
-" @section ui, layer-ui
+" @section ui, layers-ui
 " @parentsection layers
 " The `ui` layer defines the default interface for SpaceVim,
 " and it is loaded by default.
@@ -25,7 +25,7 @@ scriptencoding utf-8
 "     concealcursor = ''
 "     cursorword_delay = 50
 "     cursorword_exclude_filetype = []
-"     indentline_exclude_filetyps = []
+"     indentline_exclude_filetype = []
 " <
 "
 " if you want to disable `ui` layer, you can use:
@@ -50,7 +50,7 @@ scriptencoding utf-8
 " word highlight after cursor motions, the default is 50.
 " 9. `cursorword_exclude_filetypes`: Ignore filetypes when enable cursorword
 " highlighting.
-" 10. `indentline_exclude_filetyps`: Ignore filetypes when enable indentline.
+" 10. `indentline_exclude_filetype`: Ignore filetypes when enable indentline.
 "
 " @subsection key bindings
 " >
@@ -67,7 +67,7 @@ else
   let s:enable_scrollbar = 0
   let s:enable_indentline = 1
   let s:indentline_char = '┆'
-  let s:indentline_exclude_filetyps = []
+  let s:indentline_exclude_filetype = []
   let s:enable_cursorword = 0
   let s:conceallevel = 0
   let s:concealcursor = ''
@@ -194,8 +194,8 @@ function! SpaceVim#layers#ui#config() abort
   let g:indent_blankline_enabled = s:enable_indentline
 
   " exclude filetypes for indentline
-  let g:indentLine_fileTypeExclude = s:indentline_exclude_filetyps
-  let g:indent_blankline_buftype_exclude = s:indentline_exclude_filetyps
+  let g:indentLine_fileTypeExclude = s:indentline_exclude_filetype
+  let g:indent_blankline_buftype_exclude = s:indentline_exclude_filetype
 
   let g:better_whitespace_filetypes_blacklist = ['diff', 'gitcommit', 'unite',
         \ 'qf', 'help', 'markdown', 'leaderGuide',
@@ -318,7 +318,9 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'p'],
         \ 'call SpaceVim#layers#core#statusline#toggle_mode("paste-mode")',
         \ 'toggle-paste-mode', 1)
-
+  call SpaceVim#mapping#space#def('nnoremap', ['t', 'P'],
+        \ 'DelimitMateSwitch',
+        \ 'toggle-auto-parens-mode', 1)
 
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'l'], 'setlocal list!',
         \ 'toggle-hidden-listchars', 1)
@@ -619,9 +621,9 @@ function! SpaceVim#layers#ui#set_variable(var) abort
   let s:indentline_char = get(a:var,
         \ 'indentline_char',
         \ s:indentline_char)
-  let s:indentline_exclude_filetyps = get(a:var,
-        \ 'indentline_exclude_filetyps',
-        \ s:indentline_exclude_filetyps)
+  let s:indentline_exclude_filetype = get(a:var,
+        \ 'indentline_exclude_filetype',
+        \ s:indentline_exclude_filetype)
   let s:enable_cursorword = get(a:var,
         \ 'enable_cursorword',
         \ s:enable_cursorword)
@@ -664,7 +666,7 @@ function! SpaceVim#layers#ui#get_options() abort
         \ 'cursorword_delay',
         \ 'concealcursor',
         \ 'conceallevel',
-        \ 'indentline_exclude_filetyps',
+        \ 'indentline_exclude_filetype',
         \ 'indentline_char',
         \ 'cursorword_exclude_filetypes']
 

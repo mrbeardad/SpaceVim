@@ -1,14 +1,14 @@
 "=============================================================================
 " php.vim --- lang#php layer
-" Copyright (c) 2016-2020 Wang Shidong & Contributors
-" Author: Shidong Wang < wsdjeg at 163.com >
+" Copyright (c) 2016-2022 Wang Shidong & Contributors
+" Author: Shidong Wang < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
 
 
 ""
-" @section lang#php, layer-lang-php
+" @section lang#php, layers-lang-php
 " @parentsection layers
 " This layer is for php development, disabled by default, to enable this
 " layer, add following snippet to your SpaceVim configuration file.
@@ -59,7 +59,11 @@ function! SpaceVim#layers#lang#php#plugins() abort
   if SpaceVim#layers#lsp#check_filetype('php')
     call add(plugins, ['phpactor/phpactor', {'on_ft' : 'php', 'build' : 'composer install --no-dev -o'}])
   else
-    call add(plugins, ['shawncplus/phpcomplete.vim', { 'on_ft' : 'php'}])
+    if exists('*popup_create')
+      call add(plugins, [g:_spacevim_root_dir . 'bundle/phpcomplete.vim', {'merged' : 0}])
+    else
+      call add(plugins, [g:_spacevim_root_dir . 'bundle/phpcomplete.vim-vim7', {'merged' : 0}])
+    endif
   endif
   return plugins
 endfunction

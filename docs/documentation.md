@@ -160,7 +160,7 @@ To get more screenshots, see: [issue #415](https://github.com/SpaceVim/SpaceVim/
 
 SpaceVim defines a wide variety of transient states (temporary overlay maps)
 where it makes sense. This prevents one from doing repetitive and tedious
-presses on the SPC key.
+presses on the `SPC` (space) key.
 
 When a transient state is active, a documentation is displayed in the
 transient state buffer. Additional information may as well be displayed in it.
@@ -273,9 +273,22 @@ to the `custom_plugins` section:
 
 ```toml
 [[custom_plugins]]
-    repo = "lilydjwg/colorizer"
-    on_cmd = ["ColorHighlight", "ColorToggle"]
+    repo = 'lilydjwg/colorizer'
+    # `on_cmd` option means this plugin will be loaded
+    # only when the specific commands are called.
+    # for example, when `:ColorHighlight` or `:ColorToggle`
+    # commands are called.
+    on_cmd = ['ColorHighlight', 'ColorToggle']
+    # `on_func` option means this plugin will be loaded
+    # only when the specific functions are called.
+    # for example, when `colorizer#ColorToggle()` function is called.
+    on_func = 'colorizer#ColorToggle'
+    # `merged` option is used for merging plugins directory.
+    # When `merged` is `true`, all files in this custom plugin
+    # will be merged into `~/.cache/vimfiles/.cache/init.vim/`
+    # for neovim or `~/.cache/vimfiles/.cache/vimrc/` for vim.
     merged = false
+    # For more options see `:h dein-options`.
 ```
 
 You can also use the url of the repository, for example:
@@ -285,14 +298,6 @@ You can also use the url of the repository, for example:
     repo = "https://gitlab.com/code-stats/code-stats-vim.git"
     merged = false
 ```
-
-`on_cmd` option means this plugin will be loaded only when the following commands are called.
-
-`merged` option is used for merging plugins directory. When `merged` is `true`, all files in
-this custom plugin will be merged into `~/.cache/vimfiles/.cache/init.vim/` for neovim or
-`~/.cache/vimfiles/.cache/vimrc/` for vim.
-
-For more options see `:h dein-options`.
 
 **disable existing plugins**
 
@@ -570,6 +575,7 @@ Some UI indicators can be toggled on and off (toggles start with t and T):
 | `SPC t b`    | toggle background                                                          |
 | `SPC t c`    | toggle conceal                                                             |
 | `SPC t p`    | toggle paste mode                                                          |
+| `SPC t P`    | toggle auto parens mode                                                    |
 | `SPC t t`    | open tabs manager                                                          |
 | `SPC T ~`    | display ~ in the fringe on empty lines                                     |
 | `SPC T F`    | toggle frame fullscreen                                                    |
@@ -681,7 +687,7 @@ Here is an exhaustive set of screenshots for all the available separators:
 
 The minor mode area can be toggled on and off with `SPC t m m`.
 
-Unicode symbols are displayed by default. Add `statusline_unicode_symbols = false` to your custom configuration file to use ASCII characters instead (may be useful in the terminal if you cannot set an appropriate font).
+Unicode symbols are displayed by default. Add `statusline_unicode = false` to your custom configuration file to use ASCII characters instead (may be useful in the terminal if you cannot set an appropriate font).
 
 The letters displayed in the statusline correspond to the key bindings used to toggle them.
 
@@ -845,6 +851,13 @@ to your custom configuration file. Here is a picture of this feature:
 
 ![file-tree](https://user-images.githubusercontent.com/13142418/80496111-5065b380-899b-11ea-95c7-02af4d304aaf.png)
 
+There is also an option to configure show/hide the file tree, default to show. To hide the file tree by default, you can use the `enable_vimfiler_welcome` option:
+
+```toml
+[options]
+    enable_vimfiler_welcome = false
+```
+
 There is also an option to configure the side of the file tree, by default it is right. To move the file tree to the left,
 you can use the `filetree_direction` option:
 
@@ -865,6 +878,7 @@ Navigation is centered on the `hjkl` keys with the hope of providing a fast navi
 | `<Down>` / `j`        | select next file or directory                     |
 | `<Up>` / `k`          | select previous file or directory                 |
 | `<Right>` / `l`       | open selected file or expand directory            |
+| `<Enter>`             | open file or switch to directory                  |
 | `N`                   | Create new file under cursor                      |
 | `r`                   | Rename the file under cursor                      |
 | `d`                   | Delete the file under cursor                      |
@@ -1002,6 +1016,12 @@ Use `SpaceVim#custom#SPC()` to define custom SPC mappings. For instance:
 call SpaceVim#custom#SPC('nnoremap', ['f', 't'], 'echom "hello world"', 'test custom SPC', 1)
 ```
 
+The first parameter sets the type of shortcut key,
+which can be `nnoremap` or `nmap`, the second parameter is a list of keys,
+and the third parameter is an ex command or key binding,
+depending on whether the last parameter is true.
+The fourth parameter is a short description of this custom key binding.
+
 **Fuzzy find key bindings**
 
 It is possible to search for specific key bindings by pressing `?` in the root of the guide buffer.
@@ -1048,71 +1068,72 @@ to spaces. This feature can be disabled by `expand_tab` option.
 
 Text related commands (start with `x`):
 
-| Key Bindings  | Descriptions                                                       |
-| ------------- | ------------------------------------------------------------------ |
-| `SPC x a #`   | align region at #                                                  |
-| `SPC x a %`   | align region at %                                                  |
-| `SPC x a &`   | align region at &                                                  |
-| `SPC x a (`   | align region at (                                                  |
-| `SPC x a )`   | align region at )                                                  |
-| `SPC x a [`   | align region at [                                                  |
-| `SPC x a ]`   | align region at ]                                                  |
-| `SPC x a {`   | align region at {                                                  |
-| `SPC x a }`   | align region at }                                                  |
-| `SPC x a ,`   | align region at ,                                                  |
-| `SPC x a .`   | align region at . (for numeric tables)                             |
-| `SPC x a :`   | align region at :                                                  |
-| `SPC x a ;`   | align region at ;                                                  |
-| `SPC x a =`   | align region at =                                                  |
-| `SPC x a ¦`   | align region at ¦                                                  |
-| `SPC x a |`   | align region at \|                                                 |
-| `SPC x a SPC` | align region at [SPC]                                              |
-| `SPC x a a`   | align region (or guessed section) using default rules (TODO)       |
-| `SPC x a c`   | align current indentation region using default rules (TODO)        |
-| `SPC x a l`   | left-align with evil-lion (TODO)                                   |
-| `SPC x a L`   | right-align with evil-lion (TODO)                                  |
-| `SPC x a r`   | align region at user-specified regexp                              |
-| `SPC x a o`   | align region at operators `+-*/` etc                               |
-| `SPC x c`     | count the number of chars/words/lines in the selection region      |
-| `SPC x d w`   | delete trailing whitespace                                         |
-| `SPC x d SPC` | Delete all spaces and tabs around point, leaving one space         |
-| `SPC x g l`   | set languages used by translate commands (TODO)                    |
-| `SPC x g t`   | translate current word using Google Translate                      |
-| `SPC x g T`   | reverse source and target languages (TODO)                         |
-| `SPC x i c`   | change symbol style to `lowerCamelCase`                            |
-| `SPC x i C`   | change symbol style to `UpperCamelCase`                            |
-| `SPC x i i`   | cycle symbol naming styles (i to keep cycling)                     |
-| `SPC x i -`   | change symbol style to `kebab-case`                                |
-| `SPC x i k`   | change symbol style to `kebab-case`                                |
-| `SPC x i _`   | change symbol style to `under_score`                               |
-| `SPC x i u`   | change symbol style to `under_score`                               |
-| `SPC x i U`   | change symbol style to `UP_CASE`                                   |
-| `SPC x j c`   | set the justification to center                                    |
-| `SPC x j f`   | set the justification to full (TODO)                               |
-| `SPC x j l`   | set the justification to left                                      |
-| `SPC x j n`   | set the justification to none (TODO)                               |
-| `SPC x j r`   | set the justification to right                                     |
-| `SPC x J`     | move down a line of text (enter transient state)                   |
-| `SPC x K`     | move up a line of text (enter transient state)                     |
-| `SPC x l d`   | duplicate a line or region                                         |
-| `SPC x l s`   | sort lines (ignorecase)                                            |
-| `SPC x l S`   | sort lines (case-senstive)                                         |
-| `SPC x l u`   | uniquify lines (ignorecase)                                        |
-| `SPC x l U`   | uniquify lines (case-senstive)                                     |
-| `SPC x o`     | use avy to select a link in the frame and open it (TODO)           |
-| `SPC x O`     | use avy to select multiple links in the frame and open them (TODO) |
-| `SPC x t c`   | swap (transpose) the current character with the previous one       |
-| `SPC x t C`   | swap (transpose) the current character with the next one           |
-| `SPC x t w`   | swap (transpose) the current word with the previous one            |
-| `SPC x t W`   | swap (transpose) the current word with the next one                |
-| `SPC x t l`   | swap (transpose) the current line with the previous one            |
-| `SPC x t L`   | swap (transpose) the current line with the next one                |
-| `SPC x u`     | lowercase text                                                     |
-| `SPC x U`     | uppercase text                                                     |
-| `SPC x ~`     | toggle case text                                                   |
-| `SPC x w c`   | count the words in the select region                               |
-| `SPC x w d`   | show dictionary entry of word from wordnik.com (TODO)              |
-| `SPC x <Tab>` | indent or dedent a region rigidly (TODO)                           |
+| Key Bindings     | Descriptions                                                       |
+| ---------------- | ------------------------------------------------------------------ |
+| `SPC x a #`      | align region at #                                                  |
+| `SPC x a %`      | align region at %                                                  |
+| `SPC x a &`      | align region at &                                                  |
+| `SPC x a (`      | align region at (                                                  |
+| `SPC x a )`      | align region at )                                                  |
+| `SPC x a [`      | align region at [                                                  |
+| `SPC x a ]`      | align region at ]                                                  |
+| `SPC x a {`      | align region at {                                                  |
+| `SPC x a }`      | align region at }                                                  |
+| `SPC x a ,`      | align region at ,                                                  |
+| `SPC x a .`      | align region at . (for numeric tables)                             |
+| `SPC x a :`      | align region at :                                                  |
+| `SPC x a ;`      | align region at ;                                                  |
+| `SPC x a =`      | align region at =                                                  |
+| `SPC x a ¦`      | align region at ¦                                                  |
+| `SPC x a <Bar> ` | align region at \|                                                 |
+| `SPC x a SPC`    | align region at [SPC]                                              |
+| `SPC x a a`      | align region (or guessed section) using default rules (TODO)       |
+| `SPC x a c`      | align current indentation region using default rules (TODO)        |
+| `SPC x a l`      | left-align with evil-lion (TODO)                                   |
+| `SPC x a L`      | right-align with evil-lion (TODO)                                  |
+| `SPC x a r`      | align region at user-specified regexp                              |
+| `SPC x a o`      | align region at operators `+-*/` etc                               |
+| `SPC x c`        | count the number of chars/words/lines in the selection region      |
+| `SPC x d w`      | delete trailing whitespace                                         |
+| `SPC x d SPC`    | Delete all spaces and tabs around point, leaving one space         |
+| `SPC x g l`      | set languages used by translate commands (TODO)                    |
+| `SPC x g t`      | translate current word using Google Translate                      |
+| `SPC x g T`      | reverse source and target languages (TODO)                         |
+| `SPC x i c`      | change symbol style to `lowerCamelCase`                            |
+| `SPC x i C`      | change symbol style to `UpperCamelCase`                            |
+| `SPC x i i`      | cycle symbol naming styles (i to keep cycling)                     |
+| `SPC x i -`      | change symbol style to `kebab-case`                                |
+| `SPC x i k`      | change symbol style to `kebab-case`                                |
+| `SPC x i _`      | change symbol style to `under_score`                               |
+| `SPC x i u`      | change symbol style to `under_score`                               |
+| `SPC x i U`      | change symbol style to `UP_CASE`                                   |
+| `SPC x j c`      | set the justification to center                                    |
+| `SPC x j f`      | set the justification to full (TODO)                               |
+| `SPC x j l`      | set the justification to left                                      |
+| `SPC x j n`      | set the justification to none (TODO)                               |
+| `SPC x j r`      | set the justification to right                                     |
+| `SPC x J`        | move down a line of text (enter transient state)                   |
+| `SPC x K`        | move up a line of text (enter transient state)                     |
+| `SPC x l d`      | duplicate a line or region                                         |
+| `SPC x l r`      | reverse lines                                                      |
+| `SPC x l s`      | sort lines (ignorecase)                                            |
+| `SPC x l S`      | sort lines (case-senstive)                                         |
+| `SPC x l u`      | uniquify lines (ignorecase)                                        |
+| `SPC x l U`      | uniquify lines (case-senstive)                                     |
+| `SPC x o`        | use avy to select a link in the frame and open it (TODO)           |
+| `SPC x O`        | use avy to select multiple links in the frame and open them (TODO) |
+| `SPC x t c`      | swap (transpose) the current character with the previous one       |
+| `SPC x t C`      | swap (transpose) the current character with the next one           |
+| `SPC x t w`      | swap (transpose) the current word with the previous one            |
+| `SPC x t W`      | swap (transpose) the current word with the next one                |
+| `SPC x t l`      | swap (transpose) the current line with the previous one            |
+| `SPC x t L`      | swap (transpose) the current line with the next one                |
+| `SPC x u`        | lowercase text                                                     |
+| `SPC x U`        | uppercase text                                                     |
+| `SPC x ~`        | toggle case text                                                   |
+| `SPC x w c`      | count the words in the select region                               |
+| `SPC x w d`      | show dictionary entry of word from wordnik.com (TODO)              |
+| `SPC x <Tab>`    | indent or dedent a region rigidly (TODO)                           |
 
 #### Text insertion commands
 
@@ -1168,10 +1189,10 @@ Read `:h registers` for more info about other registers.
 
 | Key          | Descriptions                                 |
 | ------------ | -------------------------------------------- |
-| `<Leader> y` | Copy text to system clipboard                |
+| `<Leader> y` | Copy selected text to system clipboard       |
 | `<Leader> p` | Paste text from system clipboard after here  |
 | `<Leader> P` | Paste text from system clipboard before here |
-| `<Leader> Y` | Copy text to pastebin                        |
+| `<Leader> Y` | Copy selected text to pastebin               |
 
 The `<Leader> Y` key binding will copy selected text to a pastebin server. It requires `curl` in your `$PATH`.
 The default command is:
@@ -1359,29 +1380,29 @@ Windows manipulation commands (start with `w`):
 
 Buffer manipulation commands (start with `b`):
 
-| Key Bindings    | Descriptions                                                                   |
-| --------------- | ------------------------------------------------------------------------------ |
-| `SPC <Tab>`     | switch to alternate buffer in the current window (switch back and forth)       |
-| `SPC b .`       | buffer transient state                                                         |
-| `SPC b b`       | switch to a buffer (via denite/unite)                                          |
-| `SPC b d`       | kill the current buffer (does not delete the visited file)                     |
-| `SPC u SPC b d` | kill the current buffer and window (does not delete the visited file) (TODO)   |
-| `SPC b D`       | kill a visible buffer using vim-choosewin                                      |
-| `SPC u SPC b D` | kill a visible buffer and its window using ace-window(TODO)                    |
-| `SPC b Ctrl-d`  | kill other buffers                                                             |
-| `SPC b Ctrl-D`  | kill buffers using a regular expression(TODO)                                  |
-| `SPC b e`       | erase the content of the buffer (ask for confirmation)                         |
-| `SPC b h`       | open _SpaceVim_ home buffer                                                    |
-| `SPC b n`       | switch to next buffer avoiding special buffers                                 |
-| `SPC b m`       | open _Messages_ buffer                                                         |
-| `SPC u SPC b m` | kill all buffers and windows except the current one(TODO)                      |
-| `SPC b p`       | switch to previous buffer avoiding special buffers                             |
-| `SPC b P`       | copy clipboard and replace buffer (useful when pasting from a browser)         |
-| `SPC b R`       | revert the current buffer (reload from disk)                                   |
-| `SPC b s`       | switch to the _scratch_ buffer (create it if needed)                           |
-| `SPC b w`       | toggle read-only (writable state)                                              |
-| `SPC b Y`       | copy whole buffer to clipboard (useful when copying to a browser)              |
-| `z f`           | Make current function or comments visible in buffer as much as possible (TODO) |
+| Key Bindings         | Descriptions                                                                   |
+| -------------------- | ------------------------------------------------------------------------------ |
+| `SPC <Tab>`          | switch to alternate buffer in the current window (switch back and forth)       |
+| `SPC b .`            | buffer transient state                                                         |
+| `SPC b b`            | switch to a buffer (via denite/unite)                                          |
+| `SPC b d`            | kill the current buffer (does not delete the visited file)                     |
+| `SPC u SPC b d`      | kill the current buffer and window (does not delete the visited file) (TODO)   |
+| `SPC b D`            | kill a visible buffer using vim-choosewin                                      |
+| `SPC u SPC b D`      | kill a visible buffer and its window using ace-window(TODO)                    |
+| `SPC b Ctrl-d`       | kill other buffers                                                             |
+| `SPC b Ctrl-Shift-d` | kill buffers using a regular expression                                        |
+| `SPC b e`            | erase the content of the buffer (ask for confirmation)                         |
+| `SPC b h`            | open _SpaceVim_ home buffer                                                    |
+| `SPC b n`            | switch to next buffer avoiding special buffers                                 |
+| `SPC b m`            | open _Messages_ buffer                                                         |
+| `SPC b o`            | kill all saved buffers and windows except the current one                      |
+| `SPC b p`            | switch to previous buffer avoiding special buffers                             |
+| `SPC b P`            | copy clipboard and replace buffer (useful when pasting from a browser)         |
+| `SPC b R`            | revert the current buffer (reload from disk)                                   |
+| `SPC b s`            | switch to the _scratch_ buffer (create it if needed)                           |
+| `SPC b w`            | toggle read-only (writable state)                                              |
+| `SPC b Y`            | copy whole buffer to clipboard (useful when copying to a browser)              |
+| `z f`                | Make current function or comments visible in buffer as much as possible (TODO) |
 
 #### Create a new empty buffer
 
@@ -1413,11 +1434,12 @@ Files manipulation commands (start with `f`):
 | `SPC f D`    | delete a file and the associated buffer with confirmation               |
 | `SPC f E`    | open a file with elevated privileges (sudo layer) (TODO)                |
 | `SPC f W`    | save a file with elevated privileges (sudo layer)                       |
-| `SPC f f`    | open file                                                               |
-| `SPC f F`    | try to open the file under point                                        |
+| `SPC f f`    | fuzzy find files in buffer directory                                    |
+| `SPC f F`    | fuzzy find cursor file in buffer directory                              |
 | `SPC f o`    | Find current file in file tree                                          |
 | `SPC f R`    | rename the current file(TODO)                                           |
 | `SPC f s`    | save a file                                                             |
+| `SPC f a`    | save as new file name                                                   |
 | `SPC f S`    | save all files                                                          |
 | `SPC f r`    | open a recent file                                                      |
 | `SPC f t`    | toggle file tree side bar                                               |
@@ -1687,8 +1709,12 @@ getting help info about functions, variables etc:
 | ------------ | ----------------------------------------------------------------------------- |
 | `SPC h SPC`  | discover SpaceVim documentation, layers and packages using fuzzy finder layer |
 | `SPC h i`    | get help with the symbol at point                                             |
+| `SPC h g`    | run `:helpgrep` asynchronously                                                |
+| `SPC h G`    | run `:helpgrep` asynchronously with the word under cursor                     |
 | `SPC h k`    | show top-level bindings with which-key                                        |
 | `SPC h m`    | search available man pages                                                    |
+
+NOTE: `SPC h i` and `SPC h m` need to load at least one fuzzy finder layer.
 
 Reporting an issue:
 
@@ -1908,7 +1934,7 @@ root directory to the present working directory):
 
 ```toml
 [options]
-    project_rooter_automatically = false
+    project_auto_root = false
 ```
 
 Project manager commands start with `p`:
@@ -1919,13 +1945,13 @@ Project manager commands start with `p`:
 
 #### Searching files in project
 
-| Key Bindings | Descriptions                             |
-| ------------ | ---------------------------------------- |
-| `SPC p f`    | find files in current project            |
-| `SPC p F`    | find cursor file in current project      |
-| `SPC p /`    | fuzzy search for text in current project |
-| `SPC p k`    | kill all buffers of current project      |
-| `SPC p p`    | list all projects                        |
+| Key Bindings         | Descriptions                             |
+| -------------------- | ---------------------------------------- |
+| `SPC p f` / `Ctrl-p` | find files in current project            |
+| `SPC p F`            | find cursor file in current project      |
+| `SPC p /`            | fuzzy search for text in current project |
+| `SPC p k`            | kill all buffers of current project      |
+| `SPC p p`            | list all projects                        |
 
 `SPC p p` will list all the projects history cross vim sessions. By default
 only 20 projects will be listed. To increase it, you can change the value

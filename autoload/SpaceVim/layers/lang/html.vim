@@ -1,13 +1,13 @@
 "=============================================================================
 " html.vim --- SpaceVim lang#html layer
-" Copyright (c) 2016-2020 Wang Shidong & Contributors
-" Author: Wang Shidong < wsdjeg at 163.com >
+" Copyright (c) 2016-2022 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
 
 ""
-" @section lang#html, layer-lang-html
+" @section lang#html, layers-lang-html
 " @parentsection layers
 " This layer is for html development, disabled by default, to enable this
 " layer, add following snippet to your SpaceVim configuration file.
@@ -58,7 +58,7 @@ function! SpaceVim#layers#lang#html#plugins() abort
 endfunction
 
 function! SpaceVim#layers#lang#html#config() abort
-  let g:emmet_leader_key = s:emmet_leader_key
+  let g:user_emmet_leader_key = s:emmet_leader_key
   augroup spacevim_lang_html
     autocmd!
     exe printf('autocmd FileType %s call s:install_emmet()', join(s:emmet_filetyps, ','))

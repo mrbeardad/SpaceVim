@@ -1,10 +1,33 @@
 "=============================================================================
 " core.vim --- SpaceVim core layer
-" Copyright (c) 2016-2020 Wang Shidong & Contributors
-" Author: Wang Shidong < wsdjeg at 163.com >
+" Copyright (c) 2016-2022 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
+scriptencoding utf-8
+
+""
+" @section core, layers-core
+" @parentsection layers
+" The `core` layer of SpaceVim. This layer is enabled by default,
+" and it provides filetree, comment key bindings etc.
+"
+" @subsection options
+" - `filetree_show_hidden`: option for showing hidden file in filetree,
+"   disabled by default.
+" - `enable_smooth_scrolling`: enable/disabled smooth scrolling key bindings,
+"   enabled by default.
+" - `enable_filetree_gitstatus`: enable/disable git status column in filetree.
+" - `enable_filetree_filetypeicon`: enable/disable filetype icons in filetree.
+"
+" NOTE: the `enable_vimfiler_gitstatus` and `enable_filetree_gitstatus` option
+" has been deprecated. Use layer option instead.
+" *spacevim-options-enable_vimfiler_gitstatus*
+" *spacevim-options-enable_filetree_gitstatus*
+" *g:spacevim_enable_vimfiler_gitstatus*
+" *g:spacevim_enable_filetree_gitstatus*
+" *g:spacevim_enable_vimfiler_filetypeicon*
 
 if exists('s:string_hi')
   finish
@@ -12,12 +35,20 @@ endif
 
 let s:enable_smooth_scrolling = 1
 
+let g:_spacevim_enable_filetree_gitstatus = 0
+let g:_spacevim_enable_filetree_filetypeicon = 0
+
+
+" disabel netrw
+let g:loaded_netrwPlugin = 1
+
 
 let s:SYS = SpaceVim#api#import('system')
 let s:FILE = SpaceVim#api#import('file')
 let s:MESSAGE = SpaceVim#api#import('vim#message')
 let s:CMP = SpaceVim#api#import('vim#compatible')
 let s:NOTI = SpaceVim#api#import('notify')
+let s:HI = SpaceVim#api#import('vim#highlight')
 
 
 function! SpaceVim#layers#core#plugins() abort
@@ -31,7 +62,7 @@ function! SpaceVim#layers#core#plugins() abort
   if g:spacevim_filemanager ==# 'nerdtree'
     call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdtree', { 'merged' : 0,
           \ 'loadconf' : 1}])
-    if g:spacevim_enable_filetree_gitstatus
+    if g:_spacevim_enable_filetree_gitstatus
       call add(plugins, [g:_spacevim_root_dir . 'bundle/nerdtree-git-plugin', { 'merged' : 0,
             \ 'loadconf' : 1}])
     endif
@@ -122,19 +153,24 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> [p P
   nnoremap <silent> ]p p
 
-  " Select last paste
-  nnoremap <silent><expr> gp '`['.strpart(getregtype(), 0, 1).'`]'
-
+  let lnum = expand('<slnum>') + s:lnum - 1
   call SpaceVim#mapping#space#def('nnoremap', ['f', 's'], 'call call('
         \ . string(s:_function('s:save_current_file')) . ', [])',
-        \ 'save-current-file', 1)
+        \ ['save-current-file',
+        \  ['[SPC f s] is to save current file',
+        \   '',
+        \   'Definition: ' . s:filename . ':' . lnum,
+        \  ]
+        \ ]
+        \ , 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['f', 'a'], 'call call('
+        \ . string(s:_function('s:save_as_new_file')) . ', [])',
+        \ 'save-as-new-file', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'S'], 'wall', 'save-all-files', 1)
   " help mappings
   call SpaceVim#mapping#space#def('nnoremap', ['h', 'I'], 'call SpaceVim#issue#report()', 'report-issue-or-bug', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['h', 'l'], 'SPLayer -l', 'list-all-layers', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['h', 'L'], 'SPRuntimeLog', 'view-runtime-log', 1)
-  " @todo move this key binding to fuzzy layer
-  call SpaceVim#mapping#space#def('nnoremap', ['h', 'm'], 'Unite manpage', 'search available man pages', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['h', 'k'], 'LeaderGuide "[KEYs]"', 'show-top-level-bindings', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['j', '0'], 'm`^', 'jump-to-beginning-of-line', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['j', '$'], 'm`g_', 'jump-to-end-of-line', 0)
@@ -197,11 +233,43 @@ function! SpaceVim#layers#core#config() abort
           \ ]
           \ ]
           \ , 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['b', 'd'], 'call SpaceVim#mapping#close_current_buffer()', 'delete-this-buffer', 1)
+  let lnum = expand('<slnum>') + s:lnum - 1
+  call SpaceVim#mapping#space#def('nnoremap', ['h', 'g'], 'call SpaceVim#plugins#helpgrep#help()',
+        \ ['asynchronous-helpgrep',
+        \ [
+          \ '[SPC h g] is to run helpgrep asynchronously',
+          \ '',
+          \ 'Definition: ' . s:filename . ':' . lnum,
+          \ ]
+          \ ]
+          \ , 1)
+  let lnum = expand('<slnum>') + s:lnum - 1
+  call SpaceVim#mapping#space#def('nnoremap', ['h', 'G'],
+        \ 'call SpaceVim#plugins#helpgrep#help(expand("<cword>"))',
+        \ ['asynchronous-helpgrep-with-cword',
+        \ [
+          \ '[SPC h g] is to run helpgrep asynchronously with cword',
+          \ '',
+          \ 'Definition: ' . s:filename . ':' . lnum,
+          \ ]
+          \ ]
+          \ , 1)
+  let lnum = expand('<slnum>') + s:lnum - 1
+  call SpaceVim#mapping#space#def('nnoremap', ['b', 'd'],
+        \ 'call SpaceVim#mapping#close_current_buffer()',
+        \ ['delete-this-buffer',
+        \ [
+          \ '[SPC b d] is to delete current buffer',
+          \ '',
+          \ 'Definition: ' . s:filename . ':' . lnum,
+          \ ]
+          \ ]
+          \ , 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'D'],
         \ 'call SpaceVim#mapping#kill_visible_buffer_choosewin()',
         \ 'delete-the-selected-buffer', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', '<C-d>'], 'call SpaceVim#mapping#clear_buffers()', 'kill-other-buffers', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['b', '<C-S-d>'], 'call SpaceVim#mapping#kill_buffer_expr()', 'kill-buffers-by-regexp', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'c'], 'call SpaceVim#mapping#clear_saved_buffers()', 'clear-all-saved-buffers', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'e'], 'call call('
         \ . string(s:_function('s:safe_erase_buffer')) . ', [])',
@@ -210,6 +278,9 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'm'], 'call call('
         \ . string(s:_function('s:open_message_buffer')) . ', [])',
         \ 'open-message-buffer', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['b', 'o'], 'call call('
+        \ . string(s:_function('s:only_buf_win')) . ', [])',
+        \ 'kill-other-buffers-and-windows', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'p'], 'normal! ggdG"+P', 'copy-clipboard-to-whole-buffer', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['b', 'R'], 'call call('
         \ . string(s:_function('s:safe_revert_buffer')) . ', [])',
@@ -231,7 +302,6 @@ function! SpaceVim#layers#core#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'D'], 'call call('
         \ . string(s:_function('s:delete_current_buffer_file')) . ', [])',
         \ 'delete-current-buffer-file', 1)
-  call SpaceVim#mapping#space#def('nnoremap', ['f', 'F'], 'normal! gf', 'open-cursor-file', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['f', '/'], 'call SpaceVim#plugins#find#open()', 'find-files', 1)
   if s:SYS.isWindows
     call SpaceVim#mapping#space#def('nnoremap', ['f', 'd'], 'call call('
@@ -381,28 +451,23 @@ function! s:number_transient_state(n) abort
   let state = SpaceVim#api#import('transient_state')
   call state.set_title('Number Transient State')
   call state.defind_keys(
-        \ {
-          \ 'layout' : 'vertical split',
-          \ 'left' : [
-            \ {
-              \ 'key' : ['+','='],
-              \ 'desc' : 'increase number',
-              \ 'func' : '',
-              \ 'cmd' : "normal! \<c-a>",
-              \ 'exit' : 0,
-              \ },
-              \ ],
-              \ 'right' : [
-                \ {
-                  \ 'key' : '-',
-                  \ 'desc' : 'decrease number',
-                  \ 'func' : '',
-                  \ 'cmd' : "normal! \<c-x>",
-                  \ 'exit' : 0,
-                  \ },
-                  \ ],
-                  \ }
-                  \ )
+        \ {'layout' : 'vertical split',
+        \  'left' : [{'key' : ['+','='],
+        \             'desc' : 'increase number',
+        \             'func' : '',
+        \             'cmd' : "normal! \<c-a>",
+        \             'exit' : 0,
+        \            },
+        \           ],
+        \ 'right' : [{'key' : '-',
+        \             'desc' : 'decrease number',
+        \             'func' : '',
+        \             'cmd' : "normal! \<c-x>",
+        \             'exit' : 0,
+        \            },
+        \           ],
+        \ }
+        \ )
   call state.open()
 endfunction
 
@@ -491,12 +556,12 @@ function! s:jump_last_change() abort
 endfunction
 
 function! s:split_string(newline) abort
-  if s:is_string(line('.'), col('.'))
+  if s:HI.is_string(line('.'), col('.'))
     let save_cursor = getcurpos()
     let c = col('.')
     let sep = ''
     while c > 0
-      if s:is_string(line('.'), c)
+      if s:HI.is_string(line('.'), c)
         let c -= 1
       else
         if !empty(get(get(g:string_info, &filetype, {}), 'quotes_hi', []))
@@ -526,18 +591,6 @@ function! s:split_string(newline) abort
     endif
     call setpos('.', save_cursor)
   endif
-endfunction
-
-
-" @toto add sting highlight for other filetype
-let s:string_hi = {
-      \ 'c' : 'cCppString',
-      \ 'cpp' : 'cCppString',
-      \ 'python' : 'pythonString',
-      \ }
-
-function! s:is_string(l, c) abort
-  return synIDattr(synID(a:l, a:c, 1), 'name') == get(s:string_hi, &filetype, &filetype . 'String')
 endfunction
 
 " function() wrapper
@@ -585,6 +638,11 @@ function! s:open_message_buffer() abort
   normal! G
   setlocal nomodifiable
   nnoremap <buffer><silent> q :call <SID>close_message_buffer()<CR>
+endfunction
+
+function! s:only_buf_win() abort
+  only
+  call SpaceVim#mapping#clear_saved_buffers()
 endfunction
 
 function! s:close_message_buffer() abort
@@ -913,9 +971,49 @@ function! s:save_current_file() abort
     echohl None
   else
     echohl Delimiter
-    echo  bufname() . ' written'
+    echo  fnamemodify(bufname(), ':.:gs?[\\/]?/?') . ' written'
     echohl None
   endif
+endfunction
+
+
+" the `SPC f a` key binding cause many erros:
+" E212: Can't open file for writing: no such file or directory
+" E216: No such group or event: FileExplorer
+"
+" Fix E216: No such group or event: FileExplorer
+" which is called in bundle/nerdtree/plugin/NERD_tree.vim:184
+augroup FileExplorer
+  autocmd!
+augroup END
+
+
+function! s:save_as_new_file() abort
+  let current_fname = bufname()
+  if !empty(current_fname)
+    let dir = fnamemodify(current_fname, ':h') . s:FILE.separator
+  else
+    let dir = getcwd() . s:FILE.separator
+  endif
+  let input = input('save as: ', dir, 'file')
+  " clear cmdline
+  noautocmd normal! :
+  if !empty(input)
+    exe 'silent! write ' . input
+    exe 'e ' . input
+    if v:errmsg !=# ''
+      echohl ErrorMsg
+      echo  v:errmsg
+      echohl None
+    else
+      echohl Delimiter
+      echo  fnamemodify(bufname(), ':.:gs?[\\/]?/?') . ' written'
+      echohl None
+    endif
+  else
+    echo 'canceled!'
+  endif
+
 endfunction
 
 let g:_spacevim_autoclose_filetree = 1
@@ -947,15 +1045,39 @@ endfunction
 
 
 let g:_spacevim_filetree_show_hidden_files = 0
+let g:_spacevim_filetree_opened_icon = '▼'
+let g:_spacevim_filetree_closed_icon = '▶'
 
 function! SpaceVim#layers#core#set_variable(var) abort
 
   let g:_spacevim_filetree_show_hidden_files = get(a:var,
         \ 'filetree_show_hidden',
         \ g:_spacevim_filetree_show_hidden_files)
+  let g:_spacevim_filetree_opened_icon = get(a:var,
+        \ 'filetree_opened_icon',
+        \ g:_spacevim_filetree_opened_icon)
+  let g:_spacevim_filetree_closed_icon = get(a:var,
+        \ 'filetree_closed_icon',
+        \ g:_spacevim_filetree_closed_icon)
   let s:enable_smooth_scrolling = get(a:var,
         \ 'enable_smooth_scrolling',
         \ s:enable_smooth_scrolling)
+  let g:_spacevim_enable_filetree_filetypeicon = get(a:var,
+        \ 'enable_filetree_filetypeicon',
+        \ g:_spacevim_enable_filetree_filetypeicon)
+  let g:_spacevim_enable_filetree_gitstatus = get(a:var,
+        \ 'enable_filetree_gitstatus',
+        \ g:_spacevim_enable_filetree_gitstatus)
+endfunction
+
+function! SpaceVim#layers#core#get_options() abort
+
+  return [
+        \ 'filetree_closed_icon',
+        \ 'filetree_opened_icon',
+        \ 'filetree_show_hidden',
+        \ 'enable_smooth_scrolling'
+        \ ]
 
 endfunction
 
@@ -970,3 +1092,5 @@ function! s:close_current_tab() abort
     tabclose!
   endif
 endfunction
+
+" vim:set et sw=2 cc=80:

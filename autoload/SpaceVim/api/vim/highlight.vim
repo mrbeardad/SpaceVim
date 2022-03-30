@@ -1,7 +1,7 @@
 "=============================================================================
 " highlight.vim --- SpaceVim highlight API
-" Copyright (c) 2016-2020 Wang Shidong & Contributors
-" Author: Wang Shidong < wsdjeg at 163.com >
+" Copyright (c) 2016-2022 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
 "=============================================================================
@@ -159,6 +159,16 @@ function! s:self.syntax_at(...) abort
   endif
   call map(synstack(l:lnum, l:col), 'synIDattr(v:val, "name")')
   return synIDattr(synID(l:lnum, l:col, 1), 'name')
+endfunction
+
+let s:string_hi = {
+      \ 'c' : 'cCppString',
+      \ 'cpp' : 'cCppString',
+      \ 'python' : 'pythonString',
+      \ }
+
+function! s:self.is_string(l, c) abort
+  return synIDattr(synID(a:l, a:c, 1), 'name') == get(s:string_hi, &filetype, &filetype . 'String')
 endfunction
 
 function! s:self.syntax_of(pattern, ...) abort
