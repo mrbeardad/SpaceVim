@@ -1,0 +1,115 @@
+#=============================================================================
+# dark_powered.toml --- dark powered configuration example for SpaceVim
+# Copyright (c) 2016-2022 Wang Shidong & Contributors
+# Author: Wang Shidong < wsdjeg@outlook.com >
+# URL: https://spacevim.org
+# License: GPLv3
+#=============================================================================
+
+# All SpaceVim option below [option] section
+[options]
+    colorscheme = "gruvbox"
+    colorscheme_bg = "dark"
+    enable_guicolors = true
+
+    enable_tabline_filetype_icon = true
+    statusline_separator = "arrow"
+    statusline_iseparator = "arrow"
+    enable_statusline_mode = false
+    statusline_left_sections = [
+        "winnr",
+        "filename",
+        "search count",
+        "syntax checking",
+    ]
+    statusline_right_sections = [
+        "major mode",
+        "fileformat",
+        "mycursorpos",
+    ]
+
+    enable_ycm = true
+    autocomplete_method = "ycm"
+    snippet_engine = "ultisnips"
+    autocomplete_parens = true
+    error_symbol = " "
+    warning_symbol = " "
+    info_symbol = " "
+
+    filemanager = "defx"
+    filetree_direction = "left"
+ 
+    bootstrap_before = "myspacevim#before"
+    bootstrap_after = "myspacevim#after"
+    windows_leader = ""
+    escape_key_binding = ""
+    default_indent = 4
+
+# custom plugin
+[[custom_plugins]]
+    repo = "kana/vim-textobj-function"
+[[custom_plugins]]
+    repo = "sgur/vim-textobj-parameter"
+
+# default layers
+[[layers]]
+    name = "core"
+    filetree_show_hidden = true
+    enable_filetree_gitstatus= true
+    enable_filetree_filetypeicon = true
+[[layers]]
+    name = "core#banner"
+[[layers]]
+    name = "core#statusline"
+[[layers]]
+    name = "core#tabline"
+[[layers]]
+    name = "ui"
+    indentline_char = '┆'
+[[layers]]
+    name = "edit"
+[[layers]]
+    name = "tools"
+[[layers]]
+    name = "checker"
+[[layers]]
+    name = "format"
+    format_on_save = true
+[[layers]]
+    name = "autocomplete"
+    auto_completion_return_key_behavior = "smart"
+    auto_completion_tab_key_behavior = "smart"
+
+# enabled layers
+[[layers]]
+    name = "incsearch"
+[[layers]]
+    name = "git"
+[[layers]]
+    name = "VersionControl"
+[[layers]]
+    name = "leaderf"
+[[layers]]
+    name = "chinese"
+[[layers]]
+    name = "sudo"
+[[layers]]
+    name = "shell"
+    default_position = "top"
+    default_height = 30
+
+# language layers
+[[layers]]
+    name = "lang#markdown"
+[[layers]]
+    name = "lang#vim"
+[[layers]]
+    name = "lang#sh"
+[[layers]]
+    name = "lang#c"
+[[layers]]
+    name = "lang#go"
+[[layers]]
+    name = "lang#python"
+[[layers]]
+    name = "lang#javascript"

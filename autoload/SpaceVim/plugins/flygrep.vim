@@ -804,6 +804,7 @@ let s:MPT._function_key = {
       \ "\<C-s>" : function('s:open_item_horizontally'),
       \ "\<C-q>" : function('s:apply_to_quickfix'),
       \ "\<M-r>" : function('s:start_replace'),
+      \ "\<C-h>" : function('s:start_replace'),
       \ "\<C-p>" : function('s:toggle_preview'),
       \ "\<C-e>" : function('s:toggle_expr_mode'),
       \ "\<Up>" : function('s:previous_match_history'),

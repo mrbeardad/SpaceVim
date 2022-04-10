@@ -356,7 +356,7 @@ else
       endif
       call setbufvar('%', 'rootDir', rootdir)
     endif
-    call s:change_dir(rootdir)
+    "  call s:change_dir(rootdir)
     call SpaceVim#plugins#projectmanager#RootchandgeCallback()
     return rootdir
   endfunction

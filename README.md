@@ -1,55 +1,19 @@
-[![SpaceVim](https://spacevim.org/logo.png)](https://spacevim.org)
+# SpaceVim for VSCode User
+&emsp;我的主力IDE已经从SpaceVim迁移到VSCode了，master分支如无意外将停止更新。
+此vscode分支目的是为用作平时终端操作时的顺手工具，[快捷键操作](https://github.com/mrbeardad/My-IDE/blob/master/wsl.md#vim%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8)都仿照我的VSCode配置。当然这套配置依旧完全可胜任IDE的工作（除了调试），需要注意的是，配置中使用的补全引擎是[ycm](https://github.com/ycm-core/YouCompleteMe)而不是默认的[deoplete](https://github.com/Shougo/deoplete.nvim)，就我而言前者(ycm)的使用体验绝对是vim各个补全引擎中最好的，但可惜SpaceVim原作者对其支持远不如后者。
 
-[Wiki](https://github.com/SpaceVim/SpaceVim/wiki) \|
-[Community](https://spacevim.org/community/) \|
-[Sponsors](https://spacevim.org/sponsors/) \|
-[Twitter](https://twitter.com/SpaceVim) \|
-[中文官网](https://spacevim.org/cn/)
+&emsp;为了弥补ycm在一些语言上的空缺，你可以自行阅读[YCM文档](https://github.com/ycm-core/YouCompleteMe#installation)，安装对应的language-server即可。如何有一些官方未支持的语言，你可以自行在[lsp](https://microsoft.github.io/language-server-protocol/implementors/servers/)里搜索语言对应的language-server，然后配置ycm连接到他即可。
 
-[![Gitter](https://img.shields.io/gitter/room/SpaceVim/SpaceVim?color=%2364CEAA)](https://gitter.im/SpaceVim/SpaceVim)
-[![build](https://img.shields.io/github/workflow/status/SpaceVim/SpaceVim/test)](https://github.com/SpaceVim/SpaceVim/actions/workflows/check.yml?query=branch%3Amaster)
-[![Codecov coverage](https://img.shields.io/codecov/c/github/SpaceVim/SpaceVim.svg)](https://codecov.io/gh/SpaceVim/SpaceVim)
-[![Version](https://img.shields.io/badge/version-2.0.0--dev-8700FF.svg)](https://github.com/SpaceVim/SpaceVim/releases)
-[![GPLv3 License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/SpaceVim/SpaceVim/blob/master/LICENSE)
-[![Doc](https://img.shields.io/badge/doc-%3Ah%20SpaceVim-orange.svg)](doc/SpaceVim.txt)
+```vim
+" https://microsoft.github.io/language-server-protocol/implementors/servers/
+let g:ycm_language_server = 
+  \ [ 
+  \   {
+  \     'name': 'vim',
+  \     'cmdline': [ 'vim-language-server', '--stdio' ],
+  \     'filetypes': [ 'vim' ],
+  \    },
+  \ ]
+```
 
-![welcome page](https://user-images.githubusercontent.com/13142418/148374827-5f7aeaaa-e69b-441e-b872-408b47f4da04.png)
-
-[SpaceVim](https://spacevim.org/) is a community-driven modular Vim distribution. It manages collections
-of plugins in layers, which help to collect related packages together to provide IDE-like features.
-
-The last release is [v1.9.0](https://spacevim.org/SpaceVim-release-v1.9.0/), check out [following-HEAD](https://github.com/SpaceVim/SpaceVim/wiki/Following-HEAD) page for what happened since last release.
-
-**See the following links below for more information:**
-
-- [Quick Start Guide](https://spacevim.org/quick-start-guide/): A simple guide for Beginners.
-- [Documentation](https://spacevim.org/documentation/): The full documentation about using SpaceVim.
-- [Available Layers](https://spacevim.org/layers/): A list of all available layers included in SpaceVim.
-- [FAQ](https://spacevim.org/faq/): The most asked questions about SpaceVim.
-
-## Support SpaceVim
-
-This project wouldn't exist without all the people who [contributed](CONTRIBUTING.md),
-We are thankful for any contributions from the community.
-
-<a href="https://github.com/SpaceVim/SpaceVim/graphs/contributors"><img src="https://opencollective.com/spacevim/contributors.svg?width=890&button=false" /></a>
-
-The best way to support SpaceVim is to contribute to it either by reporting bugs, helping the community on the [Gitter Chat](https://gitter.im/SpaceVim/SpaceVim), or sending pull requests.
-
-For more information please check our [development guidelines](https://spacevim.org/development/).
-
-If you use SpaceVim in your daily work and feel that it has made your life easier,
-please consider buying me a coffee once in a while!
-
-<a href='https://ko-fi.com/spacevim' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi4.png?v=f' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-
-## Credits & Thanks
-
-- [Hack-SpaceVim](https://github.com/Gabirel/Hack-SpaceVim) by [@Gabirel](https://github.com/Gabirel)
-- [SpaceVimTutorial](https://everettjf.gitbooks.io/spacevimtutorial/content/) by [@everettjf](https://github.com/everettjf)
-- [10-minutes-to-SpaceVim](https://github.com/Jackiexiao/10-minutes-to-SpaceVim) by [@Jackiexiao](https://github.com/Jackiexiao)
-- [A First Look At SpaceVim](https://www.youtube.com/watch?v=iXPS_NHLj9k) by [@DistroTube](https://www.youtube.com/channel/UCVls1GmFKf6WlTraIb_IaJg)
-- [vimdoc](https://github.com/google/vimdoc) generate doc file for SpaceVim
-- Authors of all the plugins used in SpaceVim.
-
-<!-- vim:set nowrap: -->
+以上，感谢诸君的:star:，很荣幸能帮到你们！

@@ -290,7 +290,7 @@ function! s:on_stdout(job_id, data, event) abort
     else
       let data = a:data
     endif
-    call s:BUFFER.buf_set_lines(s:code_runner_bufnr, s:runner_lines , s:runner_lines + 1, 0, data)
+    call s:BUFFER.buf_set_lines(s:code_runner_bufnr, s:runner_lines , s:runner_lines + 1, 0, a:data)
   endif
   let s:runner_lines += len(data)
   if s:winid >= 0
