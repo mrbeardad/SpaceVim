@@ -148,9 +148,10 @@ function! myspacevim#after() abort
     nnoremap <silent><M-E> :call <SID>open_file_in_explorer()<Cr>
     nmap <silent><M-R> :w<Cr>[SPC]lr
     nnoremap <silent><M-z> :setlocal wrap!<Cr>
-    nnoremap <M-t> :Translate<Cr>
-    vnoremap <M-t> :Translate<Cr>
-    nnoremap <M-T> :TranslateW<Cr>
+    nnoremap <M-t> :TranslateW<Cr>
+    vnoremap <M-t> :TranslateW<Cr>
+    nnoremap <M-T> :Translate<Cr>
+    vnoremap <M-T> :Translate<Cr>
     nmap <M-F> [SPC]bf
     command CodeCounter exe "!cloc ".SpaceVim#plugins#projectmanager#current_root()
 
