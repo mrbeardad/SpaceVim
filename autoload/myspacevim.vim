@@ -88,9 +88,10 @@ function! myspacevim#after() abort
     inoremap <silent><S-Up> <Esc>:m .-2<CR>==gi
     vnoremap <silent><S-Down> :m '>+1<CR>gv=gv
     vnoremap <silent><S-Up> :m '<-2<CR>gv=gv
+    inoremap [9 <End><Cr>
 
     inoremap <expr> <C-K> repeat('<Delete>', strchars(getline('.')) - getcurpos()[2] + 1)
-    inoremap <C-L> <C-Right><C-W>
+    inoremap <C-L> <C-C><Right>cw
 
     inoremap <C-Z> <C-C>ui
     nnoremap <C-Z> u
@@ -99,7 +100,8 @@ function! myspacevim#after() abort
     nmap <C-_> <Plug>NERDCommenterInvert
     
     nnoremap <silent><C-F> :call SpaceVim#plugins#flygrep#open({'input' : input("grep pattern:"), 'dir' : get(b:, "rootDir", getcwd())})<CR>
-    nnoremap <silent><A-o> :LeaderfBufTag<Cr>
+    nnoremap <silent>[6 :Leaderf command<Cr>
+    nnoremap <silent>[7 :LeaderfBufTag<Cr>
     nmap <C-T> <Plug>LeaderfGtagsGrep
     nnoremap <silent><C-G> :Leaderf gtags<Cr>
     nnoremap <silent><F12> :YcmCompleter GoTo<Cr>
@@ -127,7 +129,7 @@ function! myspacevim#after() abort
     nnoremap <silent><C-K>n :enew<Cr>
     nnoremap <C-K>o :e <C-R>=getcwd()<Cr>/
     nnoremap <C-K>r :Leaderf neomru<Cr>
-    nmap <silent><C-K><C-S> [SPC]fa
+    nmap [8 [SPC]fa
     nnoremap <silent><C-K>s :wall<Cr>
     nnoremap <silent><M-S> :SudoWrite<Cr>
     nnoremap <silent><C-W>x :call SpaceVim#mapping#close_current_buffer()<Cr>
