@@ -1,3 +1,6 @@
+# For VSCode User
+[见vscode分支](https://github.com/mrbeardad/SpaceVim/tree/vscode)
+
 # 写在前面
 
 &emsp; [SpaceVim](https://github.com/SpaceVim/SpaceVim) 是一个非常棒的配置集合。
@@ -17,6 +20,10 @@
 # 目录
 <!-- vim-markdown-toc GFM -->
 
+- [For VSCode User](#for-vscode-user)
+- [写在前面](#写在前面)
+- [注意注意！敲黑板！使用手册在此！](#注意注意敲黑板使用手册在此)
+- [目录](#目录)
 - [颜色主题](#颜色主题)
 - [启动界面字符画](#启动界面字符画)
 - [状态栏与标签栏](#状态栏与标签栏)
