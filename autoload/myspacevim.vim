@@ -66,7 +66,7 @@ function! myspacevim#after() abort
     vnoremap <C-Right> w
     nmap ; <Plug>(better-easymotion-overwin-f)
 
-    nmap <C-D> <Plug>(SmoothieForwards)
+    " nmap <C-D> <Plug>(SmoothieForwards)
     nnoremap <silent><C-Down> <C-Y>
     nnoremap <silent><C-Up>   <C-E>
 
@@ -119,9 +119,10 @@ function! myspacevim#after() abort
     nnoremap <silent><M-P> :Leaderf command<Cr>
     " map terminal key ctrl+shift+o to sendkey <Esc>O
     nnoremap <silent><M-O> :LeaderfBufTag<Cr>
-    nnoremap <C-T> :call feedkeys(":Leaderf gtags\<lt>CR>".expand('<cword>'))<CR>
+    nnoremap <C-T> :call feedkeys(":Leaderf gtags\<lt>CR>".expand('<cword>'))<Cr>
+    nnoremap <silent><F2> :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<Cr>
     nnoremap <silent><F12> :YcmCompleter GoTo<Cr>
-    nnoremap <silent><S-F12> :YcmCompleter GoToReferences<Cr>
+    nnoremap <silent><F24> :YcmCompleter GoToReferences<Cr>
 
     nnoremap <expr> n  'Nn'[v:searchforward]
     nnoremap <expr> N  'nN'[v:searchforward]
@@ -154,10 +155,32 @@ function! myspacevim#after() abort
     nnoremap <silent><C-W>z :stop<Cr>
     nnoremap Q q
 
+    nnoremap <M-I> <C-I>
     nnoremap <silent><tab> :winc w<cr>
     nnoremap <silent><s-tab> :winc W<cr>
 
-    nnoremap <silent><F1> :Defx<Cr>
+    function s:toggle_defx_and_tagbar()
+      let prev_winid = win_getid()
+
+      let defx_bufnr = bufnr('[defx] -0')
+      if defx_bufnr == -1
+        Defx -direction=topleft
+        Defx -close
+        let defx_bufnr = bufnr('[defx] -0')
+      endif
+      let is_defx_opend = bufwinid(defx_bufnr) != -1
+      let is_tagbar_opend = bufwinid(bufnr(t:tagbar_buf_name)) != -1
+      if is_tagbar_opend == v:true || is_defx_opend == v:true
+        TagbarClose
+        Defx -close
+      else
+        call tagbar#ToggleWindow('f')
+        split +exe\ 'b\ '.defx_bufnr
+      endif
+
+      call win_gotoid(prev_winid)
+    endf
+    nnoremap <silent><F1> :call <SID>toggle_defx_and_tagbar()<Cr>
     nnoremap <silent><F3> :call SpaceVim#plugins#todo#list()<Cr>
     nmap <M-`> [SPC]'
 
