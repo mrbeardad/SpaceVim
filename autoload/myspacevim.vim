@@ -51,6 +51,9 @@ function! myspacevim#before() abort
 endf
 
 function! myspacevim#after() abort
+    let g:neomake_c_enabled_makers = ['cppcheck']
+    let g:neomake_cpp_enabled_makers = ['cppcheck']
+
     inoremap <C-A> <Home>
     inoremap <C-E> <End>
     nnoremap <C-A> <Home>
