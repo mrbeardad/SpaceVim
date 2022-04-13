@@ -376,6 +376,20 @@ fu! SpaceVim#mapping#SmartClose() abort
     endif
   endfor
   if num == 1
+    echohl WarningMsg
+    echon 'Quit or Stop vim?  Quit/Stop/Cancel'
+    let rs = nr2char(getchar())
+    echohl None
+    if rs ==? 'q'
+      qall
+    elseif rs ==? 's' || rs ==? 'z'
+      stop
+    else
+      redraw
+      echohl ModeMsg
+      echon 'canceled!'
+      echohl None
+    endif
   else
     quit
   endif

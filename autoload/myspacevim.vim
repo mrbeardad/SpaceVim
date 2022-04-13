@@ -1,3 +1,7 @@
+function! s:mycursorpos() abort
+  return ' %P  %l/%L : %c '
+endf
+
 function! myspacevim#before() abort
     set ignorecase
     set smartcase
@@ -5,13 +9,10 @@ function! myspacevim#before() abort
     set list
     set shell=/usr/bin/bash
 
-    function! s:mycursorpos() abort
-      return ' %P  %l/%L : %c '
-    endf
     call SpaceVim#layers#core#statusline#register_sections('mycursorpos', function('s:mycursorpos'))
 
     let g:table_mode_syntax = 0
-    let g:table_mode_auto_align = 0
+    let g:table_mode_auto_align = 1
 		let g:table_mode_always_active = 0
     let g:_spacevim_mappings.t = {'name' : '+Table Mode'}
     let g:clever_f_smart_case = 1
@@ -48,6 +49,36 @@ function! myspacevim#before() abort
     let g:ycm_key_invoke_completion = '<C-\>'
     let g:ycm_error_symbol = g:spacevim_error_symbol
     let g:ycm_warning_symbol = g:spacevim_warning_symbol
+endf
+
+function s:toggle_defx_and_tagbar()
+  let prev_winid = win_getid()
+
+  let defx_bufnr = bufnr('[defx] -0')
+  if defx_bufnr == -1
+    Defx -direction=topleft
+    Defx -close
+    let defx_bufnr = bufnr('[defx] -0')
+  endif
+  let is_defx_opend = bufwinid(defx_bufnr) != -1
+  let is_tagbar_opend = bufwinid(bufnr(t:tagbar_buf_name)) != -1
+  if is_tagbar_opend == v:true || is_defx_opend == v:true
+    TagbarClose
+    Defx -close
+  else
+    call tagbar#ToggleWindow('f')
+    split +exe\ 'b\ '.defx_bufnr
+  endif
+
+  call win_gotoid(prev_winid)
+endf
+
+function s:open_file_in_explorer()
+  if has('win32') || has('wsl')
+    call jobstart('explorer.exe .')
+  elseif has('unix')
+    call jobstart('xdg-open .')
+  endif
 endf
 
 function! myspacevim#after() abort
@@ -151,46 +182,18 @@ function! myspacevim#after() abort
     nnoremap <silent><C-W>w :call SpaceVim#mapping#close_current_buffer()<Cr>
     nnoremap <silent><C-K>u :call SpaceVim#mapping#clear_saved_buffers()<Cr>
     nmap <silent><C-K>w [SPC]bo
-    nnoremap <C-Q> :qa<Cr>
     nnoremap <silent><C-W>z :stop<Cr>
     nnoremap Q q
 
+    " map terminal key ctrl+i to sendkey <Esc>I
     nnoremap <M-I> <C-I>
     nnoremap <silent><tab> :winc w<cr>
     nnoremap <silent><s-tab> :winc W<cr>
 
-    function s:toggle_defx_and_tagbar()
-      let prev_winid = win_getid()
-
-      let defx_bufnr = bufnr('[defx] -0')
-      if defx_bufnr == -1
-        Defx -direction=topleft
-        Defx -close
-        let defx_bufnr = bufnr('[defx] -0')
-      endif
-      let is_defx_opend = bufwinid(defx_bufnr) != -1
-      let is_tagbar_opend = bufwinid(bufnr(t:tagbar_buf_name)) != -1
-      if is_tagbar_opend == v:true || is_defx_opend == v:true
-        TagbarClose
-        Defx -close
-      else
-        call tagbar#ToggleWindow('f')
-        split +exe\ 'b\ '.defx_bufnr
-      endif
-
-      call win_gotoid(prev_winid)
-    endf
+    autocmd VimResized * exe "normal \<C-W>="
     nnoremap <silent><F1> :call <SID>toggle_defx_and_tagbar()<Cr>
-    nnoremap <silent><F3> :call SpaceVim#plugins#todo#list()<Cr>
     nmap <M-`> [SPC]'
 
-    function s:open_file_in_explorer()
-      if has('win32') || has('wsl')
-        call jobstart('explorer.exe .')
-      elseif has('unix')
-        call jobstart('xdg-open .')
-      endif
-    endf
     nnoremap <silent><M-E> :call <SID>open_file_in_explorer()<Cr>
     nmap <silent><M-R> :w<Cr>[SPC]lr
     nnoremap <silent><M-z> :setlocal wrap!<Cr>
@@ -199,6 +202,6 @@ function! myspacevim#after() abort
     nnoremap <M-T> :Translate<Cr>
     vnoremap <M-T> :Translate<Cr>
     nmap <M-F> [SPC]bf
-    command CodeCounter exe "!cloc ".SpaceVim#plugins#projectmanager#current_root()
     nnoremap <silent><M-C> :Calc<Cr>
+    command CodeCounter exe "!cloc ".SpaceVim#plugins#projectmanager#current_root()
 endf
