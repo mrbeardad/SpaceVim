@@ -33,6 +33,11 @@ function s:open_file_in_explorer()
 endf
 
 function! s:smartquit()
+  let win_layout = split(substitute(string(winlayout()), '\D', ' ', 'g'))
+  call SpaceVim#mapping#SmartClose()
+  if len(split(substitute(string(winlayout()), '\D', ' ', 'g'))) != len(win_layout)
+    return
+  endif
   if len(getbufinfo({'buflisted':1,'bufloaded':1,'bufmodified':1})) > 0
     echohl WarningMsg
     echon 'There are some buffer modified! Quit/Save/Cancel'
