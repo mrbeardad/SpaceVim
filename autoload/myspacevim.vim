@@ -65,6 +65,8 @@ function! myspacevim#before() abort
 
     call SpaceVim#layers#core#statusline#register_sections('mycursorpos', function('s:mycursorpos'))
 
+    autocmd VimEnter * RainbowParentheses
+
     let g:table_mode_syntax = 0
     let g:table_mode_auto_align = 1
 		let g:table_mode_always_active = 0
