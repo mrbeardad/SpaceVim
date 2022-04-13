@@ -1,5 +1,3 @@
-let s:WIN = SpaceVim#api#import('vim#window')
-
 function! s:mycursorpos() abort
   return ' %P  %l/%L : %c '
 endf
@@ -35,74 +33,25 @@ function s:open_file_in_explorer()
 endf
 
 function! s:smartquit()
-  echohl WarningMsg
-  echon 'Quit or Stop vim?  Quit/Stop/Cancel'
-  let rs = nr2char(getchar())
-  echohl None
-  if rs ==? 'q'
-    if len(getbufinfo({'buflisted':1,'bufloaded':1,'bufmodified':1})) > 0
-      redraw
-      echohl WarningMsg
-      echon 'There are some buffer modified! Quit/Save/Cancel'
-      let rs = nr2char(getchar())
-      echohl None
-      if rs ==? 'q'
-        qall!
-      elseif rs ==? 's'
-        redraw
-        wall
-        qall
-      else
-        redraw
-        echohl ModeMsg
-        echon 'canceled!'
-        echohl None
-      endif
-    else
-      qall
-    endif
-  elseif rs ==? 's' || rs ==? 'z'
-    stop
-  else
-    redraw
-    echohl ModeMsg
-    echon 'canceled!'
+  if len(getbufinfo({'buflisted':1,'bufloaded':1,'bufmodified':1})) > 0
+    echohl WarningMsg
+    echon 'There are some buffer modified! Quit/Save/Cancel'
+    let rs = nr2char(getchar())
     echohl None
-  endif
-endf
-
-function! s:smartclose() abort
-  let ignorewin = get(g:,'spacevim_smartcloseignorewin',[])
-  let ignoreft = get(g:, 'spacevim_smartcloseignoreft',[])
-  if !has('nvim') 
-        \ && exists('*popup_list')
-        \ && exists('*popup_getoptions')
-        \ && exists('*popup_getpos')
-    let win_count =  len(
-          \ filter(
-          \ map(
-          \ filter(popup_list(), 'popup_getpos(v:val).visible'),
-          \ 'popup_getoptions(v:val).tabpage'),
-          \ 'v:val == -1 || v:val ==0'))
-  else
-    let win_count = winnr('$')
-  endif
-  let num = win_count
-  for i in range(1,win_count)
-    if index(ignorewin , bufname(winbufnr(i))) != -1 || index(ignoreft, getbufvar(bufname(winbufnr(i)),'&filetype')) != -1
-      let num = num - 1
-    elseif getbufvar(winbufnr(i),'&buftype') ==# 'quickfix'
-      let num = num - 1
-    elseif getwinvar(i, '&previewwindow') == 1 && winnr() !=# i
-      let num = num - 1
-    elseif s:WIN.is_float(i)
-      let num = num - 1
+    if rs ==? 'q'
+      qall!
+    elseif rs ==? 's' || rs ==? 'w'
+      redraw
+      wall
+      qall
+    else
+      redraw
+      echohl ModeMsg
+      echon 'canceled!'
+      echohl None
     endif
-  endfor
-  if num == 1
-    call s:smartquit()
   else
-    quit
+    qall
   endif
 endf
 
@@ -263,8 +212,8 @@ function! myspacevim#after() abort
     nnoremap <silent><C-W>w :call SpaceVim#mapping#close_current_buffer()<Cr>
     nnoremap <silent><C-K>u :call SpaceVim#mapping#clear_saved_buffers()<Cr>
     nmap <silent><C-K>w [SPC]bo
-    nnoremap <silent><C-W>z :stop<Cr>
-    nnoremap <silent>q :call <SID>smartclose()<Cr>
+    nnoremap <C-W>z :stop<Cr>
+    nnoremap <silent>q :call <SID>smartquit()<Cr>
     nnoremap Q q
 
     " map terminal key ctrl+i to sendkey <Esc>I
