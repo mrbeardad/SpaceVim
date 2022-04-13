@@ -1,54 +1,7 @@
+let s:WIN = SpaceVim#api#import('vim#window')
+
 function! s:mycursorpos() abort
   return ' %P  %l/%L : %c '
-endf
-
-function! myspacevim#before() abort
-    set ignorecase
-    set smartcase
-    set autochdir
-    set list
-    set shell=/usr/bin/bash
-
-    call SpaceVim#layers#core#statusline#register_sections('mycursorpos', function('s:mycursorpos'))
-
-    let g:table_mode_syntax = 0
-    let g:table_mode_auto_align = 1
-		let g:table_mode_always_active = 0
-    let g:_spacevim_mappings.t = {'name' : '+Table Mode'}
-    let g:clever_f_smart_case = 1
-    let g:clever_f_fix_key_direction = 1
-    let g:EasyMotion_smartcase = 1
-
-    let g:translator_default_engines = ['bing', 'youdao']
-    let g:indent_blankline_show_first_indent_level = v:false
-    let g:Lf_GtagsSource = 2
-    let g:Lf_Gtagslabel = 'native-pygments'
-
-    let g:ycm_semantic_triggers = {
-      \ 'erlang': ['re!\w{2}'],
-      \ 'c': ['re!\w{2}'],
-      \ 'perl': ['re!\w{2}'],
-      \ 'cpp,objcpp': ['re!\w{2}'],
-      \ 'lua': ['re!\w{2}'],
-      \ 'cs,javascript,d,python,perl6,scala,vb,elixir,go': ['re!\w{2}'],
-      \ 'php': ['re!\w{2}'],
-      \ 'objc': ['re!\w{2}'],
-      \ 'ocaml': ['re!\w{2}'],
-      \ 'ruby': ['re!\w{2}'],
-      \ 'java,jsp': ['re!\w{2}']
-      \ }
-    " https://microsoft.github.io/language-server-protocol/implementors/servers/
-    let g:ycm_language_server = 
-      \ [ 
-      \   {
-      \     'name': 'vim',
-      \     'cmdline': [ 'vim-language-server', '--stdio' ],
-      \     'filetypes': [ 'vim' ],
-      \    },
-      \ ]
-    let g:ycm_key_invoke_completion = '<C-\>'
-    let g:ycm_error_symbol = g:spacevim_error_symbol
-    let g:ycm_warning_symbol = g:spacevim_warning_symbol
 endf
 
 function s:toggle_defx_and_tagbar()
@@ -81,6 +34,133 @@ function s:open_file_in_explorer()
   endif
 endf
 
+function! s:smartquit()
+  echohl WarningMsg
+  echon 'Quit or Stop vim?  Quit/Stop/Cancel'
+  let rs = nr2char(getchar())
+  echohl None
+  if rs ==? 'q'
+    if len(getbufinfo({'buflisted':1,'bufloaded':1,'bufmodified':1})) > 0
+      redraw
+      echohl WarningMsg
+      echon 'There are some buffer modified! Quit/Save/Cancel'
+      let rs = nr2char(getchar())
+      echohl None
+      if rs ==? 'q'
+        qall!
+      elseif rs ==? 's'
+        redraw
+        wall
+        qall
+      else
+        redraw
+        echohl ModeMsg
+        echon 'canceled!'
+        echohl None
+      endif
+    else
+      qall
+    endif
+  elseif rs ==? 's' || rs ==? 'z'
+    stop
+  else
+    redraw
+    echohl ModeMsg
+    echon 'canceled!'
+    echohl None
+  endif
+endf
+
+function! s:smartclose() abort
+  let ignorewin = get(g:,'spacevim_smartcloseignorewin',[])
+  let ignoreft = get(g:, 'spacevim_smartcloseignoreft',[])
+  if !has('nvim') 
+        \ && exists('*popup_list')
+        \ && exists('*popup_getoptions')
+        \ && exists('*popup_getpos')
+    let win_count =  len(
+          \ filter(
+          \ map(
+          \ filter(popup_list(), 'popup_getpos(v:val).visible'),
+          \ 'popup_getoptions(v:val).tabpage'),
+          \ 'v:val == -1 || v:val ==0'))
+  else
+    let win_count = winnr('$')
+  endif
+  let num = win_count
+  for i in range(1,win_count)
+    if index(ignorewin , bufname(winbufnr(i))) != -1 || index(ignoreft, getbufvar(bufname(winbufnr(i)),'&filetype')) != -1
+      let num = num - 1
+    elseif getbufvar(winbufnr(i),'&buftype') ==# 'quickfix'
+      let num = num - 1
+    elseif getwinvar(i, '&previewwindow') == 1 && winnr() !=# i
+      let num = num - 1
+    elseif s:WIN.is_float(i)
+      let num = num - 1
+    endif
+  endfor
+  if num == 1
+    call s:smartquit()
+  else
+    quit
+  endif
+endf
+
+" preload configuration for plugins
+function! myspacevim#before() abort
+    set ignorecase
+    set smartcase
+    set autochdir
+    set list
+    set shell=/usr/bin/bash
+
+    call SpaceVim#layers#core#statusline#register_sections('mycursorpos', function('s:mycursorpos'))
+
+    let g:table_mode_syntax = 0
+    let g:table_mode_auto_align = 1
+		let g:table_mode_always_active = 0
+    let g:_spacevim_mappings.t = {'name' : '+Table Mode'}
+
+    let g:clever_f_smart_case = 1
+    let g:clever_f_fix_key_direction = 1
+
+    let g:EasyMotion_smartcase = 1
+
+    let g:translator_default_engines = ['bing', 'youdao']
+
+    let g:indent_blankline_show_first_indent_level = v:false
+
+    let g:Lf_GtagsSource = 2
+    let g:Lf_Gtagslabel = 'native-pygments'
+
+    let g:ycm_semantic_triggers = {
+      \ 'erlang': ['re!\w{2}'],
+      \ 'c': ['re!\w{2}'],
+      \ 'perl': ['re!\w{2}'],
+      \ 'cpp,objcpp': ['re!\w{2}'],
+      \ 'lua': ['re!\w{2}'],
+      \ 'cs,javascript,d,python,perl6,scala,vb,elixir,go': ['re!\w{2}'],
+      \ 'php': ['re!\w{2}'],
+      \ 'objc': ['re!\w{2}'],
+      \ 'ocaml': ['re!\w{2}'],
+      \ 'ruby': ['re!\w{2}'],
+      \ 'java,jsp': ['re!\w{2}']
+      \ }
+    " https://microsoft.github.io/language-server-protocol/implementors/servers/
+    let g:ycm_language_server = 
+      \ [ 
+      \   {
+      \     'name': 'vim',
+      \     'cmdline': [ 'vim-language-server', '--stdio' ],
+      \     'filetypes': [ 'vim' ],
+      \    },
+      \ ]
+    let g:ycm_key_invoke_completion = '<C-\>'
+    let g:ycm_error_symbol = g:spacevim_error_symbol
+    let g:ycm_warning_symbol = g:spacevim_warning_symbol
+endf
+
+" override configurations in spacevim
 function! myspacevim#after() abort
     let g:neomake_c_enabled_makers = ['cppcheck']
     let g:neomake_cpp_enabled_makers = ['cppcheck']
@@ -176,6 +256,7 @@ function! myspacevim#after() abort
     nnoremap <C-K>o :e <C-R>=getcwd()<Cr>/
     nnoremap <C-K>r :Leaderf neomru<Cr>
     nnoremap <silent><M-s> :SudoWrite<Cr>
+    cunmap w!!
     " map terminal key ctrl+shift+s to sendkey <Esc>S
     nmap <M-S> [SPC]fa
     nnoremap <silent><C-K>s :wall<Cr>
@@ -183,6 +264,7 @@ function! myspacevim#after() abort
     nnoremap <silent><C-K>u :call SpaceVim#mapping#clear_saved_buffers()<Cr>
     nmap <silent><C-K>w [SPC]bo
     nnoremap <silent><C-W>z :stop<Cr>
+    nnoremap <silent>q :call <SID>smartclose()<Cr>
     nnoremap Q q
 
     " map terminal key ctrl+i to sendkey <Esc>I
