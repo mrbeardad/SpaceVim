@@ -80,6 +80,7 @@ function! myspacevim#before() abort
     call SpaceVim#layers#core#statusline#register_sections('mycursorpos', function('s:mycursorpos'))
 
     autocmd VimEnter * RainbowParentheses
+    autocmd FileType defx nnoremap <silent><buffer><expr> <C-End> defx#do_action('cd', getcwd())
 
     let g:table_mode_syntax = 0
     let g:table_mode_auto_align = 1
