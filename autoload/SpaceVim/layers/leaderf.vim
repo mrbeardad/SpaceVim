@@ -53,6 +53,7 @@ function! SpaceVim#layers#leaderf#plugins() abort
   call add(plugins, 
         \ ['Yggdroot/LeaderF',
         \ {
+        \ 'build': './install.sh',
         \ 'loadconf' : 1,
         \ 'merged' : 0,
         \ }])
