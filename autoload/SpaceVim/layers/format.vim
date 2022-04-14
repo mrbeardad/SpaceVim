@@ -99,9 +99,9 @@ function! s:format() abort
         \ ( index(s:format_ft, &ft) !=# -1 || s:format_on_save ==# 1)
 
     if s:format_method ==# 'neoformat'
-      undojoin | Neoformat
+      silent! undojoin | Neoformat
     elseif s:format_method ==# 'codefmt'
-      undojoin | FormatCode
+      silent! undojoin | FormatCode
     endif
   endif
 endfunction

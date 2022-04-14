@@ -96,6 +96,7 @@ function! myspacevim#before() abort
 
     let g:indent_blankline_show_first_indent_level = v:false
 
+    " let g:Lf_GtagsAutoGenerate = 1
     let g:Lf_GtagsSource = 2
     let g:Lf_Gtagslabel = 'native-pygments'
 
@@ -130,6 +131,8 @@ endf
 function! myspacevim#after() abort
     let g:neomake_c_enabled_makers = ['cppcheck']
     let g:neomake_cpp_enabled_makers = ['cppcheck']
+
+    inoremap <C-C> <Esc>
 
     inoremap <C-A> <Home>
     inoremap <C-E> <End>
@@ -196,7 +199,7 @@ function! myspacevim#after() abort
     nnoremap <silent><M-P> :Leaderf command<Cr>
     " map terminal key ctrl+shift+o to sendkey <Esc>O
     nnoremap <silent><M-O> :LeaderfBufTag<Cr>
-    nnoremap <C-T> :call feedkeys(":Leaderf gtags\<lt>CR>".expand('<cword>'))<Cr>
+    nnoremap <silent><C-T> :call feedkeys(":Leaderf gtags\<lt>CR>".expand('<cword>'))<Cr>
     nnoremap <silent><F2> :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<Cr>
     nnoremap <silent><F12> :YcmCompleter GoTo<Cr>
     nnoremap <silent><F24> :YcmCompleter GoToReferences<Cr>

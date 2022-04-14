@@ -46,6 +46,8 @@
     escape_key_binding = ""
     default_indent = 4
 
+    disabled_plugins = ["vim-go"]
+
 # custom plugin
 [[custom_plugins]]
     repo = "kana/vim-textobj-function"
@@ -70,26 +72,26 @@
 [[layers]]
     name = "edit"
 [[layers]]
-    name = "tools"
+    name = "autocomplete"
+    auto_completion_return_key_behavior = "smart"
+    auto_completion_tab_key_behavior = "smart"
 [[layers]]
     name = "checker"
 [[layers]]
     name = "format"
     format_on_save = true
-[[layers]]
-    name = "autocomplete"
-    auto_completion_return_key_behavior = "smart"
-    auto_completion_tab_key_behavior = "smart"
 
 # enabled layers
+[[layers]]
+    name = "leaderf"
+[[layers]]
+    name = "tools"
 [[layers]]
     name = "incsearch"
 [[layers]]
     name = "git"
 [[layers]]
     name = "VersionControl"
-[[layers]]
-    name = "leaderf"
 [[layers]]
     name = "chinese"
 [[layers]]
