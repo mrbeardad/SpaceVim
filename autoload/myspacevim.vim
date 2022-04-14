@@ -34,8 +34,8 @@ endf
 
 function! s:smartquit(range)
   " if user have specified range, then colse target window
-  if a:range !=# ''
-    exe substitute(a:range, '.*\(\d\)', '\1', 'g')+1.'close'
+  if a:range != 0
+    exe a:range.'close'
     " redraw windows number
     let &l:statusline = SpaceVim#layers#core#statusline#get()
     return
@@ -229,7 +229,8 @@ function! myspacevim#after() abort
     nnoremap <silent><C-K>u :call SpaceVim#mapping#clear_saved_buffers()<Cr>
     nmap <silent><C-K>w [SPC]bo
     nnoremap <C-W>z :stop<Cr>
-    nnoremap <silent>q :<C-B>call <SID>smartquit('<C-e>')<Cr>
+    command! -range SmartQuit call s:smartquit(<range>)
+    nnoremap <silent>q :SmartQuit<Cr>
     nnoremap Q q
 
     " map terminal key ctrl+i to sendkey <Esc>I
