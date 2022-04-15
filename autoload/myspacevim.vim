@@ -4,7 +4,7 @@ function! s:mycursorpos() abort
   return ' %P  %l/%L : %c '
 endf
 
-function s:toggle_defx_and_tagbar()
+function! s:toggle_defx_and_tagbar() abort
   let prev_winid = win_getid()
 
   let defx_bufnr = bufnr('[defx] -0')
@@ -26,7 +26,7 @@ function s:toggle_defx_and_tagbar()
   call win_gotoid(prev_winid)
 endf
 
-function s:open_file_in_explorer()
+function! s:open_file_in_explorer() abort
   if has('win32') || has('wsl')
     call jobstart('explorer.exe .')
   elseif has('unix')
@@ -34,7 +34,7 @@ function s:open_file_in_explorer()
   endif
 endf
 
-function! s:smartquit(range)
+function! s:smartquit(range) abort
   " if user have specified range, then colse target window
   if a:range != 0
     exe a:range.'close'
@@ -143,8 +143,9 @@ endf
 function! myspacevim#after() abort
     let g:neomake_c_enabled_makers = ['cppcheck']
     let g:neomake_cpp_enabled_makers = ['cppcheck']
-    unlet g:neomake_c_enabled_makers
-    unlet g:neomake_cpp_enabled_makers
+    unlet g:neomake_go_enabled_makers
+    unlet g:neomake_python_enabled_makers
+    unlet g:neomake_javascript_enabled_makers
 
     inoremap <C-C> <Esc>
 
