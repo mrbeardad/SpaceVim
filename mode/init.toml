@@ -46,7 +46,7 @@
     escape_key_binding = ""
     default_indent = 4
 
-    disabled_plugins = ["vim-go"]
+    disabled_plugins = ["vim-go", "jedi-vim"]
 
 # custom plugin
 [[custom_plugins]]
@@ -103,8 +103,6 @@
 
 # language layers
 [[layers]]
-    name = "lang#markdown"
-[[layers]]
     name = "lang#vim"
 [[layers]]
     name = "lang#sh"
@@ -116,3 +114,13 @@
     name = "lang#python"
 [[layers]]
     name = "lang#javascript"
+[[layers]]
+    name = "lang#html"
+[[layers]]
+    name = "lang#json"
+[[layers]]
+    name = "lang#toml"
+[[layers]]
+    name = "lang#markdown"
+    enabled_formater = ["prettier"]
+    listItemChar = "*"

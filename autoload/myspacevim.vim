@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 function! s:mycursorpos() abort
   return ' %P  %l/%L : %c '
 endf
@@ -37,7 +39,7 @@ function! s:smartquit(range)
   if a:range != 0
     exe a:range.'close'
     " redraw windows number
-    let &l:statusline = SpaceVim#layers#core#statusline#get()
+    let &l:statusline = SpaceVim#layers#core#statusline#get(1)
     return
   endif
   " if there is not last one user window displayed, close it
@@ -73,14 +75,18 @@ endf
 function! myspacevim#before() abort
     set ignorecase
     set smartcase
-    set autochdir
+    " set autochdir
     set list
     set shell=/usr/bin/bash
 
     call SpaceVim#layers#core#statusline#register_sections('mycursorpos', function('s:mycursorpos'))
 
-    autocmd VimEnter * RainbowParentheses
-    autocmd FileType defx nnoremap <silent><buffer><expr> <C-End> defx#do_action('cd', getcwd())
+    augroup MySpaceVim
+      au!
+      autocmd VimEnter * RainbowParentheses
+      autocmd FileType defx nnoremap <silent><buffer><expr> <C-End> defx#do_action('cd', getcwd())
+      autocmd VimResized * exe "normal \<C-W>="
+    augroup END
 
     let g:table_mode_syntax = 0
     let g:table_mode_auto_align = 1
@@ -98,8 +104,14 @@ function! myspacevim#before() abort
 
     " let g:Lf_GtagsAutoGenerate = 1
     let g:Lf_GtagsSource = 2
+    let g:Lf_GtagsfilesCmd = {
+            \ '.git': 'git ls-files --recurse-submodules; git ls-files --exclude-standard -o',
+            \ '.hg': 'hg files',
+            \ 'default': 'rg --no-messages --files'
+            \}
     let g:Lf_Gtagslabel = 'native-pygments'
 
+    let g:ycm_clangd_args = ['--clang-tidy']
     let g:ycm_semantic_triggers = {
       \ 'erlang': ['re!\w{2}'],
       \ 'c': ['re!\w{2}'],
@@ -114,8 +126,8 @@ function! myspacevim#before() abort
       \ 'java,jsp': ['re!\w{2}']
       \ }
     " https://microsoft.github.io/language-server-protocol/implementors/servers/
-    let g:ycm_language_server = 
-      \ [ 
+    let g:ycm_language_server =
+      \ [
       \   {
       \     'name': 'vim',
       \     'cmdline': [ 'vim-language-server', '--stdio' ],
@@ -131,6 +143,8 @@ endf
 function! myspacevim#after() abort
     let g:neomake_c_enabled_makers = ['cppcheck']
     let g:neomake_cpp_enabled_makers = ['cppcheck']
+    unlet g:neomake_c_enabled_makers
+    unlet g:neomake_cpp_enabled_makers
 
     inoremap <C-C> <Esc>
 
@@ -199,7 +213,7 @@ function! myspacevim#after() abort
     nnoremap <silent><M-P> :Leaderf command<Cr>
     " map terminal key ctrl+shift+o to sendkey <Esc>O
     nnoremap <silent><M-O> :LeaderfBufTag<Cr>
-    nnoremap <silent><C-T> :call feedkeys(":Leaderf gtags\<lt>CR>".expand('<cword>'))<Cr>
+    nnoremap <silent><C-T> :Leaderf gtags --result=ctags-x --all --cword<Cr>
     nnoremap <silent><F2> :exe 'YcmCompleter RefactorRename '.input('refactor \"'.expand('<cword>').'\" to:')<Cr>
     nnoremap <silent><F12> :YcmCompleter GoTo<Cr>
     nnoremap <silent><F24> :YcmCompleter GoToReferences<Cr>
@@ -222,7 +236,7 @@ function! myspacevim#after() abort
     let g:_spacevim_mappings.b = ['bp', 'backward buffer']
     nnoremap <silent><Leader>b :bp<Cr>
     nnoremap <silent><C-K>n :enew<Cr>
-    nnoremap <C-K>o :e <C-R>=getcwd()<Cr>/
+    nnoremap <C-K>o :e <C-R>=expand('%:p')<Cr>
     nnoremap <C-K>r :Leaderf neomru<Cr>
     nnoremap <silent><M-s> :SudoWrite<Cr>
     cunmap w!!
@@ -242,7 +256,6 @@ function! myspacevim#after() abort
     nnoremap <silent><tab> :winc w<cr>
     nnoremap <silent><s-tab> :winc W<cr>
 
-    autocmd VimResized * exe "normal \<C-W>="
     nnoremap <silent><F1> :call <SID>toggle_defx_and_tagbar()<Cr>
     nmap <M-`> [SPC]'
 
