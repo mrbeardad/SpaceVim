@@ -45,7 +45,9 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 ./install.py --all
 ```
 
-- Leaderf 模糊搜索引擎插件下载后，可选的构建 C 扩展模块来加速搜索，构建依赖很可能不满足，需要自己手动解决，进入`nvim`后执行`:LeaderfInstallCExtension`来构建。执行任何 Leaderf 搜索命令后（例如`ctrl+p`）查看变量`:echo g:Lf_fuzzyEngine_C`，若为 1 则构建成功。至少在 ubuntu20.04 上需要额外安装`sudo apt install libpython2-dev`
+- Leaderf 模糊搜索引擎插件下载后，可选的构建 C 扩展模块来加速搜索，构建依赖很可能不满足，需要自己手动解决，进入`nvim`后执行`:LeaderfInstallCExtension`来构建。执行任何 Leaderf 搜索命令后（例如`ctrl+p`）查看变量`:echo g:Lf_fuzzyEngine_C`，若为 1 则构建成功。至少在 ubuntu20.04 上需要额外安装`libpython2-dev`
+
+**注意**：项目符号搜索需要先手动执行`:Leaderf gtags --update`构建符号数据库，以后则自动更新。或者设置`let g:Lf_GtagsAutoGenerate = 1`自动创建。
 
 ## Depends
 
