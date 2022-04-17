@@ -96,6 +96,8 @@ function! myspacevim#before() abort
     let g:clever_f_smart_case = 1
     let g:clever_f_fix_key_direction = 1
 
+    let g:bookmark_no_default_key_mappings = 1
+
     let g:EasyMotion_smartcase = 1
 
     let g:translator_default_engines = ['bing', 'youdao']
@@ -223,6 +225,8 @@ function! myspacevim#after() abort
     nnoremap <expr> N  'nN'[v:searchforward]
     nnoremap <silent><Bs> :nohl<Cr>
 
+    nunmap ma
+    nunmap mp
     nnoremap <silent> mm :<C-u>BookmarkToggle<Cr>
     nnoremap <silent> mi :<C-u>BookmarkAnnotate<Cr>
     nnoremap <silent> mc :<C-u>BookmarkClear<Cr>
