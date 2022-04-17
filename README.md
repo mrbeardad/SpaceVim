@@ -61,7 +61,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | vim-language-server | npm  | vim lsp                                                        |
 | vint                | pip  | vim linter                                                     |
 | shellcheck          | apt  | shell linter                                                   |
-| shfmt               | curl | shell formatter, https://github.com/mvdan/sh                   |
+| shfmt               | go   | shell formatter, github.com/mvdan/sh                           |
 | cppcheck            | apt  | c++ linter                                                     |
 | clang-format        | apt  | c++ formatter                                                  |
 | golangci-lint       | go   | go linter, github.com/golangci/golangci-lint/cmd/golangci-lint |
