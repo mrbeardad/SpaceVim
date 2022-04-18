@@ -148,6 +148,11 @@ function! myspacevim#after() abort
     unlet g:neomake_go_enabled_makers
     unlet g:neomake_python_enabled_makers
     unlet g:neomake_javascript_enabled_makers
+    let g:neomake_markdown_markdownlint_maker = {
+      \ 'exe': 'markdownlint',
+      \ 'args': ['--disable', 'MD013'],
+      \ 'errorformat': '%f:%l %m,%f: %l: %m'
+      \ }
 
     inoremap <C-C> <Esc>
 

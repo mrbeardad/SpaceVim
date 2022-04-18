@@ -4,9 +4,14 @@
 此 vscode 分支目的是为用作平时终端操作时的顺手工具，[快捷键操作](#key-maps)都仿照我的 VSCode 配置。
 （其中某些终端无法转换为键码序列的快捷键依赖我的[Windows Terminal 配置](https://github.com/mrbeardad/My-IDE/blob/master/WindowsTerminal/settings.json)，原理即是终端按键重映射，例如将`ctrl+shift+s`重映射成`\u001bS`序列）
 
-&emsp;当然这套配置依旧完全可胜任 IDE 的工作（除了调试），对比 master 分支犹有过之而无不及。值得注意的是，配置中使用的补全引擎是[ycm](https://github.com/ycm-core/YouCompleteMe)而不是默认的[deoplete](https://github.com/Shougo/deoplete.nvim)，就我而言前者(ycm)的使用体验绝对是 vim 各个补全引擎中最好的，但可惜 SpaceVim 原作者对其支持远不如后者。
+&emsp;当然这套配置依旧完全可胜任 IDE 的工作（除了调试），对比 master 分支犹有过之而无不及。
+值得注意的是，配置中使用的补全引擎是 YouComoleteMe(ycm)而不是默认的 Deoplete，
+就我而言前者(ycm)的使用体验绝对是 vim 各个补全引擎中最好的，但可惜 SpaceVim 原作者对其支持远不如后者。
 
-&emsp;为了弥补 ycm 在一些语言上的空缺，你可以自行阅读[YCM 文档](https://github.com/ycm-core/YouCompleteMe#installation)，安装对应的 language-server 即可。如何有一些官方未支持的语言，你可以自行在[lsp](https://microsoft.github.io/language-server-protocol/implementors/servers/)里搜索语言对应的 language-server，然后配置 ycm 连接到他即可。
+&emsp;为了弥补 ycm 在一些语言上的空缺，你可以自行阅读[ycm 文档](https://github.com/ycm-core/YouCompleteMe#installation)，
+安装对应的 language-server 即可。如何有一些官方未支持的语言，
+你可以自行在[LSP](https://microsoft.github.io/language-server-protocol/implementors/servers/)
+里搜索语言对应的 language-server，然后配置 ycm 连接到他即可。
 
 ```vim
 " https://microsoft.github.io/language-server-protocol/implementors/servers/
@@ -37,17 +42,21 @@ nvim
 
 大部分插件都能依照上面的脚本来安装，除了：
 
-- YCM 补全引擎插件下载后需要手动构建，进入 YCM 插件目录执行构建脚本
+1. YCM 补全引擎插件下载后需要手动构建，进入 YCM 插件目录执行构建脚本
 
-```sh
-cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
-# 你也可以使用--help参数查看支持的语言来选择性安装，注意该脚本需要网络下载代码
-./install.py --all
-```
+   ```sh
+   cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
+   # 你也可以使用--help参数查看支持的语言来选择性安装，注意该脚本需要网络下载代码
+   ./install.py --all
+   ```
 
-- Leaderf 模糊搜索引擎插件下载后，可选的构建 C 扩展模块来加速搜索，构建依赖很可能不满足，需要自己手动解决，进入`nvim`后执行`:LeaderfInstallCExtension`来构建。执行任何 Leaderf 搜索命令后（例如`ctrl+p`）查看变量`:echo g:Lf_fuzzyEngine_C`，若为 1 则构建成功。至少在 ubuntu20.04 上需要额外安装`libpython2-dev`
+2. Leaderf 模糊搜索引擎插件下载后，可选的构建 C 扩展模块来加速搜索，
+   构建依赖很可能不满足，需要自己手动解决，进入`nvim`后执行`:LeaderfInstallCExtension`来构建。
+   执行任何 Leaderf 搜索命令后（例如`ctrl+p`）查看变量`:echo g:Lf_fuzzyEngine_C`，若为 1 则构建成功。
+   至少在 ubuntu20.04 上需要额外安装`libpython2-dev`
 
-**注意**：项目符号搜索需要先手动执行`:Leaderf gtags --update`构建符号数据库，以后则自动更新。或者设置`let g:Lf_GtagsAutoGenerate = 1`自动创建。
+**注意**：项目符号搜索需要先手动执行`:Leaderf gtags --update`构建符号数据库，以后则自动更新。
+或者设置`let g:Lf_GtagsAutoGenerate = 1`自动创建。
 
 ## Depends
 
@@ -72,12 +81,12 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | eslint_d            | npm  | js linter                                                      |
 | htmlhint            | npm  | html linter                                                    |
 | csslint             | npm  | css linter                                                     |
-| markdownlint        | npm  | markdown linter                                                |
+| markdownlint-cli    | npm  | markdown linter                                                |
 | prettier            | npm  | js,html,css,markdown formatter                                 |
 
-# Key Maps
+## Key Maps
 
-## 光标移动
+### 光标移动
 
 | 按键           | 作用                     |
 | -------------- | ------------------------ |
@@ -91,7 +100,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `G`            | 最后一行                 |
 | `{num}` `G`    | 跳转第{num}行            |
 
-## 屏幕滚动
+### 屏幕滚动
 
 | 按键         | 作用                 |
 | ------------ | -------------------- |
@@ -100,7 +109,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `zz`         | 移动光标行到屏幕中央 |
 | `M`          | 移动光标到屏幕中央   |
 
-## 复制粘贴
+### 复制粘贴
 
 | 按键        | 作用                         |
 | ----------- | ---------------------------- |
@@ -115,7 +124,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `\` `o/O`   | 粘贴系统剪切板到下/上行      |
 | `Space` `p` | 粘贴系统剪切板覆盖至当前文件 |
 
-## 普通模式
+### 普通模式
 
 - 复合操作符：
   > `d` `c` `y` `gu` `gU` `g~` `v`
@@ -143,7 +152,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `cs` `{char}` `{char}`    | 替换包围符                |
 | `.`                       | 重复上次操作              |
 
-## 快速编辑
+### 快速编辑
 
 | 按键           | 作用                                    |
 | -------------- | --------------------------------------- |
@@ -170,7 +179,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `Space s e`    | 多光标编辑（全选）                      |
 | `Space s E`    | 多光标编辑（单选）                      |
 
-## 搜索导航
+### 搜索导航
 
 | 按键               | 作用                 |
 | ------------------ | -------------------- |
@@ -185,7 +194,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `Ctrl`+`O`         | 后向跳转             |
 | `Ctrl`+`I`         | 前向跳转             |
 
-## 书签标记
+### 书签标记
 
 | 按键          | 作用                   |
 | ------------- | ---------------------- |
@@ -200,7 +209,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `m` `{alpha}` | vim 标签，大写字母全局 |
 | `'` `{alpha}` | 跳转 vim 标签          |
 
-## Buffer 操作
+### Buffer 操作
 
 | 按键               | 作用                   |
 | ------------------ | ---------------------- |
@@ -219,7 +228,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `Ctrl`+`K` `u`     | 关闭已保存文件         |
 | `Ctrl`+`K` `w`     | 关闭其他文件           |
 
-## Window 操作
+### Window 操作
 
 | 按键                         | 作用                                 |
 | ---------------------------- | ------------------------------------ |
@@ -234,7 +243,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `q`                          | 只能关闭 Window 或退出 vim           |
 | `Ctrl`+`W` `Z`               | 暂停 vim                             |
 
-## 界面元素
+### 界面元素
 
 | 按键          | 作用               |
 | ------------- | ------------------ |
@@ -242,7 +251,7 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `F7`          | 开关 Undo          |
 | `Alt`+`` ` `` | Terminal 窗口      |
 
-## 其他按键
+### 其他按键
 
 | 按键              | 作用                               |
 | ----------------- | ---------------------------------- |
@@ -264,6 +273,6 @@ cd ~/.cache/vimfiles/repos/github.com/ycm-core/YouCompleteMe
 | `Alt`+`Shift`+`C` | 计算器                             |
 | `:CodeCounter`    | 项目代码统计                       |
 
-# The END
+## The END
 
 以上，感谢诸君的:star:，很荣幸能帮到你们！
