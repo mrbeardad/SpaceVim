@@ -204,11 +204,14 @@ function! myspacevim#after() abort
     vnoremap <silent><S-Up> :m '<-2<CR>gv=gv
     " map terminal key ctrl+enter to sendkey <Esc>N
     inoremap <M-N> <End><Cr>
+    inoremap <silent> <M-Bslash> <C-C>:Leaderf snippet<Cr>
+    nnoremap <silent> <M-Bslash> :Leaderf snippet<Cr>
     inoremap <expr> <C-K> repeat('<Delete>', strchars(getline('.')) - getcurpos()[2] + 1)
     inoremap <C-L> <C-C><Right>cw
     inoremap <C-Z> <C-C>ui
     nnoremap <C-Z> u
     vnoremap <C-Z> u
+    snoremap <C-Z> u
     nmap <C-_> <Plug>NERDCommenterInvert
     
     nnoremap <silent><C-F> :call SpaceVim#plugins#flygrep#open({'input' : input("grep pattern:"), 'dir' : get(b:, "rootDir", getcwd())})<CR>
