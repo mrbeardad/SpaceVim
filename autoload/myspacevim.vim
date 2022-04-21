@@ -96,6 +96,8 @@ function! myspacevim#before() abort
     let g:clever_f_smart_case = 1
     let g:clever_f_fix_key_direction = 1
 
+    let g:matchup_surround_enabled = 1
+
     let g:bookmark_no_default_key_mappings = 1
 
     let g:EasyMotion_smartcase = 1
@@ -219,7 +221,9 @@ function! myspacevim#after() abort
     snoremap <C-Z> u
     nmap <C-_> <Plug>NERDCommenterInvert
     
-    nnoremap <silent><C-F> :call SpaceVim#plugins#flygrep#open({'input' : input("grep pattern:"), 'dir' : get(b:, "rootDir", getcwd())})<CR>
+    nnoremap <silent><C-F> :call SpaceVim#plugins#flygrep#open({"input" : input("grep pattern:"), "files": bufname("%")})<Cr>
+    " map terminal key ctrl+shift+f to sendkey <Esc>f
+    nnoremap <silent><M-f> :call SpaceVim#plugins#flygrep#open({'input' : input("grep pattern:"), 'dir' : get(b:, "rootDir", getcwd())})<CR>
     " map terminal key ctrl+shift+p to sendkey <Esc>P
     nnoremap <silent><M-P> :Leaderf command<Cr>
     " map terminal key ctrl+shift+o to sendkey <Esc>O
@@ -272,6 +276,8 @@ function! myspacevim#after() abort
     nnoremap <silent><F1> :call <SID>toggle_defx_and_tagbar()<Cr>
     nmap <M-`> [SPC]'
 
+    let g:_spacevim_mappings_g['8'] = ['call feedkeys("g8", "n")', 'print-unicode-sequence']
+    nnoremap g8 g8
     nnoremap <silent><M-E> :call <SID>open_file_in_explorer()<Cr>
     nmap <silent><M-R> :w<Cr>[SPC]lr
     nnoremap <silent><M-z> :setlocal wrap!<Cr>
