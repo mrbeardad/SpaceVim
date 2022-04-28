@@ -11,6 +11,7 @@ configure, and use SpaceVim. It also lists a series of resources for learning Sp
 If you've never heard of SpaceVim, this is the best place to start.
 It will give you a good idea of what SpaceVim is like.
 
+
 <!-- vim-markdown-toc GFM -->
 
 - [Installation](#installation)
@@ -66,7 +67,7 @@ and a C compiler (like `gcc`) to build the dll (see issue [#435](https://github.
 
 ### Windows
 
-The easiest way is to download [install.cmd](../install.cmd) and run it as administrator, or install SpaceVim manually.
+The easiest way is to download and run [install.cmd](../install.cmd) or install [SpaceVim manually](../faq/#how-to-install-spacevim-manually). The script installs or updates SpaceVim (if it exists) for Vim and Neovim.
 
 ## Run in docker
 

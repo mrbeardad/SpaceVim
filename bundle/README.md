@@ -11,6 +11,7 @@ In `bundle/` directory, there are two kinds of plugins: forked plugins without c
 - `github-issues.vim`: based on [github-issues.vim](https://github.com/jaxbot/github-issues.vim/tree/46f1922d3d225ed659f3dda1c95e35001c9f41f4)
 - `vim-virtualenv`: based on [vim-virtualenv](https://github.com/jmcantrell/vim-virtualenv/tree/b1150223cd876f155ed7a3b2e285ed33f6f93873)
 - `clever-f.vim`: based on [`clever-f.vim@fd370f2`](https://github.com/rhysd/clever-f.vim/tree/fd370f27cca93918184a8043220cef1aa440a1fd)
+- `verilog`: based on [`vhda/verilog_systemverilog.vim@0b88f2c`](https://github.com/vhda/verilog_systemverilog.vim/tree/0b88f2ccf81983944bf00d15ec810dd807053d19)
 
 ### No changed plugins
 
@@ -18,6 +19,9 @@ In `bundle/` directory, there are two kinds of plugins: forked plugins without c
 - [dein.vim](https://github.com/Shougo/dein.vim/tree/772ae08cef5e712b2b31b4aaee908fc853accd94)
 - [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim/tree/17a83ea765831cb0cc64f768b8c3f43479b90bbe)
 - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/tree/507f8a570ac2b8b8dabdd0f62da3b3194bf822f8)
-- [deoplete-lsp](https://github.com/deoplete-plugins/deoplete-lsp/tree/6299a22bedfb4f814d95cb0010291501472f8fd0)
+- [deoplete-lsp](https://github.com/deoplete-plugins/deoplete-lsp/tree/c466c955e85d995984a8135e16da71463712e5e5)
 - [nvim-cmp](https://github.com/hrsh7th/nvim-cmp/tree/3192a0c57837c1ec5bf298e4f3ec984c7d2d60c0)
-- [coc-neosnippet](https://github.com/notomo/cmp-neosnippet/tree/2d14526af3f02dcea738b4cea520e6ce55c09979)
+- [cmp-neosnippet](https://github.com/notomo/cmp-neosnippet/tree/2d14526af3f02dcea738b4cea520e6ce55c09979)
+- [deoplete](https://github.com/Shougo/deoplete.nvim/tree/1c40f648d2b00e70beb4c473b7c0e32b633bd9ae)
+- [vim-scala@7657218](https://github.com/derekwyatt/vim-scala/tree/7657218f14837395a4e6759f15289bad6febd1b4)
+- [neosnippet.vim@5973e80](https://github.com/Shougo/neosnippet.vim/tree/5973e801e7ad38a01e888cb794d74e076a35ea9b)

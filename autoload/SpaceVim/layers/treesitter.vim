@@ -13,11 +13,23 @@
 
 function! SpaceVim#layers#treesitter#plugins() abort
   let plugins = []
-  call add(plugins, ['nvim-treesitter/nvim-treesitter', {'do' : ':TSUpdate'}])
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/nvim-treesitter',
+        \ {
+          \ 'merged' : 0,
+          \ 'loadconf' : 1 ,
+          \ 'do' : 'TSUpdate',
+          \ 'loadconf_before' : 1
+          \ }])
   return plugins
 endfunction
 
 function! SpaceVim#layers#treesitter#health() abort
   call SpaceVim#layers#treesitter#plugins()
   return 1
+endfunction
+
+function! SpaceVim#layers#treesitter#loadable() abort
+
+  return has('nvim')
+
 endfunction

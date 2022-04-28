@@ -46,6 +46,14 @@ else
   endfunction
 endif
 
+function! s:self.set_var(buf, var, val) abort
+  return setbufvar(a:buf, a:var, a:val)
+endfunction
+
+function! s:self.get_var(buf, var) abort
+  return getbufvar(a:buf, a:var)
+endfunction
+
 " bufnr needs atleast one argv before patch-8.1.1924 has('patch-8.1.1924')
 function! s:self.bufnr(...) abort
   if has('patch-8.1.1924')
@@ -92,8 +100,11 @@ if exists('*nvim_create_buf')
 else
   function! s:self.create_buf(listed, scratch) abort
     let bufnr = self.bufadd('')
-    " in vim, a:listed must be number
-    " why can not use v:true and v:false
+    if exists('*bufloaded')
+          \ && exists('*bufload')
+          \ && !bufloaded(bufnr)
+      call bufload(bufnr)
+    endif
     call setbufvar(bufnr, '&buflisted', a:listed ? 1 : 0)
     if a:scratch
       call setbufvar(bufnr, '&swapfile', 0)

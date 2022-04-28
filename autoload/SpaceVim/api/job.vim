@@ -159,6 +159,9 @@ function! s:self.warp_nvim(argv, opts) abort dict
   if has_key(a:opts, 'cwd')
     call extend(obj.opts, {'cwd' : a:opts.cwd})
   endif
+  if has_key(a:opts, 'env')
+    call extend(obj.opts, {'env' : a:opts.env})
+  endif
   return obj
 endfunction
 
@@ -259,10 +262,15 @@ endfunction
 
 function! s:self.stop(id) abort dict
   if self.nvim_job
+    let done = 0
     if has_key(self.jobs, a:id)
-      call jobstop(a:id)
+      try
+        let done = jobstop(a:id)
+      catch
+      endtry
       call remove(self.jobs, a:id)
     endif
+    return done
   elseif self.vim_job
     if has_key(self.jobs, a:id)
       call job_stop(get(self.jobs, a:id))

@@ -134,6 +134,11 @@ function! s:apply(config, type) abort
           call SpaceVim#logger#warn('defx requires +python3!', 0)
           continue
         endif
+      " keep backward compatibility
+      elseif name ==# 'statusline_right_sections'
+        let name = 'statusline_right'
+      elseif name ==# 'statusline_right_sections'
+        let name = 'statusline_right'
       endif
       exe 'let g:spacevim_' . name . ' = value'
       if name ==# 'project_rooter_patterns'
@@ -196,6 +201,26 @@ function! s:apply(config, type) abort
     " <
 
     let g:_spacevim_bootstrap_after = get(options, 'bootstrap_after', '')
+
+    ""
+    " @section bootstrap_script, options-bootstrap_script
+    " @parentsection options
+    " set the bootstrap_script string, this string will be called via
+    " `nvim_exec`, that means this option only can be used in neovim.
+    " >
+    "   [options]
+    "     bootstrap_script = '''
+    "   let g:foo_test = 1
+    "   let g:zff_test = 1
+    "   '''
+    " <
+
+    let bootstrap_script = get(options, 'bootstrap_script', '')
+
+    if !empty(bootstrap_script) && exists('*nvim_exec')
+      call nvim_exec(bootstrap_script, 0)
+    endif
+
     if !empty(bootstrap_before)
       try
         call call(bootstrap_before, [])
@@ -222,9 +247,22 @@ function! s:path_to_fname(path) abort
 endfunction
 
 function! SpaceVim#custom#load() abort
-  call SpaceVim#logger#info('start loading global config >>>')
   call s:load_glob_conf()
-  " if file .SpaceVim.d/init.toml exist
+  if getcwd() !=# expand('~')
+    call s:load_local_conf()
+  else
+    call SpaceVim#logger#info('current directory is $HOME, skip local config')
+  endif
+  if g:spacevim_enable_ycm && g:spacevim_snippet_engine !=# 'ultisnips'
+    call SpaceVim#logger#info(
+          \ 'YCM only support ultisnips')
+    let g:spacevim_snippet_engine = 'ultisnips'
+  endif
+endfunction
+
+
+function! s:load_local_conf() abort
+  call SpaceVim#logger#info('start loading local config >>>')
   if filereadable('.SpaceVim.d/init.toml')
     let local_dir = s:FILE.unify_path(
           \ s:CMP.resolve(fnamemodify('.SpaceVim.d/', ':p:h')))
@@ -261,26 +299,22 @@ function! SpaceVim#custom#load() abort
   endif
 
 
-  if g:spacevim_enable_ycm && g:spacevim_snippet_engine !=# 'ultisnips'
-    call SpaceVim#logger#info(
-          \ 'YCM only support ultisnips')
-    let g:spacevim_snippet_engine = 'ultisnips'
-  endif
 endfunction
 
-
 function! s:load_glob_conf() abort
+  call SpaceVim#logger#info('start loading global config >>>')
   let global_dir = s:global_dir()
   call SpaceVim#logger#info('global_dir is: ' . global_dir)
   if filereadable(global_dir . 'init.toml')
     let g:_spacevim_global_config_path = global_dir . 'init.toml'
-    let local_conf = global_dir . 'init.toml'
-    let local_conf_cache = s:FILE.unify_path(expand(g:spacevim_data_dir
-          \ . 'SpaceVim/conf/' . fnamemodify(resolve(local_conf), ':t:r')
+    let global_config = global_dir . 'init.toml'
+    call SpaceVim#logger#info('find global config: ' . global_config)
+    let global_config_cache = s:FILE.unify_path(expand(g:spacevim_data_dir
+          \ . 'SpaceVim/conf/' . fnamemodify(resolve(global_config), ':t:r')
           \ . '.json'))
     let &rtp = global_dir . ',' . &rtp . ',' . global_dir . 'after'
-    if getftime(resolve(local_conf)) < getftime(resolve(local_conf_cache))
-      let conf = s:JSON.json_decode(join(readfile(local_conf_cache, ''), ''))
+    if getftime(resolve(global_config)) < getftime(resolve(global_config_cache))
+      let conf = s:JSON.json_decode(join(readfile(global_config_cache, ''), ''))
       call s:apply(conf, 'glob')
     else
       let dir = s:FILE.unify_path(expand(g:spacevim_data_dir
@@ -288,8 +322,8 @@ function! s:load_glob_conf() abort
       if !isdirectory(dir)
         call mkdir(dir, 'p')
       endif
-      let conf = s:TOML.parse_file(local_conf)
-      call writefile([s:JSON.json_encode(conf)], local_conf_cache)
+      let conf = s:TOML.parse_file(global_config)
+      call writefile([s:JSON.json_encode(conf)], global_config_cache)
       call s:apply(conf, 'glob')
     endif
   elseif filereadable(global_dir . 'init.vim')

@@ -13,6 +13,7 @@ and usage.
 - [Installation](#installation)
   - [Where is my old vim configuration?](#where-is-my-old-vim-configuration)
   - [How to uninstall SpaceVim?](#how-to-uninstall-spacevim)
+  - [How to install SpaceVim manually?](#how-to-install-spacevim-manually)
 - [Configuration](#configuration)
   - [Can I try SpaceVim without overwriting my vimrc?](#can-i-try-spacevim-without-overwriting-my-vimrc)
   - [Why use toml as the default configuration file format?](#why-use-toml-as-the-default-configuration-file-format)
@@ -41,6 +42,32 @@ and if you uninstalll SpaceVim, your vimrc will come back. you can run:
 ```
 curl -sLf https://spacevim.org/install.sh | bash -s -- --uninstall
 ```
+
+### How to install SpaceVim manually?
+
+The following section will document how to install SpaceVim manually on Linux.
+First, you need to clone the repository to `~/.SpaceVim`.
+
+```
+git clone https://github.com/SpaceVim/SpaceVim.git ~/.SpaceVim
+```
+
+Then, backup your old Neovim/Vim configuration file:
+
+```
+mv ~/.vimrc ~/.vimrc_back
+mv ~/.vim ~/.vim_back
+mv ~/.config/nvim ~/.config/nvim_back
+```
+
+Link `~/.SpaceVim` to Vim and Neovim user folder:
+
+```
+ln -s ~/.SpaceVim ~/.vim
+ln -s ~/.SpaceVim ~/.config/nvim
+```
+
+
 
 ## Configuration
 

@@ -129,7 +129,7 @@ scriptencoding utf-8
 "
 " 1.  To make neoformat support scala file, you should install scalariform.
 "     [`scalariform`](https://github.com/scala-ide/scalariform)
-"     and set 'g:spacevim_layer_lang_scala_formatter' to the path of the jar.
+"     and set `scalariform_jar` option to the path of the jar.
 "
 " 2.  If lsp [`metals-vim`](https://scalameta.org/metals/docs/editors/overview.html)
 "     is enabled, it will automatically use 
@@ -137,10 +137,15 @@ scriptencoding utf-8
 "     to format code.
 
 
+if exists('s:scalariform_jar')
+  finish
+endif
+
+let s:scalariform_jar = ''
+
 function! SpaceVim#layers#lang#scala#plugins() abort
-  let plugins = [ 
-        \ ['derekwyatt/vim-scala', {'on_ft': 'scala'}],
-        \ ]
+  let plugins = []
+  call add(plugins, [g:_spacevim_root_dir . 'bundle/vim-scala', {'merged' : 0}])
   if has('python3') || has('python')
     call add(plugins, ['ensime/ensime-vim', {'on_ft': 'scala'}])
   endif
@@ -163,7 +168,7 @@ function! SpaceVim#layers#lang#scala#config() abort
   let g:neoformat_enabled_scala = neoformat#formatters#scala#enabled()
   let g:neoformat_scala_scalariform = {
         \ 'exe': 'java',
-        \ 'args': ['-jar', get(g:,'spacevim_layer_lang_scala_formatter', ''), '-'],
+        \ 'args': ['-jar', s:scalariform_jar, '-'],
         \ 'stdin': 1,
         \ }
 endfunction
@@ -336,6 +341,9 @@ endfunction
 
 " vim:set et sw=2 cc=80:
 
+function! SpaceVim#layers#lang#scala#set_variable(var) abort
+  let s:scalariform_jar = get(a:var, 'scalariform_jar', s:scalariform_jar)
+endfunction
 
 function! SpaceVim#layers#lang#scala#health() abort
   call SpaceVim#layers#lang#scala#plugins()

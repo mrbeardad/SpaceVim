@@ -83,6 +83,7 @@ This is a list of programming languages supported in SpaceVim:
 | Solidity                                                  | lang#solidity                                                       |                                                                                                               |
 | SQL                                                       | lang#sql                                                            |                                                                                                               |
 | Swift                                                     | [lang#swift](https://spacevim.org/layers/lang/swift/)               |                                                                                                               |
+| [Teal](https://github.com/teal-language/tl)               | [lang#teal](https://spacevim.org/layers/lang/teal/)                 |                                                                                                               |
 | Tcl                                                       | [lang#tcl](https://spacevim.org/layers/lang/tcl/)                   |                                                                                                               |
 | TypeScript                                                | [lang#typescript](https://spacevim.org/layers/lang/typescript/)     | [opened issues](https://github.com/SpaceVim/SpaceVim/issues?q=is%3Aissue+is%3Aopen+label%3Alang%3ATypeScript) |
 | Visual Basic .NET                                         | [lang#vbnet](https://spacevim.org/layers/lang/vbnet/)               |                                                                                                               |
@@ -142,10 +143,7 @@ Before adding these languages, we need to know:
 | BlitzMax                      |           |        |
 | Boo                           |           |        |
 | Bourne shell                  |           |        |
-| C                             |           |        |
 | C shell                       |           |        |
-| C#                            |           |        |
-| C++                           |           |        |
 | C-Omega                       |           |        |
 | CFML                          |           |        |
 | CHILL                         |           |        |
@@ -184,13 +182,10 @@ Before adding these languages, we need to know:
 | DiBOL                         |           |        |
 | Dylan                         |           |        |
 | E                             |           |        |
-| E                             |           |        |
 | ECMAScript                    |           |        |
 | EGL                           |           |        |
 | EXEC                          |           |        |
-| Eiffel                        |           |        |
 | Emacs Lisp                    |           |        |
-| Erlang                        |           |        |
 | Etoys                         |           |        |
 | Euphoria                      |           |        |
 | F#                            |           |        |
@@ -214,16 +209,11 @@ Before adding these languages, we need to know:
 | Game Maker Language           |           |        |
 | HPL                           |           |        |
 | HTML                          |           |        |
-| Haskell                       |           |        |
-| Haxe                          |           |        |
-| HaxeFoundation/haxe           |           |        |
 | Heron                         |           |        |
-| HyperTalk                     |           |        |
 | HyperTalk                     |           |        |
 | ICI                           |           |        |
 | IDL                           |           |        |
 | INTERCAL                      |           |        |
-| IO                            |           |        |
 | Icon                          |           |        |
 | Inform                        |           |        |
 | Informix-4GL                  |           |        |
@@ -235,7 +225,6 @@ Before adding these languages, we need to know:
 | JScript                       |           |        |
 | JScript.NET                   |           |        |
 | Janus                         |           |        |
-| Java                          |           |        |
 | JavaFX Script                 |           |        |
 | Joule                         |           |        |
 | Joy                           |           |        |
@@ -325,9 +314,7 @@ Before adding these languages, we need to know:
 | Pict                          |           |        |
 | Pike                          |           |        |
 | Pliant                        |           |        |
-| Pliant                        |           |        |
 | Poplog                        |           |        |
-| PostScript                    |           |        |
 | PostScript                    |           |        |
 | PowerBasic                    |           |        |
 | PowerScript                   |           |        |
@@ -335,12 +322,9 @@ Before adding these languages, we need to know:
 | Prolog                        |           |        |
 | Pure Data                     |           |        |
 | PureBasic                     |           |        |
-| Python                        |           |        |
 | Q                             |           |        |
 | Q                             |           |        |
 | REBOL                         |           |        |
-| REBOL                         |           |        |
-| REXX                          |           |        |
 | REXX                          |           |        |
 | ROOP                          |           |        |
 | RPG                           |           |        |
@@ -404,7 +388,6 @@ Before adding these languages, we need to know:
 | XBase++                       |           |        |
 | XHTML                         |           |        |
 | XL                            |           |        |
-| XML                           |           |        |
 | XOTcl                         |           |        |
 | XPL                           |           |        |
 | XQuery                        |           |        |
