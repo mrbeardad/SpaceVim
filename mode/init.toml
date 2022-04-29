@@ -16,13 +16,13 @@
     statusline_separator = "arrow"
     statusline_iseparator = "arrow"
     enable_statusline_mode = false
-    statusline_left_sections = [
+    statusline_left = [
         "winnr",
         "filename",
         "search count",
         "syntax checking",
     ]
-    statusline_right_sections = [
+    statusline_right = [
         "major mode",
         "fileformat",
         "mycursorpos",
