@@ -104,6 +104,7 @@ function! myspacevim#before() abort
 
     let g:translator_default_engines = ['bing', 'youdao']
 
+    let g:tex_conceal = 1
     let g:indent_blankline_show_first_indent_level = v:false
 
     " let g:Lf_GtagsAutoGenerate = 1
@@ -115,7 +116,7 @@ function! myspacevim#before() abort
             \}
     let g:Lf_Gtagslabel = 'native-pygments'
 
-    let g:ycm_clangd_args = ['--function-arg-placeholders=0',"--all-scopes-completion",'--enable-config','--clang-tidy']
+    let g:ycm_clangd_args = ['--function-arg-placeholders=0','--enable-config','--clang-tidy']
     let g:ycm_semantic_triggers = {
       \ 'erlang': ['re!\w{2}'],
       \ 'c': ['re!\w{2}'],
