@@ -1,3 +1,6 @@
+# For Neovim 7.0+
+如果你的环境支持neovim7.0+，不妨试试现代neovim全新的LSP+Lua生态，见[MyLunarVim](https://github.com/mrbeardad/MyLunarVim)
+
 # For VSCode User
 [见vscode分支](https://github.com/mrbeardad/SpaceVim/tree/vscode)
 
