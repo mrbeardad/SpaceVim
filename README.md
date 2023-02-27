@@ -1,3 +1,9 @@
+<div align="center">
+
+# [最新 Neovim 支持见 MyIDE](https://github.com/mrbeardad/MyIDE)
+
+</div>
+
 # For Neovim 7.0+
 如果你的环境支持neovim7.0+，不妨试试现代neovim全新的LSP+Lua生态，见[MyLunarVim](https://github.com/mrbeardad/MyLunarVim)
 
